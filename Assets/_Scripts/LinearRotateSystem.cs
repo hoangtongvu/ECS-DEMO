@@ -1,29 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-
-public partial struct CubeSystem : ISystem
+public partial struct LinearRotateSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
-        CubeJob job = new CubeJob
+        LinearRotateJob job = new()
         {
             deltaTime = SystemAPI.Time.DeltaTime,
         };
+
         job.ScheduleParallel();
     }
 }
 
-
-public partial struct CubeJob : IJobEntity
+[BurstCompile]
+public partial struct LinearRotateJob : IJobEntity
 {
     public float deltaTime;
-    public void Execute(ref CubeData cubeData, ref LocalTransform transform)
+
+    public void Execute(ref LinearRotateData cubeData, ref LocalTransform transform)
     {
-        transform = transform.RotateY(math.radians(cubeData.speed * deltaTime));
+        //transform = transform.RotateY(math.radians(cubeData.speed * deltaTime));
+        transform = transform.RotateX(math.radians(cubeData.speed * deltaTime * cubeData.direction.x));
+        transform = transform.RotateY(math.radians(cubeData.speed * deltaTime * cubeData.direction.y));
+        transform = transform.RotateZ(math.radians(cubeData.speed * deltaTime * cubeData.direction.z));
     }
 }
 
@@ -37,7 +42,5 @@ public partial struct CubeJob : IJobEntity
 //            transform.ValueRW = transform.ValueRO.RotateY(math.radians(cubeData.ValueRO.speed * deltaTime));
 //        }
 //    }
-
-
 
 //}
