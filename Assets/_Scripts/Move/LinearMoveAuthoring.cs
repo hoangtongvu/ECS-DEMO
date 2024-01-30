@@ -26,7 +26,7 @@ public class LinearMoveAuthoring : MonoBehaviour
         }
     }
 
-    public struct Data : IComponentData
+    public struct Data : IComponentData, IEnableableComponent
     {
         public float3 direction;
         public float speed;
