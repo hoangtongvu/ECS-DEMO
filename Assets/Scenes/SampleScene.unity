@@ -463,7 +463,7 @@ MonoBehaviour:
   prefabToSpawn: {fileID: 1494124455}
   spawnedObj: []
   subScene: {fileID: 563712120}
-  spawnCount: 1000
+  spawnCount: 10000
   spacing: 3
 --- !u!4 &776930510
 Transform:
@@ -542,6 +542,7 @@ GameObject:
   - component: {fileID: 1494124454}
   - component: {fileID: 1494124453}
   - component: {fileID: 1494124452}
+  - component: {fileID: 1494124457}
   - component: {fileID: 1494124456}
   m_Layer: 0
   m_Name: Cube
@@ -645,7 +646,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1494124451}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8041cad13ab766f46935983432190e29, type: 3}
+  m_Script: {fileID: 11500000, guid: 56b32b9deed54bd4bbd9ab9d05f874b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction:
+    x: 0
+    y: 0
+    z: 0
+  speed: 5
+--- !u!114 &1494124457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494124451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 197f00ce17bdd4f4aaa0e78ea1099307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   direction:

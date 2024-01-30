@@ -7,6 +7,12 @@ using Unity.Transforms;
 
 public partial struct LinearRotateSystem : ISystem
 {
+
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<LinearRotateAuthoring.Data>();
+    }
+
     public void OnUpdate(ref SystemState state)
     {
         LinearRotateJob job = new()
@@ -23,7 +29,7 @@ public partial struct LinearRotateJob : IJobEntity
 {
     public float deltaTime;
 
-    public void Execute(ref LinearRotateData cubeData, ref LocalTransform transform)
+    public void Execute(in LinearRotateAuthoring.Data cubeData, ref LocalTransform transform)
     {
         //transform = transform.RotateY(math.radians(cubeData.speed * deltaTime));
         transform = transform.RotateX(math.radians(cubeData.speed * deltaTime * cubeData.direction.x));
