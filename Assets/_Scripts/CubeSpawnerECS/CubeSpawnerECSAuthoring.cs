@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
             Data data = new()
             {
                 entity = GetEntity(authoring.prefabToSpawn, TransformUsageFlags.Dynamic),
+                //spawnedEntities = new NativeArray<Entity>(100, Allocator.Persistent),
                 spawnCount = authoring.spawnCount,
                 spacing = authoring.spacing,
             };
@@ -27,9 +29,10 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
         }
     }
 
-    public struct Data : IComponentData, IEnableableComponent
+    public struct Data : IComponentData
     {
         public Entity entity;
+        //public NativeArray<Entity> spawnedEntities;
         public int spawnCount;
         public float spacing;
     }

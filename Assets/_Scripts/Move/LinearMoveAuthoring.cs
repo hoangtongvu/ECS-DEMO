@@ -9,7 +9,7 @@ public class LinearMoveAuthoring : MonoBehaviour
     public float3 direction;
     public float speed = 5;
 
-    public class LinearMoveBaker : Baker<LinearMoveAuthoring>
+    public class Baker : Baker<LinearMoveAuthoring>
     {
         public override void Bake(LinearMoveAuthoring authoring)
         {

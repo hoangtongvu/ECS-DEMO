@@ -155,7 +155,7 @@ MonoBehaviour:
   prefabToSpawn: {fileID: 7217834233118016467, guid: 44a3980baaccece4985608cde124363a,
     type: 3}
   spawnedObj: []
-  spawnCount: 1000
+  spawnCount: 100000
   spacing: 3
 --- !u!4 &461726518
 Transform:
