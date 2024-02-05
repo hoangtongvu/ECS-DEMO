@@ -20,7 +20,7 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
             Data data = new()
             {
                 entity = GetEntity(authoring.prefabToSpawn, TransformUsageFlags.Dynamic),
-                //spawnedEntities = new NativeArray<Entity>(100, Allocator.Persistent),
+                spawnedEntities = new NativeArray<Entity>(authoring.spawnCount, Allocator.Persistent),
                 spawnCount = authoring.spawnCount,
                 spacing = authoring.spacing,
             };
@@ -29,10 +29,11 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
         }
     }
 
+    [ChunkSerializable]
     public struct Data : IComponentData
     {
         public Entity entity;
-        //public NativeArray<Entity> spawnedEntities;
+        public NativeArray<Entity> spawnedEntities;
         public int spawnCount;
         public float spacing;
     }
