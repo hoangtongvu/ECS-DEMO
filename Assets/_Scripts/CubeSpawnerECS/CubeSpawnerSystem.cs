@@ -29,6 +29,9 @@ public partial struct CubeSpawnerSystem : ISystem
         float offset = data.spacing * 0.5f; // Adjust for center alignment
 
         NativeArray<Entity> spawnedEntities = state.EntityManager.Instantiate(data.entity, data.spawnCount, state.WorldUpdateAllocator);
+        //data.spawnedEntities.CopyFrom(spawnedEntities);
+        
+        //Debug.Log(data.spawnedEntities);
 
         //Set Grid Transform.
         for (int i = 0; i < data.spawnCount; i++)
@@ -43,6 +46,7 @@ public partial struct CubeSpawnerSystem : ISystem
         }
 
         //Set Component Job.
+        state.Dependency = default;
         SetComponentJob job = new()
         {
             entities = spawnedEntities,
@@ -50,7 +54,8 @@ public partial struct CubeSpawnerSystem : ISystem
         };
 
         JobHandle jobHandle = job.ScheduleParallel(data.spawnCount, 32);
-        jobHandle.Complete();
+        state.Dependency = jobHandle;
+        //jobHandle.Complete();
     }
 
     private LocalTransform GetCubeTransform(int col, int row, float spacing, float offset)
