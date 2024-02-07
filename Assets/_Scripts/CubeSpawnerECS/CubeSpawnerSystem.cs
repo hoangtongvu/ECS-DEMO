@@ -53,9 +53,8 @@ public partial struct CubeSpawnerSystem : ISystem
             lookup = SystemAPI.GetComponentLookup<LinearMoveAuthoring.Data>(),
         };
 
-        JobHandle jobHandle = job.ScheduleParallel(data.spawnCount, 32);
-        state.Dependency = jobHandle;
-        //jobHandle.Complete();
+        state.Dependency = job.ScheduleParallel(data.spawnCount, 32);
+
     }
 
     private LocalTransform GetCubeTransform(int col, int row, float spacing, float offset)
