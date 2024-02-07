@@ -55,7 +55,7 @@ public partial struct SetComponentJob : IJobParallelForBatch
 {
 
     public NativeArray<Entity> entities;
-    [NativeDisableParallelForRestriction] public ComponentLookup<LinearMoveAuthoring.Data> linearMoveLookup;
+    [NativeDisableParallelForRestriction] /*[ReadOnly] */public ComponentLookup<LinearMoveAuthoring.Data> linearMoveLookup;
     [NativeDisableParallelForRestriction] public ComponentLookup<LocalTransform> transformLookup;
     public int rows;
     public float offset;
