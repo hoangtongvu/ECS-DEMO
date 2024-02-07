@@ -22,50 +22,29 @@ public partial struct CubeSpawnerSystem : ISystem
         this.SpawnCubes(ref state, data);
     }
 
-
     private void SpawnCubes(ref SystemState state, CubeSpawnerECSAuthoring.Data data)
     {
+
+        NativeArray<Entity> spawnedEntities = state.EntityManager.Instantiate(data.entity, data.spawnCount, state.WorldUpdateAllocator);
+
         int rows = Mathf.CeilToInt(Mathf.Sqrt(data.spawnCount));
         float offset = data.spacing * 0.5f; // Adjust for center alignment
 
-        NativeArray<Entity> spawnedEntities = state.EntityManager.Instantiate(data.entity, data.spawnCount, state.WorldUpdateAllocator);
-        //data.spawnedEntities.CopyFrom(spawnedEntities);
-        
-        //Debug.Log(data.spawnedEntities);
-
-        //Set Grid Transform.
-        for (int i = 0; i < data.spawnCount; i++)
-        {
-            int row = i / rows;
-            int col = i % rows;
-
-            LocalTransform transform = this.GetCubeTransform(col, row, data.spacing, offset);
-
-            SystemAPI.SetComponent(spawnedEntities[i], transform);
-
-        }
 
         //Set Component Job.
         state.Dependency = default;
         SetComponentJob job = new()
         {
             entities = spawnedEntities,
-            lookup = SystemAPI.GetComponentLookup<LinearMoveAuthoring.Data>(),
+            linearMoveLookup = SystemAPI.GetComponentLookup<LinearMoveAuthoring.Data>(),
+            transformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
+            rows =  rows,
+            offset = offset,
+            spacing = data.spacing,
         };
 
         state.Dependency = job.ScheduleParallel(data.spawnCount, 32);
 
-    }
-
-    private LocalTransform GetCubeTransform(int col, int row, float spacing, float offset)
-    {
-        float3 position = new
-        (
-            (col * spacing) - offset,
-            0,
-            (row * spacing) - offset
-        );
-        return LocalTransform.FromPosition(position);
     }
 
 
@@ -76,7 +55,11 @@ public partial struct SetComponentJob : IJobParallelForBatch
 {
 
     public NativeArray<Entity> entities;
-    [NativeDisableParallelForRestriction] public ComponentLookup<LinearMoveAuthoring.Data> lookup;
+    [NativeDisableParallelForRestriction] public ComponentLookup<LinearMoveAuthoring.Data> linearMoveLookup;
+    [NativeDisableParallelForRestriction] public ComponentLookup<LocalTransform> transformLookup;
+    public int rows;
+    public float offset;
+    public float spacing;
 
     public void Execute(int startIndex, int count)
     {
@@ -86,25 +69,63 @@ public partial struct SetComponentJob : IJobParallelForBatch
         for (int i = startIndex; i < startIndex + count; i++)
         {
             Entity e = this.entities[i];
-
-            RefRW<LinearMoveAuthoring.Data> data = this.lookup.GetRefRWOptional(e);
-            if (!data.IsValid)
-            {
-                Debug.Log("data not found.");
-                return;
-            }
-            data.ValueRW.direction = this.GetRandomDirection(ref random);
+            this.SetLocalTransform(e, i);
+            this.SetDirection(e, ref random);
         }
 
     }
 
-    private float3 GetRandomDirection(ref Unity.Mathematics.Random random)
+
+    private void SetLocalTransform(Entity e, int index)
     {
-        return new float3(
-            random.NextFloat(-1f, 1f),
-            0f,
-            random.NextFloat(-1f, 1f));
+        RefRW<LocalTransform> localTransform = this.transformLookup.GetRefRWOptional(e);
+        if (!localTransform.IsValid)
+        {
+            Debug.LogError("LocalTransform not found");
+            return;
+        }
+
+
+        int row = index / this.rows;
+        int col = index % this.rows;
+
+        localTransform.ValueRW.Position = GetGridPosition(col, row, spacing, offset);
+
+
+        float3 GetGridPosition(int col, int row, float spacing, float offset)
+        {
+            return new
+            (
+                (col * spacing) - offset,
+                0,
+                (row * spacing) - offset
+            );
+        }
     }
+
+
+    private void SetDirection(Entity e, ref Unity.Mathematics.Random random)
+    {
+        RefRW<LinearMoveAuthoring.Data> data = this.linearMoveLookup.GetRefRWOptional(e);
+        if (!data.IsValid)
+        {
+            Debug.Log("data not found.");
+            return;
+        }
+
+
+        data.ValueRW.direction = GetRandomDirection(ref random);
+
+
+        float3 GetRandomDirection(ref Unity.Mathematics.Random random)
+        {
+            return new float3(
+                random.NextFloat(-1f, 1f),
+                0f,
+                random.NextFloat(-1f, 1f));
+        }
+    }
+
 
 
 }
