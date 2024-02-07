@@ -31,6 +31,19 @@ public partial struct CubeSpawnerSystem : ISystem
         float offset = data.spacing * 0.5f; // Adjust for center alignment
 
 
+        DynamicBuffer<CubeSpawnerECSAuthoring.EntityBufferElement> entitiesHolder =
+            SystemAPI.GetBuffer<CubeSpawnerECSAuthoring.EntityBufferElement>(data.entity);// or state.SystemHandle.
+
+
+        foreach (Entity entity in spawnedEntities)
+        {
+            CubeSpawnerECSAuthoring.EntityBufferElement element = new()
+            {
+                e = entity,
+            };
+            entitiesHolder.Add(element);
+        }
+
         //Set Component Job.
         state.Dependency = default;
         SetComponentJob job = new()

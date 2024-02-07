@@ -27,6 +27,8 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
             };
 
             AddComponent(entity, data);
+
+            AddBuffer<EntityBufferElement>(entity);
         }
     }
 
@@ -38,4 +40,13 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
         public int spawnCount;
         public float spacing;
     }
+
+
+    [InternalBufferCapacity(16)]
+    public struct EntityBufferElement : IBufferElementData
+    {
+        public Entity e;
+    }
+
+
 }
