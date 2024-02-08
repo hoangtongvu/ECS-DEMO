@@ -21,7 +21,6 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
             Data data = new()
             {
                 entity = GetEntity(authoring.prefabToSpawn, TransformUsageFlags.Dynamic),
-                spawnedEntities = new DynamicBuffer<Entity>(),
                 spawnCount = authoring.spawnCount,
                 spacing = authoring.spacing,
             };
@@ -36,7 +35,6 @@ public class CubeSpawnerECSAuthoring : MonoBehaviour
     public struct Data : IComponentData
     {
         public Entity entity;
-        public DynamicBuffer<Entity> spawnedEntities;
         public int spawnCount;
         public float spacing;
     }

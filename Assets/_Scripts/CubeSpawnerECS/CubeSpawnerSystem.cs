@@ -18,22 +18,19 @@ public partial struct CubeSpawnerSystem : ISystem
         state.Enabled = false;// make sure this Update only run once.
 
         CubeSpawnerECSAuthoring.Data data = SystemAPI.GetSingleton<CubeSpawnerECSAuthoring.Data>();
+        DynamicBuffer<CubeSpawnerECSAuthoring.EntityBufferElement> entitiesHolder =
+            SystemAPI.GetSingletonBuffer<CubeSpawnerECSAuthoring.EntityBufferElement>();
 
-        this.SpawnCubes(ref state, data);
+        this.SpawnCubes(ref state, data, entitiesHolder);
     }
 
-    private void SpawnCubes(ref SystemState state, CubeSpawnerECSAuthoring.Data data)
+    private void SpawnCubes(ref SystemState state, CubeSpawnerECSAuthoring.Data data, DynamicBuffer<CubeSpawnerECSAuthoring.EntityBufferElement> entitiesHolder)
     {
 
         NativeArray<Entity> spawnedEntities = state.EntityManager.Instantiate(data.entity, data.spawnCount, state.WorldUpdateAllocator);
 
         int rows = Mathf.CeilToInt(Mathf.Sqrt(data.spawnCount));
         float offset = data.spacing * 0.5f; // Adjust for center alignment
-
-
-        DynamicBuffer<CubeSpawnerECSAuthoring.EntityBufferElement> entitiesHolder =
-            SystemAPI.GetBuffer<CubeSpawnerECSAuthoring.EntityBufferElement>(data.entity);// or state.SystemHandle.
-
 
         foreach (Entity entity in spawnedEntities)
         {
