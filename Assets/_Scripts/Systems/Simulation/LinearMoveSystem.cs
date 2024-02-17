@@ -15,6 +15,7 @@ namespace Systems.Simulation
             state.RequireForUpdate<LocalTransform>();
             state.RequireForUpdate<MoveDirection>();
             state.RequireForUpdate<MoveSpeed>();
+            state.RequireForUpdate<EnableableTag>();
         }
 
         [BurstCompile]
@@ -41,6 +42,7 @@ namespace Systems.Simulation
                   in MoveDirection direction
                 , in MoveSpeed speed
                 , ref LocalTransform transform
+                , in EnableableTag enableableTag
             )
             {
                 transform = transform.Translate(direction.value * speed.value * this.deltaTime);

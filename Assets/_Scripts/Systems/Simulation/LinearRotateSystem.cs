@@ -16,6 +16,7 @@ namespace Systems.Simulation
             state.RequireForUpdate<LocalTransform>();
             state.RequireForUpdate<RotateDirection>();
             state.RequireForUpdate<RotateSpeed>();
+            state.RequireForUpdate<EnableableTag>();
         }
 
         [BurstCompile]
@@ -37,6 +38,7 @@ namespace Systems.Simulation
                   in RotateDirection direction
                 , in RotateSpeed speed
                 , ref LocalTransform transform
+                , in EnableableTag enableableTag
             )
             {
                 transform = transform.Rotate(quaternion.Euler(math.radians(direction.value * speed.value * deltaTime)));
