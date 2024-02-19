@@ -7,9 +7,9 @@ namespace Authoring
     public class EnableableTagAuthoring : MonoBehaviour
     {
 
-        private class Baker : Baker<MovementAuthoring>
+        private class Baker : Baker<EnableableTagAuthoring>
         {
-            public override void Bake(MovementAuthoring authoring)
+            public override void Bake(EnableableTagAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
