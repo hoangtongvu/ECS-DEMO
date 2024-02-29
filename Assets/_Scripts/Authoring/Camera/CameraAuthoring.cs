@@ -1,4 +1,5 @@
-﻿using Components.CustomIdentification;
+﻿using Components.Camera;
+using Components.CustomIdentification;
 using Unity.Entities;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace Authoring.Camera
 {
     public class CameraAuthoring : MonoBehaviour
     {
+        public Vector3 AddPos;
 
         private class Baker : Baker<CameraAuthoring>
         {
@@ -17,6 +19,11 @@ namespace Authoring.Camera
                 {
                     Kind = UniqueKind.Camera,
                     Id = 0,
+                });
+
+                AddComponent(entity, new AddPos
+                {
+                    Value = authoring.AddPos.ToFloat3(),
                 });
 
             }

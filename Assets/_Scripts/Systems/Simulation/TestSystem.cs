@@ -1,8 +1,6 @@
 using Components;
-using Unity.Burst;
+using Components.Tag;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 
 namespace Systems.Simulation

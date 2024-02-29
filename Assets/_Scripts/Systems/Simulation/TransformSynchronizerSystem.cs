@@ -26,16 +26,29 @@ namespace Systems.Simulation
                 return;
             }
 
-            new SyncJob
-            {
-                ObjectMap = objectMap,
-            }.Schedule();
+            //new SyncJob
+            //{
+            //    ObjectMap = objectMap,
+            //}.Schedule();
 
-            
+            this.SyncFunc(objectMap);
 
         }
 
-        
+        private void SyncFunc(in UnityObjectMap objectMap)
+        {
+            foreach (var (idRef, transformRef) in
+                SystemAPI.Query<RefRO<UniqueId>, RefRO<LocalTransform>>())
+            {
+                if (!objectMap.Value.TryGetValue(idRef.ValueRO, out UnityEngine.Object gameObj)) return;
+
+                Transform gameObjTransform = ((GameObject)gameObj).transform;
+
+                float3 enityPos = transformRef.ValueRO.Position;
+                gameObjTransform.position = new Vector3(enityPos.x, enityPos.y, enityPos.z);
+            }
+        }
+
         private partial struct SyncJob : IJobEntity
         {
             public UnityObjectMap ObjectMap;

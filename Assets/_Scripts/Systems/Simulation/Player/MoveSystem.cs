@@ -1,5 +1,5 @@
 using Components.Player;
-using System;
+using Components.Tag;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
@@ -20,7 +20,7 @@ namespace Systems.Simulation.Player
             state.RequireForUpdate<LocalTransform>();
             state.RequireForUpdate<MoveDirection>();
             state.RequireForUpdate<MoveSpeed>();
-            state.RequireForUpdate<Components.EnableableTag>();
+            state.RequireForUpdate<EnableableTag>();
             this.moveDirection = new();
         }
 
@@ -47,7 +47,7 @@ namespace Systems.Simulation.Player
                   ref MoveDirection direction
                 , in MoveSpeed speed
                 , ref LocalTransform transform
-                , in Components.EnableableTag enableableTag
+                , in EnableableTag enableableTag
             )
             {
                 direction = this.moveDirection;
