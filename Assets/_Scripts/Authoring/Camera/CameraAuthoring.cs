@@ -15,12 +15,6 @@ namespace Authoring.Camera
             {
                 Entity entity = GetEntity(authoring, TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new UniqueId
-                {
-                    Kind = UniqueKind.Camera,
-                    Id = 0,
-                });
-
                 AddComponent(entity, new AddPos
                 {
                     Value = authoring.AddPos.ToFloat3(),
