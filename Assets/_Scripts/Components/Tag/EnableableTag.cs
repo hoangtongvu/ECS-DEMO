@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Components
+namespace Components.Tag
 {
     public struct EnableableTag : IComponentData, IEnableableComponent
     {
