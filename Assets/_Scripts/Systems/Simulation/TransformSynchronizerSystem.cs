@@ -40,7 +40,7 @@ namespace Systems.Simulation
             foreach (var (idRef, transformRef) in
                 SystemAPI.Query<RefRO<UniqueId>, RefRO<LocalTransform>>())
             {
-                if (!objectMap.Value.TryGetValue(idRef.ValueRO, out UnityEngine.Object gameObj)) return;
+                if (!objectMap.Value.TryGetValue(idRef.ValueRO, out UnityEngine.Object gameObj)) continue;
 
                 Transform gameObjTransform = ((GameObject)gameObj).transform;
 
