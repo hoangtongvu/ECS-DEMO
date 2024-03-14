@@ -5,14 +5,14 @@ using Core.Animator;
 using Components;
 using Components.CustomIdentification;
 using Components.Player;
-using Unity.Physics.Aspects;
+
 
 namespace Systems.Simulation.Player
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class AttackSystem : SystemBase
     {
-        private BaseAnimator animator;
+        private BaseAnimator baseAnimator;
 
 
         protected override void OnCreate()
@@ -22,12 +22,12 @@ namespace Systems.Simulation.Player
 
         protected override void OnUpdate()
         {
-
+            
             foreach (var attackDataRef in 
                 SystemAPI.Query<RefRW<AttackData>>().WithAll<PlayerTag>())
             {
 
-                if (this.animator == null) // TODO: Find another way to SetBaseAnimator.
+                if (this.baseAnimator == null) // TODO: Find another way to SetBaseAnimator.
                 {
                     this.SetBaseAnimator();
                     this.SetAttackDuration(attackDataRef);
@@ -53,26 +53,21 @@ namespace Systems.Simulation.Player
 
         }
 
-        private void SetBaseAnimator()
+        private void SetBaseAnimator() // Used to set Player's BaseAnimator.
         {
-            if (!SystemAPI.ManagedAPI.TryGetSingleton<UnityObjectMap>(out var objectMap))
+            if (!SystemAPI.ManagedAPI.TryGetSingleton<BaseAnimatorMap>(out var baseAnimatorMap))
             {
-                Debug.LogError("UnityObjectMap Singleton not found");
+                Debug.LogError("BaseAnimatorMap Singleton not found");
                 return;
             }
 
-            foreach (var idRef in
-                SystemAPI.Query<RefRO<UniqueId>>())
+            foreach (var idRef in SystemAPI.Query<RefRO<UniqueId>>())
             {
                 if (idRef.ValueRO.Kind != UniqueKind.Player) continue;
-                
-                if (!objectMap.Value.TryGetValue(idRef.ValueRO, out UnityEngine.Object unityObj))
-                {
-                    Debug.LogError($"Can't get Unity Obj with {idRef.ValueRO} in UnityObjMap");
-                    return;
-                }
 
-                this.animator = ((GameObject) unityObj).GetComponent<BaseAnimator>();
+                if (baseAnimatorMap.Value.TryGetValue(idRef.ValueRO, out this.baseAnimator)) return;
+                Debug.LogError($"Can't get BaseAnimator with {idRef.ValueRO} in BaseAnimatorMap");
+                
             }
         }
 
@@ -82,7 +77,10 @@ namespace Systems.Simulation.Player
         {
             //Play Attack Animation.
             attackDataRef.ValueRW.isAttacking = true;
-            this.animator.ChangeAnimationState("Punching");
+            foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>())
+            {
+                animatorDataRef.ValueRW.AnimName = "Punching";
+            }
             Debug.Log("Attack!");
             
         }
@@ -90,13 +88,21 @@ namespace Systems.Simulation.Player
         private void UpdateAttackTimeCounter(RefRW<AttackData> attackDataRef) =>
             attackDataRef.ValueRW.attackTimeCounter += SystemAPI.Time.DeltaTime;
 
+
+        // TODO: Add a Dynamic Buffer that store (anim Name + anim Length) to remove access BaseAnimator directly.
         private void SetAttackDuration(RefRW<AttackData> attackDataRef) =>
-            attackDataRef.ValueRW.attackDurationSecond = this.animator.GetAnimationLength("Punching");
+            attackDataRef.ValueRW.attackDurationSecond = this.baseAnimator.GetAnimationLength("Punching");
 
         private bool AttackDurationEnded(RefRW<AttackData> attackDataRef) =>
             attackDataRef.ValueRO.attackTimeCounter >= attackDataRef.ValueRO.attackDurationSecond;
 
-        private void BackToIdleState() => this.animator.ChangeAnimationState("Idle");
+        private void BackToIdleState() // Temporary code.
+        {
+            foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>().WithAll<PlayerTag>())
+            {
+                animatorDataRef.ValueRW.AnimName = "Idle";
+            }
+        }
 
     }
 }
