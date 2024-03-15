@@ -79,7 +79,7 @@ namespace Systems.Simulation.Player
         {
             //Play Attack Animation.
             attackDataRef.ValueRW.isAttacking = true;
-            foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>())
+            foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>().WithAll<PlayerTag>())
             {
                 AnimatorHelper.TryChangeAnimatorData(animatorDataRef, ATTACK_ANIM_NAME);
             }
