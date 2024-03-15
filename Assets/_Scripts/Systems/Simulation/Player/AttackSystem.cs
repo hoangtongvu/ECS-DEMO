@@ -13,6 +13,8 @@ namespace Systems.Simulation.Player
     public partial class AttackSystem : SystemBase
     {
         private BaseAnimator baseAnimator;
+        private const string ATTACK_ANIM_NAME = "Punching";
+        private const string IDLE_ANIM_NAME = "Idle";
 
 
         protected override void OnCreate()
@@ -79,7 +81,7 @@ namespace Systems.Simulation.Player
             attackDataRef.ValueRW.isAttacking = true;
             foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>())
             {
-                animatorDataRef.ValueRW.AnimName = "Punching";
+                AnimatorHelper.TryChangeAnimatorData(animatorDataRef, ATTACK_ANIM_NAME);
             }
             Debug.Log("Attack!");
             
@@ -100,7 +102,7 @@ namespace Systems.Simulation.Player
         {
             foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>().WithAll<PlayerTag>())
             {
-                animatorDataRef.ValueRW.AnimName = "Idle";
+                AnimatorHelper.TryChangeAnimatorData(animatorDataRef, IDLE_ANIM_NAME);
             }
         }
 
