@@ -20,9 +20,9 @@ namespace Systems.Simulation
         {
             //Sync Transform from Entity world to corresponding Transform in GameObject world.
 
-            if (!SystemAPI.ManagedAPI.TryGetSingleton<UnityObjectMap>(out UnityObjectMap objectMap))
+            if (!SystemAPI.ManagedAPI.TryGetSingleton<UnityTransformMap>(out UnityTransformMap transformMap))
             {
-                Debug.LogError("UnityObjectMap Singleton not found");
+                Debug.LogError("UnityTransformMap Singleton not found");
                 return;
             }
 
@@ -31,18 +31,18 @@ namespace Systems.Simulation
             //    ObjectMap = objectMap,
             //}.Schedule();
 
-            this.SyncFunc(objectMap);
+            this.SyncFunc(transformMap);
 
         }
 
-        private void SyncFunc(in UnityObjectMap objectMap)
+        private void SyncFunc(in UnityTransformMap transformMap)
         {
             foreach (var (idRef, transformRef) in
                 SystemAPI.Query<RefRO<UniqueId>, RefRO<LocalTransform>>())
             {
-                if (!objectMap.Value.TryGetValue(idRef.ValueRO, out UnityEngine.Object gameObj)) continue;
+                if (!transformMap.Value.TryGetValue(idRef.ValueRO, out UnityEngine.Transform unityTransform)) continue;
 
-                Transform gameObjTransform = ((GameObject)gameObj).transform;
+                Transform gameObjTransform = unityTransform;
 
                 float3 enityPos = transformRef.ValueRO.Position;
                 gameObjTransform.position = new Vector3(enityPos.x, enityPos.y, enityPos.z);
@@ -51,13 +51,13 @@ namespace Systems.Simulation
 
         private partial struct SyncJob : IJobEntity
         {
-            public UnityObjectMap ObjectMap;
+            public UnityTransformMap TransformMap;
 
             private void Execute(in UniqueId id, in LocalTransform transform)
             {
-                if (!this.ObjectMap.Value.TryGetValue(id, out UnityEngine.Object gameObj)) return;
+                if (!this.TransformMap.Value.TryGetValue(id, out UnityEngine.Transform unityTransform)) return;
 
-                Transform gameObjTransform = ((GameObject) gameObj).transform;
+                Transform gameObjTransform = unityTransform;
 
                 float3 enityPos = transform.Position;
                 gameObjTransform.position = new Vector3(enityPos.x, enityPos.y, enityPos.z);

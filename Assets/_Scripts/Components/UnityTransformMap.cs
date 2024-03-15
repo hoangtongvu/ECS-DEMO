@@ -4,8 +4,8 @@ using Unity.Entities;
 
 namespace Components
 {
-    public class UnityObjectMap : IComponentData
+    public class UnityTransformMap : IComponentData
     {
-        public Dictionary<UniqueId, UnityEngine.Object> Value;
+        public Dictionary<UniqueId, UnityEngine.Transform> Value;
     }
 }
