@@ -22,7 +22,7 @@ namespace Authoring
                     AnimChanged = false,
                 });
 
-
+                AddBuffer<AnimationClipInfoElement>(entity);
 
             }
         }

@@ -10,6 +10,16 @@ namespace Components
         public bool AnimChanged;
     }
 
+    [InternalBufferCapacity(0)]
+    public struct AnimationClipInfoElement : IBufferElementData
+    {
+        public FixedString64Bytes Name;
+        public float Length;
+    }
+
+
+
+
     // Old version of AnimatorData using Property.
 
     //public struct AnimatorData : IComponentData

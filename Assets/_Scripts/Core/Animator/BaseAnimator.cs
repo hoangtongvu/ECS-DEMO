@@ -12,6 +12,7 @@ namespace Core.Animator
 
         [SerializeField] protected List<AnimationClip> clipList;
 
+        public List<AnimationClip> ClipList => clipList;
 
         #region LoadComponents
 
