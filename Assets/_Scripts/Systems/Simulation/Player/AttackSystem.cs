@@ -32,12 +32,12 @@ namespace Systems.Simulation.Player
                 if (this.baseAnimator == null) // TODO: Find another way to SetBaseAnimator.
                 {
                     this.SetBaseAnimator();
-                    this.SetAttackDuration(attackDataRef);
+                    this.SetAttackDuration(out attackDataRef.ValueRW.attackDurationSecond);
                 }
 
                 if (attackDataRef.ValueRO.isAttacking)
                 {
-                    this.UpdateAttackTimeCounter(attackDataRef);
+                    this.UpdateAttackTimeCounter(ref attackDataRef.ValueRW.attackTimeCounter);
                     if (this.AttackDurationEnded(attackDataRef))
                     {
                         attackDataRef.ValueRW.isAttacking = false;
@@ -87,13 +87,13 @@ namespace Systems.Simulation.Player
             
         }
 
-        private void UpdateAttackTimeCounter(RefRW<AttackData> attackDataRef) =>
-            attackDataRef.ValueRW.attackTimeCounter += SystemAPI.Time.DeltaTime;
+        private void UpdateAttackTimeCounter(ref float attackTimeCounter) =>
+            attackTimeCounter += SystemAPI.Time.DeltaTime;
 
 
         // TODO: Add a Dynamic Buffer that store (anim Name + anim Length) to remove access BaseAnimator directly.
-        private void SetAttackDuration(RefRW<AttackData> attackDataRef) =>
-            attackDataRef.ValueRW.attackDurationSecond = this.baseAnimator.GetAnimationLength("Punching");
+        private void SetAttackDuration(out float attackDurationSecond) =>
+            attackDurationSecond = this.baseAnimator.GetAnimationLength(ATTACK_ANIM_NAME);
 
         private bool AttackDurationEnded(RefRW<AttackData> attackDataRef) =>
             attackDataRef.ValueRO.attackTimeCounter >= attackDataRef.ValueRO.attackDurationSecond;
