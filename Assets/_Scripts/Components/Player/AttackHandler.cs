@@ -3,6 +3,12 @@ using Unity.Mathematics;
 
 namespace Components.Player
 {
+
+    public struct AttackInput : IComponentData, IEnableableComponent
+    {
+        public bool IsAttackable;
+    }
+
     public struct AttackData : IComponentData, IEnableableComponent
     {
         public bool isAttacking;

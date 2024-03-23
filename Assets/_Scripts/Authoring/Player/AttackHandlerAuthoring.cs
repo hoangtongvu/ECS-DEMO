@@ -28,6 +28,10 @@ namespace Authoring.Player
                     AttackSystem set this attackDurationSecond for now.*/
                 });
 
+                AddComponent(entity, new AttackInput
+                {
+                    IsAttackable = false,
+                });
 
                 AddComponent(entity, new HitBox
                 {
