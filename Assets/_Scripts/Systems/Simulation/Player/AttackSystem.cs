@@ -1,15 +1,19 @@
 using Unity.Entities;
-using UnityEngine;
 using Components.Damage;
 using Core.Animator;
 using Components;
 using Components.Player;
+using Core;
+using Unity.Physics;
+using Unity.Mathematics;
+using Unity.Collections;
+using Unity.Transforms;
 
 
 namespace Systems.Simulation.Player
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public partial class AttackSystem : SystemBase
+    public partial class AttackSystem : SystemBase //TODO: This can be changed into ISystem + burst.
     {
 
         private const string ATTACK_ANIM_NAME = "Punching";
@@ -18,15 +22,28 @@ namespace Systems.Simulation.Player
 
         protected override void OnCreate()
         {
+            this.RequireForUpdate<LocalTransform>();
+            this.RequireForUpdate<HitBox>();
             this.RequireForUpdate<DmgValue>();
+            this.RequireForUpdate<AttackData>();
+            this.RequireForUpdate<AttackInput>();
+            this.RequireForUpdate<AnimationClipInfoElement>();
+            this.RequireForUpdate<PlayerTag>();
         }
 
         protected override void OnUpdate()
         {
-            
-            foreach (var (attackDataRef, clipInfos) in
+
+            PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+
+
+            foreach (var (transformRef, hitboxRef, dmgValueRef, attackDataRef, attackInputRef, clipInfos) in
                 SystemAPI.Query<
-                    RefRW<AttackData>
+                    RefRO<LocalTransform>
+                    , RefRO<HitBox>
+                    , RefRO<DmgValue>
+                    , RefRW<AttackData>
+                    , RefRO<AttackInput>
                     , DynamicBuffer<AnimationClipInfoElement>>()
                     .WithAll<PlayerTag>())
             {
@@ -43,18 +60,15 @@ namespace Systems.Simulation.Player
                         this.BackToIdleState();
                     }
                 }
-                
 
-                if (!this.IsAttackable(attackDataRef)) return;
+
+                if (!attackInputRef.ValueRO.IsAttackable) return;
                 this.Attack(attackDataRef);
-
+                this.TryCatchColliderInHitbox(physicsWorld, hitboxRef, transformRef, dmgValueRef);
             }
-
 
         }
 
-
-        private bool IsAttackable(RefRW<AttackData> attackDataRef) => Input.GetMouseButtonDown(0) && !attackDataRef.ValueRO.isAttacking;
 
         private void Attack(RefRW<AttackData> attackDataRef)
         {
@@ -64,9 +78,44 @@ namespace Systems.Simulation.Player
             {
                 AnimatorHelper.TryChangeAnimatorData(animatorDataRef, ATTACK_ANIM_NAME);
             }
-            Debug.Log("Attack!");
             
         }
+
+        private void TryCatchColliderInHitbox(
+            in PhysicsWorldSingleton physicsWorld
+            , RefRO<HitBox> hitboxRef
+            , RefRO<LocalTransform> transformRef
+            , RefRO<DmgValue> dmgValueRef)
+        {
+            
+            NativeList<DistanceHit> hits = new(Allocator.Temp);
+
+            physicsWorld.OverlapBox(
+                transformRef.ValueRO.Position + hitboxRef.ValueRO.HitBoxLocalPos,
+                quaternion.identity,
+                hitboxRef.ValueRO.HitBoxSize / 2,
+                ref hits,
+                new CollisionFilter
+                {
+                    BelongsTo = (uint)CollisionLayer.Player,
+                    CollidesWith = (uint)CollisionLayer.Default,
+                });
+
+            foreach (var hit in hits)
+            {
+                Entity entity = hit.Entity;
+
+
+                if (!SystemAPI.HasComponent<HpChangeState>(entity)) continue;
+                RefRW<HpChangeState> hpChangeStateRef = SystemAPI.GetComponentRW<HpChangeState>(entity);
+                HpChangeHandleSystem.DeductHp(ref hpChangeStateRef.ValueRW, dmgValueRef.ValueRO.Value);
+                // Debug.Log($"{entity} lost {dmgValueRef.ValueRO.Value} Hp.");
+            }
+
+            hits.Dispose();
+            
+        }
+
 
         private void UpdateAttackTimeCounter(ref float attackTimeCounter) =>
             attackTimeCounter += SystemAPI.Time.DeltaTime;
@@ -85,4 +134,3 @@ namespace Systems.Simulation.Player
 
     }
 }
-

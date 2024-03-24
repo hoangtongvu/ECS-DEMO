@@ -35,7 +35,7 @@ namespace Authoring.Player
 
                 AddComponent(entity, new HitBox
                 {
-                    HitBoxPos = authoring.HitBoxPos,
+                    HitBoxLocalPos = authoring.HitBoxPos,
                     HitBoxSize = authoring.HitBoxSize,
                 });
             }

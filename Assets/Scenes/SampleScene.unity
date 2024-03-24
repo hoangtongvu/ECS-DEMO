@@ -762,6 +762,7 @@ GameObject:
   - component: {fileID: 1134356423}
   - component: {fileID: 1134356425}
   - component: {fileID: 1134356426}
+  - component: {fileID: 1134356427}
   m_Layer: 0
   m_Name: Model {Player}
   m_TagString: Untagged
@@ -839,9 +840,27 @@ MonoBehaviour:
   animator: {fileID: 1134356425}
   clipArray:
   - {fileID: 7400000, guid: f91440c7cc000884785151c951e2acd5, type: 2}
+  - {fileID: 7400000, guid: ffbe52d5669234c47bbdaacd4f8db261, type: 2}
   currentStateName: 
   clipList:
   - {fileID: 7400000, guid: f91440c7cc000884785151c951e2acd5, type: 2}
+  - {fileID: 7400000, guid: ffbe52d5669234c47bbdaacd4f8db261, type: 2}
+--- !u!114 &1134356427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134356422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e902ed7ef91c76d4f89cbd840ed3aaff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id:
+    Kind: 1
+    Id: 0
+  Target: {fileID: 1134356426}
 --- !u!1 &1575741490
 GameObject:
   m_ObjectHideFlags: 0

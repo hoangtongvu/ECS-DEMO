@@ -18,7 +18,7 @@ namespace Components.Player
 
     public struct HitBox : IComponentData, IEnableableComponent
     {
-        public float3 HitBoxPos;
+        public float3 HitBoxLocalPos;
         public float3 HitBoxSize;
     }
 
