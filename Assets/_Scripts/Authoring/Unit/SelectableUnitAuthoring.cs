@@ -1,8 +1,8 @@
-﻿using Components;
+﻿using Components.Unit;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring
+namespace Authoring.Unit
 {
     public class SelectableUnitAuthoring : MonoBehaviour
     {
@@ -14,11 +14,6 @@ namespace Authoring
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<SelectableUnitTag>(entity);
-                AddComponent(entity, new SelectedState
-                {
-                    Value = false,
-                });
-
             }
         }
     }
