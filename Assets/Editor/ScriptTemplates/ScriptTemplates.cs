@@ -5,7 +5,7 @@ namespace WaynGroup.Mgm.Ability.Editor
 {
     internal class ScriptTemplates
     {
-        [MenuItem("Assets/Create/DOTS/IAspect")]
+        [MenuItem("Assets/Create/DOTS/IAspect", priority = 1)]
         public static void CreateIAspect()
         {
             ProjectWindowUtil.CreateScriptAssetFromTemplateFile(
