@@ -35,20 +35,15 @@ namespace Systems.Simulation.Unit
             if (selectionHitRef.ValueRO.SelectionType != SelectionType.Position) return;
             selectionHitRef.ValueRW.NewlyAdded = false;
 
-            // Set all selected units Moveable.
-            // This can't be put in job cause SystemAPI.SetComponentEnabled available in SystemAPI only.
+            // Set Units move to target Position.
             var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
-            foreach (var unit in selectedUnits)
-            {
-                if (Hint.Likely(!SystemAPI.HasComponent<MoveableState>(unit.Value))) continue;
-                SystemAPI.SetComponentEnabled<MoveableState>(unit.Value, true);
-            }
 
             var job = new SetTargetJob
             {
                 selectedUnits = selectedUnits,
                 targetPosition = selectionHitRef.ValueRO.RaycastHit.Position,
                 targetPosLookup = SystemAPI.GetComponentLookup<TargetPosition>(),
+                moveableStateLookup = SystemAPI.GetComponentLookup<MoveableState>(),
             };
 
             state.Dependency = default;
@@ -66,6 +61,9 @@ namespace Systems.Simulation.Unit
 
             [NativeDisableParallelForRestriction]
             public ComponentLookup<TargetPosition> targetPosLookup;
+            
+            [NativeDisableParallelForRestriction]
+            public ComponentLookup<MoveableState> moveableStateLookup;
 
             public void Execute(int startIndex, int count)
             {
@@ -73,7 +71,12 @@ namespace Systems.Simulation.Unit
 
                 for (int i = startIndex; i < length; i++)
                 {
-                    var targetPosRef = this.targetPosLookup.GetRefRWOptional(selectedUnits.ElementAt(i).Value);
+                    Entity entity = selectedUnits.ElementAt(i).Value;
+
+                    if (Hint.Likely(!this.moveableStateLookup.HasComponent(entity))) continue;
+                    this.moveableStateLookup.SetComponentEnabled(entity, true);
+
+                    var targetPosRef = this.targetPosLookup.GetRefRWOptional(entity);
                     targetPosRef.ValueRW.Value = this.targetPosition;
                 }
             }
