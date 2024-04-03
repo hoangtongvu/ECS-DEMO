@@ -4,11 +4,11 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Simulation
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct MoveTowardTargetSystem : ISystem
+    public partial struct MoveSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
