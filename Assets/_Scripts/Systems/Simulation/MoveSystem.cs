@@ -1,22 +1,22 @@
-using Components.Unit;
+using Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Simulation
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct MoveTowardTargetSystem : ISystem
+    public partial struct MoveSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<MoveableState>();
             state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<MoveDirection>();
-            state.RequireForUpdate<MoveSpeed>();
+            state.RequireForUpdate<MoveDirectionFloat2>();
+            state.RequireForUpdate<MoveSpeedLinear>();
         }
 
         [BurstCompile]
@@ -36,8 +36,8 @@ namespace Systems.Simulation.Unit
             private void Execute(
                 in MoveableState moveableState
                 , ref LocalTransform transform
-                , in MoveSpeed speed
-                , in MoveDirection direction
+                , in MoveSpeedLinear speed
+                , in MoveDirectionFloat2 direction
             )
             {
                 float3 float3Dir = new (direction.Value.x, 0f, direction.Value.y);

@@ -1,4 +1,4 @@
-using Components.Unit;
+using Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;

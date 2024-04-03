@@ -1,4 +1,4 @@
-using Components.Unit;
+using Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -16,7 +16,7 @@ namespace Systems.Simulation.Unit
         {
             state.RequireForUpdate<MoveableState>();
             state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<MoveDirection>();
+            state.RequireForUpdate<MoveDirectionFloat2>();
             state.RequireForUpdate<TargetPosition>();
         }
 
@@ -33,7 +33,7 @@ namespace Systems.Simulation.Unit
             private void Execute(
                 in MoveableState moveableState
                 , in LocalTransform transform
-                , ref MoveDirection moveDir
+                , ref MoveDirectionFloat2 moveDir
                 , in TargetPosition targetPosition
             )
             {
