@@ -1,10 +1,9 @@
-using Components.Player;
-using Components.Tag;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
-using UnityEngine;
 using Unity.Mathematics;
+using Components;
+using Components.Player;
 
 namespace Systems.Simulation.Player
 {
@@ -12,26 +11,23 @@ namespace Systems.Simulation.Player
     [BurstCompile]
     public partial struct MoveSystem : ISystem
     {
-        private MoveDirection moveDirection;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<MoveDirection>();
-            state.RequireForUpdate<MoveSpeed>();
-            state.RequireForUpdate<EnableableTag>();
-            this.moveDirection = new();
+            state.RequireForUpdate<MoveSpeedLinear>();
+            state.RequireForUpdate<InputData>();
+            state.RequireForUpdate<PlayerTag>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            this.SetMoveDirection();
             new MoveJob
             {
                 deltaTime = SystemAPI.Time.DeltaTime,
-                moveDirection = this.moveDirection,
+                moveDirection = SystemAPI.GetSingleton<InputData>().MoveDirection,
 
             }.Schedule();
         }
@@ -41,29 +37,17 @@ namespace Systems.Simulation.Player
         {
 
             public float deltaTime;
-            public MoveDirection moveDirection;
+            public MoveDirectionFloat2 moveDirection;
 
             private void Execute(
-                  ref MoveDirection direction
-                , in MoveSpeed speed
+                in PlayerTag playerTag
+                , in MoveSpeedLinear speed
                 , ref LocalTransform transform
-                , in EnableableTag enableableTag
             )
             {
-                direction = this.moveDirection;
-                if (this.moveDirection.Up) transform = transform.Translate(new float3(0, 0, 1) * speed.Value * this.deltaTime);
-                if (this.moveDirection.Down) transform = transform.Translate(new float3(0, 0, -1) * speed.Value * this.deltaTime);
-                if (this.moveDirection.Left) transform = transform.Translate(new float3(-1, 0, 0) * speed.Value * this.deltaTime);
-                if (this.moveDirection.Right) transform = transform.Translate(new float3(1, 0, 0) * speed.Value * this.deltaTime);
+                float2 translateValueFloat2 = this.moveDirection.Value * speed.Value * this.deltaTime;
+                transform = transform.Translate(new float3(translateValueFloat2.x, 0, translateValueFloat2.y));
             }
-        }
-
-        private void SetMoveDirection()
-        {
-            this.moveDirection.Up = Input.GetKey(KeyCode.W);
-            this.moveDirection.Down = Input.GetKey(KeyCode.S);
-            this.moveDirection.Right = Input.GetKey(KeyCode.D);
-            this.moveDirection.Left = Input.GetKey(KeyCode.A);
         }
 
     }

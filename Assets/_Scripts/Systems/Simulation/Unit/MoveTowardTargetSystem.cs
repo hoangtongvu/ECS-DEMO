@@ -1,4 +1,4 @@
-using Components.Unit;
+using Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -15,8 +15,8 @@ namespace Systems.Simulation.Unit
         {
             state.RequireForUpdate<MoveableState>();
             state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<MoveDirection>();
-            state.RequireForUpdate<MoveSpeed>();
+            state.RequireForUpdate<MoveDirectionFloat2>();
+            state.RequireForUpdate<MoveSpeedLinear>();
         }
 
         [BurstCompile]
@@ -36,8 +36,8 @@ namespace Systems.Simulation.Unit
             private void Execute(
                 in MoveableState moveableState
                 , ref LocalTransform transform
-                , in MoveSpeed speed
-                , in MoveDirection direction
+                , in MoveSpeedLinear speed
+                , in MoveDirectionFloat2 direction
             )
             {
                 float3 float3Dir = new (direction.Value.x, 0f, direction.Value.y);

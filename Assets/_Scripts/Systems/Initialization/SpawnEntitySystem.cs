@@ -51,7 +51,7 @@ namespace Systems.Initialization
             {
                 entities = entities,
                 lookupTransform = SystemAPI.GetComponentLookup<LocalTransform>(),
-                lookupMoveDirection = SystemAPI.GetComponentLookup<MoveDirection>(),
+                lookupMoveDirection = SystemAPI.GetComponentLookup<MoveDirectionFloat3>(),
                 rows = rows,
                 offset = offset,
                 spacing = entitySpawner.spacing,
@@ -69,7 +69,7 @@ namespace Systems.Initialization
             public ComponentLookup<LocalTransform> lookupTransform;
 
             [NativeDisableParallelForRestriction]
-            public ComponentLookup<MoveDirection> lookupMoveDirection;
+            public ComponentLookup<MoveDirectionFloat3> lookupMoveDirection;
 
             public int rows;
             public float offset;
@@ -101,7 +101,7 @@ namespace Systems.Initialization
 
                     if (Hint.Likely(directionRef.IsValid))
                     {
-                        directionRef.ValueRW.value = new float3
+                        directionRef.ValueRW.Value = new float3
                         {
                             x = random.NextFloat(-1f, 1f),
                             y = 0f,

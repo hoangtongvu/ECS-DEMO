@@ -3,13 +3,24 @@ using Unity.Mathematics;
 
 namespace Components
 {
-    public struct MoveDirection : IComponentData
+    public struct MoveDirectionFloat3 : IComponentData
     {
-        public float3 value;
+        public float3 Value;
     }
 
-    public struct MoveSpeed : IComponentData
+    public struct MoveDirectionFloat2 : IComponentData
     {
-        public float value;
+        public float2 Value;
     }
+
+    public struct MoveSpeedLinear : IComponentData
+    {
+        public float Value;
+    }
+
+    public struct MoveableState : IComponentData, IEnableableComponent
+    {
+        public Entity Entity;
+    }
+
 }

@@ -14,8 +14,8 @@ namespace Systems.Simulation
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<MoveDirection>();
-            state.RequireForUpdate<MoveSpeed>();
+            state.RequireForUpdate<MoveDirectionFloat3>();
+            state.RequireForUpdate<MoveSpeedLinear>();
             state.RequireForUpdate<EnableableTag>();
         }
 
@@ -40,13 +40,13 @@ namespace Systems.Simulation
             // It's best to separate parameters into many lines
             // because the number of components can be large and long.
             private void Execute(
-                  in MoveDirection direction
-                , in MoveSpeed speed
+                  in MoveDirectionFloat3 direction
+                , in MoveSpeedLinear speed
                 , ref LocalTransform transform
                 , in EnableableTag enableableTag
             )
             {
-                transform = transform.Translate(direction.value * speed.value * this.deltaTime);
+                transform = transform.Translate(direction.Value * speed.Value * this.deltaTime);
             }
         }
     }
