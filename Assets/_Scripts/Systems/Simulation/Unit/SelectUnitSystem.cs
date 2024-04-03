@@ -1,31 +1,21 @@
 using Unity.Entities;
-using Unity.Physics;
 using UnityEngine;
-using Unity.Mathematics;
 using Components.Unit;
-using Unity.Burst.CompilerServices;
+using Core;
+using Components;
 
 namespace Systems.Simulation.Unit
 {
 
-    public enum SelectionType
-    {
-        Position = 0,
-        Unit = 1,
-        UI = 2,
-
-    }
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public partial class SelectUnitSystem : SystemBase
+    [UpdateAfter(typeof(RaycastHitSelectionSystem))]
+    public partial class SelectUnitSystem : SystemBase // This can be turned into ISystem when custom InputSystem is created.
     {
-        private Camera mainCamera;
-
 
         protected override void OnCreate()
         {
-            this.mainCamera = CameraHolderCtrl.Instance.MainCam;
-            RequireForUpdate<SelectableUnitTag>();
+            this.RequireForUpdate<SelectionHitData>();
+            this.RequireForUpdate<SelectedUnitElement>();
             this.CreateUnitsHolder();
         }
 
@@ -37,51 +27,24 @@ namespace Systems.Simulation.Unit
                 return;
             }
 
-            if (!Input.GetMouseButtonDown(1)) return;
-            PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-            this.SelectSingleUnit(physicsWorld);
-        }
+            var selectionHitRef = SystemAPI.GetSingletonRW<SelectionHitData>();
+            if (!selectionHitRef.ValueRO.NewlyAdded) return;
+            if (selectionHitRef.ValueRO.SelectionType != SelectionType.Unit) return;
+            selectionHitRef.ValueRW.NewlyAdded = false;
 
-        // TODO: Casting a ray is a general logic that return Entity. Move this logic to a static function.
-        private void SelectSingleUnit(in PhysicsWorldSingleton physicsWorld) 
-        {
-            
-            if (!this.CastRay(physicsWorld, out var raycastHit)) return;
-
-            SelectionType selectionType = this.GetSelectionType(raycastHit);
-
-            switch (selectionType)
-            {
-                case SelectionType.Position:
-                    var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
-                    foreach (var unit in selectedUnits)
-                    {
-                        if (!SystemAPI.HasComponent<MoveableState>(unit.Value)) continue;
-
-                        if (Hint.Likely(!SystemAPI.IsComponentEnabled<MoveableState>(unit.Value)))
-                        {
-                            SystemAPI.SetComponentEnabled<MoveableState>(unit.Value, true);
-                        }
-
-                        RefRW<TargetPosition> targetPosRef = SystemAPI.GetComponentRW<TargetPosition>(unit.Value);
-                        targetPosRef.ValueRW.Value = raycastHit.Position;
-                    }
-                    break;
-                case SelectionType.Unit:
-                    this.AddUnitIntoHolder(raycastHit.Entity);
-                    break;
-                case SelectionType.UI:
-                    
-                    break;
-
-            }
+            this.AddUnitIntoHolder(selectionHitRef.ValueRO.RaycastHit.Entity);
 
         }
-
 
         private void AddUnitIntoHolder(in Entity hitEntity)
         {
             var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
+
+            for (int i = 0; i < selectedUnits.Length; i++)
+            {
+                if (selectedUnits.ElementAt(i).Value == hitEntity) return;
+            }
+
             selectedUnits.Add(new SelectedUnitElement
             {
                 Value = hitEntity,
@@ -100,34 +63,6 @@ namespace Systems.Simulation.Unit
 
             EntityManager.AddBuffer<SelectedUnitElement>(unitsHolder);
             EntityManager.SetName(unitsHolder, "SelectedUnitsHolder");
-        }
-
-        private SelectionType GetSelectionType(in Unity.Physics.RaycastHit raycastHit)
-        {
-            Entity hitEntity = raycastHit.Entity;
-
-            if (!SystemAPI.HasComponent<SelectableUnitTag>(hitEntity))
-            {
-                // if (!SystemAPI.HasComponent<GroundTag>(hitEntity)) return;
-                return SelectionType.Position;
-            }
-            return SelectionType.Unit;
-        }
-
-        private bool CastRay(in PhysicsWorldSingleton physicsWorld, out Unity.Physics.RaycastHit raycastHit)
-        {
-            UnityEngine.Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            float3 rayStart = ray.origin;
-            float3 rayEnd = ray.GetPoint(100f);
-
-            RaycastInput raycastInput = new()
-            {
-                Start = rayStart,
-                End = rayEnd,
-                Filter = CollisionFilter.Default, // this means all entities can be catched.
-            };
-
-            return physicsWorld.CastRay(raycastInput, out raycastHit);
         }
 
     }
