@@ -1,27 +1,32 @@
 using Unity.Entities;
-using UnityEngine;
 using Components.Unit;
 using Core;
 using Components;
+using Unity.Burst;
 
 namespace Systems.Simulation.Unit
 {
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(RaycastHitSelectionSystem))]
-    public partial class SelectUnitSystem : SystemBase // This can be turned into ISystem when custom InputSystem is created.
+    [BurstCompile]
+    public partial struct SelectUnitSystem : ISystem
     {
 
-        protected override void OnCreate()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
-            this.RequireForUpdate<SelectionHitData>();
-            this.RequireForUpdate<SelectedUnitElement>();
-            this.CreateUnitsHolder();
+            state.RequireForUpdate<SelectionHitData>();
+            state.RequireForUpdate<SelectedUnitElement>();
+            this.CreateUnitsHolder(state);
         }
 
-        protected override void OnUpdate()
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
-            if (Input.GetKeyDown(KeyCode.Backspace))
+
+            var inputData = SystemAPI.GetSingleton<InputData>();
+            if (inputData.BackspaceButtonDown)
             {
                 this.ClearSelectedUnitsBuffer();
                 return;
@@ -36,6 +41,7 @@ namespace Systems.Simulation.Unit
 
         }
 
+        [BurstCompile]
         private void AddUnitIntoHolder(in Entity hitEntity)
         {
             var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
@@ -51,18 +57,21 @@ namespace Systems.Simulation.Unit
             });
         }
 
+        [BurstCompile]
         private void ClearSelectedUnitsBuffer()
         {
             var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
             selectedUnits.Clear();
         }
 
-        private void CreateUnitsHolder()
+        [BurstCompile]
+        private void CreateUnitsHolder(SystemState state)
         {
-            Entity unitsHolder = EntityManager.CreateEntity();
+            EntityManager em = state.EntityManager;
+            Entity unitsHolder = em.CreateEntity();
 
-            EntityManager.AddBuffer<SelectedUnitElement>(unitsHolder);
-            EntityManager.SetName(unitsHolder, "SelectedUnitsHolder");
+            em.AddBuffer<SelectedUnitElement>(unitsHolder);
+            em.SetName(unitsHolder, "SelectedUnitsHolder");
         }
 
     }
