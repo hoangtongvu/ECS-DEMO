@@ -1,38 +1,45 @@
 using Unity.Entities;
-using UnityEngine;
 using Components.Player;
+using Components;
+using Unity.Burst;
 
 
 namespace Systems.Simulation.Player
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public partial class AttackInputHandleSystem : SystemBase
+    [BurstCompile]
+    public partial struct AttackInputHandleSystem : ISystem
     {
 
-        protected override void OnCreate()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
-            RequireForUpdate<AttackData>();
-            RequireForUpdate<AttackInput>();
+            state.RequireForUpdate<AttackData>();
+            state.RequireForUpdate<AttackInput>();
+            state.RequireForUpdate<InputData>();
         }
 
-        protected override void OnUpdate()
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
 
-            SetAttackInputJob setAttackInputJob = new SetAttackInputJob
+            var setAttackInputJob = new SetAttackInputJob
             {
-                hardwareInputState = Input.GetMouseButtonDown(0),
+                hardwareInputState = SystemAPI.GetSingleton<InputData>().LeftMouseDown,
             };
 
             setAttackInputJob.ScheduleParallel();
 
         }
 
-
+        [BurstCompile]
         private partial struct SetAttackInputJob : IJobEntity
         {
             public bool hardwareInputState;
 
-            void Execute(in AttackData attackData, ref AttackInput attackInput)
+            void Execute(
+                in AttackData attackData
+                , ref AttackInput attackInput)
             {
                 attackInput.IsAttackable = this.hardwareInputState && !attackData.isAttacking;
             }
