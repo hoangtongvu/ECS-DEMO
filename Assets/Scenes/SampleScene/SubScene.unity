@@ -1129,30 +1129,36 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 373580198721395068, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
+      propertyPath: CanSpawn
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 373580198721395068, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: SpawnCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      propertyPath: UnitProfileSO
       value: 
-      objectReference: {fileID: 2100000, guid: 4c656e407dca86f4ca50fa2659e1a789, type: 2}
+      objectReference: {fileID: 11400000, guid: 6df6f2760ceac734ca112de435b370cf,
+        type: 2}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      propertyPath: DurationPerSpawn
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
       propertyPath: m_Name
       value: House
       objectReference: {fileID: 0}
-    - target: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8491756151840566674, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.63
+      value: -5.99
       objectReference: {fileID: 0}
     - target: {fileID: 8491756151840566674, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
