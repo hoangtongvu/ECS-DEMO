@@ -28,6 +28,13 @@ namespace Components.Unit.UnitSpawning
         public float DurationCounterSecond;
     }
 
+    public struct UnitSpawningProfileElement : IBufferElementData
+    {
+        public Entity PrefabToSpawn;
+        public bool CanSpawnState;
+        public int SpawnCount;
+        public SpawnDuration SpawnDuration;
 
+    }
 
 }
