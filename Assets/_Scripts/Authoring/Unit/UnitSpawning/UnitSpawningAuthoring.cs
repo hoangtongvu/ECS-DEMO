@@ -1,5 +1,6 @@
 ﻿using Components.Unit.UnitSpawning;
 using Core.Unit;
+using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Authoring.Unit.UnitSpawning
         public bool CanSpawn = false;
         public int SpawnCount = 0;
         public float SpawnRadius = 3f;
+        public List<Core.Unit.SpawningProfile> SpawningProfiles;
 
 
         private class Baker : Baker<UnitSpawningAuthoring>
@@ -45,7 +47,24 @@ namespace Authoring.Unit.UnitSpawning
                     DurationCounterSecond = 0,
                 });
 
+                var buffer = AddBuffer<UnitSpawningProfileElement>(entity);
 
+                foreach (var profile in authoring.SpawningProfiles)
+                {
+                    buffer.Add(new()
+                    {
+                        PrefabToSpawn = GetEntity(profile.UnitProfileSO.Prefab, TransformUsageFlags.Dynamic),
+                        CanSpawnState = profile.CanSpawn,
+                        SpawnCount = profile.SpawnCount,
+                        SpawnDuration = new()
+                        {
+                            DurationPerSpawn = profile.UnitProfileSO.DurationPerUnit,
+                            DurationCounterSecond = 0,
+                        },
+                    });
+                }
+
+                
             }
         }
 
