@@ -14,9 +14,16 @@ namespace Systems.Simulation.Player
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<PlayerTag>();
+
+            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    PlayerTag
+                    , SelfEntityRef>()
+                .Build();
+
+            state.RequireForUpdate(entityQuery);
+
             state.RequireForUpdate<InputData>();
-            state.RequireForUpdate<SelfEntityRef>();
         }
 
         [BurstCompile]

@@ -15,9 +15,23 @@ namespace Systems.Simulation
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<UniqueId>();
-            state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<AddPos>();
+
+            EntityQuery camQuery = SystemAPI.QueryBuilder()
+                            .WithAll<
+                                UniqueId
+                                , LocalTransform
+                                , AddPos>()
+                            .Build();
+
+            EntityQuery playerQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    PlayerTag
+                    , LocalTransform>()
+                .Build();
+
+            state.RequireForUpdate(camQuery);
+            state.RequireForUpdate(playerQuery);
+
         }
 
         [BurstCompile]
