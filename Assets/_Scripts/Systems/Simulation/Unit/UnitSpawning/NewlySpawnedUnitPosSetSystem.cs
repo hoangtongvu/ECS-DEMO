@@ -8,7 +8,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
 {
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(SpawnPrefabSystem_MultiType))]
+    [UpdateAfter(typeof(SpawnPrefabSystem))]
     [BurstCompile]
     public partial struct NewlySpawnedUnitPosSetSystem : ISystem
     {

@@ -9,7 +9,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct SpawnPrefabSystem_MultiType : ISystem
+    public partial struct SpawnPrefabSystem : ISystem
     {
         private Random rand;
         private float2 tempVector;

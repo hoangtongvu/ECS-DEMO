@@ -7,7 +7,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct DurationCountSystem_MultiType : ISystem
+    public partial struct DurationCountSystem : ISystem
     {
 
         [BurstCompile]
