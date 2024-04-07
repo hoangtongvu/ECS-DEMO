@@ -6,17 +6,23 @@ using Unity.Transforms;
 
 namespace Systems.Simulation
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct MoveSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<MoveableState>();
-            state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<MoveDirectionFloat2>();
-            state.RequireForUpdate<MoveSpeedLinear>();
+
+            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    MoveableState
+                    , LocalTransform
+                    , MoveDirectionFloat2
+                    , MoveSpeedLinear>()
+                .Build();
+
+            state.RequireForUpdate(entityQuery);
         }
 
         [BurstCompile]
