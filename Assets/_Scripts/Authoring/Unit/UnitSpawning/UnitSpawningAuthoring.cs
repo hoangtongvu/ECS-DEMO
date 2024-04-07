@@ -1,5 +1,4 @@
 ﻿using Components.Unit.UnitSpawning;
-using Core.Unit;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
@@ -8,9 +7,6 @@ namespace Authoring.Unit.UnitSpawning
 {
     public class UnitSpawningAuthoring : MonoBehaviour
     {
-        public UnitProfileSO UnitProfileSO;
-        public bool CanSpawn = false;
-        public int SpawnCount = 0;
         public float SpawnRadius = 3f;
         public List<Core.Unit.SpawningProfile> SpawningProfiles;
 
@@ -19,32 +15,11 @@ namespace Authoring.Unit.UnitSpawning
         {
             public override void Bake(UnitSpawningAuthoring authoring)
             {
-                var entity = GetEntity(TransformUsageFlags.Dynamic); // Dynamic or static?? any dynamic unit can spawn?
-
-                AddComponent(entity, new PrefabToSpawn
-                {
-                    Value = GetEntity(authoring.UnitProfileSO.Prefab, TransformUsageFlags.Dynamic),
-                });
-
-                AddComponent(entity, new CanSpawnState
-                {
-                    Value = authoring.CanSpawn,
-                });
-
-                AddComponent(entity, new SpawnCount
-                {
-                    Value = authoring.SpawnCount,
-                });
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent(entity, new SpawnRadius
                 {
                     Value = authoring.SpawnRadius,
-                });
-
-                AddComponent(entity, new SpawnDuration
-                {
-                    DurationPerSpawn = authoring.UnitProfileSO.DurationPerUnit,
-                    DurationCounterSecond = 0,
                 });
 
                 var buffer = AddBuffer<UnitSpawningProfileElement>(entity);

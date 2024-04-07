@@ -2,21 +2,7 @@ using Unity.Entities;
 
 namespace Components.Unit.UnitSpawning
 {
-    public struct PrefabToSpawn : IComponentData
-    {
-        public Entity Value;
-    }
 
-    public struct CanSpawnState : IComponentData
-    {
-        public bool Value;
-    }
-    
-    public struct SpawnCount : IComponentData
-    {
-        public int Value;
-    }
-    
     public struct SpawnRadius : IComponentData
     {
         public float Value;
