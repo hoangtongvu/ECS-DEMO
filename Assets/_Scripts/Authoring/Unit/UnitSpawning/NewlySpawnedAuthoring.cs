@@ -14,7 +14,12 @@ namespace Authoring.Unit.UnitSpawning
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<NewlySpawnedTag>(entity);
-                AddComponent<SpawnPos>(entity);
+
+                // Set default position value for SpawnPos.
+                AddComponent(entity, new SpawnPos
+                {
+                    Value = authoring.transform.position,
+                });
             }
         }
     }
