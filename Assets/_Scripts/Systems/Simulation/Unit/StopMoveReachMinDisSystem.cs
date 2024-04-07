@@ -6,7 +6,7 @@ using Unity.Physics;
 
 namespace Systems.Simulation.Unit
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetCurrentDisToTargetSystem))]
     [BurstCompile]
     public partial struct StopMoveReachMinDisSystem : ISystem
@@ -14,9 +14,15 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<MoveableState>();
-            state.RequireForUpdate<DistanceToTarget>();
-            state.RequireForUpdate<PhysicsVelocity>();
+
+            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    MoveableState
+                    , DistanceToTarget
+                    , PhysicsVelocity>()
+                .Build();
+
+            state.RequireForUpdate(entityQuery);
         }
 
         [BurstCompile]
