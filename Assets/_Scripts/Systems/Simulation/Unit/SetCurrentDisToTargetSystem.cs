@@ -7,17 +7,23 @@ using Unity.Transforms;
 
 namespace Systems.Simulation.Unit
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct SetCurrentDisToTargetSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<MoveableState>();
-            state.RequireForUpdate<DistanceToTarget>();
-            state.RequireForUpdate<TargetPosition>();
-            state.RequireForUpdate<LocalTransform>();
+
+            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    MoveableState
+                    , LocalTransform
+                    , DistanceToTarget
+                    , TargetPosition>()
+                .Build();
+
+            state.RequireForUpdate(entityQuery);
         }
 
         [BurstCompile]

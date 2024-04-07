@@ -7,17 +7,23 @@ using Unity.Transforms;
 
 namespace Systems.Simulation.Unit
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct SetMoveDirTowardTargetPosSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<MoveableState>();
-            state.RequireForUpdate<LocalTransform>();
-            state.RequireForUpdate<MoveDirectionFloat2>();
-            state.RequireForUpdate<TargetPosition>();
+
+            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    MoveableState
+                    , LocalTransform
+                    , MoveDirectionFloat2
+                    , TargetPosition>()
+                .Build();
+
+            state.RequireForUpdate(entityQuery);
         }
 
         [BurstCompile]
