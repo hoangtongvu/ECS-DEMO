@@ -29,6 +29,7 @@ namespace Authoring.Unit.UnitSpawning
                     buffer.Add(new()
                     {
                         PrefabToSpawn = GetEntity(profile.UnitProfileSO.Prefab, TransformUsageFlags.Dynamic),
+                        UnitSprite = profile.UnitProfileSO.ProfilePicture,
                         CanSpawnState = profile.CanSpawn,
                         SpawnCount = profile.SpawnCount,
                         SpawnDuration = new()

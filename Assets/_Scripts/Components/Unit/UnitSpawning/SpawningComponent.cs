@@ -17,6 +17,7 @@ namespace Components.Unit.UnitSpawning
     public struct UnitSpawningProfileElement : IBufferElementData
     {
         public Entity PrefabToSpawn;
+        public UnityObjectRef<UnityEngine.Sprite> UnitSprite;
         public bool CanSpawnState;
         public int SpawnCount;
         public SpawnDuration SpawnDuration;
