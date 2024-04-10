@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb2803442e35774cb951d530df86bf7, type: 3}
   m_Name: Villager
   m_EditorClassIdentifier: 
-  ProfilePicture: {fileID: 0}
+  ProfilePicture: {fileID: 21300000, guid: 40110438554b1d341bcfe47fad6030e4, type: 3}
   UnitName: Villager
   Prefab: {fileID: 9010456808328279163, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
   DurationPerUnit: 5

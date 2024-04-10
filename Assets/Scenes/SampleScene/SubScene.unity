@@ -1167,6 +1167,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
+      propertyPath: SpawningProfiles.Array.data[2].SpawnCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
       propertyPath: SpawningProfiles.Array.data[0].UnitProfileSO
       value: 
       objectReference: {fileID: 11400000, guid: 6df6f2760ceac734ca112de435b370cf,
@@ -1174,6 +1179,12 @@ PrefabInstance:
     - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
       propertyPath: SpawningProfiles.Array.data[1].UnitProfileSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 6342a43af4cf5f1479e58cb563cbd054,
+        type: 2}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      propertyPath: SpawningProfiles.Array.data[2].UnitProfileSO
       value: 
       objectReference: {fileID: 11400000, guid: 6342a43af4cf5f1479e58cb563cbd054,
         type: 2}
