@@ -3,6 +3,8 @@ using Components.Unit;
 using Core;
 using Components;
 using Unity.Burst;
+using Unity.Jobs;
+using Unity.Collections;
 
 namespace Systems.Simulation.Unit
 {
@@ -18,7 +20,7 @@ namespace Systems.Simulation.Unit
         {
             state.RequireForUpdate<SelectionHitData>();
             state.RequireForUpdate<SelectedUnitElement>();
-            this.CreateUnitsHolder(state);
+            this.CreateUnitsHolder(ref state);
         }
 
         [BurstCompile]
@@ -28,7 +30,7 @@ namespace Systems.Simulation.Unit
             var inputData = SystemAPI.GetSingleton<InputData>();
             if (inputData.BackspaceButtonDown)
             {
-                this.ClearSelectedUnitsBuffer();
+                this.ClearSelectedUnitsBuffer(ref state);
                 return;
             }
 
@@ -37,12 +39,12 @@ namespace Systems.Simulation.Unit
             if (selectionHitRef.ValueRO.SelectionType != SelectionType.Unit) return;
             selectionHitRef.ValueRW.NewlyAdded = false;
 
-            this.AddUnitIntoHolder(selectionHitRef.ValueRO.RaycastHit.Entity);
+            this.AddUnitIntoHolder(ref state, selectionHitRef.ValueRO.RaycastHit.Entity);
 
         }
 
         [BurstCompile]
-        private void AddUnitIntoHolder(in Entity hitEntity)
+        private void AddUnitIntoHolder(ref SystemState state, in Entity hitEntity)
         {
             var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
 
@@ -51,6 +53,10 @@ namespace Systems.Simulation.Unit
                 if (selectedUnits.ElementAt(i).Value == hitEntity) return;
             }
 
+            // Set UnitSelected = true.
+            var unitSelectedRef = SystemAPI.GetComponentRW<UnitSelected>(hitEntity);
+            unitSelectedRef.ValueRW.Value = true;
+
             selectedUnits.Add(new SelectedUnitElement
             {
                 Value = hitEntity,
@@ -58,20 +64,51 @@ namespace Systems.Simulation.Unit
         }
 
         [BurstCompile]
-        private void ClearSelectedUnitsBuffer()
+        private void ClearSelectedUnitsBuffer(ref SystemState state)
         {
             var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
+            if (selectedUnits.IsEmpty) return;
+
+            // Set false UnitSelected for all Units in DynamicBuffer.
+            var job = new DisableUnitSelectedJob
+            {
+                SelectedUnits = selectedUnits.ToNativeArray(state.WorldUpdateAllocator),
+                UnitSelectedLookup = SystemAPI.GetComponentLookup<UnitSelected>(),
+            };
+
+            state.Dependency = job.ScheduleParallel(selectedUnits.Length, 32, state.Dependency);
+
             selectedUnits.Clear();
         }
 
         [BurstCompile]
-        private void CreateUnitsHolder(SystemState state)
+        private void CreateUnitsHolder(ref SystemState state)
         {
             EntityManager em = state.EntityManager;
             Entity unitsHolder = em.CreateEntity();
 
             em.AddBuffer<SelectedUnitElement>(unitsHolder);
             em.SetName(unitsHolder, "SelectedUnitsHolder");
+        }
+
+        [BurstCompile]
+        private struct DisableUnitSelectedJob : IJobParallelForBatch
+        {
+            public NativeArray<SelectedUnitElement> SelectedUnits;
+
+            [NativeDisableParallelForRestriction]
+            public ComponentLookup<UnitSelected> UnitSelectedLookup;
+
+            public void Execute(int startIndex, int count)
+            {
+                int length = startIndex + count;
+                for (int i = startIndex; i < length; i++)
+                {
+                    SelectedUnitElement unit = this.SelectedUnits[i];
+                    var unitSelectedRef = this.UnitSelectedLookup.GetRefRWOptional(unit.Value);
+                    unitSelectedRef.ValueRW.Value = false;
+                }
+            }
         }
 
     }
