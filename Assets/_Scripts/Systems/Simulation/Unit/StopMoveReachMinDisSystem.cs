@@ -1,5 +1,6 @@
 using Components;
 using Unity.Burst;
+using Unity.Burst.CompilerServices;
 using Unity.Entities;
 using Unity.Physics;
 
@@ -28,16 +29,20 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // Can't put this into Job directly cause SystemAPI used.
-            foreach (var (disToTargetRef, velocityRef, moveStateRef) in
-                SystemAPI.Query<
-                    RefRO<DistanceToTarget>
-                    , RefRW<PhysicsVelocity>
-                    , RefRO<MoveableState>>())
+            new StopMoveJob().ScheduleParallel();
+        }
+
+        [BurstCompile]
+        private partial struct StopMoveJob : IJobEntity
+        {
+            void Execute(
+                EnabledRefRW<MoveableState> moveStateRef
+                , in DistanceToTarget distanceToTarget
+                , ref PhysicsVelocity physicsVelocity)
             {
-                if (disToTargetRef.ValueRO.CurrentDistance >= disToTargetRef.ValueRO.MinDistance) continue;
+                if (Hint.Likely(distanceToTarget.CurrentDistance >= distanceToTarget.MinDistance)) return;
                 // velocityRef.ValueRW.Linear = 0;
-                SystemAPI.SetComponentEnabled<MoveableState>(moveStateRef.ValueRO.Entity, false);
+                moveStateRef.ValueRW = false;
             }
         }
 
