@@ -1,0 +1,20 @@
+{
+  "name": "com.zbase.foundation.pubsub",
+  "displayName": "ZBase.Foundation.PubSub",
+  "version": "1.2.2",
+  "type": "library",
+  "unity": "2021.3",
+  "dependencies": {
+    "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0",
+    "com.cysharp.unitask": "2.3.3",
+    "com.zbase.collections.pooled": "2.8.4",
+    "com.zbase.foundation": "1.0.5"
+  },
+  "samples": [
+    {
+      "displayName": "Samples",
+      "description": "Samples for PubSub",
+      "path": "Samples~"
+    }
+  ]
+}

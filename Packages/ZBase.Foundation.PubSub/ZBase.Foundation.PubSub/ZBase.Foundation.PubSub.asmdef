@@ -1,0 +1,18 @@
+{
+    "name": "ZBase.Foundation.PubSub",
+    "rootNamespace": "ZBase.Foundation.PubSub",
+    "references": [
+        "UniTask",
+        "ZBase.Foundation",
+        "ZBase.Collections.Pooled"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

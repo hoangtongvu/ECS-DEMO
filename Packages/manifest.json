@@ -1,5 +1,6 @@
 {
   "dependencies": {
+	"com.cysharp.unitask": "2.5.4",
     "com.unity.collab-proxy": "2.2.0",
     "com.unity.entities": "1.2.0",
     "com.unity.entities.graphics": "1.2.0",
@@ -44,5 +45,27 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "Unity NuGet",
+      "url": "https://unitynuget-registry.azurewebsites.net",
+      "scopes": [
+        "org.nuget"
+      ]
+    },
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.cysharp.unitask",
+        "com.cysharp.zstring",
+        "com.faster-games.t4",
+        "com.openupm",
+        "com.zbase.collections.pooled",
+        "com.zbase.foundation",
+        "org.nuget.system.runtime.compilerservices.unsafe"
+      ]
+    }
+  ]
 }
