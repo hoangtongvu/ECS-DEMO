@@ -8,7 +8,7 @@ namespace Components.Unit.UnitSpawning
         public float Value;
     }
 
-    public struct SpawnDuration : IComponentData
+    public struct SpawnDuration
     {
         public float DurationPerSpawn;
         public float DurationCounterSecond;
