@@ -3,6 +3,7 @@ using Unity.Burst;
 using Components.Unit.UnitSpawning;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Core.Extensions;
 
 namespace Systems.Simulation.Unit.UnitSpawning
 {
