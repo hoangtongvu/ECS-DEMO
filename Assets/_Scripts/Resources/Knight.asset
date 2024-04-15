@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb2803442e35774cb951d530df86bf7, type: 3}
   m_Name: Knight
   m_EditorClassIdentifier: 
-  ProfilePicture: {fileID: 0}
+  ProfilePicture: {fileID: 21300000, guid: 6f34760afcacfa946a441a9f5bda8873, type: 3}
   UnitName: Knight
   Prefab: {fileID: 3552774824711469151, guid: abf102b7e42e9874183ffb8ec9d78bfb, type: 3}
   DurationPerUnit: 3
