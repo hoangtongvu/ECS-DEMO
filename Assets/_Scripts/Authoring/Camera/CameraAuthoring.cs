@@ -2,6 +2,7 @@
 using Components.CustomIdentification;
 using Unity.Entities;
 using UnityEngine;
+using Core.Extensions;
 
 namespace Authoring.Camera
 {
