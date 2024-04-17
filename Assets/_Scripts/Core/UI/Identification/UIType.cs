@@ -1,4 +1,4 @@
-namespace Core.UI
+namespace Core.UI.Identification
 {
     public enum UIType
     {
