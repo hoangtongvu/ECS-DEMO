@@ -1,4 +1,4 @@
-using Components;
+using Components.ComponentMap;
 using Components.CustomIdentification;
 using Unity.Entities;
 using Unity.Mathematics;
