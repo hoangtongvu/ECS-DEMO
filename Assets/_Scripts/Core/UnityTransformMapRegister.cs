@@ -1,42 +1,44 @@
-using Components;
+using Components.ComponentMap;
 using Components.CustomIdentification;
 using Unity.Entities;
 using UnityEngine;
 
-
-public class UnityTransformMapRegister : MonoBehaviour
+namespace Core
 {
-    public UniqueId Id;
-    public UnityEngine.Transform Target;
-    private EntityManager em;
-
-
-    private void Awake()
+    public class UnityTransformMapRegister : MonoBehaviour
     {
-        this.em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        public UniqueId Id;
+        public UnityEngine.Transform Target;
+        private EntityManager em;
 
-        if (this.Target == false) this.Target = this.transform;
 
-
-        UnityTransformMap transformMap = this.GetUnityTransformMap();
-
-        if (transformMap == null)
+        private void Awake()
         {
-            Debug.LogError("ObjMap not found");
-            return;
+            this.em = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+            if (this.Target == false) this.Target = this.transform;
+
+
+            UnityTransformMap transformMap = this.GetUnityTransformMap();
+
+            if (transformMap == null)
+            {
+                Debug.LogError("ObjMap not found");
+                return;
+            }
+
+            if (!transformMap.Value.TryAdd(this.Id, this.Target))
+            {
+                Debug.LogError($"Một Unity Transform khác đã được đăng ký với Id={this.Id}", this.Target);
+            }
         }
 
-        if (!transformMap.Value.TryAdd(this.Id, this.Target))
+        private UnityTransformMap GetUnityTransformMap()
         {
-            Debug.LogError($"Một Unity Transform khác đã được đăng ký với Id={this.Id}", this.Target);
+            EntityQuery entityQuery = this.em.CreateEntityQuery(typeof(UnityTransformMap));
+            return entityQuery.GetSingleton<UnityTransformMap>();
         }
+
+
     }
-
-    private UnityTransformMap GetUnityTransformMap()
-    {
-        EntityQuery entityQuery = this.em.CreateEntityQuery(typeof(UnityTransformMap));
-        return entityQuery.GetSingleton<UnityTransformMap>();
-    }
-
-
 }
