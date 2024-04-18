@@ -2,6 +2,7 @@ using System;
 
 namespace Core.UI.Identification
 {
+    [System.Serializable]
     public struct UIID : IEquatable<UIID>
     {
         public UIType Type;

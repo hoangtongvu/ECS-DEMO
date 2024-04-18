@@ -3,7 +3,7 @@ using ZBase.Foundation.PubSub;
 
 namespace Core.UI.HouseUI
 {
-    public class HouseUICtrl : SaiMonoBehaviour
+    public class HouseUICtrl : BaseUICtrl
     {
         [SerializeField] private HouseUIDespawner despawner;
         [SerializeField] private UnitProfileHolder unitProfileHolder;
