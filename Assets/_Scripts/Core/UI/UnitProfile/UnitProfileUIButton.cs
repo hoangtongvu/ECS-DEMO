@@ -1,24 +1,25 @@
 using Core.MyEvent.PubSub.Messages;
+using Core.MyEvent.PubSub.Messengers;
+using UnityEngine;
 using ZBase.Foundation.PubSub;
 
 namespace Core.UI.UnitProfile
 {
     public class UnitProfileUIButton : BaseButton
     {
-        private int buttonID;
-        private MessagePublisher messagePublisher;
+        [SerializeField]private UnitProfileUICtrl unitProfileUICtrl;
 
+        protected override void LoadComponents()
+        {
+            base.LoadComponents();
+            this.LoadCtrl(ref this.unitProfileUICtrl);
+        }
 
         protected override void OnClick()
         {
-            this.messagePublisher
-                .Publish(new ButtonMessage(this.buttonID));
-        }
-
-        public void SetButtonIDAndPublisher(int buttonID, MessagePublisher messagePublisher)
-        {
-            this.buttonID = buttonID;
-            this.messagePublisher = messagePublisher;
+            GameplayMessenger.MessagePublisher
+                .Publish(new SpawnUnitMessage(this.unitProfileUICtrl.UIID));
+            
         }
 
     }

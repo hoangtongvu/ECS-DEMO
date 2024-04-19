@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Core.UI.UnitProfile
 {
-    public class UnitProfileUICtrl : SaiMonoBehaviour
+    public class UnitProfileUICtrl : BaseUICtrl
     {
         [SerializeField] private Image profilePic;
         [SerializeField] private UnitProfileUIButton profileUIButton;
