@@ -32,7 +32,12 @@ namespace Systems.Simulation
 
             while (this.eventDataQueue.TryDequeue(out var message))
             {
-                if (!uiPoolMap.Value.TryGetValue(message.UIType, out var uiPoolMapValue)) continue;
+                if (!uiPoolMap.Value.TryGetValue(message.UIType, out var uiPoolMapValue))
+                {
+                    Debug.LogError($"Can't find UI prefab of type {message.UIType}");
+                    continue;
+                }
+
                 uint newID = uiPoolMapValue.GlobalID + 1;
                 var uiPool = uiPoolMapValue.UIPool;
 
