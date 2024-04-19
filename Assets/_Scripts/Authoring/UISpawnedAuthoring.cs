@@ -1,5 +1,4 @@
 ﻿using Components;
-using Core.UI.Identification;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -22,7 +21,6 @@ namespace Authoring
                 {
                     SpawnPosOffset = authoring.SpawnPosOffset,
                     IsSpawned = false,
-                    UIType = UIType.HouseUI, // Currently this thing does nothing.
                 });
 
             }
