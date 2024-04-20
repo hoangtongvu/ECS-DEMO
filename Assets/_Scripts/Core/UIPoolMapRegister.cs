@@ -46,7 +46,7 @@ namespace Core
                             GlobalID = 0,
                             Prefab = wrapper.Prefab,
                             UIPool = wrapper.UIPool,
-
+                            DefaultHolderTransform = wrapper.UIPool.transform,
                         }))
                 {
                     Debug.LogError($"Another BaseUICtrl has already been registered with UIType = {wrapper.Type}");

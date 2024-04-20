@@ -9,7 +9,8 @@ namespace Components.ComponentMap
     {
         public uint GlobalID;
         public GameObject Prefab;
-        public ObjPool<BaseUICtrl> UIPool; // this is parent transform for default.
+        public ObjPool<BaseUICtrl> UIPool;
+        public Transform DefaultHolderTransform; // this is parent transform for default.
     }
 
     public class UIPoolMap : BaseMap<UIType, UIPoolMapValue> { }

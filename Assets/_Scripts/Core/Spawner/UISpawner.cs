@@ -74,7 +74,7 @@ namespace Core.Spawner
             return baseUICtrl;
         }
 
-        private Transform GetParentTransform(UIPoolMapValue uiPoolMapValue) => uiPoolMapValue.UIPool.transform;
+        private Transform GetParentTransform(UIPoolMapValue uiPoolMapValue) => uiPoolMapValue.DefaultHolderTransform;
 
         private void AddSpawnedUIIntoMap(BaseUICtrl baseUICtrl)
         {
