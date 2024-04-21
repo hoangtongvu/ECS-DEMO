@@ -19,6 +19,7 @@ namespace Authoring
 
                 AddComponent(entity, new UISpawned
                 {
+                    UIID = null,
                     SpawnPosOffset = authoring.SpawnPosOffset,
                     IsSpawned = false,
                 });
