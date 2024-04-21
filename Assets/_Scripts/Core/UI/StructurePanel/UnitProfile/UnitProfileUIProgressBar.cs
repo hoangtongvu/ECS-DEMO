@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
 
-namespace Core.UI.UnitProfile
+namespace Core.UI.StructurePanel.UnitProfile
 {
     public class UnitProfileUIProgressBar : ProgressBarByImage
     {

@@ -1,10 +1,10 @@
-using Core.UI.UnitProfile;
+using Core.UI.StructurePanel.UnitProfile;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Core.UI.HouseUI
+namespace Core.UI.StructurePanel
 {
-    public class UnitProfileHolder : SaiMonoBehaviour
+    public class UnitProfileUIHolder : SaiMonoBehaviour
     {
         [SerializeField] private List<UnitProfileUICtrl> unitProfileUICtrls;
 
@@ -14,12 +14,5 @@ namespace Core.UI.HouseUI
             profileUICtrl.transform.SetParent(transform);
         }
 
-        public void DespawnAll()
-        {
-            foreach (var profileUICtrl in this.unitProfileUICtrls)
-            {
-                profileUICtrl.Despawner.DespawnObject();
-            }
-        }
     }
 }

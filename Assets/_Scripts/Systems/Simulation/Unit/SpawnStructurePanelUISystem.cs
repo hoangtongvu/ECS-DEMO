@@ -2,11 +2,11 @@ using Unity.Entities;
 using Components;
 using Components.Unit.UnitSpawning;
 using Components.Unit;
-using Core.UI.HouseUI;
 using Unity.Transforms;
 using Unity.Mathematics;
-using Core.UI.UnitProfile;
 using Core.UI.Identification;
+using Core.UI.StructurePanel;
+using Core.UI.StructurePanel.UnitProfile;
 using Core.Spawner;
 
 namespace Systems.Simulation.Unit
@@ -44,9 +44,9 @@ namespace Systems.Simulation.Unit
 
                     float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
 
-                    this.SpawnMainPanel(spawnPos, ref uiSpawnedRef.ValueRW, out var houseUICtrl);
+                    this.SpawnMainPanel(spawnPos, ref uiSpawnedRef.ValueRW, out var structurePanelUICtrl);
 
-                    this.SpawnUnitProfileUI(spawningProfiles, spawnPos, houseUICtrl);
+                    this.SpawnUnitProfileUI(spawningProfiles, spawnPos, structurePanelUICtrl);
 
                     uiSpawnedRef.ValueRW.IsSpawned = true;
                 }
@@ -59,22 +59,22 @@ namespace Systems.Simulation.Unit
             RefRO<UnitSelected> selectedRef
             , RefRW<UISpawned> uiSpawnedRef) => selectedRef.ValueRO.Value && !uiSpawnedRef.ValueRO.IsSpawned;
 
-        private void SpawnMainPanel(float3 spawnPos, ref UISpawned uiSpawned, out HouseUICtrl houseUICtrl)
+        private void SpawnMainPanel(float3 spawnPos, ref UISpawned uiSpawned, out StructurePanelUICtrl structurePanelUICtrl)
         {
-            houseUICtrl = (HouseUICtrl)UISpawner.Instance.Spawn(
+            structurePanelUICtrl = (StructurePanelUICtrl)UISpawner.Instance.Spawn(
                         UIType.MainStructurePanel
                         , spawnPos
                         , quaternion.identity);
 
-            uiSpawned.UIID = houseUICtrl.UIID;
+            uiSpawned.UIID = structurePanelUICtrl.UIID;
 
-            houseUICtrl.gameObject.SetActive(true);
+            structurePanelUICtrl.gameObject.SetActive(true);
         }
 
         private void SpawnUnitProfileUI(
             DynamicBuffer<UnitSpawningProfileElement> spawningProfiles
             , float3 spawnPos
-            , HouseUICtrl houseUICtrl)
+            , StructurePanelUICtrl structurePanelUICtrl)
         {
             for (int i = 0; i < spawningProfiles.Length; i++)
             {
@@ -92,7 +92,7 @@ namespace Systems.Simulation.Unit
                 profile.UIID = unitProfileUICtrl.UIID;
 
                 unitProfileUICtrl.ProfilePic.sprite = profile.UnitSprite.Value;
-                houseUICtrl.UnitProfileHolder.Add(unitProfileUICtrl);
+                structurePanelUICtrl.UnitProfileUIHolder.Add(unitProfileUICtrl);
 
                 unitProfileUICtrl.gameObject.SetActive(true);
             }

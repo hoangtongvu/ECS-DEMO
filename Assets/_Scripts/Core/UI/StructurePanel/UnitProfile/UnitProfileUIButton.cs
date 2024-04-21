@@ -3,7 +3,7 @@ using Core.MyEvent.PubSub.Messengers;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
 
-namespace Core.UI.UnitProfile
+namespace Core.UI.StructurePanel.UnitProfile
 {
     public class UnitProfileUIButton : BaseButton
     {
