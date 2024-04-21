@@ -1,43 +1,45 @@
-using Components;
+using Components.ComponentMap;
 using Components.CustomIdentification;
 using Core.Animator;
 using Unity.Entities;
 using UnityEngine;
 
-
-public class BaseAnimatorMapRegister : MonoBehaviour
+namespace Core
 {
-    [SerializeField] private UniqueId Id;
-    [SerializeField] private BaseAnimator Target;
-    private EntityManager em;
-
-
-    private void Awake()
+    public class BaseAnimatorMapRegister : MonoBehaviour
     {
-        this.em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        [SerializeField] private UniqueId Id;
+        [SerializeField] private BaseAnimator Target;
+        private EntityManager em;
 
-        if (this.Target == false) this.Target = this.gameObject.GetComponent<BaseAnimator>();
 
-
-        BaseAnimatorMap objectMap = this.GetBaseAnimatorMap();
-
-        if (objectMap == null)
+        private void Awake()
         {
-            Debug.LogError("ObjMap not found");
-            return;
+            this.em = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+            if (this.Target == false) this.Target = this.gameObject.GetComponent<BaseAnimator>();
+
+
+            BaseAnimatorMap objectMap = this.GetBaseAnimatorMap();
+
+            if (objectMap == null)
+            {
+                Debug.LogError("ObjMap not found");
+                return;
+            }
+
+            if (!objectMap.Value.TryAdd(this.Id, this.Target))
+            {
+                Debug.LogError($"Một Base Animator khác đã được đăng ký với Id={this.Id}", this.Target);
+            }
         }
 
-        if (!objectMap.Value.TryAdd(this.Id, this.Target))
+        private BaseAnimatorMap GetBaseAnimatorMap()
         {
-            Debug.LogError($"Một Base Animator khác đã được đăng ký với Id={this.Id}", this.Target);
+            EntityQuery entityQuery = this.em.CreateEntityQuery(typeof(BaseAnimatorMap));
+            return entityQuery.GetSingleton<BaseAnimatorMap>();
         }
+
+
     }
-
-    private BaseAnimatorMap GetBaseAnimatorMap()
-    {
-        EntityQuery entityQuery = this.em.CreateEntityQuery(typeof(BaseAnimatorMap));
-        return entityQuery.GetSingleton<BaseAnimatorMap>();
-    }
-
-
 }

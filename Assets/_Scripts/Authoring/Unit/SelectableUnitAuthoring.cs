@@ -14,6 +14,11 @@ namespace Authoring.Unit
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<SelectableUnitTag>(entity);
+
+                AddComponent(entity, new UnitSelected
+                {
+                    Value = false,
+                });
             }
         }
     }

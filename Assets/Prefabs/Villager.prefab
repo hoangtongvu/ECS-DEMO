@@ -16,6 +16,9 @@ GameObject:
   - component: {fileID: 6168613857724767019}
   - component: {fileID: 7131341114656731748}
   - component: {fileID: 6401900625766593344}
+  - component: {fileID: 4778095193979332721}
+  - component: {fileID: 7195329258560464229}
+  - component: {fileID: 8392825841433163165}
   m_Layer: 0
   m_Name: Villager
   m_TagString: Untagged
@@ -175,6 +178,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Direction: {x: 0, y: 0, z: 0}
-  TargetPos: {x: 0, y: 0, z: 0}
   Speed: 5
+  MoveableState: 0
+--- !u!114 &4778095193979332721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9010456808328279163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 497960f5324633b47a04006388f26c01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7195329258560464229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9010456808328279163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: decd4a089a413b54fae79cb4ceca7c2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8392825841433163165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9010456808328279163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b9063cc63e236d44860cdf337e3a5f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetPos: {x: 0, y: 0, z: 0}
   MinDistance: 1
