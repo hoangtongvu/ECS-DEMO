@@ -57,12 +57,11 @@ namespace Core.Spawner
             if (!uiPool.TryGetFromPool(out BaseUICtrl baseUICtrl))
             {
                 baseUICtrl =
-                    Object.Instantiate(
-                    uiPoolMapValue.Prefab
-                    , position
-                    , quaternion).GetComponent<BaseUICtrl>();
+                    Object.Instantiate(uiPoolMapValue.Prefab)
+                    .GetComponent<BaseUICtrl>();
             }
 
+            baseUICtrl.transform.SetPositionAndRotation(position, quaternion);
 
             // Set ID.
             baseUICtrl.UIID.LocalId = newID;
