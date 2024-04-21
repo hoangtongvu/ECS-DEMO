@@ -39,56 +39,62 @@ namespace Systems.Simulation.Unit
                     , RefRW<UISpawned>
                     , RefRO<LocalTransform>>())
             {
-                if (selectedRef.ValueRO.Value
-                    && !uiSpawnedRef.ValueRO.IsSpawned)
+                if (this.CanSpawn(selectedRef, uiSpawnedRef))
                 {
-                    // Spawn.
 
                     float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
 
-                    // Spawn Main UI.
-                    var houseUICtrl = (HouseUICtrl) UISpawner.Instance.Spawn(
-                        UIType.MainStructurePanel
-                        , spawnPos
-                        , quaternion.identity);
+                    this.SpawnMainPanel(spawnPos, ref uiSpawnedRef.ValueRW, out var houseUICtrl);
 
-                    houseUICtrl.gameObject.SetActive(true);
-
-                    // Spawn UnitProfileUI.
-                    for (int i = 0; i < spawningProfiles.Length; i++)
-                    {
-                        ref var profile = ref spawningProfiles.ElementAt(i);
-
-                        // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
-                        var unitProfileUICtrl =
-                            (UnitProfileUICtrl)UISpawner.Instance.Spawn(
-                                UIType.UnitSpawnProfileUI
-                                , spawnPos
-                                , quaternion.identity);
-
-                        profile.UIID = unitProfileUICtrl.UIID;
-
-                        unitProfileUICtrl.ProfilePic.sprite = profile.UnitSprite.Value;
-                        houseUICtrl.UnitProfileHolder.Add(unitProfileUICtrl);
-
-                        unitProfileUICtrl.gameObject.SetActive(true);
-                    }
-
+                    this.SpawnUnitProfileUI(spawningProfiles, spawnPos, houseUICtrl);
 
                     uiSpawnedRef.ValueRW.IsSpawned = true;
                 }
 
-                if (!selectedRef.ValueRO.Value
-                    && uiSpawnedRef.ValueRO.IsSpawned)
-                {
-                    // Despawn
-
-                }
             }
 
         }
 
+        private bool CanSpawn(
+            RefRO<UnitSelected> selectedRef
+            , RefRW<UISpawned> uiSpawnedRef) => selectedRef.ValueRO.Value && !uiSpawnedRef.ValueRO.IsSpawned;
 
-        
+        private void SpawnMainPanel(float3 spawnPos, ref UISpawned uiSpawned, out HouseUICtrl houseUICtrl)
+        {
+            houseUICtrl = (HouseUICtrl)UISpawner.Instance.Spawn(
+                        UIType.MainStructurePanel
+                        , spawnPos
+                        , quaternion.identity);
+
+            uiSpawned.UIID = houseUICtrl.UIID;
+
+            houseUICtrl.gameObject.SetActive(true);
+        }
+
+        private void SpawnUnitProfileUI(
+            DynamicBuffer<UnitSpawningProfileElement> spawningProfiles
+            , float3 spawnPos
+            , HouseUICtrl houseUICtrl)
+        {
+            for (int i = 0; i < spawningProfiles.Length; i++)
+            {
+                ref var profile = ref spawningProfiles.ElementAt(i);
+
+                // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
+                var unitProfileUICtrl =
+                    (UnitProfileUICtrl)UISpawner.Instance.Spawn(
+                        UIType.UnitSpawnProfileUI
+                        , spawnPos
+                        , quaternion.identity);
+
+                profile.UIID = unitProfileUICtrl.UIID;
+
+                unitProfileUICtrl.ProfilePic.sprite = profile.UnitSprite.Value;
+                houseUICtrl.UnitProfileHolder.Add(unitProfileUICtrl);
+
+                unitProfileUICtrl.gameObject.SetActive(true);
+            }
+        }
+
     }
 }

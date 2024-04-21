@@ -18,6 +18,15 @@ namespace Core.Spawner
         public static UISpawner Instance => instance ??= new();
 
 
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void ClearOnLoad()
+        {
+            DestroyInstance();
+        }
+#endif
+
+
         private UISpawner()
         {
             this.em = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -74,6 +83,27 @@ namespace Core.Spawner
 
             this.AddSpawnedUIIntoMap(baseUICtrl);
             return baseUICtrl;
+        }
+
+        public void Despawn(UIID uiID)
+        {
+            if (!this.spawnedUIMap.Value.TryGetValue(uiID, out BaseUICtrl baseUICtrl))
+            {
+                Debug.LogError($"Can't find BaseUICtrl with ID = {uiID}");
+                return;
+            }
+
+            if (!this.uiPoolMap.Value.TryGetValue(uiID.Type, out var uiPoolMapValue))
+            {
+                Debug.LogError($"Can't find UI prefab of type {uiID.Type}");
+                return;
+            }
+
+            baseUICtrl.gameObject.SetActive(false);
+            baseUICtrl.transform
+                .SetParent(this.GetParentTransform(uiPoolMapValue));
+            this.spawnedUIMap.Value.Remove(uiID);
+            uiPoolMapValue.UIPool.AddToPool(baseUICtrl);
         }
 
         private Transform GetParentTransform(UIPoolMapValue uiPoolMapValue) => uiPoolMapValue.DefaultHolderTransform;

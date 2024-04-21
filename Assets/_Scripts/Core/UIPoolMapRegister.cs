@@ -61,10 +61,10 @@ namespace Core
             return entityQuery.GetSingleton<UIPoolMap>();
         }
 
-        private void OnDestroy() // Help Destroy instance of UISpawner.
-        {
-            UISpawner.DestroyInstance();
-        }
+        //private void OnDestroy() // Help Destroy instance of UISpawner.
+        //{
+        //     UISpawner.DestroyInstance();
+        //}
 
     }
 }
