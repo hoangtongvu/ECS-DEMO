@@ -87,6 +87,8 @@ namespace Systems.Simulation.Unit
                         , spawnPos
                         , quaternion.identity);
 
+                unitProfileUICtrl.ProgressBar.ClearProgress();
+
                 profile.UIID = unitProfileUICtrl.UIID;
 
                 unitProfileUICtrl.ProfilePic.sprite = profile.UnitSprite.Value;
