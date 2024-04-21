@@ -27,6 +27,9 @@ namespace Core.Spawner
 
         }
 
+        public static void DestroyInstance() => instance = null;
+
+
         private UIPoolMap GetUIPoolMap()
         {
             EntityQuery entityQuery = this.em.CreateEntityQuery(typeof(UIPoolMap));
