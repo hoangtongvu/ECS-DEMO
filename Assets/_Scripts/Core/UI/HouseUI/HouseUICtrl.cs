@@ -1,5 +1,4 @@
 using UnityEngine;
-using ZBase.Foundation.PubSub;
 
 namespace Core.UI.HouseUI
 {
@@ -7,11 +6,9 @@ namespace Core.UI.HouseUI
     {
         [SerializeField] private HouseUIDespawner despawner;
         [SerializeField] private UnitProfileHolder unitProfileHolder;
-        private readonly Messenger messenger = new();
 
         public HouseUIDespawner Despawner => despawner;
         public UnitProfileHolder UnitProfileHolder => unitProfileHolder;
-        public Messenger Messenger => messenger;
 
 
         protected override void LoadComponents()
