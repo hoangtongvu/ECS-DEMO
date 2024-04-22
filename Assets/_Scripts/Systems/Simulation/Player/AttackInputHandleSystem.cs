@@ -25,7 +25,7 @@ namespace Systems.Simulation.Player
 
             var setAttackInputJob = new SetAttackInputJob
             {
-                hardwareInputState = SystemAPI.GetSingleton<InputData>().LeftMouseDown,
+                hardwareInputState = SystemAPI.GetSingleton<InputData>().LeftMouseData.Down,
             };
 
             setAttackInputJob.ScheduleParallel();

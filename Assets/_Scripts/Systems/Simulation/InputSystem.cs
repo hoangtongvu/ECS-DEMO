@@ -19,9 +19,10 @@ namespace Systems.Simulation
         {
             var inputDataRef = this.GetInputDataSingletonRef();
             this.SetMoveDir(ref inputDataRef.ValueRW);
-            this.SetMouseDown(ref inputDataRef.ValueRW);
             this.SetBackspaceButtonDown(ref inputDataRef.ValueRW);
 
+            this.SetMouseData(ref inputDataRef.ValueRW.LeftMouseData, 0);
+            this.SetMouseData(ref inputDataRef.ValueRW.RightMouseData, 1);
         }
 
         private void CreateInputDataSingleton()
@@ -44,14 +45,16 @@ namespace Systems.Simulation
             inputData.MoveDirection.Value = rawDir;
         }
         
-        private void SetMouseDown(ref InputData inputData)
-        {
-            inputData.LeftMouseDown = Input.GetMouseButtonDown(0);
-            inputData.RightMouseDown = Input.GetMouseButtonDown(1);
-        }
         private void SetBackspaceButtonDown(ref InputData inputData)
         {
             inputData.BackspaceButtonDown = Input.GetKeyDown(KeyCode.Backspace);
+        }
+
+        private void SetMouseData(ref MouseData mouseData, int mouseValue)
+        {
+            mouseData.Down = Input.GetMouseButtonDown(mouseValue);
+            mouseData.Hold = Input.GetMouseButton(mouseValue);
+            mouseData.Up = Input.GetMouseButtonUp(mouseValue);
         }
     }
 }
