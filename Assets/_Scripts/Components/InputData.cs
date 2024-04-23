@@ -7,8 +7,6 @@ namespace Components
     {
 
         public MoveDirectionFloat2 MoveDirection;
-        public bool LeftMouseDown;
-        public bool RightMouseDown;
         public bool BackspaceButtonDown;
 
         public MouseData LeftMouseData;
