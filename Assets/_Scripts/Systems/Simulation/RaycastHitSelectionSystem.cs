@@ -27,7 +27,7 @@ namespace Systems.Simulation
         protected override void OnUpdate()
         {
             var inputData = SystemAPI.GetSingleton<InputData>();
-            if (!inputData.RightMouseData.Down) return;
+            if (!inputData.RightMouseData.Up) return;
             PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             this.CastRay(physicsWorld, out var raycastHit);
             this.SetNewSelectionHit(raycastHit);
