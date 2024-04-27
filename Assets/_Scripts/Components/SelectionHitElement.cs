@@ -5,10 +5,9 @@ using Unity.Physics;
 namespace Components
 {
 
-    public struct SelectionHitData : IComponentData
+    public struct SelectionHitElement : IBufferElementData
     {
         public SelectionType SelectionType;
         public RaycastHit RaycastHit;
-        public bool NewlyAdded;
     }
 }

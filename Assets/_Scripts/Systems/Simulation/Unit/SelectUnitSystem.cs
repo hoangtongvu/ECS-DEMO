@@ -18,7 +18,7 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<SelectionHitData>();
+            state.RequireForUpdate<SelectionHitElement>();
             state.RequireForUpdate<SelectedUnitElement>();
             this.CreateUnitsHolder(ref state);
         }
@@ -34,12 +34,19 @@ namespace Systems.Simulation.Unit
                 return;
             }
 
-            var selectionHitRef = SystemAPI.GetSingletonRW<SelectionHitData>();
-            if (!selectionHitRef.ValueRO.NewlyAdded) return;
-            if (selectionHitRef.ValueRO.SelectionType != SelectionType.Unit) return;
-            selectionHitRef.ValueRW.NewlyAdded = false;
 
-            this.AddUnitIntoHolder(ref state, selectionHitRef.ValueRO.RaycastHit.Entity);
+            var selectionHits = SystemAPI.GetSingletonBuffer<SelectionHitElement>();
+            if (selectionHits.IsEmpty) return;
+
+            for (int i = 0; i < selectionHits.Length; i++)
+            {
+                var hit = selectionHits[i];
+                if (hit.SelectionType != SelectionType.Unit) continue;
+
+                this.AddUnitIntoHolder(ref state, hit.RaycastHit.Entity);
+                selectionHits.RemoveAt(i);
+            }
+
 
         }
 
