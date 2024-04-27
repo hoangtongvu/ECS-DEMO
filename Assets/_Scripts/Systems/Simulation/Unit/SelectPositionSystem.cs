@@ -12,7 +12,7 @@ namespace Systems.Simulation.Unit
 {
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(RaycastHitSelectionSystem))]
+    [UpdateAfter(typeof(DragSelectionSystem))]
     [BurstCompile]
     public partial struct SelectPositionSystem : ISystem
     {
@@ -20,7 +20,7 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<SelectionHitData>();
+            state.RequireForUpdate<SelectionHitElement>();
             state.RequireForUpdate<SelectedUnitElement>();
             state.RequireForUpdate<MoveableState>();
             state.RequireForUpdate<TargetPosition>();
@@ -30,10 +30,7 @@ namespace Systems.Simulation.Unit
         public void OnUpdate(ref SystemState state)
         {
             // Checking Hit Data.
-            var selectionHitRef = SystemAPI.GetSingletonRW<SelectionHitData>();
-            if (!selectionHitRef.ValueRO.NewlyAdded) return;
-            if (selectionHitRef.ValueRO.SelectionType != SelectionType.Position) return;
-            selectionHitRef.ValueRW.NewlyAdded = false;
+            if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
             // Set Units move to target Position.
             var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
@@ -41,7 +38,7 @@ namespace Systems.Simulation.Unit
             var job = new SetTargetJob
             {
                 selectedUnits = selectedUnits,
-                targetPosition = selectionHitRef.ValueRO.RaycastHit.Position,
+                targetPosition = selectedPos,
                 targetPosLookup = SystemAPI.GetComponentLookup<TargetPosition>(),
                 moveableStateLookup = SystemAPI.GetComponentLookup<MoveableState>(),
             };
@@ -49,6 +46,26 @@ namespace Systems.Simulation.Unit
             state.Dependency = default;
             state.Dependency = job.ScheduleParallelByRef(selectedUnits.Length, 32, state.Dependency);
 
+        }
+
+        private bool TryGetSelectedPosition(out float3 selectedPos)
+        {
+            selectedPos = float3.zero;
+
+            var selectionHits = SystemAPI.GetSingletonBuffer<SelectionHitElement>();
+            if (selectionHits.IsEmpty) return false;
+
+            for (int i = 0; i < selectionHits.Length; i++)
+            {
+                var hit = selectionHits[i];
+                if (hit.SelectionType != SelectionType.Position) continue;
+                selectedPos = hit.HitPos;
+                selectionHits.RemoveAt(i);
+                i--; // Unnecessary line.
+                return true;
+            }
+
+            return false;
         }
 
         [BurstCompile]

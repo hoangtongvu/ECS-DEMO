@@ -18,37 +18,51 @@ namespace Systems.Simulation
         protected override void OnCreate()
         {
             this.mainCamera = CameraHolderCtrl.Instance.MainCam;
-            this.CreateRaycastHitsHolder();
+            this.CreateSelectionHitsHolder();
 
-            this.RequireForUpdate<SelectionHitData>();
+            this.RequireForUpdate<SelectionHitElement>();
             this.RequireForUpdate<SelectableUnitTag>();
         }
 
         protected override void OnUpdate()
         {
+            this.ClearSelectionHits();
+
             var inputData = SystemAPI.GetSingleton<InputData>();
-            if (!inputData.RightMouseDown) return;
+            if (!inputData.RightMouseData.Up) return;
+
             PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+
             this.CastRay(physicsWorld, out var raycastHit);
-            this.SetNewSelectionHit(raycastHit);
+            this.AddNewSelectionHit(raycastHit);
         }
 
-        private void SetNewSelectionHit(in Unity.Physics.RaycastHit raycastHit)
+        private void AddNewSelectionHit(in Unity.Physics.RaycastHit raycastHit)
         {
-            var selectionHitRef = SystemAPI.GetSingletonRW<SelectionHitData>();
-            selectionHitRef.ValueRW.RaycastHit = raycastHit;
-            selectionHitRef.ValueRW.NewlyAdded = true;
-            selectionHitRef.ValueRW.SelectionType = this.GetSelectionType(raycastHit);
+            var selectionHits = SystemAPI.GetSingletonBuffer<SelectionHitElement>();
+
+            selectionHits.Add(new SelectionHitElement
+            {
+                SelectionType = this.GetSelectionType(raycastHit),
+                HitEntity = raycastHit.Entity,
+                HitPos = raycastHit.Position,
+            });
         }
 
-        private void CreateRaycastHitsHolder()
+        private void ClearSelectionHits()
+        {
+            var selectionHits = SystemAPI.GetSingletonBuffer<SelectionHitElement>();
+            selectionHits.Clear();
+        }
+
+
+        private void CreateSelectionHitsHolder()
         {
             Entity entity = EntityManager.CreateEntity();
 
-            EntityManager.AddComponent<SelectionHitData>(entity);
-            EntityManager.SetName(entity, "RaycastHitsHolder");
+            EntityManager.AddBuffer<SelectionHitElement>(entity);
+            EntityManager.SetName(entity, "SelectionHitsHolder");
         }
-
 
         private bool CastRay(in PhysicsWorldSingleton physicsWorld, out Unity.Physics.RaycastHit raycastHit)
         {
