@@ -10,7 +10,7 @@ namespace Systems.Simulation.Unit
 {
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(RaycastHitSelectionSystem))]
+    [UpdateAfter(typeof(DragSelectionSystem))]
     [BurstCompile]
     public partial struct SelectUnitSystem : ISystem
     {
@@ -45,6 +45,7 @@ namespace Systems.Simulation.Unit
 
                 this.AddUnitIntoHolder(ref state, hit.HitEntity);
                 selectionHits.RemoveAt(i);
+                i--;
             }
 
 

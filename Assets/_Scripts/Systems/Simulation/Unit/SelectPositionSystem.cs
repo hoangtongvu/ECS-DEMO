@@ -12,7 +12,7 @@ namespace Systems.Simulation.Unit
 {
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(RaycastHitSelectionSystem))]
+    [UpdateAfter(typeof(DragSelectionSystem))]
     [BurstCompile]
     public partial struct SelectPositionSystem : ISystem
     {
@@ -61,6 +61,7 @@ namespace Systems.Simulation.Unit
                 if (hit.SelectionType != SelectionType.Position) continue;
                 selectedPos = hit.HitPos;
                 selectionHits.RemoveAt(i);
+                i--; // Unnecessary line.
                 return true;
             }
 
