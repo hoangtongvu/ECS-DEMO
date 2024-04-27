@@ -44,7 +44,8 @@ namespace Systems.Simulation
             selectionHits.Add(new SelectionHitElement
             {
                 SelectionType = this.GetSelectionType(raycastHit),
-                RaycastHit = raycastHit,
+                HitEntity = raycastHit.Entity,
+                HitPos = raycastHit.Position,
             });
         }
 

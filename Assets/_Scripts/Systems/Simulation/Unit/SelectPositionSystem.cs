@@ -59,7 +59,7 @@ namespace Systems.Simulation.Unit
             {
                 var hit = selectionHits[i];
                 if (hit.SelectionType != SelectionType.Position) continue;
-                selectedPos = hit.RaycastHit.Position;
+                selectedPos = hit.HitPos;
                 selectionHits.RemoveAt(i);
                 return true;
             }

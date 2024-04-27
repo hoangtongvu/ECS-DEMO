@@ -43,7 +43,7 @@ namespace Systems.Simulation.Unit
                 var hit = selectionHits[i];
                 if (hit.SelectionType != SelectionType.Unit) continue;
 
-                this.AddUnitIntoHolder(ref state, hit.RaycastHit.Entity);
+                this.AddUnitIntoHolder(ref state, hit.HitEntity);
                 selectionHits.RemoveAt(i);
             }
 

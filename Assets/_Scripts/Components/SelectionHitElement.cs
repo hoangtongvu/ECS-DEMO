@@ -1,6 +1,6 @@
 using Core;
 using Unity.Entities;
-using Unity.Physics;
+using Unity.Mathematics;
 
 namespace Components
 {
@@ -8,6 +8,7 @@ namespace Components
     public struct SelectionHitElement : IBufferElementData
     {
         public SelectionType SelectionType;
-        public RaycastHit RaycastHit;
+        public Entity HitEntity;
+        public float3 HitPos;
     }
 }
