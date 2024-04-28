@@ -94,6 +94,9 @@ namespace Core
                 isValid = true;
                 instance = new(em);
             }
+
+            // Just to make sure use UpToDated EntityManager.
+            instance.entityManager = em;
             return instance;
         }
 
