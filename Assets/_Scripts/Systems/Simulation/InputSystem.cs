@@ -1,4 +1,5 @@
 using Components;
+using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -27,9 +28,8 @@ namespace Systems.Simulation
 
         private void CreateInputDataSingleton()
         {
-            Entity entity = EntityManager.CreateEntity();
-            EntityManager.AddComponent<InputData>(entity);
-            EntityManager.SetName(entity, "InputData");
+            SingletonUtilities.GetInstance(EntityManager)
+                .AddComponent<InputData>();
         }
 
         private RefRW<InputData> GetInputDataSingletonRef() => SystemAPI.GetSingletonRW<InputData>();

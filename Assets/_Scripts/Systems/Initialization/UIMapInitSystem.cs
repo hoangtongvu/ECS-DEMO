@@ -1,4 +1,5 @@
 using Components.ComponentMap;
+using Core;
 using Core.UI.Identification;
 using System.Collections.Generic;
 using Unity.Entities;
@@ -12,21 +13,18 @@ namespace Systems.Initialization
     {
         protected override void OnCreate()
         {
-            Entity entity = EntityManager.CreateEntity();
 
-            EntityManager.AddComponent<UIPoolMap>(entity);
-            EntityManager.SetComponentData(entity, new UIPoolMap
-            {
-                Value = new Dictionary<UIType, UIPoolMapValue>(),
-            });
+            SingletonUtilities.GetInstance(EntityManager)
+                .AddOrSetComponentData(new UIPoolMap
+                {
+                    Value = new Dictionary<UIType, UIPoolMapValue>(),
+                });
 
-            EntityManager.AddComponent<SpawnedUIMap>(entity);
-            EntityManager.SetComponentData(entity, new SpawnedUIMap
-            {
-                Value = new Dictionary<UIID, Core.UI.BaseUICtrl>(),
-            });
-
-            EntityManager.SetName(entity, "UIMap");
+            SingletonUtilities.GetInstance(EntityManager)
+                .AddOrSetComponentData(new SpawnedUIMap
+                {
+                    Value = new Dictionary<UIID, Core.UI.BaseUICtrl>(),
+                });
 
         }
 

@@ -58,10 +58,8 @@ namespace Systems.Simulation
 
         private void CreateSelectionHitsHolder()
         {
-            Entity entity = EntityManager.CreateEntity();
-
-            EntityManager.AddBuffer<SelectionHitElement>(entity);
-            EntityManager.SetName(entity, "SelectionHitsHolder");
+            SingletonUtilities.GetInstance(EntityManager)
+                .AddBuffer<SelectionHitElement>();
         }
 
         private bool CastRay(in PhysicsWorldSingleton physicsWorld, out Unity.Physics.RaycastHit raycastHit)
