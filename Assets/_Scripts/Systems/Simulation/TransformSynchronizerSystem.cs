@@ -1,5 +1,6 @@
 using Components.ComponentMap;
 using Components.CustomIdentification;
+using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -12,8 +13,11 @@ namespace Systems.Simulation
     {
         protected override void OnCreate()
         {
-            RequireForUpdate<UniqueId>();
-            RequireForUpdate<LocalTransform>();
+            this.CreateTransformMap();
+
+            this.RequireForUpdate<UniqueId>();
+            this.RequireForUpdate<LocalTransform>();
+            this.RequireForUpdate<UnityTransformMap>();
         }
 
         protected override void OnUpdate()
@@ -25,11 +29,6 @@ namespace Systems.Simulation
                 Debug.LogError("UnityTransformMap Singleton not found");
                 return;
             }
-
-            //new SyncJob
-            //{
-            //    ObjectMap = objectMap,
-            //}.Schedule();
 
             this.SyncFunc(transformMap);
 
@@ -49,21 +48,15 @@ namespace Systems.Simulation
             }
         }
 
-        private partial struct SyncJob : IJobEntity
+        private void CreateTransformMap()
         {
-            public UnityTransformMap TransformMap;
-
-            private void Execute(in UniqueId id, in LocalTransform transform)
-            {
-                if (!this.TransformMap.Value.TryGetValue(id, out UnityEngine.Transform unityTransform)) return;
-
-                Transform gameObjTransform = unityTransform;
-
-                float3 enityPos = transform.Position;
-                gameObjTransform.position = new Vector3(enityPos.x, enityPos.y, enityPos.z);
-
-            }
+            SingletonUtilities.GetInstance(EntityManager)
+                .AddOrSetComponentData(new UnityTransformMap
+                {
+                    Value = new System.Collections.Generic.Dictionary<UniqueId, UnityEngine.Transform>()
+                });
         }
+
 
     }
 }

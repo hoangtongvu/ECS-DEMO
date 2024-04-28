@@ -92,11 +92,8 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         private void CreateUnitsHolder(ref SystemState state)
         {
-            EntityManager em = state.EntityManager;
-            Entity unitsHolder = em.CreateEntity();
-
-            em.AddBuffer<SelectedUnitElement>(unitsHolder);
-            em.SetName(unitsHolder, "SelectedUnitsHolder");
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddBuffer<SelectedUnitElement>();
         }
 
         [BurstCompile]

@@ -63,13 +63,12 @@ namespace Systems.Simulation
 
         private void CreateDragSelectionData()
         {
-            Entity entity = EntityManager.CreateEntity(typeof(DragSelectionData));
-            EntityManager.SetComponentData(entity, new DragSelectionData
+            SingletonUtilities.GetInstance(EntityManager)
+                .AddOrSetComponentData(new DragSelectionData
             {
                 IsDragging = false,
                 DistanceToConsiderDrag = 0.5f,
             });
-            EntityManager.SetName(entity, "DragSelectionData");
         }
 
         private void OnInputDown(PhysicsWorldSingleton physicsWorld, RefRW<DragSelectionData> dragSelectionDataRef)
