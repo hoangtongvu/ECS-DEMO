@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Core.Helpers
+namespace Utilities.Helpers
 {
     public static class DynamicBufferQueueHelper
     {

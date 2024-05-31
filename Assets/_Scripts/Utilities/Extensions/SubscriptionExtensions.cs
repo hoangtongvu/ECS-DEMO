@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ZBase.Foundation.PubSub;
 
-namespace Core.Extensions
+namespace Utilities.Extensions
 {
     public static class SubscriptionExtensions
     {

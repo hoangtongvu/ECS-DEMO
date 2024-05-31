@@ -1,6 +1,6 @@
 using Unity.Mathematics;
 
-namespace Core.Extensions
+namespace Utilities.Extensions
 {
     public static class Float3Extensions
     {

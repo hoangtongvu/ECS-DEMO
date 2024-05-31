@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using Components;
 using Components.CustomIdentification;
 using Components.ComponentMap;
-using Core.Extensions;
+using Utilities.Extensions;
 
 namespace Systems.Simulation
 {

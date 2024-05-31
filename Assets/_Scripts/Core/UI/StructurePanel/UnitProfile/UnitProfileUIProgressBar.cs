@@ -1,10 +1,10 @@
-using Core.Extensions;
 using Core.MyEvent.PubSub.Messages;
 using Core.MyEvent.PubSub.Messengers;
 using Core.UI.MyImage;
 using System.Collections.Generic;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
+using Utilities.Extensions;
 
 namespace Core.UI.StructurePanel.UnitProfile
 {
