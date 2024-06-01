@@ -1,7 +1,7 @@
 using Components;
 using Unity.Entities;
 
-namespace Core.Animator
+namespace Utilities.Helpers
 {
     public static class AnimatorHelper
     {

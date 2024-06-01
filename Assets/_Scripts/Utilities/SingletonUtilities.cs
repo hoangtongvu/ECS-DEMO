@@ -2,9 +2,9 @@ using Components.Tag;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Core
+namespace Utilities
 {
-    
+
     public struct SingletonUtilities
     {
 
