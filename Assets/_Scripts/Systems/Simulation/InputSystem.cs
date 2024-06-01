@@ -3,6 +3,7 @@ using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using Utilities;
 
 namespace Systems.Simulation
 {
