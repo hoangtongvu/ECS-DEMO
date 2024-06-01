@@ -28,7 +28,7 @@ namespace Systems.Initialization
             // Run a Query of UniqueId then Get corresponding BaseAnimator from Map.
             foreach (var (idRef, clipInfos) in
                 SystemAPI.Query<
-                    RefRO<UniqueId>
+                    RefRO<UniqueIdICD>
                     , DynamicBuffer<AnimationClipInfoElement>>())
             {
                 if (!baseAnimatorMap.Value.TryGetValue(idRef.ValueRO, out Core.Animator.BaseAnimator baseAnimator))

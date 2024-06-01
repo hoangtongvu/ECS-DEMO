@@ -1,6 +1,7 @@
 using Components.Camera;
 using Components.CustomIdentification;
 using Components.Player;
+using Core.CustomIdentification;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -18,7 +19,7 @@ namespace Systems.Simulation
 
             EntityQuery camQuery = SystemAPI.QueryBuilder()
                             .WithAll<
-                                UniqueId
+                                UniqueIdICD
                                 , LocalTransform
                                 , AddPos>()
                             .Build();
@@ -62,12 +63,12 @@ namespace Systems.Simulation
 
             
             private void Execute(
-                in UniqueId id
+                in UniqueIdICD id
                 , ref LocalTransform transform
                 , in AddPos addPos
             )
             {
-                if (id.Kind != UniqueKind.Camera) return;
+                if (id.BaseId.Kind != UniqueKind.Camera) return;
                 transform = LocalTransform.FromPosition(this.PlayerPos + addPos.Value);
             }
         }

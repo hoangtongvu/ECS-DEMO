@@ -1,10 +1,9 @@
 ﻿using System;
-using Unity.Entities;
 
-namespace Components.CustomIdentification
+namespace Core.CustomIdentification
 {
     [Serializable]
-    public struct UniqueId : IEquatable<UniqueId>, IComponentData
+    public struct UniqueId : IEquatable<UniqueId>
     {
 
         public UniqueKind Kind;

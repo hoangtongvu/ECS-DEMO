@@ -1,6 +1,6 @@
 
 
-namespace Components.CustomIdentification
+namespace Core.CustomIdentification
 {
     public enum UniqueKind : uint
     {

@@ -15,7 +15,7 @@ namespace Systems.Initialization
             EntityManager.AddComponent<BaseAnimatorMap>(entity);
             EntityManager.SetComponentData(entity, new BaseAnimatorMap
             {
-                Value = new System.Collections.Generic.Dictionary<UniqueId, Core.Animator.BaseAnimator>(),
+                Value = new System.Collections.Generic.Dictionary<UniqueIdICD, Core.Animator.BaseAnimator>(),
             });
 
             EntityManager.SetName(entity, "BaseAnimatorMap");

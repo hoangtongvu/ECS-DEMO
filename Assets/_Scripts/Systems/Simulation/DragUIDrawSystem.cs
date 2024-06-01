@@ -5,6 +5,7 @@ using Components;
 using Components.CustomIdentification;
 using Components.ComponentMap;
 using Utilities.Extensions;
+using Core.CustomIdentification;
 
 namespace Systems.Simulation
 {
@@ -20,10 +21,13 @@ namespace Systems.Simulation
             var transformMap = SystemAPI.ManagedAPI.GetSingleton<UnityTransformMap>();
 
             transformMap.Value.TryGetValue(
-                new UniqueId
+                new UniqueIdICD
                 {
-                    Id = 1,
-                    Kind = UniqueKind.None
+                    BaseId = new UniqueId
+                    {
+                        Id = 1,
+                        Kind = UniqueKind.None,
+                    },
                 }
                 , out this.spriteTransform);
         }

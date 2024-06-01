@@ -1,4 +1,5 @@
 ﻿using Components.CustomIdentification;
+using Core.CustomIdentification;
 using Unity.Entities;
 using UnityEngine;
 
@@ -14,7 +15,10 @@ namespace Authoring
             {
                 Entity entity = GetEntity(authoring, TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, authoring.UniqueId);
+                AddComponent(entity, new UniqueIdICD
+                {
+                    BaseId = authoring.UniqueId,
+                });
 
             }
         }
