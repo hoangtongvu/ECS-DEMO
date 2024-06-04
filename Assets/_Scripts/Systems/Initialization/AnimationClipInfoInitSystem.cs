@@ -1,36 +1,39 @@
 using Components;
 using Components.ComponentMap;
 using Components.CustomIdentification;
+using Components.Unit.UnitSpawning;
 using Unity.Entities;
 
 namespace Systems.Initialization
 {
 
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(BaseAnimatorMapSystem))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class AnimationClipInfoInitSystem : SystemBase
     {
         protected override void OnCreate()
         {
-            RequireForUpdate<AnimationClipInfoElement>();
-
+            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UniqueIdICD
+                    , AnimationClipInfoElement
+                    , NewlySpawnedTag>()
+                .Build();
+            this.RequireForUpdate(entityQuery);
         }
 
         protected override void OnUpdate()
         {
-            this.Enabled = false;
 
-
-            // Get BaseAnimatorMap.
-            if (!this.TryGetBaseAnimatorMap(out BaseAnimatorMap baseAnimatorMap)) return;
-
-
-            // Run a Query of UniqueId then Get corresponding BaseAnimator from Map.
             foreach (var (idRef, clipInfos) in
                 SystemAPI.Query<
                     RefRO<UniqueIdICD>
-                    , DynamicBuffer<AnimationClipInfoElement>>())
+                    , DynamicBuffer<AnimationClipInfoElement>>()
+                    .WithAll<NewlySpawnedTag>())
             {
+                // Get BaseAnimatorMap.
+                if (!this.TryGetBaseAnimatorMap(out BaseAnimatorMap baseAnimatorMap)) return;
+
+                // Get corresponding BaseAnimator from Map.
                 if (!baseAnimatorMap.Value.TryGetValue(idRef.ValueRO, out Core.Animator.BaseAnimator baseAnimator))
                 {
                     UnityEngine.Debug.LogError($"Can't get BaseAnimator with {idRef.ValueRO} in BaseAnimatorMap.");
