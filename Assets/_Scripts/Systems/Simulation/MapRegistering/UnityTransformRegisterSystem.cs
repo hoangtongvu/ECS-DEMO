@@ -14,13 +14,13 @@ namespace Systems.Initialization
     public partial class UnityTransformRegisterSystem : SystemBase
     {
         private NativeQueue<RegisterMessage<UniqueId, UnityEngine.Transform>> eventDataQueue;
-
+        private ISubscription subscription;
 
         protected override void OnCreate()
         {
             this.eventDataQueue = new(Allocator.Persistent);
 
-            MapRegisterMessenger.MessageSubscriber
+            this.subscription = MapRegisterMessenger.MessageSubscriber
                 .Subscribe<RegisterMessage<UniqueId, UnityEngine.Transform>>(this.HandleEvent0);
         }
 
@@ -39,6 +39,11 @@ namespace Systems.Initialization
 
                 UnityEngine.Debug.LogError($"Một Unity Transform khác đã được đăng ký với Id={message.ID}", message.TargetRef.Value);
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            this.subscription.Unsubscribe();
         }
 
         private void HandleEvent(RegisterMessage<UniqueId, UnityEngine.Transform> data) => this.eventDataQueue.Enqueue(data);
