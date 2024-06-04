@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Collections;
 using Components.Unit.UnitSpawning;
 
-namespace Systems.Initialization.Player
+namespace Systems.Simulation.Player
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(AnimationClipInfoInitSystem))]

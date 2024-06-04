@@ -4,7 +4,7 @@ using Components.CustomIdentification;
 using Components.Unit.UnitSpawning;
 using Unity.Entities;
 
-namespace Systems.Initialization
+namespace Systems.Simulation
 {
 
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
