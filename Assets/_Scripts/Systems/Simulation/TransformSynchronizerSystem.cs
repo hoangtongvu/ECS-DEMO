@@ -1,11 +1,9 @@
 using Components.ComponentMap;
 using Components.CustomIdentification;
-using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using Utilities;
 
 namespace Systems.Simulation
 {
@@ -14,7 +12,6 @@ namespace Systems.Simulation
     {
         protected override void OnCreate()
         {
-            this.CreateTransformMap();
 
             this.RequireForUpdate<UniqueIdICD>();
             this.RequireForUpdate<LocalTransform>();
@@ -49,14 +46,6 @@ namespace Systems.Simulation
             }
         }
 
-        private void CreateTransformMap()
-        {
-            SingletonUtilities.GetInstance(EntityManager)
-                .AddOrSetComponentData(new UnityTransformMap
-                {
-                    Value = new System.Collections.Generic.Dictionary<UniqueIdICD, UnityEngine.Transform>()
-                });
-        }
 
 
     }
