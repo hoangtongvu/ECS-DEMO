@@ -3,8 +3,8 @@ using Components;
 using Components.Unit.UnitSpawning;
 using Components.Unit;
 using Unity.Transforms;
-using Core.Spawner;
 using Components.ComponentMap;
+using Utilities.Helpers;
 
 namespace Systems.Simulation.Unit
 {
@@ -29,6 +29,7 @@ namespace Systems.Simulation.Unit
         protected override void OnUpdate()
         {
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
+            var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
 
             foreach (var (selectedRef, spawningProfiles, uiSpawnedRef) in
                 SystemAPI.Query<
@@ -39,9 +40,9 @@ namespace Systems.Simulation.Unit
 
                 if (this.CanDespawn(selectedRef, uiSpawnedRef))
                 {
-                    this.DespawnUnitProfileUI(spawningProfiles);
+                    this.DespawnUnitProfileUI(uiPoolMap, spawnedUIMap, spawningProfiles);
 
-                    this.DespawnMainPanel(ref uiSpawnedRef.ValueRW);
+                    this.DespawnMainPanel(uiPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
 
                     // TODO: Use event to despawn is much more easier cause we don't need any return.
                     uiSpawnedRef.ValueRW.IsSpawned = false;
@@ -55,20 +56,26 @@ namespace Systems.Simulation.Unit
             , RefRW<UISpawned> uiSpawnedRef) => !selectedRef.ValueRO.Value && uiSpawnedRef.ValueRO.IsSpawned;
 
 
-        private void DespawnUnitProfileUI(DynamicBuffer<UnitSpawningProfileElement> spawningProfiles)
+        private void DespawnUnitProfileUI(
+            UIPoolMap uiPoolMap
+            , SpawnedUIMap spawnedUIMap
+            , DynamicBuffer<UnitSpawningProfileElement> spawningProfiles)
         {
             for (int i = 0; i < spawningProfiles.Length; i++)
             {
                 ref var profile = ref spawningProfiles.ElementAt(i);
-                UISpawner.Instance.Despawn(profile.UIID.Value);
+                UISpawningHelper.Despawn(uiPoolMap, spawnedUIMap, profile.UIID.Value);
 
                 profile.UIID = null;
             }
         }
 
-        private void DespawnMainPanel(ref UISpawned uiSpawned)
+        private void DespawnMainPanel(
+            UIPoolMap uiPoolMap
+            , SpawnedUIMap spawnedUIMap
+            , ref UISpawned uiSpawned)
         {
-            UISpawner.Instance.Despawn(uiSpawned.UIID.Value);
+            UISpawningHelper.Despawn(uiPoolMap, spawnedUIMap, uiSpawned.UIID.Value);
             uiSpawned.UIID = null;
         }
 
