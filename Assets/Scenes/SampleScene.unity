@@ -1466,7 +1466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da131638d4f86ec4884772dfe6a63295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tempWrappers:
+  registerValues:
   - Type: 1
     Prefab: {fileID: 559930959}
     UIPool: {fileID: 368467462}

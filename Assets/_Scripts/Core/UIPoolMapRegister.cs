@@ -1,14 +1,17 @@
-using Components.ComponentMap;
+using Core.MyEvent.PubSub.Messages;
+using Core.MyEvent.PubSub.Messengers;
 using Core.UI;
 using Core.UI.Identification;
 using System.Collections.Generic;
-using Unity.Entities;
 using UnityEngine;
+using ZBase.Foundation.PubSub;
 
 namespace Core
 {
+
     public class UIPoolMapRegister : MonoBehaviour
     {
+
         [System.Serializable]
         private class RegisterValue
         {
@@ -17,54 +20,29 @@ namespace Core
             public ObjPool<BaseUICtrl> UIPool;
         }
 
-        [SerializeField] private List<RegisterValue> tempWrappers;
-        private EntityManager em;
+
+        [SerializeField] private List<RegisterValue> registerValues;
 
 
         private void Awake()
         {
-            this.em = World.DefaultGameObjectInjectionWorld.EntityManager;
-
-            if (this.tempWrappers.Count == 0) return;
-
-
-            UIPoolMap uiMap = this.GetMap();
-
-            if (uiMap == null)
-            {
-                Debug.LogError("UIPoolMap not found");
-                return;
-            }
-
-            foreach (var wrapper in this.tempWrappers)
-            {
-                if (!uiMap.Value
-                    .TryAdd(
-                        wrapper.Type
-                        , new UIPoolMapValue
-                        {
-                            GlobalID = 0,
-                            Prefab = wrapper.Prefab,
-                            UIPool = wrapper.UIPool,
-                            DefaultHolderTransform = wrapper.UIPool.transform,
-                        }))
-                {
-                    Debug.LogError($"Another BaseUICtrl has already been registered with UIType = {wrapper.Type}");
-                }
-
-            }
+            if (this.registerValues.Count == 0) return;
+            this.Register();
         }
 
-        private UIPoolMap GetMap()
+        private void Register()
         {
-            EntityQuery entityQuery = this.em.CreateEntityQuery(typeof(UIPoolMap));
-            return entityQuery.GetSingleton<UIPoolMap>();
+            foreach (var value in this.registerValues)
+            {
+                MapRegisterMessenger.MessagePublisher.Publish(new UIPoolRegisterMessage
+                {
+                    Type = value.Type,
+                    Prefab = value.Prefab,
+                    UIPool = value.UIPool,
+                });
+            }
         }
 
-        //private void OnDestroy() // Help Destroy instance of UISpawner.
-        //{
-        //     UISpawner.DestroyInstance();
-        //}
 
     }
 }
