@@ -4,7 +4,7 @@ using Core.UI.MyImage;
 using System.Collections.Generic;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
-using Utilities.Extensions;
+using Core.Utilities.Extensions;
 
 namespace Core.UI.StructurePanel.UnitProfile
 {

@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Utilities.Extensions
+namespace Core.Utilities.Extensions
 {
     public static class Vector3Extensions
     {

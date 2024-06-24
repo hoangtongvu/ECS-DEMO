@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Unity.Entities;
 
-namespace Utilities.Helpers
+namespace Core.Utilities.Helpers
 {
     public static class ListHelper
     {
