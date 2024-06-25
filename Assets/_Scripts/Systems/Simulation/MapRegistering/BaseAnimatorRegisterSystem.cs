@@ -5,16 +5,18 @@ using Core.CustomIdentification;
 using Core.MyEvent.PubSub.Messages;
 using Core.MyEvent.PubSub.Messengers;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
 using Utilities;
 using ZBase.Foundation.PubSub;
 
-namespace Systems.Initialization
+namespace Systems.Simulation.MapRegistering
 {
 
-    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderFirst = true)]
     public partial class BaseAnimatorRegisterSystem : SystemBase
     {
+        private NativeQueue<RegisterMessage<UniqueId, BaseAnimator>> eventQueue;
         private ISubscription subscription;
 
 
@@ -22,22 +24,28 @@ namespace Systems.Initialization
         {
             this.CreateBaseAnimMap();
 
+            this.eventQueue = new NativeQueue<RegisterMessage<UniqueId, BaseAnimator>>(Allocator.Persistent);
+
             this.subscription = MapRegisterMessenger.MessageSubscriber
-                .Subscribe<RegisterMessage<UniqueId, BaseAnimator>>(this.HandleEvent);
+                .Subscribe<RegisterMessage<UniqueId, BaseAnimator>>(this.HandleMessage);
         }
 
         protected override void OnUpdate()
         {
-            this.Enabled = false;
+            while (this.eventQueue.TryDequeue(out var data))
+            {
+                this.HandleEvent(in data);
+            }
         }
 
         protected override void OnDestroy()
         {
             this.subscription.Unsubscribe();
+            this.eventQueue.Dispose();
         }
 
 
-        private void HandleEvent(RegisterMessage<UniqueId, BaseAnimator> data)
+        private void HandleEvent(in RegisterMessage<UniqueId, BaseAnimator> data)
         {
             var animatorMap = SystemAPI.ManagedAPI.GetSingleton<BaseAnimatorMap>();
 
@@ -52,6 +60,8 @@ namespace Systems.Initialization
 
             UnityEngine.Debug.LogError($"Một BaseAnimator khác đã được đăng ký với Id={data.ID}", target);
         }
+
+        private void HandleMessage(RegisterMessage<UniqueId, BaseAnimator> data) => this.eventQueue.Enqueue(data);
 
         private void CreateBaseAnimMap()
         {
