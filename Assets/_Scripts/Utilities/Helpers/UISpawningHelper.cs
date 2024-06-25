@@ -8,6 +8,7 @@ namespace Utilities.Helpers
 {
     public static class UISpawningHelper
     {
+        // UIPoolMap and SpawnedUIMap are classes, could be pass into function as reference, no need 'in' keyword.
         public static BaseUICtrl Spawn(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap
