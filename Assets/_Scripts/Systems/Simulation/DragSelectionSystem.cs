@@ -7,6 +7,7 @@ using Components;
 using Core;
 using Unity.Collections;
 using Components.Unit;
+using Core.MyCamera;
 
 namespace Systems.Simulation
 {
