@@ -1,8 +1,6 @@
 ﻿using Components.Camera;
-using Components.CustomIdentification;
 using Unity.Entities;
 using UnityEngine;
-using Core.Extensions;
 
 namespace Authoring.Camera
 {
@@ -18,7 +16,7 @@ namespace Authoring.Camera
 
                 AddComponent(entity, new AddPos
                 {
-                    Value = authoring.AddPos.ToFloat3(),
+                    Value = authoring.AddPos,
                 });
 
             }

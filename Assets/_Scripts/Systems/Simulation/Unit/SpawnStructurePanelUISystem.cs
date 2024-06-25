@@ -7,7 +7,8 @@ using Unity.Mathematics;
 using Core.UI.Identification;
 using Core.UI.StructurePanel;
 using Core.UI.StructurePanel.UnitProfile;
-using Core.Spawner;
+using Components.ComponentMap;
+using Utilities.Helpers;
 
 namespace Systems.Simulation.Unit
 {
@@ -31,6 +32,9 @@ namespace Systems.Simulation.Unit
 
         protected override void OnUpdate()
         {
+            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
+            var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
+
 
             foreach (var (selectedRef, spawningProfiles, uiSpawnedRef, transformRef) in
                 SystemAPI.Query<
@@ -44,9 +48,19 @@ namespace Systems.Simulation.Unit
 
                     float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
 
-                    this.SpawnMainPanel(spawnPos, ref uiSpawnedRef.ValueRW, out var structurePanelUICtrl);
+                    this.SpawnMainPanel(
+                        uiPoolMap
+                        , spawnedUIMap
+                        , spawnPos
+                        , ref uiSpawnedRef.ValueRW
+                        , out var structurePanelUICtrl);
 
-                    this.SpawnUnitProfileUI(spawningProfiles, spawnPos, structurePanelUICtrl);
+                    this.SpawnUnitProfileUI(
+                        uiPoolMap
+                        , spawnedUIMap
+                        , spawningProfiles
+                        , spawnPos
+                        , structurePanelUICtrl);
 
                     uiSpawnedRef.ValueRW.IsSpawned = true;
                 }
@@ -59,12 +73,21 @@ namespace Systems.Simulation.Unit
             RefRO<UnitSelected> selectedRef
             , RefRW<UISpawned> uiSpawnedRef) => selectedRef.ValueRO.Value && !uiSpawnedRef.ValueRO.IsSpawned;
 
-        private void SpawnMainPanel(float3 spawnPos, ref UISpawned uiSpawned, out StructurePanelUICtrl structurePanelUICtrl)
+        private void SpawnMainPanel(
+            UIPoolMap uiPoolMap
+            , SpawnedUIMap spawnedUIMap
+            , float3 spawnPos
+            , ref UISpawned uiSpawned
+            , out StructurePanelUICtrl structurePanelUICtrl)
         {
-            structurePanelUICtrl = (StructurePanelUICtrl)UISpawner.Instance.Spawn(
-                        UIType.MainStructurePanel
-                        , spawnPos
-                        , quaternion.identity);
+
+            structurePanelUICtrl =
+                (StructurePanelUICtrl) UISpawningHelper.Spawn(
+                    uiPoolMap
+                    , spawnedUIMap
+                    , UIType.MainStructurePanel
+                    , spawnPos
+                    , quaternion.identity);
 
             uiSpawned.UIID = structurePanelUICtrl.UIID;
 
@@ -72,7 +95,9 @@ namespace Systems.Simulation.Unit
         }
 
         private void SpawnUnitProfileUI(
-            DynamicBuffer<UnitSpawningProfileElement> spawningProfiles
+            UIPoolMap uiPoolMap
+            , SpawnedUIMap spawnedUIMap
+            , DynamicBuffer<UnitSpawningProfileElement> spawningProfiles
             , float3 spawnPos
             , StructurePanelUICtrl structurePanelUICtrl)
         {
@@ -82,8 +107,10 @@ namespace Systems.Simulation.Unit
 
                 // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
                 var unitProfileUICtrl =
-                    (UnitProfileUICtrl)UISpawner.Instance.Spawn(
-                        UIType.UnitSpawnProfileUI
+                    (UnitProfileUICtrl) UISpawningHelper.Spawn(
+                        uiPoolMap
+                        , spawnedUIMap
+                        , UIType.UnitSpawnProfileUI
                         , spawnPos
                         , quaternion.identity);
 

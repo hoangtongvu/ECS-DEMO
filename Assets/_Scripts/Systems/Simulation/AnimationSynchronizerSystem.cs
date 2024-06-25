@@ -16,7 +16,7 @@ namespace Systems.Simulation
 
         protected override void OnCreate()
         {
-            RequireForUpdate<UniqueId>();
+            RequireForUpdate<UniqueIdICD>();
             RequireForUpdate<AnimatorData>();
         }
 
@@ -40,7 +40,7 @@ namespace Systems.Simulation
         private void SyncAnimation()
         {
             foreach (var (idRef, animDataRef) in
-                SystemAPI.Query<RefRO<UniqueId>, RefRW<AnimatorData>>())
+                SystemAPI.Query<RefRO<UniqueIdICD>, RefRW<AnimatorData>>())
             {
                 // Only sync Animation if AnimChanged Tag is true.
                 if (!animDataRef.ValueRO.AnimChanged) continue;

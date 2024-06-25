@@ -4,6 +4,7 @@ using Core;
 using Components;
 using Unity.Burst;
 using Unity.Jobs;
+using Utilities;
 using Unity.Collections;
 
 namespace Systems.Simulation.Unit

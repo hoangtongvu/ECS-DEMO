@@ -1,70 +1,56 @@
-using Components.ComponentMap;
+using Core.MyEvent.PubSub.Messages;
+using Core.MyEvent.PubSub.Messengers;
 using Core.UI;
 using Core.UI.Identification;
-using System.Collections.Generic;
-using Unity.Entities;
 using UnityEngine;
+using ZBase.Foundation.PubSub;
 
 namespace Core
 {
+
     public class UIPoolMapRegister : MonoBehaviour
     {
-        [System.Serializable]
-        private class RegisterValue
-        {
-            public UIType Type;
-            public GameObject Prefab;
-            public ObjPool<BaseUICtrl> UIPool;
-        }
 
-        [SerializeField] private List<RegisterValue> tempWrappers;
-        private EntityManager em;
+        [SerializeField] private BaseUICtrl[] uiCtrls;
 
 
         private void Awake()
         {
-            this.em = World.DefaultGameObjectInjectionWorld.EntityManager;
-
-            if (this.tempWrappers.Count == 0) return;
-
-
-            UIPoolMap uiMap = this.GetMap();
-
-            if (uiMap == null)
-            {
-                Debug.LogError("UIPoolMap not found");
-                return;
-            }
-
-            foreach (var wrapper in this.tempWrappers)
-            {
-                if (!uiMap.Value
-                    .TryAdd(
-                        wrapper.Type
-                        , new UIPoolMapValue
-                        {
-                            GlobalID = 0,
-                            Prefab = wrapper.Prefab,
-                            UIPool = wrapper.UIPool,
-                            DefaultHolderTransform = wrapper.UIPool.transform,
-                        }))
-                {
-                    Debug.LogError($"Another BaseUICtrl has already been registered with UIType = {wrapper.Type}");
-                }
-
-            }
+            this.LoadAllUIPrefabs();
+            this.Register();
         }
 
-        private UIPoolMap GetMap()
+        private void Register()
         {
-            EntityQuery entityQuery = this.em.CreateEntityQuery(typeof(UIPoolMap));
-            return entityQuery.GetSingleton<UIPoolMap>();
+            foreach (var uiCtrl in this.uiCtrls)
+            {
+                UIType type = uiCtrl.UIID.Type;
+
+                this.InstantiateObjPool(type, out var objPool);
+
+                MapRegisterMessenger.MessagePublisher.Publish(new UIPoolRegisterMessage
+                {
+                    Type = type,
+                    Prefab = uiCtrl.gameObject,
+                    UIPool = objPool,
+                });
+            }
         }
 
-        //private void OnDestroy() // Help Destroy instance of UISpawner.
-        //{
-        //     UISpawner.DestroyInstance();
-        //}
 
+        private void LoadAllUIPrefabs() => this.uiCtrls = Resources.LoadAll<BaseUICtrl>("UI");
+
+        private void InstantiateObjPool(UIType type, out BaseUIPool objPool)
+        {
+            GameObject newGameObject = new($"{type} Pool");
+            newGameObject.transform.SetParent(this.transform);
+            objPool = newGameObject.AddComponent<BaseUIPool>();
+        }
+
+        // Load UI Prefabs from Resources.
+        // Instantiate objPool for each UIPrefab.
+        // Set objPool's parent to ObjPoolsHolder.
+        // With each prefab, GetComponent BaseUICtrl and get UIType from that.
+        // Publish Message.
     }
 }

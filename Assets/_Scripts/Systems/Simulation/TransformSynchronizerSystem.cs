@@ -1,6 +1,5 @@
 using Components.ComponentMap;
 using Components.CustomIdentification;
-using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -13,9 +12,8 @@ namespace Systems.Simulation
     {
         protected override void OnCreate()
         {
-            this.CreateTransformMap();
 
-            this.RequireForUpdate<UniqueId>();
+            this.RequireForUpdate<UniqueIdICD>();
             this.RequireForUpdate<LocalTransform>();
             this.RequireForUpdate<UnityTransformMap>();
         }
@@ -37,7 +35,7 @@ namespace Systems.Simulation
         private void SyncFunc(in UnityTransformMap transformMap)
         {
             foreach (var (idRef, transformRef) in
-                SystemAPI.Query<RefRO<UniqueId>, RefRO<LocalTransform>>())
+                SystemAPI.Query<RefRO<UniqueIdICD>, RefRO<LocalTransform>>())
             {
                 if (!transformMap.Value.TryGetValue(idRef.ValueRO, out UnityEngine.Transform unityTransform)) continue;
 
@@ -48,14 +46,6 @@ namespace Systems.Simulation
             }
         }
 
-        private void CreateTransformMap()
-        {
-            SingletonUtilities.GetInstance(EntityManager)
-                .AddOrSetComponentData(new UnityTransformMap
-                {
-                    Value = new System.Collections.Generic.Dictionary<UniqueId, UnityEngine.Transform>()
-                });
-        }
 
 
     }

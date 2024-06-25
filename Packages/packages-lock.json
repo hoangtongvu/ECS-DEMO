@@ -7,6 +7,16 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.github-joc0de.visual-studio-solution-generator": {
+      "version": "1.0.13",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ide.visualstudio": "2.0.22",
+        "com.unity.settings-manager": "2.0.1"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.unity.burst": {
       "version": "1.8.12",
       "depth": 1,
@@ -188,6 +198,13 @@
         "com.unity.collections": "2.1.4",
         "com.unity.burst": "1.7.2"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.settings-manager": {
+      "version": "2.0.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {

@@ -2,5 +2,5 @@ using Components.CustomIdentification;
 
 namespace Components.ComponentMap
 {
-    public class BaseAnimatorMap : BaseMap<UniqueId, Core.Animator.BaseAnimator> {}
+    public class BaseAnimatorMap : BaseMap<UniqueIdICD, Core.Animator.BaseAnimator> {}
 }
