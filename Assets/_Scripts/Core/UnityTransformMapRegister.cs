@@ -1,7 +1,6 @@
 using Core.CustomIdentification;
 using Core.MyEvent.PubSub.Messages;
 using Core.MyEvent.PubSub.Messengers;
-using Unity.Entities;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
 
@@ -11,9 +10,8 @@ namespace Core
     // TODO: This can be turned into Generic class.
     public class UnityTransformMapRegister : MonoBehaviour
     {
-        public UniqueId Id;
-        public UnityEngine.Transform Target;
-        private EntityManager em;
+        [SerializeField] private UniqueId Id;
+        [SerializeField] private Transform Target;
 
 
         private void Awake()
