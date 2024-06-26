@@ -1,3 +1,5 @@
+using AYellowpaper.SerializedCollections;
+using Core.GameResource;
 using UnityEngine;
 
 namespace Core.Unit
@@ -9,5 +11,8 @@ namespace Core.Unit
         public string UnitName;
         public GameObject Prefab;
         public float DurationPerUnit;
+
+        [SerializedDictionary("ResourceType ", "Quantity")]
+        public SerializedDictionary<ResourceType, uint> Costs;
     }
 }
