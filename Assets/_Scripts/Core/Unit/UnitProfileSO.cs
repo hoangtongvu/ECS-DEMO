@@ -13,6 +13,6 @@ namespace Core.Unit
         public float DurationPerUnit;
 
         [SerializedDictionary("ResourceType ", "Quantity")]
-        public SerializedDictionary<ResourceType, uint> Costs;
+        public SerializedDictionary<ResourceType, uint> BaseCosts;
     }
 }
