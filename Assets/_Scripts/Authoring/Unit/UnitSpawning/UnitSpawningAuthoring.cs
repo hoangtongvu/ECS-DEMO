@@ -37,6 +37,9 @@ namespace Authoring.Unit.UnitSpawning
                             DurationPerSpawn = profile.UnitProfileSO.DurationPerUnit,
                             DurationCounterSecond = 0,
                         },
+
+                        UnitType = profile.UnitProfileSO.UnitType,
+                        LocalIndex = profile.UnitProfileSO.LocalIndex,
                     });
                 }
 
