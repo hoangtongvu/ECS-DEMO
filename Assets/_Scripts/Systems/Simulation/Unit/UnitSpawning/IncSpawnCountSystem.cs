@@ -74,8 +74,11 @@ namespace Systems.Simulation.Unit.UnitSpawning
 
         private void SpawnUnitMessageHandle(SpawnUnitMessage spawnUnitMessage) => this.spawnUnitMessages.Enqueue(spawnUnitMessage);
 
+        [BurstCompile]
         private bool IdMatched(UIID first, UIID second) => first.Equals(second);
 
+        // TODO: Turn this into job?
+        [BurstCompile]
         private bool HaveEnoughResources(
             DynamicBuffer<ResourceWalletElement> resourceWallet
             , in UnitCostMap unitCostMap
@@ -95,7 +98,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
 
                 if (!unitCostMap.Value.TryGetValue(unitCostId, out uint cost)) continue;
                 long tempValue = (long) walletArr[i].Quantity - cost;
-                UnityEngine.Debug.Log($"{resourceType} {tempValue} = {walletArr[i].Quantity} - {cost}");
+                // UnityEngine.Debug.Log($"{resourceType} {tempValue} = {walletArr[i].Quantity} - {cost}");
 
                 if (tempValue < 0) return false;
                 walletArr[i] = new ResourceWalletElement
