@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Authoring.GameResource
 {
 
-    public class GameResourceAuthoring : MonoBehaviour
+    public class ResourceWalletAuthoring : MonoBehaviour
     {
 
-        private class Baker : Baker<GameResourceAuthoring>
+        private class Baker : Baker<ResourceWalletAuthoring>
         {
-            public override void Bake(GameResourceAuthoring authoring)
+            public override void Bake(ResourceWalletAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
