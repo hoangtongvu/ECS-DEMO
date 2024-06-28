@@ -35,7 +35,7 @@ namespace Systems.Initialization
                     var unitCostId = new UnitCostId(profile.UnitType, cost.Key, profile.LocalIndex);
                     if (unitCostMap.Value.TryAdd(unitCostId, cost.Value))
                     {
-                        // Debug.Log($"UnitCostMap added UnitCostId: {unitCostId}");
+                        // Debug.Log($"UnitCostMap added UnitCostId: ({unitCostId}) | Cost: {cost.Value}");
                         continue;
                     }
                     Debug.LogError($"UnitCostMap already contains UnitCostId: {unitCostId}");
@@ -54,6 +54,6 @@ namespace Systems.Initialization
             this.Enabled = false;
         }
 
-        private void LoadUnitProfileSOs(out UnitProfileSO[] unitProfiles) => unitProfiles = Resources.LoadAll<UnitProfileSO>("");
+        private void LoadUnitProfileSOs(out UnitProfileSO[] unitProfiles) => unitProfiles = Resources.LoadAll<UnitProfileSO>("UnitProfiles");
     }
 }
