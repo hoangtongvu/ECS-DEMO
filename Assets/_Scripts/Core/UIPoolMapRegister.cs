@@ -43,6 +43,7 @@ namespace Core
         private void InstantiateObjPool(UIType type, out BaseUIPool objPool)
         {
             GameObject newGameObject = new($"{type} Pool");
+            newGameObject.AddComponent<RectTransform>();
             newGameObject.transform.SetParent(this.transform);
             objPool = newGameObject.AddComponent<BaseUIPool>();
         }
