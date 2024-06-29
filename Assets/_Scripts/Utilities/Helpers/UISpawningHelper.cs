@@ -8,13 +8,12 @@ namespace Utilities.Helpers
 {
     public static class UISpawningHelper
     {
+
         // UIPoolMap and SpawnedUIMap are classes, could be pass into function as reference, no need 'in' keyword.
         public static BaseUICtrl Spawn(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap
-            , UIType uiType
-            , float3 position
-            , quaternion quaternion)
+            , UIType uiType)
         {
             if (!uiPoolMap.Value.TryGetValue(uiType, out var uiPoolMapValue))
             {
@@ -33,8 +32,6 @@ namespace Utilities.Helpers
                     .GetComponent<BaseUICtrl>();
             }
 
-            baseUICtrl.transform.SetPositionAndRotation(position, quaternion);
-
             // Set ID.
             baseUICtrl.UIID.LocalId = newID;
             uiPoolMapValue.GlobalID = newID;
@@ -45,6 +42,19 @@ namespace Utilities.Helpers
 
 
             AddSpawnedUIIntoMap(spawnedUIMap, baseUICtrl);
+            return baseUICtrl;
+        }
+
+
+        public static BaseUICtrl Spawn(
+            UIPoolMap uiPoolMap
+            , SpawnedUIMap spawnedUIMap
+            , UIType uiType
+            , float3 position
+            , quaternion quaternion)
+        {
+            var baseUICtrl = Spawn(uiPoolMap, spawnedUIMap, uiType);
+            baseUICtrl?.transform.SetPositionAndRotation(position, quaternion);
             return baseUICtrl;
         }
 
