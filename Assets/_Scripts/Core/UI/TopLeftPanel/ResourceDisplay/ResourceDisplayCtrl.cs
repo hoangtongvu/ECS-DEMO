@@ -1,3 +1,4 @@
+using Core.GameResource;
 using UnityEngine;
 
 namespace Core.UI.TopLeftPanel.ResourceDisplay
@@ -6,6 +7,9 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
     {
         [SerializeField] private ResourceImage resourceImage;
         [SerializeField] private QuantityText quantityText;
+
+        public ResourceType ResourceType;
+
 
         public ResourceImage ResourceImage => resourceImage;
         public QuantityText QuantityText => quantityText;
