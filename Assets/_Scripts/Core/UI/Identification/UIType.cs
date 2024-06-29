@@ -6,5 +6,6 @@ namespace Core.UI.Identification
         MainStructurePanel = 1,
         UnitSpawnProfileUI = 2,
 
+        ResourceDisplay = 3,
     }
 }
