@@ -304,6 +304,8 @@ MonoBehaviour:
   UIID:
     Type: 2
     LocalId: 0
+  CanvasType: 1
+  CanvasAnchorPreset: 0
   profilePic: {fileID: 2793441872235664091}
   profileUIButton: {fileID: 7285389287214552395}
   progressBar: {fileID: 7059756165954914532}
