@@ -25,20 +25,17 @@ namespace Utilities.Helpers
             var uiPool = uiPoolMapValue.UIPool;
 
             // Obj pool has no ref to prefab so it can't spawn new instance itself.
+            // Instantiate with parent as parameter.
             if (!uiPool.TryGetFromPool(out BaseUICtrl baseUICtrl))
             {
                 baseUICtrl =
-                    Object.Instantiate(uiPoolMapValue.Prefab)
+                    Object.Instantiate(uiPoolMapValue.Prefab, GetParentTransform(uiPoolMapValue), false) // false to keep relative position.
                     .GetComponent<BaseUICtrl>();
             }
 
             // Set ID.
             baseUICtrl.UIID.LocalId = newID;
             uiPoolMapValue.GlobalID = newID;
-
-            // Set parent for newly spawned UI Element.
-            baseUICtrl.transform
-                .SetParent(GetParentTransform(uiPoolMapValue));
 
 
             AddSpawnedUIIntoMap(spawnedUIMap, baseUICtrl);
