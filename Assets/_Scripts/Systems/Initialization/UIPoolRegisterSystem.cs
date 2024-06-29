@@ -1,6 +1,7 @@
 ﻿using Components.ComponentMap;
 using Core.MyEvent.PubSub.Messages;
 using Core.MyEvent.PubSub.Messengers;
+using Core.UI.MyCanvas;
 using Unity.Collections;
 using Unity.Entities;
 using ZBase.Foundation.PubSub;
@@ -30,6 +31,13 @@ namespace Systems.Initialization
 
             while (this.eventQueue.TryDequeue(out var data))
             {
+                if (this.CanvasTypeIsNone(data))
+                {
+                    UnityEngine.Debug.LogError($"UI with type: {data.Type} has CanvasType = {CanvasType.None}");
+                    continue;
+                }
+
+
                 if (!uiMap.Value
                     .TryAdd(
                         data.Type
@@ -55,6 +63,7 @@ namespace Systems.Initialization
 
         private void HandleEvent(UIPoolRegisterMessage data) => this.eventQueue.Enqueue(data);
 
+        private bool CanvasTypeIsNone(UIPoolRegisterMessage data) => data.CanvasType == CanvasType.None;
 
 
     }
