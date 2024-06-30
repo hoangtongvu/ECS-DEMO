@@ -259,6 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 8736570870127326251}
+  resourceDisplayCtrl: {fileID: 878300098839857978}
 --- !u!1 &7800172657124145918
 GameObject:
   m_ObjectHideFlags: 0
