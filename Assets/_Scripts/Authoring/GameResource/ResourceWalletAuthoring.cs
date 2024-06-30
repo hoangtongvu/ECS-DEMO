@@ -27,10 +27,13 @@ namespace Authoring.GameResource
                     resourceWallet.Add(new ResourceWalletElement
                     {
                         Type = type,
-                        Quantity = 0,
+                        Quantity = 10,
                     });
 
                 }
+
+                // AddBuffer<ResourceWalletChangedElement>(entity);
+                AddComponent<WalletChanged>(entity);
 
             }
         }
