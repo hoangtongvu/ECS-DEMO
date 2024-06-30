@@ -49,7 +49,6 @@ namespace Systems.Simulation.Unit.UnitSpawning
                     {
                         profile.SpawnDuration.DurationCounterSecond = 0;
                         profile.CanSpawnState = true;
-                        profile.SpawnCount--;
                     }
                 }
             }

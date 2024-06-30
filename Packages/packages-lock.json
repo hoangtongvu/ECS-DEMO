@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "ayellowpaper.serialized-dictionary": {
+      "version": "https://github.com/ayellowpaper/SerializedDictionary.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f3ddbf09e20fc0c55b4468b86ccf05f0f5b04d25"
+    },
     "com.cysharp.unitask": {
       "version": "2.5.4",
       "depth": 0,
@@ -16,6 +23,12 @@
         "com.unity.settings-manager": "2.0.1"
       },
       "url": "https://package.openupm.com"
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
     },
     "com.unity.burst": {
       "version": "1.8.12",

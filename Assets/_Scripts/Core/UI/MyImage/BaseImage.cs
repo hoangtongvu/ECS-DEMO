@@ -7,6 +7,8 @@ namespace Core.UI.MyImage
     {
         [SerializeField] protected Image image;
 
+        public Image Image => image;
+
         protected override void LoadComponents()
         {
             base.LoadComponents();

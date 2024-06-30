@@ -48,6 +48,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
 
                     if (!profile.CanSpawnState) continue;
                     profile.CanSpawnState = false;
+                    profile.SpawnCount--;
 
                     Entity entity = state.EntityManager.Instantiate(profile.PrefabToSpawn);
                     RefRW<SpawnPos> spawnPosRef = SystemAPI.GetComponentRW<SpawnPos>(entity);
