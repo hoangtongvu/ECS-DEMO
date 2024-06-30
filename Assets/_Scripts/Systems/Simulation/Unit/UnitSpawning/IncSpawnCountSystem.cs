@@ -34,6 +34,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
         {
             // Only handle Player's side this time.
             var resourceWallet = SystemAPI.GetSingletonBuffer<ResourceWalletElement>();
+            var walletChangedRef = SystemAPI.GetSingletonRW<WalletChanged>();
             var unitCostMap = SystemAPI.GetSingleton<UnitCostMap>();
 
             // Put foreach inside while loop is more efficient in this situation.
@@ -60,6 +61,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
                         if (!this.HaveEnoughResources(resourceWallet, in unitCostMap, in profile, out var walletArr)) continue;
 
                         resourceWallet.CopyFrom(walletArr);
+                        walletChangedRef.ValueRW.Value = true;
                         profile.SpawnCount++;
                     }
                 }
