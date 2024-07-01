@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components.Unit.UnitSpawning
+namespace Components.MyEntity.EntitySpawning
 {
     public struct NewlySpawnedTag : IComponentData, IEnableableComponent
     {
