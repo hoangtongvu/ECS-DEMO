@@ -10,7 +10,7 @@ namespace Authoring.MyEntity.EntitySpawning
     public class UnitSpawningAuthoring : MonoBehaviour
     {
         public float SpawnRadius = 3f;
-        public List<Core.Unit.SpawningProfile> SpawningProfiles;
+        public List<Core.MyEntity.SpawningProfile> SpawningProfiles;
 
 
         private class Baker : Baker<UnitSpawningAuthoring>
@@ -30,13 +30,13 @@ namespace Authoring.MyEntity.EntitySpawning
                 {
                     buffer.Add(new()
                     {
-                        PrefabToSpawn = GetEntity(profile.UnitProfileSO.Prefab, TransformUsageFlags.Dynamic),
-                        UnitSprite = profile.UnitProfileSO.ProfilePicture,
+                        PrefabToSpawn = GetEntity(profile.EntityProfileSO.Prefab, TransformUsageFlags.Dynamic),
+                        UnitSprite = profile.EntityProfileSO.ProfilePicture,
                         CanSpawnState = profile.CanSpawn,
                         SpawnCount = profile.SpawnCount,
                         SpawnDuration = new()
                         {
-                            DurationPerSpawn = profile.UnitProfileSO.DurationPerSpawn,
+                            DurationPerSpawn = profile.EntityProfileSO.DurationPerSpawn,
                             DurationCounterSecond = 0,
                         },
 
@@ -51,7 +51,7 @@ namespace Authoring.MyEntity.EntitySpawning
                 {
                     for (int i = 0; i < enumLength; i++)
                     {
-                        profile.UnitProfileSO.BaseCosts.TryGetValue((ResourceType)i, out var tempCost);
+                        profile.EntityProfileSO.BaseCosts.TryGetValue((ResourceType)i, out var tempCost);
 
                         localCostBuffer.Add(new()
                         {

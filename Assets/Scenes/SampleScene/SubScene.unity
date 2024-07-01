@@ -190,6 +190,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 6342a43af4cf5f1479e58cb563cbd054,
         type: 2}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      propertyPath: SpawningProfiles.Array.data[0].EntityProfileSO
+      value: 
+      objectReference: {fileID: 11400000, guid: f03eefc5b1aab8b4eb21842a209fe7fd,
+        type: 2}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      propertyPath: SpawningProfiles.Array.data[1].EntityProfileSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 836947920bd15f94db9246a8c6afb547,
+        type: 2}
     - target: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
       propertyPath: m_Name
@@ -1388,6 +1400,18 @@ PrefabInstance:
       propertyPath: SpawningProfiles.Array.data[2].UnitProfileSO
       value: 
       objectReference: {fileID: 11400000, guid: 6342a43af4cf5f1479e58cb563cbd054,
+        type: 2}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      propertyPath: SpawningProfiles.Array.data[0].EntityProfileSO
+      value: 
+      objectReference: {fileID: 11400000, guid: f03eefc5b1aab8b4eb21842a209fe7fd,
+        type: 2}
+    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      propertyPath: SpawningProfiles.Array.data[1].EntityProfileSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 836947920bd15f94db9246a8c6afb547,
         type: 2}
     - target: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
