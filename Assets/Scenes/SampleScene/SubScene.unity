@@ -257,10 +257,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 443162270}
     - targetCorrespondingSourceObject: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
       insertIndex: -1
@@ -480,6 +485,26 @@ MonoBehaviour:
     x: 0
     y: 3
     z: 0
+--- !u!114 &443162270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443162261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb365f563a410824b8e3e35c528c0536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpawnRadius: 3
+  SpawningProfiles:
+  - EntityProfileSO: {fileID: 11400000, guid: f03eefc5b1aab8b4eb21842a209fe7fd, type: 2}
+    CanSpawn: 0
+    SpawnCount: 0
+  - EntityProfileSO: {fileID: 11400000, guid: 836947920bd15f94db9246a8c6afb547, type: 2}
+    CanSpawn: 0
+    SpawnCount: 0
 --- !u!1 &461726516
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,6 +914,26 @@ MonoBehaviour:
     x: 0
     y: 3
     z: 0
+--- !u!114 &1118369716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118369699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb365f563a410824b8e3e35c528c0536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpawnRadius: 3
+  SpawningProfiles:
+  - EntityProfileSO: {fileID: 11400000, guid: f03eefc5b1aab8b4eb21842a209fe7fd, type: 2}
+    CanSpawn: 0
+    SpawnCount: 0
+  - EntityProfileSO: {fileID: 11400000, guid: 836947920bd15f94db9246a8c6afb547, type: 2}
+    CanSpawn: 0
+    SpawnCount: 0
 --- !u!1 &1295268466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,10 +1513,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1118369716}
     - targetCorrespondingSourceObject: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
       insertIndex: -1
