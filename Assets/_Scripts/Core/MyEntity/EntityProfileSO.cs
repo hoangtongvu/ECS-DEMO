@@ -10,7 +10,7 @@ namespace Core.MyEntity
         public ushort LocalIndex;
 
         public Sprite ProfilePicture;
-        public string UnitName;
+        public string Name;
         public GameObject Prefab;
         public float DurationPerSpawn;
 
