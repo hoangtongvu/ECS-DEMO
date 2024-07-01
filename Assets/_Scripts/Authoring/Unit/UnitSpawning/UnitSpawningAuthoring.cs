@@ -41,8 +41,6 @@ namespace Authoring.Unit.UnitSpawning
                             DurationCounterSecond = 0,
                         },
 
-                        UnitType = profile.UnitProfileSO.UnitType,
-                        LocalIndex = profile.UnitProfileSO.LocalIndex,
                     });
                 }
                 

@@ -1,5 +1,4 @@
 using Core.UI.Identification;
-using Core.Unit;
 using Unity.Entities;
 
 namespace Components.Unit.UnitSpawning
@@ -25,8 +24,6 @@ namespace Components.Unit.UnitSpawning
         public SpawnDuration SpawnDuration;
         public UIID? UIID;
 
-        public UnitType UnitType;
-        public ushort LocalIndex;
     }
 
 }
