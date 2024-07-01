@@ -4,17 +4,16 @@ using UnityEngine;
 
 namespace Authoring.MyEntity.EntitySpawning
 {
-    public class NewlySpawnedAuthoring : MonoBehaviour
+    public class SpawnerPosAuthoring : MonoBehaviour
     {
 
-        private class Baker : Baker<NewlySpawnedAuthoring>
+        private class Baker : Baker<SpawnerPosAuthoring>
         {
-            public override void Bake(NewlySpawnedAuthoring authoring)
+            public override void Bake(SpawnerPosAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent<NewlySpawnedTag>(entity);
-
+                AddComponent<SpawnerPos>(entity);
             }
         }
     }

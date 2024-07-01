@@ -7,7 +7,7 @@ namespace Components.MyEntity.EntitySpawning
     {
     }
 
-    public struct SpawnPos : IComponentData
+    public struct SpawnerPos : IComponentData
     {
         public float3 Value;
     }

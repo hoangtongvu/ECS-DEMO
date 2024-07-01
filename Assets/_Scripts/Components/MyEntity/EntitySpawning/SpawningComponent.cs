@@ -4,11 +4,6 @@ using Unity.Entities;
 namespace Components.MyEntity.EntitySpawning
 {
 
-    public struct SpawnRadius : IComponentData
-    {
-        public float Value;
-    }
-
     public struct SpawnDuration
     {
         public float DurationPerSpawn;

@@ -2,6 +2,8 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.MyEntity.EntitySpawning;
 using Unity.Transforms;
+using Unity.Mathematics;
+using Core.Utilities.Extensions;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -11,16 +13,22 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
     [BurstCompile]
     public partial struct NewlySpawnedUnitPosSetSystem : ISystem
     {
+        private Random rand;
+        private float2 tempVector;
+
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            this.rand = new Random(1);
+            this.tempVector = new(1, 1);
+
 
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     NewlySpawnedTag
                     , LocalTransform
-                    , SpawnPos>()
+                    , SpawnerPos>()
                 .Build();
             state.RequireForUpdate(entityQuery);
         }
@@ -28,15 +36,23 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (spawnPos, transformRef) in
+
+            foreach (var (spawnerPos, transformRef) in
                 SystemAPI.Query<
-                    RefRO<SpawnPos>
+                    RefRO<SpawnerPos>
                     , RefRW<LocalTransform>>()
                     .WithAll<NewlySpawnedTag>())
             {
-                transformRef.ValueRW.Position = spawnPos.ValueRO.Value;
+                transformRef.ValueRW.Position = this.GetRandomPositionInRadius(3, spawnerPos.ValueRO.Value);
             }
 
+        }
+
+        private float3 GetRandomPositionInRadius(in float radius, in float3 centerPos)
+        {
+            // This is heavy work?? try to use job.
+            float2 distanceVector = math.normalize(this.rand.NextFloat2(-this.tempVector, this.tempVector)) * radius;
+            return centerPos.Add(x: distanceVector.x, z: distanceVector.y);
         }
 
     }

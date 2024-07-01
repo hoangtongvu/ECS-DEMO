@@ -19,11 +19,6 @@ namespace Authoring.MyEntity.EntitySpawning
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new SpawnRadius
-                {
-                    Value = authoring.SpawnRadius,
-                });
-
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
                 foreach (var profile in authoring.SpawningProfiles)
