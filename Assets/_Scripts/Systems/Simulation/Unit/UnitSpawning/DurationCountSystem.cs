@@ -13,7 +13,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<UnitSpawningProfileElement>();
+            state.RequireForUpdate<EntitySpawningProfileElement>();
         }
 
         [BurstCompile]
@@ -34,7 +34,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
             public float DeltaTime;
 
             void Execute(
-                ref DynamicBuffer<UnitSpawningProfileElement> profileElements)
+                ref DynamicBuffer<EntitySpawningProfileElement> profileElements)
             {
                 
                 for (int i = 0; i < profileElements.Length; i++)

@@ -42,7 +42,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
                 foreach (var (unitSelectedRef, profiles, localCostMap) in
                     SystemAPI.Query<
                         RefRO<UnitSelected>
-                        , DynamicBuffer<UnitSpawningProfileElement>
+                        , DynamicBuffer<EntitySpawningProfileElement>
                         , DynamicBuffer<LocalCostMapElement>>())
                 {
                     if (!unitSelectedRef.ValueRO.Value) continue;

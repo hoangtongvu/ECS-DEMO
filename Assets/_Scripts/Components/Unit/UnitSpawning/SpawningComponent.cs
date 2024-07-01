@@ -15,7 +15,7 @@ namespace Components.Unit.UnitSpawning
         public float DurationCounterSecond;
     }
 
-    public struct UnitSpawningProfileElement : IBufferElementData
+    public struct EntitySpawningProfileElement : IBufferElementData
     {
         public Entity PrefabToSpawn;
         public UnityObjectRef<UnityEngine.Sprite> UnitSprite;

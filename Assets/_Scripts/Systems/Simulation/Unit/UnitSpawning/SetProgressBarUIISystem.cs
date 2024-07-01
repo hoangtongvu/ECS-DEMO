@@ -18,7 +18,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitSelected
-                    , UnitSpawningProfileElement
+                    , EntitySpawningProfileElement
                     , UISpawned>()
                 .Build();
 
@@ -31,7 +31,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
             foreach (var (selectedRef, spawningProfiles, uiSpawnedRef) in
                 SystemAPI.Query<
                     RefRO<UnitSelected>
-                    , DynamicBuffer<UnitSpawningProfileElement>
+                    , DynamicBuffer<EntitySpawningProfileElement>
                     , RefRO<UISpawned>>())
             {
                 if (!selectedRef.ValueRO.Value) continue;

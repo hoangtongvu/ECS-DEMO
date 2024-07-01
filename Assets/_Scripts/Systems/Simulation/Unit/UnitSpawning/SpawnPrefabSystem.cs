@@ -24,7 +24,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
 
             this.spawnerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSpawningProfileElement
+                    EntitySpawningProfileElement
                     , SpawnRadius
                     , LocalTransform>()
                 .Build();
@@ -37,7 +37,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
         {
             foreach (var (profiles, spawnRadiusRef, transformRef) in
                 SystemAPI.Query<
-                    DynamicBuffer<UnitSpawningProfileElement>
+                    DynamicBuffer<EntitySpawningProfileElement>
                     , RefRO<SpawnRadius>
                     , RefRO<LocalTransform>>())
             {

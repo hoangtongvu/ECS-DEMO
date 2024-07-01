@@ -25,7 +25,7 @@ namespace Authoring.Unit.UnitSpawning
                     Value = authoring.SpawnRadius,
                 });
 
-                var buffer = AddBuffer<UnitSpawningProfileElement>(entity);
+                var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
                 foreach (var profile in authoring.SpawningProfiles)
                 {

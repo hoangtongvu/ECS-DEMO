@@ -22,7 +22,7 @@ namespace Systems.Simulation.Unit
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitSelected
-                    , UnitSpawningProfileElement
+                    , EntitySpawningProfileElement
                     , UISpawned
                     , LocalTransform>()
                 .Build();
@@ -39,7 +39,7 @@ namespace Systems.Simulation.Unit
             foreach (var (selectedRef, spawningProfiles, uiSpawnedRef, transformRef) in
                 SystemAPI.Query<
                     RefRO<UnitSelected>
-                    , DynamicBuffer<UnitSpawningProfileElement>
+                    , DynamicBuffer<EntitySpawningProfileElement>
                     , RefRW<UISpawned>
                     , RefRO<LocalTransform>>())
             {
@@ -97,7 +97,7 @@ namespace Systems.Simulation.Unit
         private void SpawnUnitProfileUI(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap
-            , DynamicBuffer<UnitSpawningProfileElement> spawningProfiles
+            , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
             , float3 spawnPos
             , StructurePanelUICtrl structurePanelUICtrl)
         {
