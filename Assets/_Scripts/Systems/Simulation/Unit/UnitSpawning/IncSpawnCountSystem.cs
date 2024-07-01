@@ -1,4 +1,4 @@
-using Components.Unit.UnitSpawning;
+using Components.MyEntity.EntitySpawning;
 using Components.Unit;
 using Core.MyEvent.PubSub.Messages;
 using Core.MyEvent.PubSub.Messengers;

@@ -1,6 +1,6 @@
 using Unity.Entities;
 using Components;
-using Components.Unit.UnitSpawning;
+using Components.MyEntity.EntitySpawning;
 using Components.Unit;
 using Unity.Transforms;
 using Components.ComponentMap;

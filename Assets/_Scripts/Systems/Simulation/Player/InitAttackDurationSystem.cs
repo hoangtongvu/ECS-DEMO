@@ -3,7 +3,7 @@ using Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Collections;
-using Components.Unit.UnitSpawning;
+using Components.MyEntity.EntitySpawning;
 
 namespace Systems.Simulation.Player
 {

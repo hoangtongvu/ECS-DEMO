@@ -1,7 +1,7 @@
 using Components;
 using Components.ComponentMap;
 using Components.CustomIdentification;
-using Components.Unit.UnitSpawning;
+using Components.MyEntity.EntitySpawning;
 using Unity.Entities;
 
 namespace Systems.Simulation

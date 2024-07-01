@@ -1,6 +1,6 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components.Unit.UnitSpawning;
+using Components.MyEntity.EntitySpawning;
 
 namespace Systems.Simulation.Unit.UnitSpawning
 {
