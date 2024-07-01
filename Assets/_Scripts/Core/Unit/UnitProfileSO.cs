@@ -1,21 +1,12 @@
-using AYellowpaper.SerializedCollections;
-using Core.GameResource;
+using Core.MyEntity;
 using UnityEngine;
 
 namespace Core.Unit
 {
-    [CreateAssetMenu(fileName = "UnitProfile", menuName = "SO/Unit")]
-    public class UnitProfileSO : ScriptableObject
+    [CreateAssetMenu(fileName = "UnitProfile", menuName = "SO/MyEntity/UnitProfile")]
+    public class UnitProfileSO : EntityProfileSO
     {
-        public ushort LocalIndex;
-
-        public Sprite ProfilePicture;
-        public string UnitName;
+        [Header("Unit Profile")]
         public UnitType UnitType;
-        public GameObject Prefab;
-        public float DurationPerUnit;
-
-        [SerializedDictionary("ResourceType ", "Quantity")]
-        public SerializedDictionary<ResourceType, uint> BaseCosts;
     }
 }

@@ -36,7 +36,7 @@ namespace Authoring.MyEntity.EntitySpawning
                         SpawnCount = profile.SpawnCount,
                         SpawnDuration = new()
                         {
-                            DurationPerSpawn = profile.UnitProfileSO.DurationPerUnit,
+                            DurationPerSpawn = profile.UnitProfileSO.DurationPerSpawn,
                             DurationCounterSecond = 0,
                         },
 

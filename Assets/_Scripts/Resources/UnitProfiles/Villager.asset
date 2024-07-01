@@ -15,10 +15,10 @@ MonoBehaviour:
   LocalIndex: 0
   ProfilePicture: {fileID: 21300000, guid: 40110438554b1d341bcfe47fad6030e4, type: 3}
   UnitName: Villager
-  UnitType: 1
   Prefab: {fileID: 9010456808328279163, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
-  DurationPerUnit: 5
+  DurationPerSpawn: 5
   BaseCosts:
     _serializedList:
     - Key: 2
       Value: 5
+  UnitType: 1
