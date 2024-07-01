@@ -11,7 +11,7 @@ using Components.GameResource;
 using Core.GameResource;
 using System;
 
-namespace Systems.Simulation.Unit.UnitSpawning
+namespace Systems.Simulation.MyEntity.EntitySpawning
 {
 
     [BurstCompile]

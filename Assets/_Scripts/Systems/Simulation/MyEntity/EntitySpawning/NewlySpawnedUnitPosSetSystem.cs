@@ -3,7 +3,7 @@ using Unity.Burst;
 using Components.MyEntity.EntitySpawning;
 using Unity.Transforms;
 
-namespace Systems.Simulation.Unit.UnitSpawning
+namespace Systems.Simulation.MyEntity.EntitySpawning
 {
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]

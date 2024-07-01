@@ -5,7 +5,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Core.Utilities.Extensions;
 
-namespace Systems.Simulation.Unit.UnitSpawning
+namespace Systems.Simulation.MyEntity.EntitySpawning
 {
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]

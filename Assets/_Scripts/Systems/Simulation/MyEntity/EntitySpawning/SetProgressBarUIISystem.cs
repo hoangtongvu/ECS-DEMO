@@ -6,7 +6,7 @@ using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
 using Core.MyEvent.PubSub.Messages;
 
-namespace Systems.Simulation.Unit.UnitSpawning
+namespace Systems.Simulation.MyEntity.EntitySpawning
 {
 
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
