@@ -1,8 +1,8 @@
-﻿using Components.Unit.UnitSpawning;
+﻿using Components.MyEntity.EntitySpawning;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring.Unit.UnitSpawning
+namespace Authoring.MyEntity.EntitySpawning
 {
     public class NewlySpawnedAuthoring : MonoBehaviour
     {
