@@ -8,8 +8,8 @@ using Unity.Entities;
 using ZBase.Foundation.PubSub;
 using Core.UI.Identification;
 using Components.GameResource;
-using Core.Unit;
 using Core.GameResource;
+using System;
 
 namespace Systems.Simulation.Unit.UnitSpawning
 {
@@ -35,15 +35,15 @@ namespace Systems.Simulation.Unit.UnitSpawning
             // Only handle Player's side this time.
             var resourceWallet = SystemAPI.GetSingletonBuffer<ResourceWalletElement>();
             var walletChangedRef = SystemAPI.GetSingletonRW<WalletChanged>();
-            var unitCostMap = SystemAPI.GetSingleton<UnitCostMap>();
 
             // Put foreach inside while loop is more efficient in this situation.
             while (this.spawnUnitMessages.TryDequeue(out var message))
             {
-                foreach (var (unitSelectedRef, profiles) in
+                foreach (var (unitSelectedRef, profiles, localCostMap) in
                     SystemAPI.Query<
                         RefRO<UnitSelected>
-                        , DynamicBuffer<UnitSpawningProfileElement>>())
+                        , DynamicBuffer<UnitSpawningProfileElement>
+                        , DynamicBuffer<LocalCostMapElement>>())
                 {
                     if (!unitSelectedRef.ValueRO.Value) continue;
 
@@ -58,7 +58,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
                         }
 
                         if (!this.IdMatched(message.ProfileID, profile.UIID.Value)) continue;
-                        if (!this.HaveEnoughResources(resourceWallet, in unitCostMap, in profile, out var walletArr)) continue;
+                        if (!this.HaveEnoughResources(resourceWallet, localCostMap, i, out var walletArr)) continue;
 
                         resourceWallet.CopyFrom(walletArr);
                         walletChangedRef.ValueRW.Value = true;
@@ -83,8 +83,8 @@ namespace Systems.Simulation.Unit.UnitSpawning
         [BurstCompile]
         private bool HaveEnoughResources(
             DynamicBuffer<ResourceWalletElement> resourceWallet
-            , in UnitCostMap unitCostMap
-            , in UnitSpawningProfileElement profile
+            , DynamicBuffer<LocalCostMapElement> localCostMap
+            , int bufferIndex
             , out NativeArray<ResourceWalletElement> walletArr)
         {
 
@@ -96,9 +96,7 @@ namespace Systems.Simulation.Unit.UnitSpawning
             {
                 ResourceType resourceType = (ResourceType)i;
 
-                var unitCostId = new UnitCostId(profile.UnitType, resourceType, profile.LocalIndex);
-
-                if (!unitCostMap.Value.TryGetValue(unitCostId, out uint cost)) continue;
+                uint cost = this.GetCost(localCostMap, bufferIndex, resourceType);
                 long tempValue = (long) walletArr[i].Quantity - cost;
                 // UnityEngine.Debug.Log($"{resourceType} {tempValue} = {walletArr[i].Quantity} - {cost}");
 
@@ -112,6 +110,16 @@ namespace Systems.Simulation.Unit.UnitSpawning
             }
 
             return true;
+        }
+
+        private uint GetCost(
+            DynamicBuffer<LocalCostMapElement> localCostMap
+            , int bufferIndex
+            , ResourceType resourceType)
+        {
+            int enumLength = Enum.GetNames(typeof(ResourceType)).Length;
+            int costMapIndex = bufferIndex * enumLength + (int) resourceType;
+            return localCostMap[costMapIndex].Cost;
         }
 
 

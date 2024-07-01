@@ -1,4 +1,7 @@
-﻿using Components.Unit.UnitSpawning;
+﻿using Components.Unit;
+using Components.Unit.UnitSpawning;
+using Core.GameResource;
+using System;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
@@ -42,15 +45,37 @@ namespace Authoring.Unit.UnitSpawning
                         LocalIndex = profile.UnitProfileSO.LocalIndex,
                     });
                 }
+                
+
+                var localCostBuffer = AddBuffer<LocalCostMapElement>(entity);
+
+                int enumLength = Enum.GetNames(typeof(ResourceType)).Length;
+                foreach (var profile in authoring.SpawningProfiles)
+                {
+                    for (int i = 0; i < enumLength; i++)
+                    {
+                        profile.UnitProfileSO.BaseCosts.TryGetValue((ResourceType)i, out var tempCost);
+
+                        localCostBuffer.Add(new()
+                        {
+                            Cost = tempCost,
+                        });
+
+                    }
+                }
 
                 
             }
+
+            
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, this.SpawnRadius);
         }
+
+        
 
     }
 }

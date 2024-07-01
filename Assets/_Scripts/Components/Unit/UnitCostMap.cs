@@ -9,4 +9,9 @@ namespace Components.Unit
         public NativeHashMap<UnitCostId, uint> Value;
     }
 
+    public struct LocalCostMapElement : IBufferElementData
+    {
+        public uint Cost;
+    }
+
 }
