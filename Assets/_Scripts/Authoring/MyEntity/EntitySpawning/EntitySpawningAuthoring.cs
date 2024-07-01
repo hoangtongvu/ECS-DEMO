@@ -28,6 +28,8 @@ namespace Authoring.MyEntity.EntitySpawning
                         PrefabToSpawn = GetEntity(profile.EntityProfileSO.Prefab, TransformUsageFlags.Dynamic),
                         UnitSprite = profile.EntityProfileSO.ProfilePicture,
                         CanSpawnState = profile.CanSpawn,
+
+                        CanIncSpawnCount = true,
                         SpawnCount = profile.SpawnCount,
                         SpawnDuration = new()
                         {

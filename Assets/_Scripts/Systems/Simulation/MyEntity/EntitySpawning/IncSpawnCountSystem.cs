@@ -51,6 +51,8 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     {
                         ref var profile = ref profiles.ElementAt(i);
 
+                        if (!profile.CanIncSpawnCount) continue;
+
                         if (!profile.UIID.HasValue)
                         {
                             UnityEngine.Debug.LogError($"Profile UIID with order of {i} is null.");

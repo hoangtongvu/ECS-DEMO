@@ -15,6 +15,8 @@ namespace Components.MyEntity.EntitySpawning
         public Entity PrefabToSpawn;
         public UnityObjectRef<UnityEngine.Sprite> UnitSprite;
         public bool CanSpawnState;
+
+        public bool CanIncSpawnCount;
         public int SpawnCount;
         public SpawnDuration SpawnDuration;
         public UIID? UIID;

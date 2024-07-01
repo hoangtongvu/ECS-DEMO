@@ -42,7 +42,7 @@ namespace Systems.Simulation.Tool
                 var toolsHolder = SystemAPI.GetBuffer<ToolHolderElement>(spawner);
                 var toolHoldLimitRef = SystemAPI.GetComponentRO<ToolHoldLimit>(spawner);
 
-                if (toolsHolder.Length > toolHoldLimitRef.ValueRO.Value) continue;
+                if (toolsHolder.Length >= toolHoldLimitRef.ValueRO.Value) continue;
 
                 toolsHolder.Add(new ToolHolderElement
                 {
