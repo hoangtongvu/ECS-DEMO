@@ -5,8 +5,8 @@ using Components.Unit;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Core.UI.Identification;
-using Core.UI.StructurePanel;
-using Core.UI.StructurePanel.UnitProfile;
+using Core.UI.EntitySpawningPanel;
+using Core.UI.EntitySpawningPanel.SpawningProfileDisplay;
 using Components.ComponentMap;
 using Utilities.Helpers;
 
@@ -53,14 +53,14 @@ namespace Systems.Simulation.Unit
                         , spawnedUIMap
                         , spawnPos
                         , ref uiSpawnedRef.ValueRW
-                        , out var structurePanelUICtrl);
+                        , out var entitySpawningPanelCtrl);
 
                     this.SpawnUnitProfileUI(
                         uiPoolMap
                         , spawnedUIMap
                         , spawningProfiles
                         , spawnPos
-                        , structurePanelUICtrl);
+                        , entitySpawningPanelCtrl);
 
                     uiSpawnedRef.ValueRW.IsSpawned = true;
                 }
@@ -78,20 +78,20 @@ namespace Systems.Simulation.Unit
             , SpawnedUIMap spawnedUIMap
             , float3 spawnPos
             , ref UISpawned uiSpawned
-            , out StructurePanelUICtrl structurePanelUICtrl)
+            , out EntitySpawningPanelCtrl entitySpawningPanelCtrl)
         {
 
-            structurePanelUICtrl =
-                (StructurePanelUICtrl) UISpawningHelper.Spawn(
+            entitySpawningPanelCtrl =
+                (EntitySpawningPanelCtrl) UISpawningHelper.Spawn(
                     uiPoolMap
                     , spawnedUIMap
-                    , UIType.MainStructurePanel
+                    , UIType.EntitySpawningPanel
                     , spawnPos
                     , quaternion.identity);
 
-            uiSpawned.UIID = structurePanelUICtrl.UIID;
+            uiSpawned.UIID = entitySpawningPanelCtrl.UIID;
 
-            structurePanelUICtrl.gameObject.SetActive(true);
+            entitySpawningPanelCtrl.gameObject.SetActive(true);
         }
 
         private void SpawnUnitProfileUI(
@@ -99,29 +99,29 @@ namespace Systems.Simulation.Unit
             , SpawnedUIMap spawnedUIMap
             , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
             , float3 spawnPos
-            , StructurePanelUICtrl structurePanelUICtrl)
+            , EntitySpawningPanelCtrl entitySpawningPanelCtrl)
         {
             for (int i = 0; i < spawningProfiles.Length; i++)
             {
                 ref var profile = ref spawningProfiles.ElementAt(i);
 
                 // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
-                var unitProfileUICtrl =
-                    (UnitProfileUICtrl) UISpawningHelper.Spawn(
+                var profileDisplayCtrl =
+                    (SpawningProfileDisplayCtrl) UISpawningHelper.Spawn(
                         uiPoolMap
                         , spawnedUIMap
-                        , UIType.UnitSpawnProfileUI
+                        , UIType.SpawningProfileDisplay
                         , spawnPos
                         , quaternion.identity);
 
-                unitProfileUICtrl.ProgressBar.ClearProgress();
+                profileDisplayCtrl.ProgressBar.ClearProgress();
 
-                profile.UIID = unitProfileUICtrl.UIID;
+                profile.UIID = profileDisplayCtrl.UIID;
 
-                unitProfileUICtrl.ProfilePic.sprite = profile.UnitSprite.Value;
-                structurePanelUICtrl.UnitProfileUIHolder.Add(unitProfileUICtrl);
+                profileDisplayCtrl.ProfilePic.sprite = profile.UnitSprite.Value;
+                entitySpawningPanelCtrl.SpawningDisplaysHolder.Add(profileDisplayCtrl);
 
-                unitProfileUICtrl.gameObject.SetActive(true);
+                profileDisplayCtrl.gameObject.SetActive(true);
             }
         }
 

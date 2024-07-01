@@ -85,11 +85,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 600027609074970268}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac86a3ace82192741abc86ce3588310b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c6394ece72c7c3429f26aab01b1948b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 4470894870234134306}
-  unitProfileUICtrl: {fileID: 5627687236498127547}
+  spawningProfileDisplayCtrl: {fileID: 5627687236498127547}
 --- !u!1 &4352457251621119045
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 5627687236498127547}
   - component: {fileID: 7285389287214552395}
   m_Layer: 0
-  m_Name: UnitProfileUI
+  m_Name: SpawningDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -298,7 +298,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8368578966582362874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c0bd82155aef7c4181b9802c5d27850, type: 3}
+  m_Script: {fileID: 11500000, guid: 093d1f3c98040c14cb8fd6df7b9844b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UIID:
@@ -307,7 +307,7 @@ MonoBehaviour:
   CanvasType: 1
   CanvasAnchorPreset: 0
   profilePic: {fileID: 2793441872235664091}
-  profileUIButton: {fileID: 7285389287214552395}
+  incSpawnCountButton: {fileID: 7285389287214552395}
   progressBar: {fileID: 7059756165954914532}
 --- !u!114 &7285389287214552395
 MonoBehaviour:
@@ -318,8 +318,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8368578966582362874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 816187dabf571ac4d90bda6c90cae3b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 5321f23f22c0cd947ada9d76014767dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 5625069851195845900}
-  unitProfileUICtrl: {fileID: 5627687236498127547}
+  spawningProfileDisplayCtrl: {fileID: 5627687236498127547}

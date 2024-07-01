@@ -3,22 +3,22 @@ using Core.MyEvent.PubSub.Messengers;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
 
-namespace Core.UI.StructurePanel.UnitProfile
+namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
 {
-    public class UnitProfileUIButton : BaseButton
+    public class IncSpawnCountButton : BaseButton
     {
-        [SerializeField]private UnitProfileUICtrl unitProfileUICtrl;
+        [SerializeField] private SpawningProfileDisplayCtrl spawningProfileDisplayCtrl;
 
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadCtrl(ref this.unitProfileUICtrl);
+            this.LoadCtrl(ref this.spawningProfileDisplayCtrl);
         }
 
         protected override void OnClick()
         {
             GameplayMessenger.MessagePublisher
-                .Publish(new SpawnUnitMessage(this.unitProfileUICtrl.UIID));
+                .Publish(new SpawnUnitMessage(this.spawningProfileDisplayCtrl.UIID));
             
         }
 

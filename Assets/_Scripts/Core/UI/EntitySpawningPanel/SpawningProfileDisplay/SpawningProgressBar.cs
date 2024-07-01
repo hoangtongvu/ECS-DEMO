@@ -6,17 +6,17 @@ using UnityEngine;
 using ZBase.Foundation.PubSub;
 using Core.Utilities.Extensions;
 
-namespace Core.UI.StructurePanel.UnitProfile
+namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
 {
-    public class UnitProfileUIProgressBar : ProgressBarByImage
+    public class SpawningProgressBar : ProgressBarByImage
     {
-        [SerializeField] private UnitProfileUICtrl unitProfileUICtrl;
+        [SerializeField] private SpawningProfileDisplayCtrl spawningProfileDisplayCtrl;
         private List<ISubscription> subscriptions = new();
 
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadCtrl(ref this.unitProfileUICtrl);
+            this.LoadCtrl(ref this.spawningProfileDisplayCtrl);
         }
 
         private void OnEnable()
@@ -36,7 +36,7 @@ namespace Core.UI.StructurePanel.UnitProfile
 
         private void Handle(SetProgressBarMessage message)
         {
-            if (!message.UIID.Equals(this.unitProfileUICtrl.UIID)) return;
+            if (!message.UIID.Equals(this.spawningProfileDisplayCtrl.UIID)) return;
             if (message.Value > 1) Debug.LogWarning($"Progress value is greater than 1, is potentially a bug");
             this.SetProgress(message.Value);
         }
