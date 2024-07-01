@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.MyEntity.EntitySpawning;
 using Unity.Transforms;
+using Components;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -17,7 +18,8 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var spawnerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     EntitySpawningProfileElement
-                    , LocalTransform>()
+                    , LocalTransform
+                    , SelfEntityRef>()
                 .Build();
 
             state.RequireForUpdate(spawnerQuery);
@@ -26,10 +28,11 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (profiles, transformRef) in
+            foreach (var (profiles, transformRef, selfEntityRef) in
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<LocalTransform>>())
+                    , RefRO<LocalTransform>
+                    , RefRO<SelfEntityRef>>())
             {
                 
                 for (int i = 0; i < profiles.Length; i++)
@@ -42,10 +45,20 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                     Entity entity = state.EntityManager.Instantiate(profile.PrefabToSpawn);
                     
-                    if (!SystemAPI.HasComponent<SpawnerPos>(entity)) continue;
-                    var spawnerPosRef = SystemAPI.GetComponentRW<SpawnerPos>(entity);
+                    if (SystemAPI.HasComponent<SpawnerPos>(entity))
+                    {
+                        var spawnerPosRef = SystemAPI.GetComponentRW<SpawnerPos>(entity);
+                        spawnerPosRef.ValueRW.Value = transformRef.ValueRO.Position;
+                    }
 
-                    spawnerPosRef.ValueRW.Value = transformRef.ValueRO.Position;
+                    
+                    if (SystemAPI.HasComponent<SpawnerEntity>(entity))
+                    {
+                        var spawnerEntityRef = SystemAPI.GetComponentRW<SpawnerEntity>(entity);
+                        spawnerEntityRef.ValueRW.Value = selfEntityRef.ValueRO.Value;
+                    }
+
+                    
                 }
 
             }

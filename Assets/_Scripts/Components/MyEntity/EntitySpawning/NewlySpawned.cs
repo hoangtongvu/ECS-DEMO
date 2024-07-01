@@ -12,4 +12,9 @@ namespace Components.MyEntity.EntitySpawning
         public float3 Value;
     }
 
+    public struct SpawnerEntity : IComponentData
+    {
+        public Entity Value;
+    }
+
 }
