@@ -7,15 +7,15 @@ using UnityEngine;
 
 namespace Authoring.MyEntity.EntitySpawning
 {
-    public class UnitSpawningAuthoring : MonoBehaviour
+    public class EntitySpawningAuthoring : MonoBehaviour
     {
         public float SpawnRadius = 3f;
         public List<Core.MyEntity.SpawningProfile> SpawningProfiles;
 
 
-        private class Baker : Baker<UnitSpawningAuthoring>
+        private class Baker : Baker<EntitySpawningAuthoring>
         {
-            public override void Bake(UnitSpawningAuthoring authoring)
+            public override void Bake(EntitySpawningAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
