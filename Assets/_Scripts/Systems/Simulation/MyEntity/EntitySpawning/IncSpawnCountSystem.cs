@@ -65,6 +65,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                         resourceWallet.CopyFrom(walletArr);
                         walletChangedRef.ValueRW.Value = true;
                         profile.SpawnCount++;
+                        profile.SpawnCountChanged = true;
                     }
                 }
             }
@@ -119,11 +120,13 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             , int bufferIndex
             , ResourceType resourceType)
         {
-            int enumLength = Enum.GetNames(typeof(ResourceType)).Length;
+            this.GetEnumLength<ResourceType>(out int enumLength);
             int costMapIndex = bufferIndex * enumLength + (int) resourceType;
             return localCostMap[costMapIndex].Cost;
         }
 
+        [BurstDiscard]
+        private void GetEnumLength<TEnum>(out int enumLength) where TEnum : Enum => enumLength = Enum.GetNames(typeof(TEnum)).Length;
 
     }
 

@@ -42,6 +42,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     if (!profile.CanSpawnState) continue;
                     profile.CanSpawnState = false;
                     profile.SpawnCount--;
+                    profile.SpawnCountChanged = true;
 
                     Entity entity = state.EntityManager.Instantiate(profile.PrefabToSpawn);
                     
