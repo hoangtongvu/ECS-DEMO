@@ -8,7 +8,7 @@ using ZBase.Foundation.PubSub;
 
 namespace Systems.Simulation
 {
-    public partial class SpawnUnitMessageSystemTEST : MessageQueuingSystem<SpawnUnitMessage> { }
+    public partial class SpawnUnitMessageSystem : MessageQueuingSystem<SpawnUnitMessage> { }
 
 
 
@@ -30,12 +30,12 @@ namespace Systems.Simulation
             this.SubscribeEvents();
         }
 
-        protected override void OnDestroy()
-        {
-            this.messages.Dispose();
-            var messageQueue = SystemAPI.GetSingleton<MessageQueue<TMessage>>();
-            messageQueue.Value.Dispose();
-        }
+        //protected override void OnDestroy()
+        //{
+        //    this.messages.Dispose(); // Note: This line cause Allocator Exception, dunno why.
+        //    var messageQueue = SystemAPI.GetSingleton<MessageQueue<TMessage>>();
+        //    messageQueue.Value.Dispose();
+        //}
 
         protected override void OnUpdate()
         {
