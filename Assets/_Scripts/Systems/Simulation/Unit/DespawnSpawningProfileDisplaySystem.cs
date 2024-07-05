@@ -10,7 +10,7 @@ namespace Systems.Simulation.Unit
 {
 
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    public partial class DespawnStructurePanelUISystem : SystemBase
+    public partial class DespawnEntitySpawningPanelSystem : SystemBase
     {
 
         protected override void OnCreate()
@@ -40,9 +40,9 @@ namespace Systems.Simulation.Unit
 
                 if (this.CanDespawn(selectedRef, uiSpawnedRef))
                 {
-                    this.DespawnUnitProfileUI(uiPoolMap, spawnedUIMap, spawningProfiles);
+                    this.DespawnProfileDisplays(uiPoolMap, spawnedUIMap, spawningProfiles);
 
-                    this.DespawnMainPanel(uiPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
+                    this.DespawnEntitySpawningPanel(uiPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
 
                     // TODO: Use event to despawn is much more easier cause we don't need any return.
                     uiSpawnedRef.ValueRW.IsSpawned = false;
@@ -56,7 +56,7 @@ namespace Systems.Simulation.Unit
             , RefRW<UISpawned> uiSpawnedRef) => !selectedRef.ValueRO.Value && uiSpawnedRef.ValueRO.IsSpawned;
 
 
-        private void DespawnUnitProfileUI(
+        private void DespawnProfileDisplays(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap
             , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles)
@@ -70,7 +70,7 @@ namespace Systems.Simulation.Unit
             }
         }
 
-        private void DespawnMainPanel(
+        private void DespawnEntitySpawningPanel(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap
             , ref UISpawned uiSpawned)

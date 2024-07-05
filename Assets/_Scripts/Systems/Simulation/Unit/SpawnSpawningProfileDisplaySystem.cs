@@ -14,7 +14,7 @@ namespace Systems.Simulation.Unit
 {
 
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    public partial class SpawnStructurePanelUISystem : SystemBase
+    public partial class SpawnEntitySpawningPanelSystem : SystemBase
     {
 
         protected override void OnCreate()
@@ -48,14 +48,14 @@ namespace Systems.Simulation.Unit
 
                     float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
 
-                    this.SpawnMainPanel(
+                    this.SpawnEntitySpawningPanel(
                         uiPoolMap
                         , spawnedUIMap
                         , spawnPos
                         , ref uiSpawnedRef.ValueRW
                         , out var entitySpawningPanelCtrl);
 
-                    this.SpawnUnitProfileUI(
+                    this.SpawnProfileDisplays(
                         uiPoolMap
                         , spawnedUIMap
                         , spawningProfiles
@@ -73,7 +73,7 @@ namespace Systems.Simulation.Unit
             RefRO<UnitSelected> selectedRef
             , RefRW<UISpawned> uiSpawnedRef) => selectedRef.ValueRO.Value && !uiSpawnedRef.ValueRO.IsSpawned;
 
-        private void SpawnMainPanel(
+        private void SpawnEntitySpawningPanel(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap
             , float3 spawnPos
@@ -94,7 +94,7 @@ namespace Systems.Simulation.Unit
             entitySpawningPanelCtrl.gameObject.SetActive(true);
         }
 
-        private void SpawnUnitProfileUI(
+        private void SpawnProfileDisplays(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap
             , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
