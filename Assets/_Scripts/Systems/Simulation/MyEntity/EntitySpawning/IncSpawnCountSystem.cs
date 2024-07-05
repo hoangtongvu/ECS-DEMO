@@ -1,15 +1,12 @@
 using Components.MyEntity.EntitySpawning;
 using Components.Unit;
-using Core.MyEvent.PubSub.Messages;
-using Core.MyEvent.PubSub.Messengers;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using ZBase.Foundation.PubSub;
 using Core.UI.Identification;
 using Components.GameResource;
 using Core.GameResource;
-using System;
+using Components;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -18,14 +15,34 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial struct IncSpawnCountSystem : ISystem
     {
-        private NativeQueue<SpawnUnitMessage> spawnUnitMessages;
-
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            this.spawnUnitMessages = new(Allocator.Persistent);
-            this.SubscribeEvents();
+            var entityQuery0 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    ResourceWalletElement
+                    , WalletChanged>()
+                    .Build();
+
+            var entityQuery1 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    SpawnUnitMessageQueue
+                    , EnumLength<ResourceType>>()
+                    .Build();
+
+            var entityQuery2 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitSelected
+                    , EntitySpawningProfileElement
+                    , LocalCostMapElement>()
+                    .Build();
+
+
+            state.RequireForUpdate(entityQuery0);
+            state.RequireForUpdate(entityQuery1);
+            state.RequireForUpdate(entityQuery2);
+
         }
 
 
@@ -35,10 +52,13 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             // Only handle Player's side this time.
             var resourceWallet = SystemAPI.GetSingletonBuffer<ResourceWalletElement>();
             var walletChangedRef = SystemAPI.GetSingletonRW<WalletChanged>();
+            var messageQueueRef = SystemAPI.GetSingletonRW<SpawnUnitMessageQueue>();
+            var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>();
 
             // Put foreach inside while loop is more efficient in this situation.
-            while (this.spawnUnitMessages.TryDequeue(out var message))
+            while (messageQueueRef.ValueRW.Value.TryDequeue(out var message))
             {
+                // Turn whole these below into IJobEntity?
                 foreach (var (unitSelectedRef, profiles, localCostMap) in
                     SystemAPI.Query<
                         RefRO<UnitSelected>
@@ -60,7 +80,12 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                         }
 
                         if (!this.IdMatched(message.ProfileID, profile.UIID.Value)) continue;
-                        if (!this.HaveEnoughResources(resourceWallet, localCostMap, i, out var walletArr)) continue;
+                        if (!this.HaveEnoughResources(
+                            resourceWallet
+                            , localCostMap
+                            , i
+                            , resourceCount.Value
+                            , out var walletArr)) continue;
 
                         resourceWallet.CopyFrom(walletArr);
                         walletChangedRef.ValueRW.Value = true;
@@ -71,13 +96,6 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             }
         }
 
-        [BurstDiscard]
-        private void SubscribeEvents()
-        {
-            GameplayMessenger.MessageSubscriber.Subscribe<SpawnUnitMessage>(this.SpawnUnitMessageHandle);
-        }
-
-        private void SpawnUnitMessageHandle(SpawnUnitMessage spawnUnitMessage) => this.spawnUnitMessages.Enqueue(spawnUnitMessage);
 
         [BurstCompile]
         private bool IdMatched(UIID first, UIID second) => first.Equals(second);
@@ -88,6 +106,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             DynamicBuffer<ResourceWalletElement> resourceWallet
             , DynamicBuffer<LocalCostMapElement> localCostMap
             , int bufferIndex
+            , int resourceCount
             , out NativeArray<ResourceWalletElement> walletArr)
         {
 
@@ -99,7 +118,12 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             {
                 ResourceType resourceType = (ResourceType)i;
 
-                uint cost = this.GetCost(localCostMap, bufferIndex, resourceType);
+                uint cost = this.GetCost(
+                    localCostMap
+                    , bufferIndex
+                    , resourceCount
+                    , resourceType);
+
                 long tempValue = (long) walletArr[i].Quantity - cost;
                 // UnityEngine.Debug.Log($"{resourceType} {tempValue} = {walletArr[i].Quantity} - {cost}");
 
@@ -115,18 +139,17 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             return true;
         }
 
+        [BurstCompile]
         private uint GetCost(
             DynamicBuffer<LocalCostMapElement> localCostMap
             , int bufferIndex
+            , int resourceCount
             , ResourceType resourceType)
         {
-            this.GetEnumLength<ResourceType>(out int enumLength);
-            int costMapIndex = bufferIndex * enumLength + (int) resourceType;
+            int costMapIndex = bufferIndex * resourceCount + (int) resourceType;
             return localCostMap[costMapIndex].Cost;
         }
 
-        [BurstDiscard]
-        private void GetEnumLength<TEnum>(out int enumLength) where TEnum : Enum => enumLength = Enum.GetNames(typeof(TEnum)).Length;
 
     }
 
