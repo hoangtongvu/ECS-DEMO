@@ -6,7 +6,7 @@ using Unity.Transforms;
 using Components.ComponentMap;
 using Utilities.Helpers;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Simulation.MyEntity.EntitySpawning
 {
 
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
