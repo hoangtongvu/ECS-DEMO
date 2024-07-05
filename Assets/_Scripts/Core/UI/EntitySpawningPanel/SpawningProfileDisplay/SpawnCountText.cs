@@ -32,7 +32,7 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
             this.SetSpawnCount(message.Value);
         }
 
-        private void SetSpawnCount(int value) => this.text.text = value.ToString();
+        public void SetSpawnCount(int value) => this.text.text = value.ToString();
 
     }
 }
