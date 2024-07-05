@@ -56,8 +56,6 @@ namespace Utilities
         private static void DestroyInstance() => InstanceField.Data = default;
 
 
-        
-
         public bool HasSingleton<T>() where T : IComponentData => this.entityManager.HasComponent<T>(this.singletonEntity);
 
         public T GetSingleton<T>() where T : unmanaged, IComponentData => this.entityManager.GetComponentData<T>(this.singletonEntity);
