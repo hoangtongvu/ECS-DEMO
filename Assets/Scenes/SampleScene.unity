@@ -1184,7 +1184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Id:
-    Kind: 0
+    Kind: 2
     Id: 0
   Target: {fileID: 0}
 --- !u!114 &1004793682
