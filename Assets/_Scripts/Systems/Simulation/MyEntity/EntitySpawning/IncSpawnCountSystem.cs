@@ -7,6 +7,7 @@ using Core.UI.Identification;
 using Components.GameResource;
 using Core.GameResource;
 using Components;
+using Core.MyEvent.PubSub.Messages;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -27,7 +28,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
             var entityQuery1 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    SpawnUnitMessageQueue
+                    MessageQueue<SpawnUnitMessage>
                     , EnumLength<ResourceType>>()
                     .Build();
 
@@ -52,11 +53,11 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             // Only handle Player's side this time.
             var resourceWallet = SystemAPI.GetSingletonBuffer<ResourceWalletElement>();
             var walletChangedRef = SystemAPI.GetSingletonRW<WalletChanged>();
-            var messageQueueRef = SystemAPI.GetSingletonRW<SpawnUnitMessageQueue>();
+            var messageQueue = SystemAPI.GetSingleton<MessageQueue<SpawnUnitMessage>>();
             var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>();
 
             // Put foreach inside while loop is more efficient in this situation.
-            while (messageQueueRef.ValueRW.Value.TryDequeue(out var message))
+            while (messageQueue.Value.TryDequeue(out var message))
             {
                 // Turn whole these below into IJobEntity?
                 foreach (var (unitSelectedRef, profiles, localCostMap) in
