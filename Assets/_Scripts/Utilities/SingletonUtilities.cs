@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Utilities
 {
 
-    public struct SingletonUtilitiesNEW
+    public struct SingletonUtilities
     {
 
         private Entity singletonEntity;
@@ -19,13 +19,13 @@ namespace Utilities
 
 
 
-        private static readonly SharedStatic<SingletonUtilitiesNEW> InstanceField
-            = SharedStatic<SingletonUtilitiesNEW>.GetOrCreate<InstanceFieldKey>();
+        private static readonly SharedStatic<SingletonUtilities> InstanceField
+            = SharedStatic<SingletonUtilities>.GetOrCreate<InstanceFieldKey>();
 
         // Define a Key type to identify InstanceField
         private class InstanceFieldKey { }
 
-        SingletonUtilitiesNEW(EntityManager em)
+        SingletonUtilities(EntityManager em)
         {
             this.isValid = false;
             this.singletonEntity = em.CreateEntity();
@@ -34,7 +34,7 @@ namespace Utilities
             this.entityManager = em;
         }
 
-        public static SingletonUtilitiesNEW GetInstance(EntityManager entityManager)
+        public static SingletonUtilities GetInstance(EntityManager entityManager)
         {
             if (!InstanceField.Data.isValid)
             {
@@ -88,9 +88,9 @@ namespace Utilities
 
     }
 
-    public static class SingletonContainerManagedExtensions
+    public static class SingletonUtilitiesManagedExtensions
     {
-        public static Entity AddOrSetComponentData<T>(this SingletonUtilitiesNEW su, T data) where T : class, IComponentData, new()
+        public static Entity AddOrSetComponentData<T>(this SingletonUtilities su, T data) where T : class, IComponentData, new()
         {
             EntityManager em = su.EntityManager;
             Entity singletonEntity = su.DefaultSingletonEntity;
