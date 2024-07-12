@@ -41,6 +41,7 @@ namespace Systems.Simulation.Unit
                 targetPosition = selectedPos,
                 targetPosLookup = SystemAPI.GetComponentLookup<TargetPosition>(),
                 moveableStateLookup = SystemAPI.GetComponentLookup<MoveableState>(),
+                moveAffecterLookup = SystemAPI.GetComponentLookup<MoveAffecterICD>(),
             };
 
             state.Dependency = default;
@@ -82,6 +83,10 @@ namespace Systems.Simulation.Unit
             [NativeDisableParallelForRestriction]
             public ComponentLookup<MoveableState> moveableStateLookup;
 
+            [NativeDisableParallelForRestriction]
+            public ComponentLookup<MoveAffecterICD> moveAffecterLookup;
+
+
             public void Execute(int startIndex, int count)
             {
                 var length = startIndex + count;
@@ -95,6 +100,11 @@ namespace Systems.Simulation.Unit
 
                     var targetPosRef = this.targetPosLookup.GetRefRWOptional(entity);
                     targetPosRef.ValueRW.Value = this.targetPosition;
+
+                    var moveAffecterRef = this.moveAffecterLookup.GetRefRWOptional(entity);
+                    moveAffecterRef.ValueRW.Value = Core.Unit.MoveAffecter.PlayerCommand;
+
+
                 }
             }
         }
