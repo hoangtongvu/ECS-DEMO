@@ -19,8 +19,8 @@ namespace Systems.Simulation.Tool
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     EntitySpawningProfileElement
-                    , ToolHolderElement
-                    , ToolHoldLimit>()
+                    , ToolHoldLimit
+                    , ToolHoldCount>()
                 .Build();
 
             state.RequireForUpdate(query);
@@ -40,11 +40,11 @@ namespace Systems.Simulation.Tool
             [BurstCompile]
             void Execute(
                 DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
-                , DynamicBuffer<ToolHolderElement> toolsHolder
+                , in ToolHoldCount toolHoldCount
                 , in ToolHoldLimit toolHoldLimit)
             {
                 int profileLength = spawningProfiles.Length;
-                int usedSlotCount = toolsHolder.Length;
+                int usedSlotCount = toolHoldCount.Value;
                 int limit = toolHoldLimit.Value;
 
                 for (int i = 0; i < profileLength; i++)

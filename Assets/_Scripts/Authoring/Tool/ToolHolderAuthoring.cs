@@ -23,7 +23,7 @@ namespace Authoring.Tool
                     Value = 3,
                 });
 
-                AddBuffer<ToolHolderElement>(entity);
+                AddComponent<ToolHoldCount>(entity);
 
                 AddComponent(entity, new ToolCallerRadius
                 {

@@ -9,6 +9,7 @@ using Systems.Simulation.Unit;
 using Core.Unit;
 using Utilities.Helpers;
 using Utilities;
+using Components.MyEntity.EntitySpawning;
 
 namespace Systems.Simulation.Tool
 {
@@ -54,13 +55,15 @@ namespace Systems.Simulation.Tool
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadiusSingleton>();
 
-            foreach (var (toolTransformRef, toolEntity) in
+            foreach (var (toolTransformRef, spawnerEntityRef, toolEntity) in
                 SystemAPI.Query<
-                    RefRO<LocalTransform>>()
+                    RefRO<LocalTransform>
+                    , RefRW<SpawnerEntityRef>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
-                
+                var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.ValueRO.Value);
+
                 foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
                     SystemAPI.Query<
                         RefRW<UnitToolHolder>
@@ -85,7 +88,11 @@ namespace Systems.Simulation.Tool
                         // Pick the tool
                         unitToolHolderRef.ValueRW.Value = toolEntity;
                         SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
-                        continue;
+
+                        toolHoldCountRef.ValueRW.Value--;
+                        spawnerEntityRef.ValueRW.Value = Entity.Null;
+
+                        break;
                     }
 
                     if (!MoveAffecterHelper.TryChangeMoveAffecter(

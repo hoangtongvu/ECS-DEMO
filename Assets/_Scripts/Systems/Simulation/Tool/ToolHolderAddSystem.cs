@@ -2,7 +2,6 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.MyEntity.EntitySpawning;
 using Components.Tool;
-using Components;
 using Systems.Simulation.MyEntity.EntitySpawning;
 
 namespace Systems.Simulation.Tool
@@ -20,7 +19,6 @@ namespace Systems.Simulation.Tool
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     SpawnerEntityRef
-                    , SelfEntityRef
                     , NewlySpawnedTag>()
                 .Build();
 
@@ -31,23 +29,19 @@ namespace Systems.Simulation.Tool
         public void OnUpdate(ref SystemState state)
         {
 
-            foreach (var (spawnerEntityRef, selfEntityRef) in
+            foreach (var spawnerEntityRef in
                 SystemAPI.Query<
-                    RefRO<SpawnerEntityRef>
-                    , RefRO<SelfEntityRef>>()
+                    RefRO<SpawnerEntityRef>>()
                     .WithAll<NewlySpawnedTag>())
             {
                 Entity spawner = spawnerEntityRef.ValueRO.Value;
 
-                var toolsHolder = SystemAPI.GetBuffer<ToolHolderElement>(spawner);
+                var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawner);
                 var toolHoldLimitRef = SystemAPI.GetComponentRO<ToolHoldLimit>(spawner);
 
-                if (toolsHolder.Length >= toolHoldLimitRef.ValueRO.Value) continue;
+                if (toolHoldCountRef.ValueRO.Value >= toolHoldLimitRef.ValueRO.Value) continue;
 
-                toolsHolder.Add(new ToolHolderElement
-                {
-                    Value = selfEntityRef.ValueRO.Value,
-                });
+                toolHoldCountRef.ValueRW.Value++;
 
             }
 
