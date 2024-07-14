@@ -6,10 +6,4 @@ namespace Components.Tool
     {
     }
 
-    // TODO: Rename this later and move it to another file.
-    public struct ToolCallRadiusSingleton : IComponentData
-    {
-        public float Value;
-    }
-    
 }

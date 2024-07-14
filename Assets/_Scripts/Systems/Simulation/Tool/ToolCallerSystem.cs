@@ -43,7 +43,7 @@ namespace Systems.Simulation.Tool
             state.RequireForUpdate(query1);
 
             SingletonUtilities.GetInstance(state.EntityManager)
-                .AddOrSetComponentData(new ToolCallRadiusSingleton
+                .AddOrSetComponentData(new ToolCallRadius
                 {
                     Value = 15f,
                 });
@@ -53,7 +53,7 @@ namespace Systems.Simulation.Tool
         public void OnUpdate(ref SystemState state)
         {
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
-            var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadiusSingleton>();
+            var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
 
             foreach (var (toolTransformRef, spawnerEntityRef, toolEntity) in
                 SystemAPI.Query<
