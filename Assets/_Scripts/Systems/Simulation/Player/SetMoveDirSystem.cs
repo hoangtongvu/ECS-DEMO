@@ -18,7 +18,7 @@ namespace Systems.Simulation.Player
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerTag
-                    , SelfEntityRef>()
+                    , MoveDirectionFloat2>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
@@ -31,19 +31,19 @@ namespace Systems.Simulation.Player
         {
             float2 inputMoveDirection = SystemAPI.GetSingleton<InputData>().MoveDirection.Value;
 
-            foreach (var (moveDirRef, selfEntityRefRef) in
+            foreach (var (moveDirRef, selfEntity) in
                 SystemAPI.Query<
-                    RefRW<MoveDirectionFloat2>
-                    , RefRO<SelfEntityRef>>()
+                    RefRW<MoveDirectionFloat2>>()
+                    .WithEntityAccess()
                     .WithAll<PlayerTag>())
             {
                 if (inputMoveDirection.x == 0 && inputMoveDirection.y == 0)
                 {
-                    SystemAPI.SetComponentEnabled<MoveableState>(selfEntityRefRef.ValueRO.Value, false);
+                    SystemAPI.SetComponentEnabled<MoveableState>(selfEntity, false);
                     return;
                 }
 
-                SystemAPI.SetComponentEnabled<MoveableState>(selfEntityRefRef.ValueRO.Value, true);
+                SystemAPI.SetComponentEnabled<MoveableState>(selfEntity, true);
                 moveDirRef.ValueRW.Value = inputMoveDirection;
                 
             }

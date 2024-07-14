@@ -2,7 +2,6 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.MyEntity.EntitySpawning;
 using Unity.Transforms;
-using Components;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -18,8 +17,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var spawnerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     EntitySpawningProfileElement
-                    , LocalTransform
-                    , SelfEntityRef>()
+                    , LocalTransform>()
                 .Build();
 
             state.RequireForUpdate(spawnerQuery);
@@ -28,11 +26,11 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (profiles, transformRef, selfEntityRef) in
+            foreach (var (profiles, transformRef, selfEntity) in
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<LocalTransform>
-                    , RefRO<SelfEntityRef>>())
+                    , RefRO<LocalTransform>>()
+                    .WithEntityAccess())
             {
                 
                 for (int i = 0; i < profiles.Length; i++)
@@ -56,7 +54,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     if (SystemAPI.HasComponent<SpawnerEntityRef>(entity))
                     {
                         var spawnerEntityRef = SystemAPI.GetComponentRW<SpawnerEntityRef>(entity);
-                        spawnerEntityRef.ValueRW.Value = selfEntityRef.ValueRO.Value;
+                        spawnerEntityRef.ValueRW.Value = selfEntity;
                     }
 
                     
