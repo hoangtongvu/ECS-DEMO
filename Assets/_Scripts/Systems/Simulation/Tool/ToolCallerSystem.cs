@@ -6,6 +6,8 @@ using Components.Unit;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Systems.Simulation.Unit;
+using Core.Unit;
+using Utilities.Helpers;
 
 namespace Systems.Simulation.Tool
 {
@@ -43,6 +45,7 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
 
             foreach (var (toolsHolder, toolHolderTransformRef, toolCallerRadiusRef, toolPickRadiusRef) in
                 SystemAPI.Query<
@@ -60,13 +63,14 @@ namespace Systems.Simulation.Tool
 
                     // May be adding a Jobless Tag to Unit more efficiently.
 
-                    foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitEntity) in
+                    foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
                         SystemAPI.Query<
                             RefRW<UnitToolHolder>
                             , RefRO<LocalTransform>
                             , RefRW<TargetPosition>
                             , RefRW<MoveAffecterICD>
-                            , RefRW<DistanceToTarget>>()
+                            , RefRW<DistanceToTarget>
+                            , RefRO<UnitId>>()
                             .WithEntityAccess())
                     {
                         if (unitToolHolderRef.ValueRO.Value != Entity.Null) continue;
@@ -86,7 +90,16 @@ namespace Systems.Simulation.Tool
                             continue;
                         }
 
-                        moveAffecterRef.ValueRW.Value = Core.Unit.MoveAffecter.Others;
+                        if (!MoveAffecterHelper.TryChangeMoveAffecter(
+                            moveAffecterMap.Value
+                            , unitIdRef.ValueRO.UnitType
+                            , ref moveAffecterRef.ValueRW
+                            , MoveAffecter.Others
+                            , unitIdRef.ValueRO.LocalIndex))
+                        {
+                            continue;
+                        }
+
 
                         targetPosRef.ValueRW.Value = toolHolderTransformRef.ValueRO.Position;
                         distanceToTargetRef.ValueRW.MinDistance = toolPickRadiusRef.ValueRO.Value;
@@ -104,7 +117,6 @@ namespace Systems.Simulation.Tool
         }
 
         
-
 
     }
 }

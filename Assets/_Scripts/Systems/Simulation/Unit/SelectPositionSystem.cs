@@ -7,6 +7,8 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Burst;
+using Core.Unit;
+using Utilities.Helpers;
 
 namespace Systems.Simulation.Unit
 {
@@ -29,6 +31,8 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
+
             // Checking Hit Data.
             if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
@@ -42,6 +46,8 @@ namespace Systems.Simulation.Unit
                 targetPosLookup = SystemAPI.GetComponentLookup<TargetPosition>(),
                 moveableStateLookup = SystemAPI.GetComponentLookup<MoveableState>(),
                 moveAffecterLookup = SystemAPI.GetComponentLookup<MoveAffecterICD>(),
+                unitIdLookup = SystemAPI.GetComponentLookup<UnitId>(),
+                moveAffecterMap = moveAffecterMap.Value,
             };
 
             state.Dependency = default;
@@ -86,6 +92,11 @@ namespace Systems.Simulation.Unit
             [NativeDisableParallelForRestriction]
             public ComponentLookup<MoveAffecterICD> moveAffecterLookup;
 
+            [NativeDisableParallelForRestriction]
+            public ComponentLookup<UnitId> unitIdLookup;
+
+            [ReadOnly]
+            public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
 
             public void Execute(int startIndex, int count)
             {
@@ -96,14 +107,27 @@ namespace Systems.Simulation.Unit
                     Entity entity = selectedUnits.ElementAt(i).Value;
 
                     if (Hint.Likely(!this.moveableStateLookup.HasComponent(entity))) continue;
+
+
+                    var moveAffecterRef = this.moveAffecterLookup.GetRefRWOptional(entity);
+                    var unitIdRef = this.unitIdLookup.GetRefROOptional(entity);
+
+
+                    if (!MoveAffecterHelper.TryChangeMoveAffecter(
+                        this.moveAffecterMap
+                        , unitIdRef.ValueRO.UnitType
+                        , ref moveAffecterRef.ValueRW
+                        , MoveAffecter.PlayerCommand
+                        , unitIdRef.ValueRO.LocalIndex))
+                    {
+                        continue;
+                    }
+
+
                     this.moveableStateLookup.SetComponentEnabled(entity, true);
 
                     var targetPosRef = this.targetPosLookup.GetRefRWOptional(entity);
                     targetPosRef.ValueRW.Value = this.targetPosition;
-
-                    var moveAffecterRef = this.moveAffecterLookup.GetRefRWOptional(entity);
-                    moveAffecterRef.ValueRW.Value = Core.Unit.MoveAffecter.PlayerCommand;
-
 
                 }
             }
