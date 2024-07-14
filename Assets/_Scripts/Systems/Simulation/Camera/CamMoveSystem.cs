@@ -9,7 +9,7 @@ using Unity.Transforms;
 
 namespace Systems.Simulation
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct CamMoveSystem : ISystem
     {

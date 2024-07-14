@@ -1,4 +1,5 @@
 ﻿using Components;
+using Components.Unit;
 using Unity.Entities;
 using UnityEngine;
 
@@ -24,6 +25,11 @@ namespace Authoring
                 AddComponent(entity, new DistanceToTarget
                 {
                     MinDistance = authoring.MinDistance,
+                });
+
+                AddComponent(entity, new MoveAffecterICD
+                {
+                    Value = Core.Unit.MoveAffecter.None,
                 });
 
 

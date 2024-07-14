@@ -1,4 +1,5 @@
 using Components;
+using Components.Unit;
 using Unity.Burst;
 using Unity.Burst.CompilerServices;
 using Unity.Entities;
@@ -20,6 +21,7 @@ namespace Systems.Simulation.Unit
                 .WithAll<
                     MoveableState
                     , DistanceToTarget
+                    , MoveAffecterICD
                     , PhysicsVelocity>()
                 .Build();
 
@@ -38,11 +40,13 @@ namespace Systems.Simulation.Unit
             void Execute(
                 EnabledRefRW<MoveableState> moveStateRef
                 , in DistanceToTarget distanceToTarget
+                , ref MoveAffecterICD moveAffecter
                 , ref PhysicsVelocity physicsVelocity)
             {
                 if (Hint.Likely(distanceToTarget.CurrentDistance >= distanceToTarget.MinDistance)) return;
                 // velocityRef.ValueRW.Linear = 0;
                 moveStateRef.ValueRW = false;
+                moveAffecter.Value = Core.Unit.MoveAffecter.None;
             }
         }
 

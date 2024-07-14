@@ -1,4 +1,5 @@
 using Components.Tag;
+using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
 
@@ -9,45 +10,50 @@ namespace Utilities
     {
 
         private Entity singletonEntity;
-        private static SingletonUtilities instance;
-        private static bool isValid;
-
         private EntityManager entityManager;
+        private bool isValid;
+
 
         public EntityManager EntityManager => entityManager;
         public Entity DefaultSingletonEntity => singletonEntity;
 
+
+
+        private static readonly SharedStatic<SingletonUtilities> InstanceField
+            = SharedStatic<SingletonUtilities>.GetOrCreate<InstanceFieldKey>();
+
+        // Define a Key type to identify InstanceField
+        private class InstanceFieldKey { }
+
+        SingletonUtilities(EntityManager em)
+        {
+            this.isValid = false;
+            this.singletonEntity = em.CreateEntity();
+            em.AddComponent<DefaultSingletonTag>(this.singletonEntity);
+            em.SetName(this.singletonEntity, "*DefaultSingletonEntity");
+            this.entityManager = em;
+        }
+
+        public static SingletonUtilities GetInstance(EntityManager entityManager)
+        {
+            if (!InstanceField.Data.isValid)
+            {
+                InstanceField.Data = new(entityManager);
+                InstanceField.Data.isValid = true;
+            }
+            InstanceField.Data.entityManager = entityManager;
+            return InstanceField.Data;
+        }
+
+
 #if UNITY_EDITOR
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void ClearOnLoad() => DestroyInstance();
 
 #endif
 
-
-        private SingletonUtilities(EntityManager em)
-        {
-            this.singletonEntity = em.CreateEntity(typeof(DefaultSingletonTag));
-            em.SetName(this.singletonEntity, "*DefaultSingletonEntity");
-
-            this.entityManager = em;
-        }
-
-
-        public static SingletonUtilities GetInstance(EntityManager em)
-        {
-            if (!isValid)
-            {
-                isValid = true;
-                instance = new(em);
-            }
-
-            // Just to make sure use UpToDated EntityManager.
-            instance.entityManager = em;
-            return instance;
-        }
-
-        private static void DestroyInstance() => isValid = false;
-
+        private static void DestroyInstance() => InstanceField.Data = default;
 
 
         public bool HasSingleton<T>() where T : IComponentData => this.entityManager.HasComponent<T>(this.singletonEntity);

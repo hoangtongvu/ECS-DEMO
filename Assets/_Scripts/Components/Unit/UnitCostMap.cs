@@ -8,5 +8,4 @@ namespace Components.Unit
     {
         public NativeHashMap<UnitCostId, uint> Value;
     }
-
 }

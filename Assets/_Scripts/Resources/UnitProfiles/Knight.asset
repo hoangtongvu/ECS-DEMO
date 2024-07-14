@@ -14,13 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LocalIndex: 0
   ProfilePicture: {fileID: 21300000, guid: 6f34760afcacfa946a441a9f5bda8873, type: 3}
-  UnitName: Knight
-  UnitType: 2
+  Name: 
   Prefab: {fileID: 3552774824711469151, guid: abf102b7e42e9874183ffb8ec9d78bfb, type: 3}
-  DurationPerUnit: 3
+  DurationPerSpawn: 3
   BaseCosts:
     _serializedList:
     - Key: 0
       Value: 3
     - Key: 1
       Value: 5
+  UnitType: 2
+  MoveAffecterPriorities:
+    _serializedList:
+    - Key: 1
+      Value: 0
+    - Key: 2
+      Value: 1
+    - Key: 3
+      Value: 2
