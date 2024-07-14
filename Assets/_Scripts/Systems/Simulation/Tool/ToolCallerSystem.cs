@@ -8,6 +8,8 @@ using Unity.Mathematics;
 using Systems.Simulation.Unit;
 using Core.Unit;
 using Utilities.Helpers;
+using Utilities;
+using Components.MyEntity.EntitySpawning;
 
 namespace Systems.Simulation.Tool
 {
@@ -23,10 +25,8 @@ namespace Systems.Simulation.Tool
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    ToolHolderElement
-                    , LocalTransform
-                    , ToolCallerRadius
-                    , ToolPickRadius>()
+                    LocalTransform
+                    , DerelictToolTag>()
                 .Build();
 
             var query1 = SystemAPI.QueryBuilder()
@@ -35,81 +35,85 @@ namespace Systems.Simulation.Tool
                     , LocalTransform
                     , TargetPosition
                     , MoveAffecterICD
-                    , DistanceToTarget>()
+                    , DistanceToTarget
+                    , UnitId>()
                 .Build();
 
             state.RequireForUpdate(query0);
             state.RequireForUpdate(query1);
+
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(new ToolCallRadiusSingleton
+                {
+                    Value = 15f,
+                });
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
+            var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadiusSingleton>();
 
-            foreach (var (toolsHolder, toolHolderTransformRef, toolCallerRadiusRef, toolPickRadiusRef) in
+            foreach (var (toolTransformRef, spawnerEntityRef, toolEntity) in
                 SystemAPI.Query<
-                    DynamicBuffer<ToolHolderElement>
-                    , RefRO<LocalTransform>
-                    , RefRO<ToolCallerRadius>
-                    , RefRO<ToolPickRadius>>())
+                    RefRO<LocalTransform>
+                    , RefRW<SpawnerEntityRef>>()
+                    .WithEntityAccess()
+                    .WithAll<DerelictToolTag>())
             {
-                if (toolsHolder.IsEmpty) continue;
-                int toolsHolderLength = toolsHolder.Length;
+                var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.ValueRO.Value);
 
-                for (int i = 0; i < toolsHolderLength; i++)
+                foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
+                    SystemAPI.Query<
+                        RefRW<UnitToolHolder>
+                        , RefRO<LocalTransform>
+                        , RefRW<TargetPosition>
+                        , RefRW<MoveAffecterICD>
+                        , RefRW<DistanceToTarget>
+                        , RefRO<UnitId>>()
+                        .WithEntityAccess())
                 {
-                    ref var toolHolder = ref toolsHolder.ElementAt(i);
+                    if (unitToolHolderRef.ValueRO.Value != Entity.Null) continue;
+                    // Even if we can set min distance then how we can make unit pick up tool upon stop.
 
-                    // May be adding a Jobless Tag to Unit more efficiently.
 
-                    foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
-                        SystemAPI.Query<
-                            RefRW<UnitToolHolder>
-                            , RefRO<LocalTransform>
-                            , RefRW<TargetPosition>
-                            , RefRW<MoveAffecterICD>
-                            , RefRW<DistanceToTarget>
-                            , RefRO<UnitId>>()
-                            .WithEntityAccess())
+                    // calculate distance.
+                    // compare to range.
+                    float distance = math.distance(toolTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
+                    if (distance > toolCallRadius.Value) continue;
+
+                    if (distance <= distanceToTargetRef.ValueRO.MinDistance)
                     {
-                        if (unitToolHolderRef.ValueRO.Value != Entity.Null) continue;
-                        // Even if we can set min distance then how we can make unit pick up tool upon stop.
+                        // Pick the tool
+                        unitToolHolderRef.ValueRW.Value = toolEntity;
+                        SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
 
+                        toolHoldCountRef.ValueRW.Value--;
+                        spawnerEntityRef.ValueRW.Value = Entity.Null;
 
-                        // calculate distance.
-                        // compare to range.
-                        float distance = math.distance(toolHolderTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
-                        if (distance > toolCallerRadiusRef.ValueRO.Value) continue;
-
-                        if (distance <= toolPickRadiusRef.ValueRO.Value)
-                        {
-                            // Pick the tool
-                            unitToolHolderRef.ValueRW.Value = toolHolder.Value;
-                            toolsHolder.RemoveAt(i);
-                            continue;
-                        }
-
-                        if (!MoveAffecterHelper.TryChangeMoveAffecter(
-                            moveAffecterMap.Value
-                            , unitIdRef.ValueRO.UnitType
-                            , ref moveAffecterRef.ValueRW
-                            , MoveAffecter.Others
-                            , unitIdRef.ValueRO.LocalIndex))
-                        {
-                            continue;
-                        }
-
-
-                        targetPosRef.ValueRW.Value = toolHolderTransformRef.ValueRO.Position;
-                        distanceToTargetRef.ValueRW.MinDistance = toolPickRadiusRef.ValueRO.Value;
-                        SystemAPI.SetComponentEnabled<MoveableState>(unitEntity, true);
-
+                        break;
                     }
 
-                    break; // process tool one by one.
+                    if (!MoveAffecterHelper.TryChangeMoveAffecter(
+                        moveAffecterMap.Value
+                        , unitIdRef.ValueRO.UnitType
+                        , ref moveAffecterRef.ValueRW
+                        , MoveAffecter.Others
+                        , unitIdRef.ValueRO.LocalIndex))
+                    {
+                        continue;
+                    }
+
+
+                    targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
+                    SystemAPI.SetComponentEnabled<MoveableState>(unitEntity, true);
 
                 }
+
+                    
+
+                
 
             }
 
