@@ -19,7 +19,7 @@ namespace Systems.Simulation.Tool
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    SpawnerEntity
+                    SpawnerEntityRef
                     , SelfEntityRef
                     , NewlySpawnedTag>()
                 .Build();
@@ -33,7 +33,7 @@ namespace Systems.Simulation.Tool
 
             foreach (var (spawnerEntityRef, selfEntityRef) in
                 SystemAPI.Query<
-                    RefRO<SpawnerEntity>
+                    RefRO<SpawnerEntityRef>
                     , RefRO<SelfEntityRef>>()
                     .WithAll<NewlySpawnedTag>())
             {

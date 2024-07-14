@@ -53,9 +53,9 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     }
 
                     
-                    if (SystemAPI.HasComponent<SpawnerEntity>(entity))
+                    if (SystemAPI.HasComponent<SpawnerEntityRef>(entity))
                     {
-                        var spawnerEntityRef = SystemAPI.GetComponentRW<SpawnerEntity>(entity);
+                        var spawnerEntityRef = SystemAPI.GetComponentRW<SpawnerEntityRef>(entity);
                         spawnerEntityRef.ValueRW.Value = selfEntityRef.ValueRO.Value;
                     }
 

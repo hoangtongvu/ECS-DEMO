@@ -4,16 +4,16 @@ using UnityEngine;
 
 namespace Authoring.MyEntity.EntitySpawning
 {
-    public class SpawnerEntityAuthoring : MonoBehaviour
+    public class SpawnerEntityRefAuthoring : MonoBehaviour
     {
 
-        private class Baker : Baker<SpawnerEntityAuthoring>
+        private class Baker : Baker<SpawnerEntityRefAuthoring>
         {
-            public override void Bake(SpawnerEntityAuthoring authoring)
+            public override void Bake(SpawnerEntityRefAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent<SpawnerEntity>(entity);
+                AddComponent<SpawnerEntityRef>(entity);
             }
         }
     }
