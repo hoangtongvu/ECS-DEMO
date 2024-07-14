@@ -293,6 +293,7 @@ GameObject:
   - component: {fileID: 308047749}
   - component: {fileID: 308047750}
   - component: {fileID: 308047751}
+  - component: {fileID: 308047752}
   m_Layer: 0
   m_Name: PunchingBag
   m_TagString: Untagged
@@ -480,6 +481,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d0a91c9ab59034d8350e585748bc74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &308047752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308047741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ae8a458e17b1042b0155c6b9d2855f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitType: 1
+  localIndex: 0
 --- !u!1 &443162261 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
@@ -993,6 +1008,7 @@ GameObject:
   - component: {fileID: 1295268467}
   - component: {fileID: 1295268475}
   - component: {fileID: 1295268476}
+  - component: {fileID: 1295268477}
   m_Layer: 0
   m_Name: PunchingBag
   m_TagString: Untagged
@@ -1180,6 +1196,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d0a91c9ab59034d8350e585748bc74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1295268477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295268466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ae8a458e17b1042b0155c6b9d2855f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitType: 1
+  localIndex: 0
 --- !u!1 &1655414800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1259,6 +1289,7 @@ GameObject:
   - component: {fileID: 1679093608}
   - component: {fileID: 1679093616}
   - component: {fileID: 1679093617}
+  - component: {fileID: 1679093618}
   m_Layer: 0
   m_Name: PunchingBag
   m_TagString: Untagged
@@ -1446,6 +1477,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d0a91c9ab59034d8350e585748bc74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1679093618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679093607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ae8a458e17b1042b0155c6b9d2855f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitType: 1
+  localIndex: 0
 --- !u!4 &675544521015210363
 Transform:
   m_ObjectHideFlags: 0
@@ -1941,6 +1986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   callerRadius: 15
+  pickUpToolRadius: 3
 --- !u!114 &8761746637686818202
 MonoBehaviour:
   m_ObjectHideFlags: 0
