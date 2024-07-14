@@ -10,7 +10,7 @@ namespace Systems.Simulation.Tool
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(SpawnPrefabSystem))]
     [BurstCompile]
-    public partial struct ToolHolderAddSystem : ISystem
+    public partial struct ToolHoldCountAddSystem : ISystem
     {
 
         [BurstCompile]
