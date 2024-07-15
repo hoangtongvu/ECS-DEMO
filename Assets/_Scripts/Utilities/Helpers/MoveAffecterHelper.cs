@@ -5,6 +5,7 @@ using Unity.Collections;
 
 namespace Utilities.Helpers
 {
+    [BurstCompile]
     public static class MoveAffecterHelper
     {
         [BurstCompile]
