@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿#if UNITY_EDITOR
+
+using System.Reflection;
 using UnityEditor;
 
 namespace WaynGroup.Mgm.Ability.Editor
@@ -53,3 +55,5 @@ namespace WaynGroup.Mgm.Ability.Editor
 
     }
 }
+
+#endif
