@@ -7,7 +7,7 @@ using Components;
 using Core;
 using Unity.Collections;
 using Components.Unit;
-using Core.MyCamera;
+using Components.Camera;
 
 namespace Systems.Simulation
 {
@@ -16,14 +16,18 @@ namespace Systems.Simulation
     [UpdateAfter(typeof(RaycastHitSelectionSystem))]
     public partial class DragSelectionSystem : SystemBase
     {
-        private Camera mainCamera;
+        private UnityEngine.Camera mainCamera;
 
         protected override void OnCreate()
         {
-            this.mainCamera = CameraHolderCtrl.Instance.MainCam;
             this.CreateDragSelectionData();
+            this.RequireForUpdate<MainCamHolder>();
         }
 
+        protected override void OnStartRunning()
+        {
+            this.mainCamera = SystemAPI.GetSingleton<MainCamHolder>().Value;
+        }
 
         protected override void OnUpdate()
         {

@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Components;
 using Components.Unit;
 using Core;
-using Core.MyCamera;
+using Components.Camera;
 
 namespace Systems.Simulation
 {
@@ -14,16 +14,21 @@ namespace Systems.Simulation
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class RaycastHitSelectionSystem : SystemBase
     {
-        private Camera mainCamera;
+        private UnityEngine.Camera mainCamera;
 
 
         protected override void OnCreate()
         {
-            this.mainCamera = CameraHolderCtrl.Instance.MainCam;
             this.CreateSelectionHitsHolder();
 
             this.RequireForUpdate<SelectionHitElement>();
             this.RequireForUpdate<SelectableUnitTag>();
+            this.RequireForUpdate<MainCamHolder>();
+        }
+
+        protected override void OnStartRunning()
+        {
+            this.mainCamera = SystemAPI.GetSingleton<MainCamHolder>().Value;
         }
 
         protected override void OnUpdate()

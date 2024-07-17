@@ -12,4 +12,10 @@ namespace Core.MyEvent.PubSub.Messages
         public UnityObjectRef<TTarget> TargetRef;
     }
 
+    public struct RegisterMessage<TTarget>: IMessage
+        where TTarget : Component
+    {
+        public UnityObjectRef<TTarget> TargetRef;
+    }
+
 }
