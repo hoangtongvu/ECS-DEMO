@@ -114,7 +114,7 @@ namespace Systems.Simulation.Unit
 
 
                     if (!MoveAffecterHelper.TryChangeMoveAffecter(
-                        this.moveAffecterMap
+                        in this.moveAffecterMap
                         , unitIdRef.ValueRO.UnitType
                         , ref moveAffecterRef.ValueRW
                         , MoveAffecter.PlayerCommand

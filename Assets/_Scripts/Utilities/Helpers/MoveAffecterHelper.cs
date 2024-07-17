@@ -10,7 +10,7 @@ namespace Utilities.Helpers
     {
         [BurstCompile]
         public static bool TryChangeMoveAffecter(
-            NativeHashMap<MoveAffecterId, byte> moveAffecterMap
+            in NativeHashMap<MoveAffecterId, byte> moveAffecterMap
             , UnitType unitType
             , ref MoveAffecterICD currentMoveAffecterICD
             , MoveAffecter newAffecter
@@ -28,7 +28,7 @@ namespace Utilities.Helpers
 
         [BurstCompile]
         private static byte GetMoveAffecterPriority(
-            NativeHashMap<MoveAffecterId, byte> moveAffecterMap
+            in NativeHashMap<MoveAffecterId, byte> moveAffecterMap
             , UnitType unitType
             , MoveAffecter currentAffecter
             , ushort localIndex)

@@ -96,7 +96,7 @@ namespace Systems.Simulation.Tool
                     }
 
                     if (!MoveAffecterHelper.TryChangeMoveAffecter(
-                        moveAffecterMap.Value
+                        in moveAffecterMap.Value
                         , unitIdRef.ValueRO.UnitType
                         , ref moveAffecterRef.ValueRW
                         , MoveAffecter.Others
