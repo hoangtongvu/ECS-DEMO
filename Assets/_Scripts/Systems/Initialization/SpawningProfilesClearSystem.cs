@@ -43,7 +43,7 @@ namespace Systems.Initialization
         [BurstCompile]
         private void ClearProfileFields(ref EntitySpawningProfileElement profile)
         {
-            profile.SpawnCountChanged = false;
+            profile.SpawnCount.ValueChanged = false;
         }
     }
 }

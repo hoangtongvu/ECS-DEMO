@@ -30,8 +30,12 @@ namespace Authoring.MyEntity.EntitySpawning
                         CanSpawnState = profile.CanSpawn,
 
                         CanIncSpawnCount = true,
-                        SpawnCount = profile.SpawnCount,
-                        SpawnCountChanged = false,
+
+                        SpawnCount = new()
+                        {
+                            Value = profile.SpawnCount,
+                            ValueChanged = false,
+                        },
 
                         SpawnDuration = new()
                         {

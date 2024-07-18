@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.MyEntity.EntitySpawning;
 using Unity.Transforms;
+using Components;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -39,8 +40,8 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                     if (!profile.CanSpawnState) continue;
                     profile.CanSpawnState = false;
-                    profile.SpawnCount--;
-                    profile.SpawnCountChanged = true;
+
+                    profile.SpawnCount.ChangeValue(profile.SpawnCount.Value - 1);
 
                     Entity entity = state.EntityManager.Instantiate(profile.PrefabToSpawn);
                     

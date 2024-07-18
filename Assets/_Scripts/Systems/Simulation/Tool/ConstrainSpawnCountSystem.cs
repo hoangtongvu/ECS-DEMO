@@ -51,7 +51,7 @@ namespace Systems.Simulation.Tool
                 {
                     ref var profile = ref spawningProfiles.ElementAt(i);
 
-                    int total = usedSlotCount + profile.SpawnCount;
+                    int total = usedSlotCount + profile.SpawnCount.Value;
 
                     profile.CanIncSpawnCount = total < limit;
                 }

@@ -115,7 +115,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                         , quaternion.identity);
 
                 profileDisplayCtrl.ProgressBar.ClearProgress();
-                profileDisplayCtrl.SpawnCountText.SetSpawnCount(profile.SpawnCount);
+                profileDisplayCtrl.SpawnCountText.SetSpawnCount(profile.SpawnCount.Value);
 
                 profile.UIID = profileDisplayCtrl.UIID;
 

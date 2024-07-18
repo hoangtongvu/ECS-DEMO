@@ -90,8 +90,8 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                         resourceWallet.CopyFrom(walletArr);
                         walletChangedRef.ValueRW.Value = true;
-                        profile.SpawnCount++;
-                        profile.SpawnCountChanged = true;
+
+                        profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
                     }
                 }
             }

@@ -39,7 +39,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                 foreach (var profile in spawningProfiles)
                 {
-                    if (profile.SpawnCount <= 0) continue;
+                    if (profile.SpawnCount.Value <= 0) continue;
                     
                     // This means when nothing to spawned, UI won't update.
                     float progressValue =

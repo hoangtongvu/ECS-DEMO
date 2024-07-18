@@ -17,8 +17,7 @@ namespace Components.MyEntity.EntitySpawning
         public bool CanSpawnState;
 
         public bool CanIncSpawnCount;
-        public int SpawnCount;
-        public bool SpawnCountChanged;
+        public ChangedFlagValue<int> SpawnCount;
 
         public SpawnDuration SpawnDuration;
         public UIID? UIID;

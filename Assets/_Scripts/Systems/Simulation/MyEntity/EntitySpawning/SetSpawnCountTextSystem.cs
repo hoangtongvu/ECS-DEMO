@@ -36,7 +36,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                 foreach (var profile in spawningProfiles)
                 {
-                    if (!profile.SpawnCountChanged) continue;
+                    if (!profile.SpawnCount.ValueChanged) continue;
                     this.UpdateUI(in profile);
                 }
             }
@@ -48,7 +48,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             GameplayMessenger.MessagePublisher.Publish(new SetIntTextMessage
             {
                 UIID = profile.UIID.Value,
-                Value = profile.SpawnCount,
+                Value = profile.SpawnCount.Value,
             });
         }
         

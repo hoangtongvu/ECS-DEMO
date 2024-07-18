@@ -41,7 +41,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 {
                     ref var profile = ref profileElements.ElementAt(i);
 
-                    if (profile.SpawnCount <= 0) continue;
+                    if (profile.SpawnCount.Value <= 0) continue;
 
                     profile.SpawnDuration.DurationCounterSecond += this.DeltaTime;
 
