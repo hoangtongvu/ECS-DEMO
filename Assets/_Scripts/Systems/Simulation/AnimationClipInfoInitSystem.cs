@@ -7,7 +7,7 @@ using Unity.Entities;
 namespace Systems.Simulation
 {
 
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class AnimationClipInfoInitSystem : SystemBase
     {
         protected override void OnCreate()

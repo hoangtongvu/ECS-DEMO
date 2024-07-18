@@ -7,7 +7,7 @@ using Components.MyEntity.EntitySpawning;
 
 namespace Systems.Simulation.Player
 {
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(AnimationClipInfoInitSystem))]
     [BurstCompile]
     public partial struct InitAttackDurationSystem : ISystem

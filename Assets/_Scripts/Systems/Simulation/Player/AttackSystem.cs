@@ -47,7 +47,11 @@ namespace Systems.Simulation.Player
                     .WithAll<PlayerTag>())
             {
 
-                if (clipInfos.IsEmpty) continue;
+                if (clipInfos.IsEmpty)
+                {
+                    UnityEngine.Debug.LogError("clipInfos.IsEmpty");
+                    continue;
+                }
 
                 if (attackDataRef.ValueRO.isAttacking)
                 {
@@ -78,7 +82,7 @@ namespace Systems.Simulation.Player
             {
                 animatorDataRef.ValueRW.Value.ChangeValue(ATTACK_ANIM_NAME);
             }
-            
+
         }
 
         private void TryCatchColliderInHitbox(
