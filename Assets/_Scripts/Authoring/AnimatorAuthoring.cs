@@ -15,11 +15,13 @@ namespace Authoring
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-
                 AddComponent(entity, new AnimatorData
                 {
-                    AnimName = authoring.CurrentStateName,
-                    AnimChanged = false,
+                    Value = new()
+                    {
+                        Value = authoring.CurrentStateName,
+                        ValueChanged = false,
+                    }
                 });
 
                 AddBuffer<AnimationClipInfoElement>(entity);

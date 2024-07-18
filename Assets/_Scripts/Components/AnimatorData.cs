@@ -4,12 +4,6 @@ using Unity.Entities;
 namespace Components
 {
 
-    public struct AnimatorData : IComponentData
-    {
-        public FixedString64Bytes AnimName;
-        public bool AnimChanged;
-    }
-
     [InternalBufferCapacity(0)]
     public struct AnimationClipInfoElement : IBufferElementData
     {
@@ -17,6 +11,10 @@ namespace Components
         public float Length;
     }
 
+    public struct AnimatorData : IComponentData
+    {
+        public ChangedFlagValue<FixedString64Bytes> Value;
+    }
 
 
 

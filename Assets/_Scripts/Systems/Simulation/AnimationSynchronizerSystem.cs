@@ -40,10 +40,12 @@ namespace Systems.Simulation
         private void SyncAnimation()
         {
             foreach (var (idRef, animDataRef) in
-                SystemAPI.Query<RefRO<UniqueIdICD>, RefRW<AnimatorData>>())
+                SystemAPI.Query<
+                    RefRO<UniqueIdICD>
+                    , RefRW<AnimatorData>>())
             {
                 // Only sync Animation if AnimChanged Tag is true.
-                if (!animDataRef.ValueRO.AnimChanged) continue;
+                if (!animDataRef.ValueRO.Value.ValueChanged) continue;
 
                 if (!this.baseAnimatorMap.Value.TryGetValue(idRef.ValueRO, out BaseAnimator baseAnimator))
                 {
@@ -51,8 +53,8 @@ namespace Systems.Simulation
                     continue;
                 }
 
-                baseAnimator.ChangeAnimationState(animDataRef.ValueRO.AnimName.ToString());
-                animDataRef.ValueRW.AnimChanged = false;
+                baseAnimator.ChangeAnimationState(animDataRef.ValueRO.Value.Value.ToString());
+                animDataRef.ValueRW.Value.ValueChanged = false;
 
             }
         }

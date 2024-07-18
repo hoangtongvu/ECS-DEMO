@@ -1,6 +1,5 @@
 using Unity.Entities;
 using Components.Damage;
-using Core.Animator;
 using Components;
 using Components.Player;
 using Core;
@@ -8,7 +7,6 @@ using Unity.Physics;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Transforms;
-using Utilities.Helpers;
 
 namespace Systems.Simulation.Player
 {
@@ -29,6 +27,7 @@ namespace Systems.Simulation.Player
             this.RequireForUpdate<AttackInput>();
             this.RequireForUpdate<AnimationClipInfoElement>();
             this.RequireForUpdate<PlayerTag>();
+            this.RequireForUpdate<AnimatorData>();
         }
 
         protected override void OnUpdate()
@@ -74,9 +73,10 @@ namespace Systems.Simulation.Player
         {
             //Play Attack Animation.
             attackDataRef.ValueRW.isAttacking = true;
+
             foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>().WithAll<PlayerTag>())
             {
-                AnimatorHelper.TryChangeAnimatorData(animatorDataRef, ATTACK_ANIM_NAME);
+                animatorDataRef.ValueRW.Value.ChangeValue(ATTACK_ANIM_NAME);
             }
             
         }
@@ -126,10 +126,12 @@ namespace Systems.Simulation.Player
 
         private void BackToIdleState() // Temporary code.
         {
+
             foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>().WithAll<PlayerTag>())
             {
-                AnimatorHelper.TryChangeAnimatorData(animatorDataRef, IDLE_ANIM_NAME);
+                animatorDataRef.ValueRW.Value.ChangeValue(IDLE_ANIM_NAME);
             }
+
         }
 
     }
