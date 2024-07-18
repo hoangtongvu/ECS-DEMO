@@ -259,6 +259,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b, type: 3}
+    - {fileID: 4829563671098018911, guid: 7ea3abd3ef752c543947ce4d1da25b0b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1426,77 +1427,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: CanSpawn
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawnCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: UnitProfileSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 6df6f2760ceac734ca112de435b370cf,
-        type: 2}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: DurationPerSpawn
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[0].SpawnCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[1].SpawnCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[2].SpawnCount
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[0].UnitProfileSO
-      value: 
-      objectReference: {fileID: 11400000, guid: f03eefc5b1aab8b4eb21842a209fe7fd,
-        type: 2}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[1].UnitProfileSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 836947920bd15f94db9246a8c6afb547,
-        type: 2}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[2].UnitProfileSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 6342a43af4cf5f1479e58cb563cbd054,
-        type: 2}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[0].EntityProfileSO
-      value: 
-      objectReference: {fileID: 11400000, guid: f03eefc5b1aab8b4eb21842a209fe7fd,
-        type: 2}
-    - target: {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
-        type: 3}
-      propertyPath: SpawningProfiles.Array.data[1].EntityProfileSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 836947920bd15f94db9246a8c6afb547,
-        type: 2}
     - target: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
         type: 3}
       propertyPath: m_Name
@@ -1552,8 +1482,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3440600677895948472, guid: 7ea3abd3ef752c543947ce4d1da25b0b, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1655,13 +1584,13 @@ GameObject:
   - component: {fileID: 675544521015210363}
   - component: {fileID: 4358161892277912893}
   - component: {fileID: 8761746637686818197}
-  - component: {fileID: 4593334624625529014}
   - component: {fileID: 2003929820952308383}
   - component: {fileID: 3726410829882979224}
   - component: {fileID: 8761746637686818200}
   - component: {fileID: 8761746637686818199}
   - component: {fileID: 8761746637686818198}
   - component: {fileID: 8761746637686818201}
+  - component: {fileID: 8761746637686818202}
   m_Layer: 0
   m_Name: ToolSpawner
   m_TagString: Untagged
@@ -1765,27 +1694,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2767793836663257863}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &4593334624625529014
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2767793836663257863}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &8761746637686818197
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1886,6 +1794,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba21177d4d5271a4883e43bd09cbc5ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &8761746637686818202
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2767793836663257863}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
