@@ -11,7 +11,7 @@ namespace Components
 
     public static class ChangedFlagValueExtension
     {
-        public static void ChangeValue<T>(ref this ChangedFlagValue<T> changedFlagValue, T newValue) where T : unmanaged
+        public static void ChangeValue<T>(ref this ChangedFlagValue<T> changedFlagValue, in T newValue) where T : unmanaged
         {
             changedFlagValue.Value = newValue;
             changedFlagValue.ValueChanged = true;
