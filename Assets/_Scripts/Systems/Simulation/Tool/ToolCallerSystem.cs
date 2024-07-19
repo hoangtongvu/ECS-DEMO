@@ -9,7 +9,6 @@ using Systems.Simulation.Unit;
 using Core.Unit;
 using Utilities.Helpers;
 using Utilities;
-using Components.MyEntity.EntitySpawning;
 
 namespace Systems.Simulation.Tool
 {
@@ -26,6 +25,8 @@ namespace Systems.Simulation.Tool
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     LocalTransform
+                    , CanBePicked
+                    , PickedBy
                     , DerelictToolTag>()
                 .Build();
 
@@ -55,14 +56,14 @@ namespace Systems.Simulation.Tool
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
 
-            foreach (var (toolTransformRef, spawnerEntityRef, toolEntity) in
+            foreach (var (toolTransformRef, canBePickedRef, pickedByRef, toolEntity) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
-                    , RefRW<SpawnerEntityRef>>()
+                    , RefRW<CanBePicked>
+                    , RefRW<PickedBy>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
-                var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.ValueRO.Value);
 
                 foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
                     SystemAPI.Query<
@@ -85,12 +86,9 @@ namespace Systems.Simulation.Tool
 
                     if (distance <= distanceToTargetRef.ValueRO.MinDistance)
                     {
-                        // Pick the tool
-                        unitToolHolderRef.ValueRW.Value = toolEntity;
-                        SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
-
-                        toolHoldCountRef.ValueRW.Value--;
-                        spawnerEntityRef.ValueRW.Value = Entity.Null;
+                        // Set as can be picked up.
+                        canBePickedRef.ValueRW.Value = true;
+                        pickedByRef.ValueRW.Value = unitEntity;
 
                         break;
                     }
@@ -110,8 +108,6 @@ namespace Systems.Simulation.Tool
                     SystemAPI.SetComponentEnabled<MoveableState>(unitEntity, true);
 
                 }
-
-                    
 
                 
 
