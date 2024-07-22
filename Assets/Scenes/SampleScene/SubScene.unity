@@ -559,24 +559,6 @@ MonoBehaviour:
   prefab: {fileID: 7217834233118016467, guid: 44a3980baaccece4985608cde124363a, type: 3}
   spawnCount: 1000
   spacing: 3
---- !u!1 &576619900 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
-    type: 3}
-  m_PrefabInstance: {fileID: 6161888769691929436}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &576619901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576619900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5352455240847f74fb5a53e73f5c565f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &697405478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,15 +1796,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tree
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7988040591970155973, guid: 561c6dcbe191a7f418a0de98bfd6e2e7, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 576619901}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 561c6dcbe191a7f418a0de98bfd6e2e7, type: 3}
 --- !u!23 &8761746637686818197
 MeshRenderer:
