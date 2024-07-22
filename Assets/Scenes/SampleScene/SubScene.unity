@@ -284,6 +284,7 @@ GameObject:
   - component: {fileID: 308047751}
   - component: {fileID: 308047752}
   - component: {fileID: 308047753}
+  - component: {fileID: 308047754}
   m_Layer: 0
   m_Name: PunchingBag
   m_TagString: Untagged
@@ -499,6 +500,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   z: 0
+--- !u!114 &308047754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308047741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2833a6295546f4f83caf8dad365434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &461726516
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,6 +559,24 @@ MonoBehaviour:
   prefab: {fileID: 7217834233118016467, guid: 44a3980baaccece4985608cde124363a, type: 3}
   spawnCount: 1000
   spacing: 3
+--- !u!1 &576619900 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 6161888769691929436}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &576619901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576619900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5352455240847f74fb5a53e73f5c565f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &697405478
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,6 +924,7 @@ GameObject:
   - component: {fileID: 1295268476}
   - component: {fileID: 1295268477}
   - component: {fileID: 1295268478}
+  - component: {fileID: 1295268479}
   m_Layer: 0
   m_Name: PunchingBag
   m_TagString: Untagged
@@ -1108,6 +1140,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   z: 0
+--- !u!114 &1295268479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295268466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2833a6295546f4f83caf8dad365434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1655414800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1189,6 +1233,7 @@ GameObject:
   - component: {fileID: 1679093617}
   - component: {fileID: 1679093618}
   - component: {fileID: 1679093619}
+  - component: {fileID: 1679093620}
   m_Layer: 0
   m_Name: PunchingBag
   m_TagString: Untagged
@@ -1404,6 +1449,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   z: 0
+--- !u!114 &1679093620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679093607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2833a6295546f4f83caf8dad365434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &675544521015210363
 Transform:
   m_ObjectHideFlags: 0
@@ -1757,10 +1814,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tree
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7988040591970155973, guid: 561c6dcbe191a7f418a0de98bfd6e2e7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 576619901}
   m_SourcePrefab: {fileID: 100100000, guid: 561c6dcbe191a7f418a0de98bfd6e2e7, type: 3}
 --- !u!23 &8761746637686818197
 MeshRenderer:
