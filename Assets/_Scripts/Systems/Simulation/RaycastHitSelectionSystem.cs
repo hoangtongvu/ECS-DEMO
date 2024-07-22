@@ -8,6 +8,7 @@ using Components.Unit;
 using Core;
 using Components.Camera;
 using Components.Harvest;
+using Components.MyEntity;
 
 namespace Systems.Simulation
 {
@@ -90,9 +91,9 @@ namespace Systems.Simulation
         {
             Entity hitEntity = raycastHit.Entity;
 
-            if (SystemAPI.HasComponent<HarvesteeTag>(hitEntity))
+            if (SystemAPI.HasComponent<InteractableEntityTag>(hitEntity))
             {
-                return SelectionType.Harvestee;
+                return SelectionType.InteractableEntity;
             }
 
             if (!SystemAPI.HasComponent<SelectableUnitTag>(hitEntity))
