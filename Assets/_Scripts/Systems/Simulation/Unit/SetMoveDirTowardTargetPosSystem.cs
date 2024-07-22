@@ -43,9 +43,11 @@ namespace Systems.Simulation.Unit
                 , in TargetPosition targetPosition
             )
             {
-                float3 rawDir = math.normalize(targetPosition.Value - transform.Position);
-                moveDir.Value.x = rawDir.x;
-                moveDir.Value.y = rawDir.z;
+                float3 float3Dir = targetPosition.Value - transform.Position;
+                float2 float2Dir = new(float3Dir.x, float3Dir.z);
+                float2 normalizedDir = math.normalize(float2Dir);
+                moveDir.Value.x = normalizedDir.x;
+                moveDir.Value.y = normalizedDir.y;
             }
         }
     }
