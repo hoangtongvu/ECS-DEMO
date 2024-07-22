@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.MyEntity;
 using Systems.Simulation.MyEntity;
+using Components.Harvest;
 
 namespace Systems.Simulation.Harvest
 {
@@ -22,6 +23,8 @@ namespace Systems.Simulation.Harvest
                 .Build();
 
             state.RequireForUpdate(query0);
+
+            state.RequireForUpdate<HarvesteeTag>();
         }
 
         [BurstCompile]
@@ -32,6 +35,7 @@ namespace Systems.Simulation.Harvest
                     RefRO<TargetEntity>>()
                     .WithAll<CanInteractEntityTag>())
             {
+                if (!SystemAPI.HasComponent<HarvesteeTag>(targetEntityRef.ValueRO.Value)) continue;
                 UnityEngine.Debug.Log($"Interacted {targetEntityRef.ValueRO.Value}.");
             }
 
