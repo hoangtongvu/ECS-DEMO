@@ -3,6 +3,8 @@ using Unity.Burst;
 using Components.Tool;
 using Components.Unit;
 using Components.MyEntity.EntitySpawning;
+using Core.Tool;
+using Core.Unit;
 
 namespace Systems.Simulation.Tool
 {
@@ -34,22 +36,28 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var tool2UnitMap = SystemAPI.GetSingleton<Tool2UnitMap>();
 
-            foreach (var (spawnerEntityRef, canBePickedRef, pickedByRef, toolEntity) in
+            foreach (var (spawnerEntityRef, toolTypeICDRef, canBePickedRef, pickedByRef, toolEntity) in
                 SystemAPI.Query<
                     RefRW<SpawnerEntityRef>
-                    , RefRW<CanBePicked>
+                    , RefRO<ToolTypeICD>
+                    , RefRW<CanBePicked> //TODO Turn this into EnableAble tag.
                     , RefRW<PickedBy>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
                 if (!canBePickedRef.ValueRO.Value) continue;
 
-                var unitToolHolderRef = SystemAPI.GetComponentRW<UnitToolHolder>(pickedByRef.ValueRO.Value);
-                var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.ValueRO.Value);
+                this.UnitHandler(
+                    ref state
+                    , pickedByRef.ValueRO.Value
+                    , toolEntity
+                    , tool2UnitMap
+                    , toolTypeICDRef.ValueRO.Value);
 
-                // Pick the tool
-                unitToolHolderRef.ValueRW.Value = toolEntity;
+                //TODO: Add ToolSpawnerHandler() as the way we did with UnitHandler().
+                var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.ValueRO.Value);
 
                 SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
 
@@ -65,7 +73,29 @@ namespace Systems.Simulation.Tool
 
         }
 
-        
+        [BurstCompile]
+        private void UnitHandler(
+            ref SystemState state
+            , in Entity unitEntity
+            , in Entity toolEntity
+            , in Tool2UnitMap tool2UnitMap
+            , in ToolType toolType)
+        {
+            var unitToolHolderRef = SystemAPI.GetComponentRW<UnitToolHolder>(unitEntity);
+            unitToolHolderRef.ValueRW.Value = toolEntity;
+
+
+            var unitIdRef = SystemAPI.GetComponentRW<UnitId>(unitEntity);
+
+            var byteKey = (byte)toolType;
+            if (tool2UnitMap.Value.TryGetValue(byteKey, out byte unitType))
+            {
+                unitIdRef.ValueRW.UnitType = (UnitType)unitType;
+                return;
+            }
+
+            UnityEngine.Debug.LogError($"tool2UnitMap does not contain {byteKey}");
+        }
 
     }
 }
