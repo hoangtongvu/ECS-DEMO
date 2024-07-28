@@ -5,6 +5,7 @@ using Components.Unit;
 using Components.MyEntity.EntitySpawning;
 using Core.Tool;
 using Core.Unit;
+using Components.Harvest;
 
 namespace Systems.Simulation.Tool
 {
@@ -37,6 +38,8 @@ namespace Systems.Simulation.Tool
         public void OnUpdate(ref SystemState state)
         {
             var tool2UnitMap = SystemAPI.GetSingleton<Tool2UnitMap>();
+            var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
+                .CreateCommandBuffer(state.WorldUnmanaged);
 
             foreach (var (spawnerEntityRef, toolTypeICDRef, canBePickedRef, pickedByRef, toolEntity) in
                 SystemAPI.Query<
@@ -51,6 +54,7 @@ namespace Systems.Simulation.Tool
 
                 this.UnitHandler(
                     ref state
+                    , ecb
                     , pickedByRef.ValueRO.Value
                     , toolEntity
                     , tool2UnitMap
@@ -76,6 +80,7 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         private void UnitHandler(
             ref SystemState state
+            , EntityCommandBuffer ecb
             , in Entity unitEntity
             , in Entity toolEntity
             , in Tool2UnitMap tool2UnitMap
@@ -88,9 +93,28 @@ namespace Systems.Simulation.Tool
             var unitIdRef = SystemAPI.GetComponentRW<UnitId>(unitEntity);
 
             var byteKey = (byte)toolType;
-            if (tool2UnitMap.Value.TryGetValue(byteKey, out byte unitType))
+            if (tool2UnitMap.Value.TryGetValue(byteKey, out byte unitTypeByte))
             {
-                unitIdRef.ValueRW.UnitType = (UnitType)unitType;
+                var unitType = (UnitType)unitTypeByte;
+
+                switch (unitType)
+                {
+                    case UnitType.None:
+                        
+                        break;
+                    case UnitType.Villager:
+                        
+                        break;
+                    case UnitType.Knight:
+                        
+                        break;
+                    case UnitType.Harvester:
+                        ecb.AddComponent<HarvesterICD>(unitEntity);
+                        ecb.AddComponent<HarvesteeHealthId>(unitEntity);
+                        break;
+                }
+
+                unitIdRef.ValueRW.UnitType = unitType;
                 return;
             }
 

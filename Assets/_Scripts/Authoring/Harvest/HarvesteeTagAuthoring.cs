@@ -14,6 +14,7 @@ namespace Authoring.Harvest
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<HarvesteeTag>(entity);
+                AddComponent<HarvesteeHealthId>(entity);
             }
         }
     }
