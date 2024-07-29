@@ -31,10 +31,10 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (targetEntityRef, harvesteeHealthIdOnUnit) in
+            foreach (var (targetEntityRef, harvestTargetRef) in
                 SystemAPI.Query<
                     RefRO<TargetEntity>
-                    , RefRW<HarvesteeHealthId>>()
+                    , RefRW<HarvestTargetEntity>>()
                     .WithAll<
                         CanInteractEntityTag
                         , HarvesterICD>())
@@ -59,8 +59,9 @@ namespace Systems.Simulation.Harvest
                     }
                 };
 
-                this.AssignNewId(ref harvesteeHealthIdOnUnit.ValueRW, newId);
                 this.AssignNewId(ref idOnHarvesteeRef.ValueRW, newId);
+
+                harvestTargetRef.ValueRW.Value = targetEntity;
 
                 UnityEngine.Debug.Log($"Interacted {targetEntity}.");
             }
