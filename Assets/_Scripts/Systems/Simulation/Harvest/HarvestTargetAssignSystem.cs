@@ -3,7 +3,6 @@ using Unity.Burst;
 using Components.MyEntity;
 using Systems.Simulation.MyEntity;
 using Components.Harvest;
-using Core.Harvest;
 
 namespace Systems.Simulation.Harvest
 {
@@ -11,7 +10,7 @@ namespace Systems.Simulation.Harvest
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetCanInteractFlagSystem))]
     [BurstCompile]
-    public partial struct HarvesteeAssignSystem : ISystem
+    public partial struct HarvestTargetAssignSystem : ISystem
     {
 
         [BurstCompile]
@@ -20,6 +19,7 @@ namespace Systems.Simulation.Harvest
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     TargetEntity
+                    , HarvestTargetEntity
                     , CanInteractEntityTag>()
                 .Build();
 
@@ -36,42 +36,17 @@ namespace Systems.Simulation.Harvest
                     RefRO<TargetEntity>
                     , RefRW<HarvestTargetEntity>>()
                     .WithAll<
-                        CanInteractEntityTag
-                        , HarvesterICD>())
+                        CanInteractEntityTag>())
             {
                 var targetEntity = targetEntityRef.ValueRO.Value;
 
                 if (!SystemAPI.HasComponent<HarvesteeTag>(targetEntity)) continue;
 
-                var idOnHarvesteeRef = SystemAPI.GetComponentRW<HarvesteeHealthId>(targetEntity);
-                if (!idOnHarvesteeRef.IsValid)
-                {
-                    UnityEngine.Debug.LogError("Target has HarvesteeTag but doesn't have HarvesteeHealthId");
-                    continue;
-                }
-
-                var newId = new HarvesteeHealthId
-                {
-                    Value = new HealthId
-                    {
-                        Index = targetEntity.Index,
-                        Version = targetEntity.Version,
-                    }
-                };
-
-                this.AssignNewId(ref idOnHarvesteeRef.ValueRW, newId);
-
                 harvestTargetRef.ValueRW.Value = targetEntity;
 
-                UnityEngine.Debug.Log($"Interacted {targetEntity}.");
             }
 
         }
-
-        [BurstCompile]
-        private void AssignNewId(
-            ref HarvesteeHealthId currentId
-            , in HarvesteeHealthId newId) => currentId = newId;
 
     }
 }
