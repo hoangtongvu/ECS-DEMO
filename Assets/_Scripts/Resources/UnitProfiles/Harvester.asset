@@ -21,7 +21,7 @@ MonoBehaviour:
     _serializedList:
     - Key: 2
       Value: 5
-  UnitType: 1
+  UnitType: 3
   MoveAffecterPriorities:
     _serializedList:
     - Key: 2
