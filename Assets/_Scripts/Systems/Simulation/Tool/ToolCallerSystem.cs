@@ -84,7 +84,8 @@ namespace Systems.Simulation.Tool
                     float distance = math.distance(toolTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
                     if (distance > toolCallRadius.Value) continue;
 
-                    if (distance <= distanceToTargetRef.ValueRO.MinDistance)
+                    const float minDis = 1.5f;// Note: This is a temp fix.
+                    if (distance <= minDis)
                     {
                         // Set as can be picked up.
                         canBePickedRef.ValueRW.Value = true;
