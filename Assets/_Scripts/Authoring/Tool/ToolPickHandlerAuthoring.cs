@@ -13,7 +13,7 @@ namespace Authoring.Tool
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<CanBePicked>(entity);
-                AddComponent(entity, new PickedBy
+                AddComponent(entity, new ToolPickerEntity
                 {
                     Value = Entity.Null,
                 });

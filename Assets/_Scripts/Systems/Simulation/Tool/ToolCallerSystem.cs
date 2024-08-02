@@ -26,7 +26,7 @@ namespace Systems.Simulation.Tool
                 .WithAll<
                     LocalTransform
                     , CanBePicked
-                    , PickedBy
+                    , ToolPickerEntity
                     , DerelictToolTag>()
                 .Build();
 
@@ -56,11 +56,11 @@ namespace Systems.Simulation.Tool
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
 
-            foreach (var (toolTransformRef, canBePickedRef, pickedByRef, toolEntity) in
+            foreach (var (toolTransformRef, canBePickedRef, toolPickerEntityRef, toolEntity) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
                     , RefRW<CanBePicked>
-                    , RefRW<PickedBy>>()
+                    , RefRW<ToolPickerEntity>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
@@ -89,7 +89,7 @@ namespace Systems.Simulation.Tool
                     {
                         // Set as can be picked up.
                         canBePickedRef.ValueRW.Value = true;
-                        pickedByRef.ValueRW.Value = unitEntity;
+                        toolPickerEntityRef.ValueRW.Value = unitEntity;
 
                         break;
                     }

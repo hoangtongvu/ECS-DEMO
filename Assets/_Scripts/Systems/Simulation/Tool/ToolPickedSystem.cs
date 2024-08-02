@@ -23,7 +23,7 @@ namespace Systems.Simulation.Tool
                 .WithAll<
                     SpawnerEntityRef
                     , CanBePicked
-                    , PickedBy
+                    , ToolPickerEntity
                     , DerelictToolTag>()
                 .Build();
 
@@ -41,12 +41,12 @@ namespace Systems.Simulation.Tool
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            foreach (var (spawnerEntityRef, toolTypeICDRef, canBePickedRef, pickedByRef, toolEntity) in
+            foreach (var (spawnerEntityRef, toolTypeICDRef, canBePickedRef, toolPickerEntityRef, toolEntity) in
                 SystemAPI.Query<
                     RefRW<SpawnerEntityRef>
                     , RefRO<ToolTypeICD>
                     , RefRW<CanBePicked> //TODO Turn this into EnableAble tag.
-                    , RefRW<PickedBy>>()
+                    , RefRW<ToolPickerEntity>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
@@ -55,7 +55,7 @@ namespace Systems.Simulation.Tool
                 this.UnitHandler(
                     ref state
                     , ecb
-                    , pickedByRef.ValueRO.Value
+                    , toolPickerEntityRef.ValueRO.Value
                     , toolEntity
                     , tool2UnitMap
                     , toolTypeICDRef.ValueRO.Value);
@@ -70,7 +70,7 @@ namespace Systems.Simulation.Tool
 
                 // Reset ToolPickHandler
                 canBePickedRef.ValueRW.Value = false;
-                pickedByRef.ValueRW.Value = Entity.Null;
+                toolPickerEntityRef.ValueRW.Value = Entity.Null;
 
             }
 

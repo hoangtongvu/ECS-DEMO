@@ -7,7 +7,7 @@ namespace Components.Tool
         public bool Value;
     }
 
-    public struct PickedBy : IComponentData
+    public struct ToolPickerEntity : IComponentData
     {
         public Entity Value;
     }
