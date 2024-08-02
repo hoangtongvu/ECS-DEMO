@@ -25,7 +25,7 @@ namespace Systems.Simulation.Tool
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     LocalTransform
-                    , CanBePicked
+                    , CanBePickedTag
                     , ToolPickerEntity
                     , DerelictToolTag>()
                 .Build();
@@ -56,10 +56,9 @@ namespace Systems.Simulation.Tool
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
 
-            foreach (var (toolTransformRef, canBePickedRef, toolPickerEntityRef, toolEntity) in
+            foreach (var (toolTransformRef, toolPickerEntityRef, toolEntity) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
-                    , RefRW<CanBePicked>
                     , RefRW<ToolPickerEntity>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
@@ -88,7 +87,7 @@ namespace Systems.Simulation.Tool
                     if (distance <= minDis)
                     {
                         // Set as can be picked up.
-                        canBePickedRef.ValueRW.Value = true;
+                        SystemAPI.SetComponentEnabled<CanBePickedTag>(toolEntity, true);
                         toolPickerEntityRef.ValueRW.Value = unitEntity;
 
                         break;
