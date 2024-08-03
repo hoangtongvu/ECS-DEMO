@@ -13,7 +13,7 @@ namespace Systems.Simulation.Tool
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(ToolCallerSystem))]
     [BurstCompile]
-    public partial struct ToolPickedSystem : ISystem
+    public partial struct ToolPickSystem : ISystem
     {
 
         [BurstCompile]
