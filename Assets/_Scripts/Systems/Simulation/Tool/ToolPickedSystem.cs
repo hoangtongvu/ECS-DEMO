@@ -50,7 +50,7 @@ namespace Systems.Simulation.Tool
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
-                this.UnitHandler(
+                this.HandleUnit(
                     ref state
                     , ecb
                     , toolPickerEntityRef.ValueRO.Value
@@ -76,7 +76,7 @@ namespace Systems.Simulation.Tool
         }
 
         [BurstCompile]
-        private void UnitHandler(
+        private void HandleUnit(
             ref SystemState state
             , EntityCommandBuffer ecb
             , in Entity unitEntity
