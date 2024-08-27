@@ -58,21 +58,41 @@ namespace Systems.Simulation.Tool
                     , tool2UnitMap
                     , toolTypeICDRef.ValueRO.Value);
 
-                //TODO: Add ToolSpawnerHandler() as the way we did with UnitHandler().
-                var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.ValueRO.Value);
+                this.HandleToolSpawner(
+                    ref state
+                    , ref spawnerEntityRef.ValueRW);
 
-                SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
-
-                toolHoldCountRef.ValueRW.Value--;
-                spawnerEntityRef.ValueRW.Value = Entity.Null;
-
-                // Reset ToolPickHandler
-                canBePickedTagRef.ValueRW = false;
-                toolPickerEntityRef.ValueRW.Value = Entity.Null;
+                this.HandleTool(
+                    ref state
+                    , canBePickedTagRef
+                    , toolPickerEntityRef
+                    , toolEntity);
 
             }
 
 
+        }
+
+        [BurstCompile]
+        private void HandleToolSpawner(
+            ref SystemState state
+            , ref SpawnerEntityRef spawnerEntityRef)
+        {
+            var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.Value);
+            toolHoldCountRef.ValueRW.Value--;
+            spawnerEntityRef.Value = Entity.Null;
+        }
+
+        [BurstCompile]
+        private void HandleTool(
+            ref SystemState state
+            , EnabledRefRW<CanBePickedTag> canBePickedTagRef
+            , RefRW<ToolPickerEntity> toolPickerEntityRef
+            , Entity toolEntity)
+        {
+            SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
+            canBePickedTagRef.ValueRW = false;
+            toolPickerEntityRef.ValueRW.Value = Entity.Null;
         }
 
         [BurstCompile]
