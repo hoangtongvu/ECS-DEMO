@@ -107,6 +107,7 @@ namespace Systems.Simulation.Tool
             var unitToolHolderRef = SystemAPI.GetComponentRW<UnitToolHolder>(unitEntity);
             unitToolHolderRef.ValueRW.Value = toolEntity;
 
+            SystemAPI.SetComponentEnabled<JoblessUnitTag>(unitEntity, false);
 
             var unitIdRef = SystemAPI.GetComponentRW<UnitId>(unitEntity);
 

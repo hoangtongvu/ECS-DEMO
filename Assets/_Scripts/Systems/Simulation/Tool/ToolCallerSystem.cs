@@ -32,7 +32,7 @@ namespace Systems.Simulation.Tool
 
             var query1 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitToolHolder
+                    JoblessUnitTag
                     , LocalTransform
                     , TargetPosition
                     , MoveAffecterICD
@@ -64,17 +64,16 @@ namespace Systems.Simulation.Tool
                     .WithAll<DerelictToolTag>())
             {
 
-                foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
+                foreach (var (unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
                     SystemAPI.Query<
-                        RefRW<UnitToolHolder>
-                        , RefRO<LocalTransform>
+                        RefRO<LocalTransform>
                         , RefRW<TargetPosition>
                         , RefRW<MoveAffecterICD>
                         , RefRW<DistanceToTarget>
                         , RefRO<UnitId>>()
+                        .WithAll<JoblessUnitTag>()
                         .WithEntityAccess())
                 {
-                    if (unitToolHolderRef.ValueRO.Value != Entity.Null) continue;
                     // Even if we can set min distance then how we can make unit pick up tool upon stop.
 
 
