@@ -329,6 +329,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -803212738098847423, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 6168613857724767019, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 7131341114656731748, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 6401900625766593344, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 7195329258560464229, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 8392825841433163165, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: -517926809379521023, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 729170185180935014, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 6783297583257712822, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: -6653386188289277487, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 5894441469769209763, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -398,6 +408,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -803212738098847423, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 6168613857724767019, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 7131341114656731748, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 6401900625766593344, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 7195329258560464229, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 8392825841433163165, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: -517926809379521023, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 729170185180935014, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 6783297583257712822, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: -6653386188289277487, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
+    - {fileID: 5894441469769209763, guid: 0c1e1657d2ad0794488880ebc03ed100, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
