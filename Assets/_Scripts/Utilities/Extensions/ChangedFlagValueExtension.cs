@@ -4,6 +4,7 @@ using Unity.Burst;
 
 namespace Utilities.Extensions
 {
+    [BurstCompile]
     public static class ChangedFlagValueExtension
     {
         [BurstCompile]
