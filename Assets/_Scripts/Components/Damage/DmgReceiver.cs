@@ -8,15 +8,19 @@ namespace Components.Damage
         public int MaxHp;
     }
 
-    public struct HpChangeState : IComponentData // TODO: Find a way to store Hp change history (using queue?) (system dependency related problem?).
+    // TODO: Find a way to store Hp change history (using queue?) (system dependency related problem?).
+    public struct HpChangedTag : IComponentData, IEnableableComponent
     {
-        public bool IsChanged;
-        public int ChangedValue; // positive number -> healing, negative number -> taking dmg.
     }
 
-    public struct AliveState : IComponentData
+    public struct HpChangedValue : IComponentData
     {
-        public bool Value;
+        public int Value; //positive number -> healing, negative number -> taking dmg.
     }
+
+    public struct IsAliveTag : IComponentData, IEnableableComponent
+    {
+    }
+
 
 }

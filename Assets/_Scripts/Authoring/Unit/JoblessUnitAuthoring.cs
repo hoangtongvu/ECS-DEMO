@@ -46,15 +46,10 @@ namespace Authoring.Unit
                     CurrentHp = authoring.currentHp,
                     MaxHp = authoring.maxHp,
                 });
-                AddComponent(entity, new HpChangeState
-                {
-                    IsChanged = false,
-                    ChangedValue = 0,
-                });
-                AddComponent(entity, new AliveState
-                {
-                    Value = true,
-                });
+                AddComponent<HpChangedTag>(entity);
+                SetComponentEnabled<HpChangedTag>(entity, false);
+                AddComponent<HpChangedValue>(entity);
+                AddComponent<IsAliveTag>(entity);
 
 
                 AddComponent<MoveDirectionFloat2>(entity);
