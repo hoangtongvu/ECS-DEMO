@@ -8,6 +8,7 @@ using Components.GameResource;
 using Core.GameResource;
 using Components;
 using Core.MyEvent.PubSub.Messages;
+using Utilities.Extensions;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {

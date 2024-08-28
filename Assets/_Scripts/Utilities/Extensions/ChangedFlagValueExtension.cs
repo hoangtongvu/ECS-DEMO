@@ -1,21 +1,16 @@
+using Core.Misc;
+using Unity.Burst;
 
-namespace Components
+
+namespace Utilities.Extensions
 {
-
-    public struct ChangedFlagValue<T> where T : unmanaged
-    {
-        public T Value;
-        public bool ValueChanged;
-    }
-
-
     public static class ChangedFlagValueExtension
     {
+        [BurstCompile]
         public static void ChangeValue<T>(ref this ChangedFlagValue<T> changedFlagValue, in T newValue) where T : unmanaged
         {
             changedFlagValue.Value = newValue;
             changedFlagValue.ValueChanged = true;
         }
     }
-
 }

@@ -2,7 +2,7 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.MyEntity.EntitySpawning;
 using Unity.Transforms;
-using Components;
+using Utilities.Extensions;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
