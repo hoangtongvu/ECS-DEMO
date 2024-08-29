@@ -37,23 +37,19 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     , RefRW<UISpawned>>()
                     .WithDisabled<UnitSelectedTag>())
             {
+                bool canDespawn = uiSpawnedRef.ValueRO.IsSpawned;
+                if (!canDespawn) continue;
 
-                if (this.CanDespawn(uiSpawnedRef))
-                {
-                    this.DespawnProfileDisplays(uiPoolMap, spawnedUIMap, spawningProfiles);
 
-                    this.DespawnEntitySpawningPanel(uiPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
+                this.DespawnProfileDisplays(uiPoolMap, spawnedUIMap, spawningProfiles);
 
-                    // TODO: Use event to despawn is much more easier cause we don't need any return.
-                    uiSpawnedRef.ValueRW.IsSpawned = false;
-                }
+                this.DespawnEntitySpawningPanel(uiPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
+
+                // TODO: Use event to despawn is much more easier cause we don't need any return.
+                uiSpawnedRef.ValueRW.IsSpawned = false;
             }
 
         }
-
-        private bool CanDespawn(
-            RefRW<UISpawned> uiSpawnedRef) => uiSpawnedRef.ValueRO.IsSpawned;
-
 
         private void DespawnProfileDisplays(
             UIPoolMap uiPoolMap

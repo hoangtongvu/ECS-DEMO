@@ -43,34 +43,31 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     , RefRO<LocalTransform>>()
                     .WithAll<UnitSelectedTag>())
             {
-                if (this.CanSpawn(uiSpawnedRef))
-                {
+                bool canSpawn = !uiSpawnedRef.ValueRO.IsSpawned;
+                if (!canSpawn) continue;
 
-                    float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
+                float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
 
-                    this.SpawnEntitySpawningPanel(
-                        uiPoolMap
-                        , spawnedUIMap
-                        , spawnPos
-                        , ref uiSpawnedRef.ValueRW
-                        , out var entitySpawningPanelCtrl);
+                this.SpawnEntitySpawningPanel(
+                    uiPoolMap
+                    , spawnedUIMap
+                    , spawnPos
+                    , ref uiSpawnedRef.ValueRW
+                    , out var entitySpawningPanelCtrl);
 
-                    this.SpawnProfileDisplays(
-                        uiPoolMap
-                        , spawnedUIMap
-                        , spawningProfiles
-                        , spawnPos
-                        , entitySpawningPanelCtrl);
+                this.SpawnProfileDisplays(
+                    uiPoolMap
+                    , spawnedUIMap
+                    , spawningProfiles
+                    , spawnPos
+                    , entitySpawningPanelCtrl);
 
-                    uiSpawnedRef.ValueRW.IsSpawned = true;
-                }
+                uiSpawnedRef.ValueRW.IsSpawned = true;
 
             }
 
         }
 
-        private bool CanSpawn(
-            RefRW<UISpawned> uiSpawnedRef) => !uiSpawnedRef.ValueRO.IsSpawned;
 
         private void SpawnEntitySpawningPanel(
             UIPoolMap uiPoolMap
