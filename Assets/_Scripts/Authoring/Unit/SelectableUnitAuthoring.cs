@@ -1,4 +1,5 @@
 ﻿using Components.Unit;
+using Components.Unit.UnitSelection;
 using Unity.Entities;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ namespace Authoring.Unit
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<SelectableUnitTag>(entity);
+                AddComponent<UnitSelectedTag>(entity);
+                SetComponentEnabled<UnitSelectedTag>(entity, false);
 
                 AddComponent(entity, new UnitSelected
                 {

@@ -3,6 +3,7 @@ using Components.Damage;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
 using Components.Unit;
+using Components.Unit.UnitSelection;
 using Core.Unit;
 using Unity.Entities;
 using UnityEngine;
@@ -35,6 +36,8 @@ namespace Authoring.Unit
                 });
 
                 AddComponent<SelectableUnitTag>(entity);
+                AddComponent<UnitSelectedTag>(entity);
+                SetComponentEnabled<UnitSelectedTag>(entity, false);
                 AddComponent(entity, new UnitSelected
                 {
                     Value = false,

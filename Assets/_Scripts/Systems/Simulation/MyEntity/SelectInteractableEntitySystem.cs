@@ -2,8 +2,6 @@ using Unity.Entities;
 using Components.Unit;
 using Core;
 using Components;
-using Unity.Burst.CompilerServices;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Burst;
@@ -11,6 +9,7 @@ using Core.Unit;
 using Utilities.Helpers;
 using Components.MyEntity;
 using Unity.Transforms;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.MyEntity
 {
@@ -24,12 +23,22 @@ namespace Systems.Simulation.MyEntity
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<SelectedUnitElement>();
-            state.RequireForUpdate<MoveableState>();
-            state.RequireForUpdate<TargetPosition>();
             state.RequireForUpdate<InteractableEntityTag>();
-            state.RequireForUpdate<TargetEntity>();
+            state.RequireForUpdate<SelectionHitElement>();
+            state.RequireForUpdate<MoveAffecterMap>();
+
+            EntityQuery query = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitSelectedTag
+                    , MoveableState
+                    , LocalTransform
+                    , DistanceToTarget
+                    , TargetEntity
+                    , TargetPosition
+                    , MoveAffecterICD>()
+                .Build();
+
+            state.RequireForUpdate(query);
         }
 
         [BurstCompile]
@@ -40,26 +49,12 @@ namespace Systems.Simulation.MyEntity
             // Checking Hit Data.
             if (!this.TryGetInteractable(out Entity entity, out float3 pos)) return;
 
-            // Set Units move to target Position.
-            var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
-
-            var job = new SetTargetJob
+            new SetTargetJob()
             {
-                selectedUnits = selectedUnits,
                 targetEntity = entity,
                 targetPosition = pos,
-                targetPosLookup = SystemAPI.GetComponentLookup<TargetPosition>(),
-                distanceToTargetLookup = SystemAPI.GetComponentLookup<DistanceToTarget>(),
-                transformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
-                moveableStateLookup = SystemAPI.GetComponentLookup<MoveableState>(),
-                moveAffecterLookup = SystemAPI.GetComponentLookup<MoveAffecterICD>(),
-                unitIdLookup = SystemAPI.GetComponentLookup<UnitId>(),
-                targetEntityLookup = SystemAPI.GetComponentLookup<TargetEntity>(),
                 moveAffecterMap = moveAffecterMap.Value,
-            };
-
-            state.Dependency = default;
-            state.Dependency = job.ScheduleParallelByRef(selectedUnits.Length, 32, state.Dependency);
+            }.ScheduleParallel();
 
         }
 
@@ -89,82 +84,47 @@ namespace Systems.Simulation.MyEntity
         }
 
 
-
+        [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
-        private struct SetTargetJob : IJobParallelForBatch // Duplicated Job, same as one in SelectPosSystem.
+        private partial struct SetTargetJob : IJobEntity
         {
-            [NativeDisableParallelForRestriction]
-            public DynamicBuffer<SelectedUnitElement> selectedUnits;
 
-            public Entity targetEntity;
-            public float3 targetPosition;
+            [ReadOnly] public Entity targetEntity;
+            [ReadOnly] public float3 targetPosition;
+            [ReadOnly] public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
 
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<TargetPosition> targetPosLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<DistanceToTarget> distanceToTargetLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<LocalTransform> transformLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<MoveableState> moveableStateLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<MoveAffecterICD> moveAffecterLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<UnitId> unitIdLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<TargetEntity> targetEntityLookup;
-
-            [ReadOnly]
-            public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
-
-            [BurstCompile]
-            public void Execute(int startIndex, int count)
+            void Execute(
+                in UnitId unitId
+                , EnabledRefRO<UnitSelectedTag> unitSelectedTag
+                , EnabledRefRW<MoveableState> moveableState
+                , in LocalTransform transform
+                , ref DistanceToTarget distanceToTarget
+                , ref TargetPosition targetPosition
+                , ref TargetEntity targetInteractableEntity
+                , ref MoveAffecterICD moveAffecterICD)
             {
-                var length = startIndex + count;
+                bool unitSelected = unitSelectedTag.ValueRO;
+                if (!unitSelected) return;
 
-                for (int i = startIndex; i < length; i++)
-                {
-                    Entity entity = selectedUnits.ElementAt(i).Value;
-
-                    if (Hint.Likely(!this.moveableStateLookup.HasComponent(entity))) continue;
-
-
-                    var moveAffecterRef = this.moveAffecterLookup.GetRefRWOptional(entity);
-                    var unitIdRef = this.unitIdLookup.GetRefROOptional(entity);
-
-
-                    if (!MoveAffecterHelper.TryChangeMoveAffecter(
+                if (!MoveAffecterHelper.TryChangeMoveAffecter(
                         in this.moveAffecterMap
-                        , unitIdRef.ValueRO.UnitType
-                        , ref moveAffecterRef.ValueRW
+                        , unitId.UnitType
+                        , ref moveAffecterICD
                         , MoveAffecter.PlayerCommand
-                        , unitIdRef.ValueRO.LocalIndex))
-                    {
-                        continue;
-                    }
-
-                    // Init distance to target.
-                    var distanceToTargetRef = this.distanceToTargetLookup.GetRefRWOptional(entity);
-                    var transformRef = this.transformLookup.GetRefROOptional(entity);
-                    distanceToTargetRef.ValueRW.CurrentDistance = MathHelper.GetDistance2(transformRef.ValueRO.Position, this.targetPosition);
-
-                    this.moveableStateLookup.SetComponentEnabled(entity, true);
-
-                    var targetPosRef = this.targetPosLookup.GetRefRWOptional(entity);
-                    targetPosRef.ValueRW.Value = this.targetPosition;
-
-                    var targetEntityRef = this.targetEntityLookup.GetRefRWOptional(entity);
-                    targetEntityRef.ValueRW.Value = this.targetEntity;
+                        , unitId.LocalIndex))
+                {
+                    return;
                 }
+
+                moveableState.ValueRW = true;
+                targetInteractableEntity.Value = this.targetEntity;
+                targetPosition.Value = this.targetPosition;
+
+                // Init distance to target.
+                distanceToTarget.CurrentDistance = MathHelper.GetDistance2(transform.Position, this.targetPosition);
+
             }
         }
-
 
     }
 }
