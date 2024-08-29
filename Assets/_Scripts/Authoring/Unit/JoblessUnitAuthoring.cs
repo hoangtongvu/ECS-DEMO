@@ -38,10 +38,6 @@ namespace Authoring.Unit
                 AddComponent<SelectableUnitTag>(entity);
                 AddComponent<UnitSelectedTag>(entity);
                 SetComponentEnabled<UnitSelectedTag>(entity, false);
-                AddComponent(entity, new UnitSelected
-                {
-                    Value = false,
-                });
 
 
                 AddComponent(entity, new HpComponent

@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Components;
 using Components.MyEntity.EntitySpawning;
-using Components.Unit;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Core.UI.Identification;
@@ -9,6 +8,7 @@ using Core.UI.EntitySpawningPanel;
 using Core.UI.EntitySpawningPanel.SpawningProfileDisplay;
 using Components.ComponentMap;
 using Utilities.Helpers;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -21,7 +21,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelected
+                    UnitSelectedTag
                     , EntitySpawningProfileElement
                     , UISpawned
                     , LocalTransform>()
@@ -36,14 +36,14 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
 
 
-            foreach (var (selectedRef, spawningProfiles, uiSpawnedRef, transformRef) in
+            foreach (var (spawningProfiles, uiSpawnedRef, transformRef) in
                 SystemAPI.Query<
-                    RefRO<UnitSelected>
-                    , DynamicBuffer<EntitySpawningProfileElement>
+                    DynamicBuffer<EntitySpawningProfileElement>
                     , RefRW<UISpawned>
-                    , RefRO<LocalTransform>>())
+                    , RefRO<LocalTransform>>()
+                    .WithAll<UnitSelectedTag>())
             {
-                if (this.CanSpawn(selectedRef, uiSpawnedRef))
+                if (this.CanSpawn(uiSpawnedRef))
                 {
 
                     float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
@@ -70,8 +70,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         }
 
         private bool CanSpawn(
-            RefRO<UnitSelected> selectedRef
-            , RefRW<UISpawned> uiSpawnedRef) => selectedRef.ValueRO.Value && !uiSpawnedRef.ValueRO.IsSpawned;
+            RefRW<UISpawned> uiSpawnedRef) => !uiSpawnedRef.ValueRO.IsSpawned;
 
         private void SpawnEntitySpawningPanel(
             UIPoolMap uiPoolMap

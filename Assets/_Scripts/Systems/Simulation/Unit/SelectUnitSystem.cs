@@ -3,7 +3,6 @@ using Core;
 using Components;
 using Unity.Burst;
 using Components.Unit.UnitSelection;
-using Components.Unit;
 
 namespace Systems.Simulation.Unit
 {
@@ -28,7 +27,6 @@ namespace Systems.Simulation.Unit
             var inputData = SystemAPI.GetSingleton<InputData>();
             if (inputData.BackspaceButtonDown)
             {
-                this.ClearSelectedUnitsBuffer(ref state);
                 this.DisableUnitSelectedTag(ref state);
                 return;
             }
@@ -43,7 +41,6 @@ namespace Systems.Simulation.Unit
                 if (hit.SelectionType != SelectionType.Unit) continue;
 
                 this.EnableUnitSelectedTag(ref state, hit.HitEntity);
-                this.AddUnitIntoHolder(ref state, hit.HitEntity);
                 selectionHits.RemoveAt(i);
                 i--;
             }
@@ -65,28 +62,6 @@ namespace Systems.Simulation.Unit
             }
         }
 
-
-        [BurstCompile]
-        private void AddUnitIntoHolder(ref SystemState state, in Entity hitEntity)
-        {
-            // Set UnitSelected = true.
-            var unitSelectedRef = SystemAPI.GetComponentRW<UnitSelected>(hitEntity);
-            unitSelectedRef.ValueRW.Value = true;
-        }
-
-        [BurstCompile]
-        private void ClearSelectedUnitsBuffer(ref SystemState state)
-        {
-
-            foreach (var (unitSelectedRef, entity) in
-                SystemAPI.Query<RefRW<UnitSelected>>()
-                .WithAll<UnitSelectedTag>()
-                .WithEntityAccess())
-            {
-                unitSelectedRef.ValueRW.Value = false;
-            }
-        }
-        
 
     }
 }

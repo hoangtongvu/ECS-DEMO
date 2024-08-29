@@ -1,10 +1,10 @@
 using Unity.Entities;
 using Components;
 using Components.MyEntity.EntitySpawning;
-using Components.Unit;
 using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
 using Core.MyEvent.PubSub.Messages;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -17,7 +17,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelected
+                    UnitSelectedTag
                     , EntitySpawningProfileElement
                     , UISpawned>()
                 .Build();
@@ -28,13 +28,12 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         protected override void OnUpdate()
         {
 
-            foreach (var (selectedRef, spawningProfiles, uiSpawnedRef) in
+            foreach (var (spawningProfiles, uiSpawnedRef) in
                 SystemAPI.Query<
-                    RefRO<UnitSelected>
-                    , DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<UISpawned>>())
+                    DynamicBuffer<EntitySpawningProfileElement>
+                    , RefRO<UISpawned>>()
+                    .WithAll<UnitSelectedTag>())
             {
-                if (!selectedRef.ValueRO.Value) continue;
                 if (!uiSpawnedRef.ValueRO.IsSpawned) continue;
 
                 foreach (var profile in spawningProfiles)

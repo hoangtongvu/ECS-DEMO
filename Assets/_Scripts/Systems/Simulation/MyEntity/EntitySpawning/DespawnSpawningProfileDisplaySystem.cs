@@ -1,10 +1,10 @@
 using Unity.Entities;
 using Components;
 using Components.MyEntity.EntitySpawning;
-using Components.Unit;
 using Unity.Transforms;
 using Components.ComponentMap;
 using Utilities.Helpers;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -17,7 +17,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelected
+                    UnitSelectedTag
                     , EntitySpawningProfileElement
                     , UISpawned
                     , LocalTransform>()
@@ -31,14 +31,14 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
 
-            foreach (var (selectedRef, spawningProfiles, uiSpawnedRef) in
+            foreach (var (spawningProfiles, uiSpawnedRef) in
                 SystemAPI.Query<
-                    RefRO<UnitSelected>
-                    , DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRW<UISpawned>>())
+                    DynamicBuffer<EntitySpawningProfileElement>
+                    , RefRW<UISpawned>>()
+                    .WithDisabled<UnitSelectedTag>())
             {
 
-                if (this.CanDespawn(selectedRef, uiSpawnedRef))
+                if (this.CanDespawn(uiSpawnedRef))
                 {
                     this.DespawnProfileDisplays(uiPoolMap, spawnedUIMap, spawningProfiles);
 
@@ -52,8 +52,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         }
 
         private bool CanDespawn(
-            RefRO<UnitSelected> selectedRef
-            , RefRW<UISpawned> uiSpawnedRef) => !selectedRef.ValueRO.Value && uiSpawnedRef.ValueRO.IsSpawned;
+            RefRW<UISpawned> uiSpawnedRef) => uiSpawnedRef.ValueRO.IsSpawned;
 
 
         private void DespawnProfileDisplays(
