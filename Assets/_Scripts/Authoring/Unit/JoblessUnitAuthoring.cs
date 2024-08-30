@@ -17,7 +17,6 @@ namespace Authoring.Unit
         [SerializeField] private int maxHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private int currentHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private float speed = 5f; //Can put this into Unit profile SO;
-        [SerializeField] private bool moveableState;
 
         private class Baker : Baker<JoblessUnitAuthoring>
         {
@@ -56,12 +55,10 @@ namespace Authoring.Unit
                 {
                     Value = authoring.speed,
                 });
-                AddComponent(entity, new MoveableState
-                {
-                    Entity = entity,
-                });
-                SetComponentEnabled<MoveableState>(entity, authoring.moveableState);
-
+                AddComponent<MoveableEntityTag>(entity);
+                AddComponent<CanMoveEntityTag>(entity);
+                SetComponentEnabled<CanMoveEntityTag>(entity, false);
+                
 
                 AddComponent<TargetPosition>(entity);
                 AddComponent(entity, new DistanceToTarget

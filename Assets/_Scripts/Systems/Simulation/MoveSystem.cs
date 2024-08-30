@@ -16,7 +16,7 @@ namespace Systems.Simulation
 
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    MoveableState
+                    CanMoveEntityTag
                     , LocalTransform
                     , MoveDirectionFloat2
                     , MoveSpeedLinear>()
@@ -34,14 +34,14 @@ namespace Systems.Simulation
             }.ScheduleParallel();
         }
 
+        [WithAll(typeof(CanMoveEntityTag))]
         [BurstCompile]
         private partial struct MoveJob : IJobEntity
         {
             public float deltaTime;
 
             private void Execute(
-                in MoveableState moveableState
-                , ref LocalTransform transform
+                ref LocalTransform transform
                 , in MoveSpeedLinear speed
                 , in MoveDirectionFloat2 direction
             )

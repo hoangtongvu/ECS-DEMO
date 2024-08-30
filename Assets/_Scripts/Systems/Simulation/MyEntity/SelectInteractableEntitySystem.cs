@@ -30,7 +30,7 @@ namespace Systems.Simulation.MyEntity
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitSelectedTag
-                    , MoveableState
+                    , CanMoveEntityTag
                     , LocalTransform
                     , DistanceToTarget
                     , TargetEntity
@@ -96,7 +96,7 @@ namespace Systems.Simulation.MyEntity
             void Execute(
                 in UnitId unitId
                 , EnabledRefRO<UnitSelectedTag> unitSelectedTag
-                , EnabledRefRW<MoveableState> moveableState
+                , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , in LocalTransform transform
                 , ref DistanceToTarget distanceToTarget
                 , ref TargetPosition targetPosition
@@ -116,7 +116,7 @@ namespace Systems.Simulation.MyEntity
                     return;
                 }
 
-                moveableState.ValueRW = true;
+                canMoveEntityTag.ValueRW = true;
                 targetInteractableEntity.Value = this.targetEntity;
                 targetPosition.Value = this.targetPosition;
 

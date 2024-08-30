@@ -17,7 +17,7 @@ namespace Systems.Simulation.Unit
 
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    MoveableState
+                    CanMoveEntityTag
                     , LocalTransform
                     , DistanceToTarget
                     , TargetPosition>()
@@ -32,12 +32,12 @@ namespace Systems.Simulation.Unit
             new SetCurrDis().ScheduleParallel();
         }
 
+        [WithAll(typeof(CanMoveEntityTag))]
         [BurstCompile]
         private partial struct SetCurrDis : IJobEntity
         {
             private void Execute(
-                in MoveableState moveableState
-                , in LocalTransform transform
+                in LocalTransform transform
                 , ref DistanceToTarget distanceToTarget
                 , in TargetPosition targetPosition
             )

@@ -8,7 +8,7 @@ namespace Authoring
     {
         public Vector3 Direction; // this is not necessary.
         public float Speed = 5f;
-        public bool MoveableState;
+        public bool CanMoveEntity;
 
         private class Baker : Baker<LinearMovementAuthoring>
         {
@@ -23,11 +23,9 @@ namespace Authoring
                     Value = authoring.Speed,
                 });
 
-                AddComponent(entity, new MoveableState
-                {
-                    Entity = entity,
-                });
-                SetComponentEnabled<MoveableState>(entity, authoring.MoveableState);
+                AddComponent<MoveableEntityTag>(entity);
+                AddComponent<CanMoveEntityTag>(entity);
+                SetComponentEnabled<CanMoveEntityTag>(entity, authoring.CanMoveEntity);
 
             }
         }

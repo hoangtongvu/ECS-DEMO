@@ -17,7 +17,7 @@ namespace Systems.Simulation.Unit
 
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    MoveableState
+                    CanMoveEntityTag
                     , LocalTransform
                     , MoveDirectionFloat2
                     , TargetPosition>()
@@ -33,12 +33,12 @@ namespace Systems.Simulation.Unit
             new SetMoveDirJob().ScheduleParallel();
         }
 
+        [WithAll(typeof(CanMoveEntityTag))]
         [BurstCompile]
         private partial struct SetMoveDirJob : IJobEntity
         {
             private void Execute(
-                in MoveableState moveableState
-                , in LocalTransform transform
+                in LocalTransform transform
                 , ref MoveDirectionFloat2 moveDir
                 , in TargetPosition targetPosition
             )

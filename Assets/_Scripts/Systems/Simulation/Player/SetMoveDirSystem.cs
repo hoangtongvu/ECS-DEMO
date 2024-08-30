@@ -31,19 +31,20 @@ namespace Systems.Simulation.Player
         {
             float2 inputMoveDirection = SystemAPI.GetSingleton<InputData>().MoveDirection.Value;
 
-            foreach (var (moveDirRef, selfEntity) in
+            foreach (var (canMoveEntityTag, moveDirRef) in
                 SystemAPI.Query<
-                    RefRW<MoveDirectionFloat2>>()
-                    .WithEntityAccess()
-                    .WithAll<PlayerTag>())
+                    EnabledRefRW<CanMoveEntityTag>
+                    , RefRW<MoveDirectionFloat2>>()
+                    .WithAll<PlayerTag>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 if (inputMoveDirection.x == 0 && inputMoveDirection.y == 0)
                 {
-                    SystemAPI.SetComponentEnabled<MoveableState>(selfEntity, false);
+                    canMoveEntityTag.ValueRW = false;
                     return;
                 }
 
-                SystemAPI.SetComponentEnabled<MoveableState>(selfEntity, true);
+                canMoveEntityTag.ValueRW = true;
                 moveDirRef.ValueRW.Value = inputMoveDirection;
                 
             }

@@ -19,7 +19,7 @@ namespace Systems.Simulation.Unit
 
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    MoveableState
+                    CanMoveEntityTag
                     , DistanceToTarget
                     , MoveAffecterICD
                     , PhysicsVelocity>()
@@ -38,14 +38,14 @@ namespace Systems.Simulation.Unit
         private partial struct StopMoveJob : IJobEntity
         {
             void Execute(
-                EnabledRefRW<MoveableState> moveStateRef
+                EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , in DistanceToTarget distanceToTarget
                 , ref MoveAffecterICD moveAffecter
                 , ref PhysicsVelocity physicsVelocity)
             {
                 if (Hint.Likely(distanceToTarget.CurrentDistance >= distanceToTarget.MinDistance)) return;
                 // velocityRef.ValueRW.Linear = 0;
-                moveStateRef.ValueRW = false;
+                canMoveEntityTag.ValueRW = false;
                 moveAffecter.Value = Core.Unit.MoveAffecter.None;
             }
         }

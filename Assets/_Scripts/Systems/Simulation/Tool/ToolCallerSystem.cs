@@ -104,7 +104,7 @@ namespace Systems.Simulation.Tool
 
 
                     targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
-                    SystemAPI.SetComponentEnabled<MoveableState>(unitEntity, true);
+                    SystemAPI.SetComponentEnabled<CanMoveEntityTag>(unitEntity, true);
 
                 }
 

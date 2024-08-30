@@ -27,7 +27,7 @@ namespace Systems.Simulation.Unit
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitSelectedTag
-                    , MoveableState
+                    , CanMoveEntityTag
                     , TargetPosition
                     , MoveAffecterICD>()
                 .Build();
@@ -83,7 +83,7 @@ namespace Systems.Simulation.Unit
             void Execute(
                 in UnitId unitId
                 , EnabledRefRO<UnitSelectedTag> unitSelectedTag
-                , EnabledRefRW<MoveableState> moveableState
+                , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , ref TargetPosition targetPosition
                 , ref MoveAffecterICD moveAffecterICD)
             {
@@ -100,7 +100,7 @@ namespace Systems.Simulation.Unit
                     return;
                 }
 
-                moveableState.ValueRW = true;
+                canMoveEntityTag.ValueRW = true;
                 targetPosition.Value = this.targetPosition;
             }
         }
