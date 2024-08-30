@@ -9,6 +9,7 @@ using Systems.Simulation.Unit;
 using Core.Unit;
 using Utilities.Helpers;
 using Utilities;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.Tool
 {
@@ -55,6 +56,8 @@ namespace Systems.Simulation.Tool
         {
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
 
             foreach (var (toolTransformRef, toolPickerEntityRef, toolEntity) in
                 SystemAPI.Query<
@@ -82,8 +85,7 @@ namespace Systems.Simulation.Tool
                     float distance = math.distance(toolTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
                     if (distance > toolCallRadius.Value) continue;
 
-                    const float minDis = 1.5f;// Note: This is a temp fix.
-                    if (distance <= minDis)
+                    if (distance <= interactRadius)
                     {
                         // Set as can be picked up.
                         SystemAPI.SetComponentEnabled<CanBePickedTag>(toolEntity, true);

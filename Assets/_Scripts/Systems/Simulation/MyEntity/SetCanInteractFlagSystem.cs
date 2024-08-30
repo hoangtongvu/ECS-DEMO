@@ -2,6 +2,7 @@ using Unity.Entities;
 using Components;
 using Unity.Burst;
 using Components.MyEntity;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.MyEntity
 {
@@ -27,6 +28,9 @@ namespace Systems.Simulation.MyEntity
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
+
             // Clear components.
             foreach (var (tagRef, targetEntityRef) in SystemAPI.Query<EnabledRefRW<CanInteractEntityTag>, RefRW<TargetEntity>>())
             {
@@ -41,10 +45,9 @@ namespace Systems.Simulation.MyEntity
                     .WithDisabled<CanInteractEntityTag>()
                     .WithEntityAccess())
             {
-                const float interactionRadius = 2f;// TODO: Replace this with an ICD
 
                 if (targetEntityRef.ValueRO.Value == Entity.Null) continue;
-                if (distanceToTargetRef.ValueRO.CurrentDistance > interactionRadius) continue;
+                if (distanceToTargetRef.ValueRO.CurrentDistance > interactRadius) continue;
                 //UnityEngine.Debug.Log(distanceToTargetRef.ValueRO.CurrentDistance);
                 SystemAPI.SetComponentEnabled<CanInteractEntityTag>(entity, true);
             }

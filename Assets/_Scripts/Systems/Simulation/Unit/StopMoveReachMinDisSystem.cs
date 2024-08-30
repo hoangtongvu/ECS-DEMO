@@ -1,7 +1,9 @@
 using Components;
+using Components.Misc.GlobalConfigs;
 using Components.Unit;
 using Unity.Burst;
 using Unity.Burst.CompilerServices;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
 
@@ -31,19 +33,27 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new StopMoveJob().ScheduleParallel();
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            float stopMoveRadius = gameGlobalConfigs.Value.UnitStopMoveRadius;
+
+            new StopMoveJob
+            {
+                StopMoveRadius = stopMoveRadius,
+            }.ScheduleParallel();
         }
 
         [BurstCompile]
         private partial struct StopMoveJob : IJobEntity
         {
+            [ReadOnly] public float StopMoveRadius;
+
             void Execute(
                 EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , in DistanceToTarget distanceToTarget
                 , ref MoveAffecterICD moveAffecter
                 , ref PhysicsVelocity physicsVelocity)
             {
-                if (Hint.Likely(distanceToTarget.CurrentDistance >= distanceToTarget.MinDistance)) return;
+                if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveRadius)) return;
                 // velocityRef.ValueRW.Linear = 0;
                 canMoveEntityTag.ValueRW = false;
                 moveAffecter.Value = Core.Unit.MoveAffecter.None;
