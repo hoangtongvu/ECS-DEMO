@@ -1,5 +1,7 @@
 using Components;
+using Components.Misc.GlobalConfigs;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -28,9 +30,11 @@ namespace Systems.Simulation
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             new MoveJob
             {
                 deltaTime = SystemAPI.Time.DeltaTime,
+                speedScale = gameGlobalConfigs.Value.EntityMoveSpeedScale,
             }.ScheduleParallel();
         }
 
@@ -39,6 +43,7 @@ namespace Systems.Simulation
         private partial struct MoveJob : IJobEntity
         {
             public float deltaTime;
+            [ReadOnly] public float speedScale;
 
             private void Execute(
                 ref LocalTransform transform
@@ -47,7 +52,7 @@ namespace Systems.Simulation
             )
             {
                 float3 float3Dir = new (direction.Value.x, 0f, direction.Value.y);
-                transform = transform.Translate(float3Dir * speed.Value * this.deltaTime);
+                transform = transform.Translate(float3Dir * this.speedScale * speed.Value * this.deltaTime);
             }
         }
     }
