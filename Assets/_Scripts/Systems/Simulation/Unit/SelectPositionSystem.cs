@@ -2,13 +2,12 @@ using Unity.Entities;
 using Components.Unit;
 using Core;
 using Components;
-using Unity.Burst.CompilerServices;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Burst;
 using Core.Unit;
 using Utilities.Helpers;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.Unit
 {
@@ -23,9 +22,17 @@ namespace Systems.Simulation.Unit
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<SelectedUnitElement>();
-            state.RequireForUpdate<MoveableState>();
-            state.RequireForUpdate<TargetPosition>();
+            state.RequireForUpdate<MoveAffecterMap>();
+
+            EntityQuery query = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitSelectedTag
+                    , CanMoveEntityTag
+                    , TargetPosition
+                    , MoveAffecterICD>()
+                .Build();
+
+            state.RequireForUpdate(query);
         }
 
         [BurstCompile]
@@ -36,22 +43,11 @@ namespace Systems.Simulation.Unit
             // Checking Hit Data.
             if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
-            // Set Units move to target Position.
-            var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
-
-            var job = new SetTargetJob
+            new SetTargetJob()
             {
-                selectedUnits = selectedUnits,
-                targetPosition = selectedPos,
-                targetPosLookup = SystemAPI.GetComponentLookup<TargetPosition>(),
-                moveableStateLookup = SystemAPI.GetComponentLookup<MoveableState>(),
-                moveAffecterLookup = SystemAPI.GetComponentLookup<MoveAffecterICD>(),
-                unitIdLookup = SystemAPI.GetComponentLookup<UnitId>(),
                 moveAffecterMap = moveAffecterMap.Value,
-            };
-
-            state.Dependency = default;
-            state.Dependency = job.ScheduleParallelByRef(selectedUnits.Length, 32, state.Dependency);
+                targetPosition = selectedPos,
+            }.ScheduleParallel();
 
         }
 
@@ -75,64 +71,38 @@ namespace Systems.Simulation.Unit
             return false;
         }
 
+
+        [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
-        private struct SetTargetJob : IJobParallelForBatch
+        private partial struct SetTargetJob : IJobEntity
         {
-            [NativeDisableParallelForRestriction]
-            public DynamicBuffer<SelectedUnitElement> selectedUnits;
 
-            public float3 targetPosition;
+            [ReadOnly] public float3 targetPosition;
+            [ReadOnly] public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
 
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<TargetPosition> targetPosLookup;
-            
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<MoveableState> moveableStateLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<MoveAffecterICD> moveAffecterLookup;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<UnitId> unitIdLookup;
-
-            [ReadOnly]
-            public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
-
-            public void Execute(int startIndex, int count)
+            void Execute(
+                in UnitId unitId
+                , EnabledRefRO<UnitSelectedTag> unitSelectedTag
+                , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
+                , ref TargetPosition targetPosition
+                , ref MoveAffecterICD moveAffecterICD)
             {
-                var length = startIndex + count;
+                bool unitSelected = unitSelectedTag.ValueRO;
+                if (!unitSelected) return;
 
-                for (int i = startIndex; i < length; i++)
-                {
-                    Entity entity = selectedUnits.ElementAt(i).Value;
-
-                    if (Hint.Likely(!this.moveableStateLookup.HasComponent(entity))) continue;
-
-
-                    var moveAffecterRef = this.moveAffecterLookup.GetRefRWOptional(entity);
-                    var unitIdRef = this.unitIdLookup.GetRefROOptional(entity);
-
-
-                    if (!MoveAffecterHelper.TryChangeMoveAffecter(
+                if (!MoveAffecterHelper.TryChangeMoveAffecter(
                         in this.moveAffecterMap
-                        , unitIdRef.ValueRO.UnitType
-                        , ref moveAffecterRef.ValueRW
+                        , unitId.UnitType
+                        , ref moveAffecterICD
                         , MoveAffecter.PlayerCommand
-                        , unitIdRef.ValueRO.LocalIndex))
-                    {
-                        continue;
-                    }
-
-
-                    this.moveableStateLookup.SetComponentEnabled(entity, true);
-
-                    var targetPosRef = this.targetPosLookup.GetRefRWOptional(entity);
-                    targetPosRef.ValueRW.Value = this.targetPosition;
-
+                        , unitId.LocalIndex))
+                {
+                    return;
                 }
+
+                canMoveEntityTag.ValueRW = true;
+                targetPosition.Value = this.targetPosition;
             }
         }
-
-
     }
 }

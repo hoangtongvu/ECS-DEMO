@@ -1,10 +1,10 @@
 using Unity.Entities;
 using Components;
 using Components.MyEntity.EntitySpawning;
-using Components.Unit;
 using Unity.Transforms;
 using Components.ComponentMap;
 using Utilities.Helpers;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -17,7 +17,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelected
+                    UnitSelectedTag
                     , EntitySpawningProfileElement
                     , UISpawned
                     , LocalTransform>()
@@ -31,30 +31,25 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
 
-            foreach (var (selectedRef, spawningProfiles, uiSpawnedRef) in
+            foreach (var (spawningProfiles, uiSpawnedRef) in
                 SystemAPI.Query<
-                    RefRO<UnitSelected>
-                    , DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRW<UISpawned>>())
+                    DynamicBuffer<EntitySpawningProfileElement>
+                    , RefRW<UISpawned>>()
+                    .WithDisabled<UnitSelectedTag>())
             {
+                bool canDespawn = uiSpawnedRef.ValueRO.IsSpawned;
+                if (!canDespawn) continue;
 
-                if (this.CanDespawn(selectedRef, uiSpawnedRef))
-                {
-                    this.DespawnProfileDisplays(uiPoolMap, spawnedUIMap, spawningProfiles);
 
-                    this.DespawnEntitySpawningPanel(uiPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
+                this.DespawnProfileDisplays(uiPoolMap, spawnedUIMap, spawningProfiles);
 
-                    // TODO: Use event to despawn is much more easier cause we don't need any return.
-                    uiSpawnedRef.ValueRW.IsSpawned = false;
-                }
+                this.DespawnEntitySpawningPanel(uiPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
+
+                // TODO: Use event to despawn is much more easier cause we don't need any return.
+                uiSpawnedRef.ValueRW.IsSpawned = false;
             }
 
         }
-
-        private bool CanDespawn(
-            RefRO<UnitSelected> selectedRef
-            , RefRW<UISpawned> uiSpawnedRef) => !selectedRef.ValueRO.Value && uiSpawnedRef.ValueRO.IsSpawned;
-
 
         private void DespawnProfileDisplays(
             UIPoolMap uiPoolMap

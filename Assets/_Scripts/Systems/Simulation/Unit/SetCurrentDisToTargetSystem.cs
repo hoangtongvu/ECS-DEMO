@@ -1,8 +1,8 @@
 using Components;
 using Unity.Burst;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
+using Utilities.Helpers;
 
 
 namespace Systems.Simulation.Unit
@@ -17,7 +17,7 @@ namespace Systems.Simulation.Unit
 
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    MoveableState
+                    CanMoveEntityTag
                     , LocalTransform
                     , DistanceToTarget
                     , TargetPosition>()
@@ -32,17 +32,17 @@ namespace Systems.Simulation.Unit
             new SetCurrDis().ScheduleParallel();
         }
 
+        [WithAll(typeof(CanMoveEntityTag))]
         [BurstCompile]
         private partial struct SetCurrDis : IJobEntity
         {
             private void Execute(
-                in MoveableState moveableState
-                , in LocalTransform transform
+                in LocalTransform transform
                 , ref DistanceToTarget distanceToTarget
                 , in TargetPosition targetPosition
             )
             {
-                distanceToTarget.CurrentDistance = math.distance(targetPosition.Value, transform.Position);
+                distanceToTarget.CurrentDistance = MathHelper.GetDistance2(in transform.Position, in targetPosition.Value);
             }
         }
     }

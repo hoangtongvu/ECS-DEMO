@@ -7,6 +7,7 @@ using Unity.Physics;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Transforms;
+using Utilities.Extensions;
 
 namespace Systems.Simulation.Player
 {
@@ -109,11 +110,14 @@ namespace Systems.Simulation.Player
             {
                 Entity entity = hit.Entity;
 
+                if (!SystemAPI.HasComponent<HpComponent>(entity)) continue;
 
-                if (!SystemAPI.HasComponent<HpChangeState>(entity)) continue;
-                RefRW<HpChangeState> hpChangeStateRef = SystemAPI.GetComponentRW<HpChangeState>(entity);
-                HpChangeHandleSystem.DeductHp(ref hpChangeStateRef.ValueRW, dmgValueRef.ValueRO.Value);
-                // Debug.Log($"{entity} lost {dmgValueRef.ValueRO.Value} Hp.");
+                var hpChangedValueRef = SystemAPI.GetComponentRW<HpChangedValue>(entity);
+
+                SystemAPI.SetComponentEnabled<HpChangedTag>(entity, true);
+                hpChangedValueRef.ValueRW.Value = -dmgValueRef.ValueRO.Value;
+
+                //UnityEngine.Debug.Log($"{entity} received {dmgValueRef.ValueRO.Value} Dmg.");
             }
 
             hits.Dispose();

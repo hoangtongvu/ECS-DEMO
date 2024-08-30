@@ -9,6 +9,7 @@ using Systems.Simulation.Unit;
 using Core.Unit;
 using Utilities.Helpers;
 using Utilities;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.Tool
 {
@@ -25,14 +26,14 @@ namespace Systems.Simulation.Tool
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     LocalTransform
-                    , CanBePicked
-                    , PickedBy
+                    , CanBePickedTag
+                    , ToolPickerEntity
                     , DerelictToolTag>()
                 .Build();
 
             var query1 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitToolHolder
+                    JoblessUnitTag
                     , LocalTransform
                     , TargetPosition
                     , MoveAffecterICD
@@ -55,27 +56,27 @@ namespace Systems.Simulation.Tool
         {
             var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
 
-            foreach (var (toolTransformRef, canBePickedRef, pickedByRef, toolEntity) in
+            foreach (var (toolTransformRef, toolPickerEntityRef, toolEntity) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
-                    , RefRW<CanBePicked>
-                    , RefRW<PickedBy>>()
+                    , RefRW<ToolPickerEntity>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
 
-                foreach (var (unitToolHolderRef, unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
+                foreach (var (unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
                     SystemAPI.Query<
-                        RefRW<UnitToolHolder>
-                        , RefRO<LocalTransform>
+                        RefRO<LocalTransform>
                         , RefRW<TargetPosition>
                         , RefRW<MoveAffecterICD>
                         , RefRW<DistanceToTarget>
                         , RefRO<UnitId>>()
+                        .WithAll<JoblessUnitTag>()
                         .WithEntityAccess())
                 {
-                    if (unitToolHolderRef.ValueRO.Value != Entity.Null) continue;
                     // Even if we can set min distance then how we can make unit pick up tool upon stop.
 
 
@@ -84,11 +85,11 @@ namespace Systems.Simulation.Tool
                     float distance = math.distance(toolTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
                     if (distance > toolCallRadius.Value) continue;
 
-                    if (distance <= distanceToTargetRef.ValueRO.MinDistance)
+                    if (distance <= interactRadius)
                     {
                         // Set as can be picked up.
-                        canBePickedRef.ValueRW.Value = true;
-                        pickedByRef.ValueRW.Value = unitEntity;
+                        SystemAPI.SetComponentEnabled<CanBePickedTag>(toolEntity, true);
+                        toolPickerEntityRef.ValueRW.Value = unitEntity;
 
                         break;
                     }
@@ -105,7 +106,7 @@ namespace Systems.Simulation.Tool
 
 
                     targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
-                    SystemAPI.SetComponentEnabled<MoveableState>(unitEntity, true);
+                    SystemAPI.SetComponentEnabled<CanMoveEntityTag>(unitEntity, true);
 
                 }
 

@@ -7,6 +7,8 @@ using Components;
 using Components.Unit;
 using Core;
 using Components.Camera;
+using Components.Harvest;
+using Components.MyEntity;
 
 namespace Systems.Simulation
 {
@@ -88,6 +90,11 @@ namespace Systems.Simulation
         private SelectionType GetSelectionType(in Unity.Physics.RaycastHit raycastHit)
         {
             Entity hitEntity = raycastHit.Entity;
+
+            if (SystemAPI.HasComponent<InteractableEntityTag>(hitEntity))
+            {
+                return SelectionType.InteractableEntity;
+            }
 
             if (!SystemAPI.HasComponent<SelectableUnitTag>(hitEntity))
             {

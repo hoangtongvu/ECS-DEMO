@@ -1,5 +1,4 @@
 using Components.MyEntity.EntitySpawning;
-using Components.Unit;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -8,6 +7,8 @@ using Components.GameResource;
 using Core.GameResource;
 using Components;
 using Core.MyEvent.PubSub.Messages;
+using Utilities.Extensions;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -34,7 +35,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
             var entityQuery2 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelected
+                    UnitSelectedTag
                     , EntitySpawningProfileElement
                     , LocalCostMapElement>()
                     .Build();
@@ -60,13 +61,12 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             while (messageQueue.Value.TryDequeue(out var message))
             {
                 // Turn whole these below into IJobEntity?
-                foreach (var (unitSelectedRef, profiles, localCostMap) in
+                foreach (var (profiles, localCostMap) in
                     SystemAPI.Query<
-                        RefRO<UnitSelected>
-                        , DynamicBuffer<EntitySpawningProfileElement>
-                        , DynamicBuffer<LocalCostMapElement>>())
+                        DynamicBuffer<EntitySpawningProfileElement>
+                        , DynamicBuffer<LocalCostMapElement>>()
+                        .WithAll<UnitSelectedTag>())
                 {
-                    if (!unitSelectedRef.ValueRO.Value) continue;
 
                     for (int i = 0; i < profiles.Length; i++)
                     {

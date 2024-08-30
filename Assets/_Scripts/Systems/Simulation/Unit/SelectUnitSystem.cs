@@ -1,11 +1,8 @@
 using Unity.Entities;
-using Components.Unit;
 using Core;
 using Components;
 using Unity.Burst;
-using Unity.Jobs;
-using Utilities;
-using Unity.Collections;
+using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.Unit
 {
@@ -20,8 +17,7 @@ namespace Systems.Simulation.Unit
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<SelectedUnitElement>();
-            this.CreateUnitsHolder(ref state);
+            state.RequireForUpdate<UnitSelectedTag>();
         }
 
         [BurstCompile]
@@ -31,7 +27,7 @@ namespace Systems.Simulation.Unit
             var inputData = SystemAPI.GetSingleton<InputData>();
             if (inputData.BackspaceButtonDown)
             {
-                this.ClearSelectedUnitsBuffer(ref state);
+                this.DisableUnitSelectedTag(ref state);
                 return;
             }
 
@@ -44,7 +40,7 @@ namespace Systems.Simulation.Unit
                 var hit = selectionHits[i];
                 if (hit.SelectionType != SelectionType.Unit) continue;
 
-                this.AddUnitIntoHolder(ref state, hit.HitEntity);
+                this.EnableUnitSelectedTag(ref state, hit.HitEntity);
                 selectionHits.RemoveAt(i);
                 i--;
             }
@@ -53,69 +49,19 @@ namespace Systems.Simulation.Unit
         }
 
         [BurstCompile]
-        private void AddUnitIntoHolder(ref SystemState state, in Entity hitEntity)
-        {
-            var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
-
-            for (int i = 0; i < selectedUnits.Length; i++)
-            {
-                if (selectedUnits.ElementAt(i).Value == hitEntity) return;
-            }
-
-            // Set UnitSelected = true.
-            var unitSelectedRef = SystemAPI.GetComponentRW<UnitSelected>(hitEntity);
-            unitSelectedRef.ValueRW.Value = true;
-
-            selectedUnits.Add(new SelectedUnitElement
-            {
-                Value = hitEntity,
-            });
-        }
+        private void EnableUnitSelectedTag(ref SystemState state, in Entity hitEntity)
+            => SystemAPI.SetComponentEnabled<UnitSelectedTag>(hitEntity, true);
 
         [BurstCompile]
-        private void ClearSelectedUnitsBuffer(ref SystemState state)
+        private void DisableUnitSelectedTag(ref SystemState state)
         {
-            var selectedUnits = SystemAPI.GetSingletonBuffer<SelectedUnitElement>();
-            if (selectedUnits.IsEmpty) return;
-
-            // Set false UnitSelected for all Units in DynamicBuffer.
-            var job = new DisableUnitSelectedJob
+            foreach (var unitSelectedTag in
+                SystemAPI.Query<EnabledRefRW<UnitSelectedTag>>())
             {
-                SelectedUnits = selectedUnits.ToNativeArray(state.WorldUpdateAllocator),
-                UnitSelectedLookup = SystemAPI.GetComponentLookup<UnitSelected>(),
-            };
-
-            state.Dependency = job.ScheduleParallel(selectedUnits.Length, 32, state.Dependency);
-
-            selectedUnits.Clear();
-        }
-
-        [BurstCompile]
-        private void CreateUnitsHolder(ref SystemState state)
-        {
-            SingletonUtilities.GetInstance(state.EntityManager)
-                .AddBuffer<SelectedUnitElement>();
-        }
-
-        [BurstCompile]
-        private struct DisableUnitSelectedJob : IJobParallelForBatch
-        {
-            public NativeArray<SelectedUnitElement> SelectedUnits;
-
-            [NativeDisableParallelForRestriction]
-            public ComponentLookup<UnitSelected> UnitSelectedLookup;
-
-            public void Execute(int startIndex, int count)
-            {
-                int length = startIndex + count;
-                for (int i = startIndex; i < length; i++)
-                {
-                    SelectedUnitElement unit = this.SelectedUnits[i];
-                    var unitSelectedRef = this.UnitSelectedLookup.GetRefRWOptional(unit.Value);
-                    unitSelectedRef.ValueRW.Value = false;
-                }
+                unitSelectedTag.ValueRW = false;
             }
         }
+
 
     }
 }

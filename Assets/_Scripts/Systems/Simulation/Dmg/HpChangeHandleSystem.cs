@@ -1,4 +1,3 @@
-using Aspect;
 using Components.Damage;
 using Unity.Burst;
 using Unity.Entities;
@@ -13,56 +12,72 @@ namespace Systems.Simulation
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            // state.RequireForUpdate<DmgReceiverAspect>(); //Got exception when requiring aspect -> require per component instead.
-            state.RequireForUpdate<HpComponent>();
-            state.RequireForUpdate<HpChangeState>();
-            state.RequireForUpdate<AliveState>();
+            var query = SystemAPI.QueryBuilder()
+                .WithAll<
+                    HpComponent
+                    , HpChangedTag
+                    , HpChangedValue
+                    , IsAliveTag>()
+                .Build();
+
+            state.RequireForUpdate(query);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            HpChangeJob hpChangeJob = new();
-            hpChangeJob.ScheduleParallel();
+            new HpChangeJob()
+                .ScheduleParallel();
         }
 
 
         [BurstCompile]
         private partial struct HpChangeJob : IJobEntity
         {
-            void Execute(DmgReceiverAspect dmgReceiverAspect)
+            void Execute(
+                ref HpComponent hpComponent
+                , EnabledRefRW<HpChangedTag> hpChangedTag
+                , ref HpChangedValue hpChangedValue
+                , EnabledRefRW<IsAliveTag> aliveTag)
             {
-                if (!dmgReceiverAspect.HpChangeStateRef.ValueRO.IsChanged) return;
+                hpChangedTag.ValueRW = false;
 
-                dmgReceiverAspect.HpChangeStateRef.ValueRW.IsChanged = false;
+                int rawCurrentHp = hpComponent.CurrentHp;
+                rawCurrentHp += hpChangedValue.Value;
 
-                int rawCurrentHp = dmgReceiverAspect.HpComponentRef.ValueRO.CurrentHp;
-                rawCurrentHp += dmgReceiverAspect.HpChangeStateRef.ValueRO.ChangedValue;
-
-                if (rawCurrentHp > dmgReceiverAspect.HpComponentRef.ValueRO.MaxHp)
-                    dmgReceiverAspect.HpComponentRef.ValueRW.CurrentHp = dmgReceiverAspect.HpComponentRef.ValueRO.MaxHp;
+                if (rawCurrentHp > hpComponent.MaxHp)
+                    hpComponent.CurrentHp = hpComponent.MaxHp;
                 else if (rawCurrentHp <= 0)
                 {
-                    dmgReceiverAspect.HpComponentRef.ValueRW.CurrentHp = 0;
-                    dmgReceiverAspect.AliveStateRef.ValueRW.Value = false;
+                    hpComponent.CurrentHp = 0;
+                    aliveTag.ValueRW = false;
                 }
                 else
-                    dmgReceiverAspect.HpComponentRef.ValueRW.CurrentHp = rawCurrentHp;
+                    hpComponent.CurrentHp = rawCurrentHp;
 
             }
         }
 
-        public static void DeductHp(ref HpChangeState hpChangeState, int deductValue)
-        {
-            hpChangeState.IsChanged = true;
-            hpChangeState.ChangedValue = - deductValue;
-        }
+        //Cant use EnabledRefRW with Burst inside a BurstCompiled function.
+        //[BurstCompile]
+        //public static void DeductHp(
+        //    EnabledRefRW<HpChangedTag> hpChangedTag
+        //    , ref HpChangedValue hpChangedValue
+        //    , int deductValue)
+        //{
+        //    hpChangedTag.ValueRW = true;
+        //    hpChangedValue.Value = -deductValue;
+        //}
 
-        public static void RecoverHp(ref HpChangeState hpChangeState, int healValue)
-        {
-            hpChangeState.IsChanged = true;
-            hpChangeState.ChangedValue = healValue;
-        }
+        //[BurstCompile]
+        //public static void RecoverHp(
+        //    EnabledRefRW<HpChangedTag> hpChangedTag
+        //    , ref HpChangedValue hpChangedValue
+        //    , int healValue)
+        //{
+        //    hpChangedTag.ValueRW = true;
+        //    hpChangedValue.Value = healValue;
+        //}
 
     }
 }

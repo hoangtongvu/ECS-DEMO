@@ -18,9 +18,12 @@ namespace Components
         public float Value;
     }
 
-    public struct MoveableState : IComponentData, IEnableableComponent
+    public struct CanMoveEntityTag : IComponentData, IEnableableComponent
     {
-        public Entity Entity;
+    }
+
+    public struct MoveableEntityTag : IComponentData
+    {
     }
 
 }

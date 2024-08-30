@@ -21,18 +21,11 @@ namespace Authoring.Damage
                     MaxHp = authoring.MaxHp,
                 });
 
-                AddComponent(entity, new HpChangeState
-                {
-                    IsChanged = false,
-                    ChangedValue = 0,
-                });
+                AddComponent<HpChangedTag>(entity);
+                SetComponentEnabled<HpChangedTag>(entity, false);
+                AddComponent<HpChangedValue>(entity);
 
-                AddComponent(entity, new AliveState
-                {
-                    Value = true,
-                });
-
-                
+                AddComponent<IsAliveTag>(entity);
 
             }
         }

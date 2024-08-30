@@ -13,16 +13,9 @@ GameObject:
   - component: {fileID: 8309582735017838521}
   - component: {fileID: 2960436155912095393}
   - component: {fileID: 5738762699998178640}
-  - component: {fileID: 4533705021051212690}
-  - component: {fileID: 7886607595355932145}
-  - component: {fileID: 4985691107963245970}
-  - component: {fileID: 1919286584906510265}
-  - component: {fileID: 6788104109394483538}
   - component: {fileID: 8473944424651042083}
   - component: {fileID: 264369486369415393}
-  - component: {fileID: -1441650979372199106}
-  - component: {fileID: 7731964712474885308}
-  - component: {fileID: 349932243896350069}
+  - component: {fileID: 2757000227693699482}
   m_Layer: 0
   m_Name: Knight
   m_TagString: Untagged
@@ -143,73 +136,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4533705021051212690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3552774824711469151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9b631565ca3b844b851acfc169ad039, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7886607595355932145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3552774824711469151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86497afe85494564088d9bf13b25a98b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHp: 100
-  CurrentHp: 100
---- !u!114 &4985691107963245970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3552774824711469151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15adfb0712b7d3c459a78394302fb538, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Direction: {x: 0, y: 0, z: 0}
-  Speed: 5
-  MoveableState: 0
---- !u!114 &1919286584906510265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3552774824711469151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: decd4a089a413b54fae79cb4ceca7c2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6788104109394483538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3552774824711469151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b9063cc63e236d44860cdf337e3a5f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetPos: {x: 0, y: 0, z: 0}
-  MinDistance: 1
 --- !u!114 &8473944424651042083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,7 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb5fc567c7c5e8f439a88815bb33ac5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-1441650979372199106
+--- !u!114 &2757000227693699482
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -244,34 +170,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3552774824711469151}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77d0a91c9ab59034d8350e585748bc74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7731964712474885308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3552774824711469151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43ae8a458e17b1042b0155c6b9d2855f, type: 3}
+  m_Script: {fileID: 11500000, guid: ac528d841496c1249ab98593adaf05cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   unitType: 2
   localIndex: 0
---- !u!114 &349932243896350069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3552774824711469151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 945b37efbf41bc6488e23b8fe1202aa5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  x: 0
-  z: 0
+  maxHp: 100
+  currentHp: 100
+  speed: 5
+  moveableState: 0
