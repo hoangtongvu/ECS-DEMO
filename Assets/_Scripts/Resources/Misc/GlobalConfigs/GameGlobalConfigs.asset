@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 622728781b404524a823b9a29ebd515f, type: 3}
   m_Name: GameGlobalConfigs
   m_EditorClassIdentifier: 
+  Configs:
+    EntityMoveSpeedScale: 1
+    UnitStopMoveRadius: 1
+    UnitInteractRadius: 1.5
