@@ -33,6 +33,7 @@ namespace Systems.Simulation.Unit
                 .Build();
 
             state.RequireForUpdate(query);
+            state.Enabled = false;
         }
 
         [BurstCompile]

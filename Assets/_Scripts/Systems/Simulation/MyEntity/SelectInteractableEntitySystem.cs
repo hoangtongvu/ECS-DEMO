@@ -39,6 +39,7 @@ namespace Systems.Simulation.MyEntity
                 .Build();
 
             state.RequireForUpdate(query);
+            state.Enabled = false;
         }
 
         [BurstCompile]

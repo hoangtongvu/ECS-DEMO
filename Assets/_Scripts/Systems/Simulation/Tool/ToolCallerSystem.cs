@@ -49,6 +49,8 @@ namespace Systems.Simulation.Tool
                 {
                     Value = 15f,
                 });
+
+            state.Enabled = false;
         }
 
         [BurstCompile]

@@ -28,6 +28,7 @@ namespace Systems.Simulation.Unit
                 .Build();
 
             state.RequireForUpdate(entityQuery);
+            state.Enabled = false;
         }
 
         [BurstCompile]
