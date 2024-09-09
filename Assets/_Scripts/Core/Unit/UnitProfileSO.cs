@@ -14,8 +14,8 @@ namespace Core.Unit
         [SerializedDictionary("MoveAffecter", "Priority")]
         public SerializedDictionary<MoveAffecter, byte> MoveAffecterPriorities;
 
-        [SerializedDictionary("MoveCommand", "Priority")]
-        public SerializedDictionary<MoveCommand, byte> MoveCommandPriorities;
+        [SerializedDictionary("MoveCommandSource", "Priority")]
+        public SerializedDictionary<MoveCommandSource, byte> MoveCommandSourcePriorities;
 
     }
 }
