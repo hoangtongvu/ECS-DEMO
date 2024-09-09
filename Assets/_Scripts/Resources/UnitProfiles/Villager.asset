@@ -30,11 +30,11 @@ MonoBehaviour:
       Value: 1
     - Key: 3
       Value: 2
-  MoveCommandPriorities:
+  MoveCommandSourcePriorities:
     _serializedList:
-    - Key: 3
-      Value: 0
     - Key: 2
-      Value: 1
+      Value: 0
     - Key: 1
+      Value: 1
+    - Key: 3
       Value: 2
