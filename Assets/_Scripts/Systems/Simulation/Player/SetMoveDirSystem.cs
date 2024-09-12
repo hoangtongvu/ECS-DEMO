@@ -24,7 +24,6 @@ namespace Systems.Simulation.Player
             state.RequireForUpdate(entityQuery);
 
             state.RequireForUpdate<InputData>();
-            state.Enabled = false;
         }
 
         [BurstCompile]
