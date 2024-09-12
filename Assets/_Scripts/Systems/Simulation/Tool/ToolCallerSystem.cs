@@ -6,10 +6,11 @@ using Components.Unit;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Systems.Simulation.Unit;
-using Core.Unit;
 using Utilities.Helpers;
 using Utilities;
 using Components.Misc.GlobalConfigs;
+using Components.Unit.MyMoveCommand;
+using Core.Unit.MyMoveCommand;
 
 namespace Systems.Simulation.Tool
 {
@@ -36,7 +37,7 @@ namespace Systems.Simulation.Tool
                     JoblessUnitTag
                     , LocalTransform
                     , TargetPosition
-                    , MoveAffecterICD
+                    , MoveCommandElement
                     , DistanceToTarget
                     , UnitId>()
                 .Build();
@@ -50,13 +51,12 @@ namespace Systems.Simulation.Tool
                     Value = 15f,
                 });
 
-            state.Enabled = false;
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
+            var commandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
@@ -69,11 +69,11 @@ namespace Systems.Simulation.Tool
                     .WithAll<DerelictToolTag>())
             {
 
-                foreach (var (unitTransformRef, targetPosRef, moveAffecterRef, distanceToTargetRef, unitIdRef, unitEntity) in
+                foreach (var (unitTransformRef, targetPosRef, moveCommandElementRef, distanceToTargetRef, unitIdRef, unitEntity) in
                     SystemAPI.Query<
                         RefRO<LocalTransform>
                         , RefRW<TargetPosition>
-                        , RefRW<MoveAffecterICD>
+                        , RefRW<MoveCommandElement>
                         , RefRW<DistanceToTarget>
                         , RefRO<UnitId>>()
                         .WithAll<JoblessUnitTag>()
@@ -96,18 +96,18 @@ namespace Systems.Simulation.Tool
                         break;
                     }
 
-                    if (!MoveAffecterHelper.TryChangeMoveAffecter(
-                        in moveAffecterMap.Value
-                        , unitIdRef.ValueRO.UnitType
-                        , ref moveAffecterRef.ValueRW
-                        , MoveAffecter.Others
-                        , unitIdRef.ValueRO.LocalIndex))
-                    {
-                        continue;
-                    }
+                    bool canOverrideMoveCommand =
+                        MoveCommandHelper.TryOverrideMoveCommand(
+                            commandSourceMap.Value
+                            , unitIdRef.ValueRO.UnitType
+                            , ref moveCommandElementRef.ValueRW
+                            , MoveCommandSource.ToolCall
+                            , unitIdRef.ValueRO.LocalIndex);
 
+                    if (!canOverrideMoveCommand) continue;
 
                     targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
+                    moveCommandElementRef.ValueRW.Float3 = toolTransformRef.ValueRO.Position;
                     SystemAPI.SetComponentEnabled<CanMoveEntityTag>(unitEntity, true);
 
                 }
