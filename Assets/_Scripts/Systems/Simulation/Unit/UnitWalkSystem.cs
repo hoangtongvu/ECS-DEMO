@@ -23,6 +23,20 @@ namespace Systems.Simulation.Unit
         public void OnCreate(ref SystemState state)
         {
             this.rand = new(1);
+
+            state.RequireForUpdate<MoveCommandSourceMap>();
+
+            EntityQuery query = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitId
+                    , MoveSpeedLinear
+                    , LocalTransform
+                    , MoveCommandElement
+                    , IsAliveTag
+                    , NeedsInitWalkTag>()
+                .Build();
+
+            state.RequireForUpdate(query);
         }
 
         [BurstCompile]
