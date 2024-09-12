@@ -82,13 +82,13 @@ namespace Systems.Simulation.Unit
             foreach (var tag in SystemAPI.Query<EnabledRefRW<NewlySelectedUnitTag>>())
             {
                 tag.ValueRW = false;
-                UnityEngine.Debug.Log("SelectedTag cleared");
+                //UnityEngine.Debug.Log("SelectedTag cleared");
             }
 
             foreach (var tag in SystemAPI.Query<EnabledRefRW<NewlyDeselectedUnitTag>>())
             {
                 tag.ValueRW = false;
-                UnityEngine.Debug.Log("DeselectedTag cleared");
+                //UnityEngine.Debug.Log("DeselectedTag cleared");
             }
         }
 
