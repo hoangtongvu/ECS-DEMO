@@ -8,6 +8,7 @@ using Unity.Transforms;
 using Utilities.Helpers;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.Unit
 {
@@ -27,16 +28,15 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
 
-            foreach (var (unitIdRef, walkSpeedRef, moveSpeedRef, transformRef, walkMinDisRef, walkMaxDisRef, moveCommandElement, entity) in
+            foreach (var (unitIdRef, walkSpeedRef, moveSpeedRef, transformRef, moveCommandElement, entity) in
                 SystemAPI.Query<
                     RefRO<UnitId>
                     , RefRO<WalkSpeed>
                     , RefRW<MoveSpeedLinear>
                     , RefRW<LocalTransform>
-                    , RefRO<WalkMinDistance>
-                    , RefRO<WalkMaxDistance>
                     , RefRW<MoveCommandElement>>()
                     .WithAll<IsAliveTag>()
                     .WithAll<NeedsInitWalkTag>()
@@ -59,7 +59,7 @@ namespace Systems.Simulation.Unit
                 float2 randomDir = this.rand.NextFloat2Direction();
 
                 // Generate a random distance between the min and max distance
-                float randomDis = this.rand.NextFloat(walkMinDisRef.ValueRO.Value, walkMaxDisRef.ValueRO.Value);
+                float randomDis = this.rand.NextFloat(gameGlobalConfigs.Value.UnitWalkMinDistance, gameGlobalConfigs.Value.UnitWalkMaxDistance);
 
                 float2 tempVector2 = randomDir * randomDis;
 

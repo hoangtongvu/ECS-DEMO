@@ -3,6 +3,7 @@ using Unity.Burst;
 using Components;
 using Components.Damage;
 using Components.Unit;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.Unit
 {
@@ -20,10 +21,11 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
 
-            foreach (var (unitIdleRef, canMoveEntityTag, entity) in
+            foreach (var (idleTimeCounterRef, canMoveEntityTag, entity) in
                 SystemAPI.Query<
-                    RefRW<UnitIdleICD>
+                    RefRW<UnitIdleTimeCounter>
                     , EnabledRefRW<CanMoveEntityTag>>()
                     .WithAll<IsAliveTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
@@ -37,13 +39,13 @@ namespace Systems.Simulation.Unit
                 if (!canMoveEntityTag.ValueRO)
                 {
                     // Also counter = 0??
-                    unitIdleRef.ValueRW.TimeCounterSecond += SystemAPI.Time.DeltaTime;
+                    idleTimeCounterRef.ValueRW.Value += SystemAPI.Time.DeltaTime;
                 }
 
 
-                if (unitIdleRef.ValueRO.TimeCounterSecond >= unitIdleRef.ValueRO.TimeDurationSecond)
+                if (idleTimeCounterRef.ValueRO.Value >= gameGlobalConfigs.Value.UnitIdleMaxDuration)
                 {
-                    unitIdleRef.ValueRW.TimeCounterSecond = 0;
+                    idleTimeCounterRef.ValueRW.Value = 0;
                     SystemAPI.SetComponentEnabled<NeedsInitWalkTag>(entity, true);
                 }
 

@@ -19,12 +19,12 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var unitIdleICDRef in
+            foreach (var timeCounterRef in
                 SystemAPI.Query<
-                    RefRW<UnitIdleICD>>()
+                    RefRW<UnitIdleTimeCounter>>()
                     .WithAll<CanMoveEntityTag>())
             {
-                unitIdleICDRef.ValueRW.TimeCounterSecond = 0;
+                timeCounterRef.ValueRW.Value = 0;
             }
 
             //foreach (var unitReactionRef in
