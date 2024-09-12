@@ -100,6 +100,15 @@ namespace Authoring.Unit
                     Value = Entity.Null,
                 });
 
+
+                AddComponent<NewlySelectedUnitTag>(entity);
+                SetComponentEnabled<NewlySelectedUnitTag>(entity, false);
+                AddComponent<NewlyDeselectedUnitTag>(entity);
+                SetComponentEnabled<NewlyDeselectedUnitTag>(entity, false);
+
+
+                AddComponent<UnitTargetPosUIID>(entity);
+
             }
         }
     }
