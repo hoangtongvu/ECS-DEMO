@@ -5,9 +5,10 @@ using Components;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Burst;
-using Core.Unit;
 using Utilities.Helpers;
 using Components.Unit.UnitSelection;
+using Components.Unit.MyMoveCommand;
+using Core.Unit.MyMoveCommand;
 
 namespace Systems.Simulation.Unit
 {
@@ -22,14 +23,14 @@ namespace Systems.Simulation.Unit
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<MoveAffecterMap>();
+            state.RequireForUpdate<MoveCommandSourceMap>();
 
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitSelectedTag
                     , CanMoveEntityTag
                     , TargetPosition
-                    , MoveAffecterICD>()
+                    , MoveCommandElement>()
                 .Build();
 
             state.RequireForUpdate(query);
@@ -39,14 +40,14 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
-
             // Checking Hit Data.
             if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
+            var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+
             new SetTargetJob()
             {
-                moveAffecterMap = moveAffecterMap.Value,
+                moveCommandSourceMap = moveCommandSourceMap.Value,
                 targetPosition = selectedPos,
             }.ScheduleParallel();
 
@@ -79,27 +80,27 @@ namespace Systems.Simulation.Unit
         {
 
             [ReadOnly] public float3 targetPosition;
-            [ReadOnly] public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
+            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
 
             void Execute(
                 in UnitId unitId
                 , EnabledRefRO<UnitSelectedTag> unitSelectedTag
                 , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , ref TargetPosition targetPosition
-                , ref MoveAffecterICD moveAffecterICD)
+                , ref MoveCommandElement moveCommandElement)
             {
                 bool unitSelected = unitSelectedTag.ValueRO;
                 if (!unitSelected) return;
 
-                if (!MoveAffecterHelper.TryChangeMoveAffecter(
-                        in this.moveAffecterMap
+                bool canOverrideCommand =
+                    MoveCommandHelper.TryOverrideMoveCommand(
+                        in this.moveCommandSourceMap
                         , unitId.UnitType
-                        , ref moveAffecterICD
-                        , MoveAffecter.PlayerCommand
-                        , unitId.LocalIndex))
-                {
-                    return;
-                }
+                        , ref moveCommandElement
+                        , MoveCommandSource.PlayerCommand
+                        , unitId.LocalIndex);
+
+                if (!canOverrideCommand) return;
 
                 canMoveEntityTag.ValueRW = true;
                 targetPosition.Value = this.targetPosition;

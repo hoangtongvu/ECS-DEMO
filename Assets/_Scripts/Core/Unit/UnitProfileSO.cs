@@ -11,9 +11,6 @@ namespace Core.Unit
         [Header("Unit Profile")]
         public UnitType UnitType;
 
-        [SerializedDictionary("MoveAffecter", "Priority")]
-        public SerializedDictionary<MoveAffecter, byte> MoveAffecterPriorities;
-
         [SerializedDictionary("MoveCommandSource", "Priority")]
         public SerializedDictionary<MoveCommandSource, byte> MoveCommandSourcePriorities;
 

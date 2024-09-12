@@ -27,10 +27,6 @@ namespace Authoring
                     MinDistance = authoring.MinDistance,
                 });
 
-                AddComponent(entity, new MoveAffecterICD
-                {
-                    Value = Core.Unit.MoveAffecter.None,
-                });
 
 
             }
