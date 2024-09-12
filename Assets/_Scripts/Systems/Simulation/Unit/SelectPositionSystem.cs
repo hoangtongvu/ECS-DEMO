@@ -5,10 +5,11 @@ using Components;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Burst;
-using Utilities.Helpers;
 using Components.Unit.UnitSelection;
-using Components.Unit.MyMoveCommand;
+using Utilities.Helpers;
 using Core.Unit.MyMoveCommand;
+using Components.Unit.MyMoveCommand;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.Unit
 {
@@ -27,14 +28,15 @@ namespace Systems.Simulation.Unit
 
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelectedTag
+                    UnitId
+                    , UnitSelectedTag
                     , CanMoveEntityTag
                     , TargetPosition
-                    , MoveCommandElement>()
+                    , MoveCommandElement
+                    , MoveSpeedLinear>()
                 .Build();
 
             state.RequireForUpdate(query);
-            state.Enabled = false;
         }
 
         [BurstCompile]
@@ -44,12 +46,14 @@ namespace Systems.Simulation.Unit
             if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
 
             new SetTargetJob()
             {
-                moveCommandSourceMap = moveCommandSourceMap.Value,
                 targetPosition = selectedPos,
-            }.ScheduleParallel();
+                unitRunSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
+                moveCommandSourceMap = moveCommandSourceMap.Value,
+            }.Run();
 
         }
 
@@ -78,20 +82,22 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         private partial struct SetTargetJob : IJobEntity
         {
-
             [ReadOnly] public float3 targetPosition;
+            [ReadOnly] public float unitRunSpeed;
             [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
 
             void Execute(
                 in UnitId unitId
                 , EnabledRefRO<UnitSelectedTag> unitSelectedTag
                 , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
+                , ref MoveSpeedLinear moveSpeedLinear
                 , ref TargetPosition targetPosition
                 , ref MoveCommandElement moveCommandElement)
             {
                 bool unitSelected = unitSelectedTag.ValueRO;
                 if (!unitSelected) return;
 
+                
                 bool canOverrideCommand =
                     MoveCommandHelper.TryOverrideMoveCommand(
                         in this.moveCommandSourceMap
@@ -102,8 +108,12 @@ namespace Systems.Simulation.Unit
 
                 if (!canOverrideCommand) return;
 
-                canMoveEntityTag.ValueRW = true;
+                moveCommandElement.Float3 = this.targetPosition;
                 targetPosition.Value = this.targetPosition;
+                moveSpeedLinear.Value = this.unitRunSpeed;
+
+                canMoveEntityTag.ValueRW = true;
+
             }
         }
     }
