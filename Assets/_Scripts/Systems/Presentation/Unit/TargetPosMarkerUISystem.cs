@@ -10,10 +10,10 @@ using Core.Utilities.Extensions;
 using Core;
 using Components.Unit;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Presentation.Unit
 {
 
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial class TargetPosMarkerUISystem : SystemBase
     {
 
