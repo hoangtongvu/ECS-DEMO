@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Unity.Burst;
 using Components;
-using Components.Damage;
 using Components.Unit;
 
 namespace Systems.Simulation.Unit
@@ -28,14 +27,12 @@ namespace Systems.Simulation.Unit
                 unitIdleICDRef.ValueRW.TimeCounterSecond = 0;
             }
 
-            foreach (var unitReactionRef in
-                SystemAPI.Query<
-                    RefRW<UnitReactionICD>>()
-                    .WithAll<IsAliveTag>()
-                    .WithDisabled<CanMoveEntityTag>())
-            {
-                unitReactionRef.ValueRW.Value = Core.Unit.UnitReaction.Idle;
-            }
+            //foreach (var unitReactionRef in
+            //    SystemAPI.Query<>()
+            //        .WithAll<IsAliveTag>()
+            //        .WithDisabled<CanMoveEntityTag>())
+            //{
+            //}
 
 
         }
