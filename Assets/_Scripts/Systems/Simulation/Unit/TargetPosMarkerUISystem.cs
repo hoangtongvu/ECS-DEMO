@@ -99,8 +99,7 @@ namespace Systems.Simulation.Unit
                     uiPoolMap
                     , spawnedUIMap
                     , uiType
-                    , spawnPos
-                    , quaternion.identity);
+                    , spawnPos);
 
             markerUIID.Value = baseUICtrl.UIID;
             baseUICtrl.gameObject.SetActive(true);
