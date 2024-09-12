@@ -31,10 +31,9 @@ namespace Systems.Simulation.Unit
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
 
-            foreach (var (unitIdRef, walkSpeedRef, moveSpeedRef, transformRef, moveCommandElement, entity) in
+            foreach (var (unitIdRef, moveSpeedRef, transformRef, moveCommandElement, entity) in
                 SystemAPI.Query<
                     RefRO<UnitId>
-                    , RefRO<WalkSpeed>
                     , RefRW<MoveSpeedLinear>
                     , RefRW<LocalTransform>
                     , RefRW<MoveCommandElement>>()
@@ -70,7 +69,7 @@ namespace Systems.Simulation.Unit
                 moveCommandElement.ValueRW.Float3 = randomPoint;
 
                 // Set move speed
-                moveSpeedRef.ValueRW.Value = walkSpeedRef.ValueRO.Value;
+                moveSpeedRef.ValueRW.Value = gameGlobalConfigs.Value.UnitWalkSpeed;
 
                 // SystemAPI.Query only supports upto 7 parameters...
                 SystemAPI.SetComponent(entity, new TargetPosition

@@ -7,10 +7,4 @@ namespace Components.Unit
     {
     }
     
-    public struct WalkSpeed : IComponentData
-    {
-        public float Value;
-    }
-
-
 }

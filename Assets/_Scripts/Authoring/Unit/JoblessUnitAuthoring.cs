@@ -3,9 +3,12 @@ using Components.Damage;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
 using Components.Unit;
+using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
 using Core.Unit;
+using Core.Unit.MyMoveCommand;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Authoring.Unit
@@ -65,10 +68,20 @@ namespace Authoring.Unit
                 {
                     MinDistance = 1f, //TODO: Find another way to get this value;
                 });
-                AddComponent(entity, new MoveAffecterICD
+                AddComponent(entity, new MoveCommandElement
                 {
-                    Value = Core.Unit.MoveAffecter.None,
+                    CommandSource = MoveCommandSource.None,
+                    Float3 = float3.zero,
+                    TargetEntity = Entity.Null,
                 });
+
+                AddComponent(entity, new UnitIdleTimeCounter
+                {
+                    Value = 0,
+                });
+
+                AddComponent<NeedsInitWalkTag>(entity);
+                SetComponentEnabled<NeedsInitWalkTag>(entity, false);
 
 
                 AddComponent(entity, new UnitToolHolder
