@@ -92,6 +92,7 @@ namespace Systems.Simulation.Unit
                 , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , ref MoveSpeedLinear moveSpeedLinear
                 , ref TargetPosition targetPosition
+                , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
                 , ref MoveCommandElement moveCommandElement)
             {
                 bool unitSelected = unitSelectedTag.ValueRO;
@@ -110,6 +111,7 @@ namespace Systems.Simulation.Unit
 
                 moveCommandElement.Float3 = this.targetPosition;
                 targetPosition.Value = this.targetPosition;
+                targetPosChangedTag.ValueRW = true;
                 moveSpeedLinear.Value = this.unitRunSpeed;
 
                 canMoveEntityTag.ValueRW = true;

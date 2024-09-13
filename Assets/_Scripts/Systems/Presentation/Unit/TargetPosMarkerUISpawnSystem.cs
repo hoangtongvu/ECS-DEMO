@@ -14,7 +14,7 @@ namespace Systems.Presentation.Unit
 {
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public partial class TargetPosMarkerUISystem : SystemBase
+    public partial class TargetPosMarkerUISpawnSystem : SystemBase
     {
 
         protected override void OnCreate()

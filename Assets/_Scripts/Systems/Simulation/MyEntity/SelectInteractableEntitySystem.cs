@@ -101,6 +101,7 @@ namespace Systems.Simulation.MyEntity
                 , in LocalTransform transform
                 , ref DistanceToTarget distanceToTarget
                 , ref TargetPosition targetPosition
+                , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
                 , ref TargetEntity targetInteractableEntity
                 , ref MoveCommandElement moveCommandElement)
             {
@@ -120,6 +121,7 @@ namespace Systems.Simulation.MyEntity
                 canMoveEntityTag.ValueRW = true;
                 targetInteractableEntity.Value = this.targetEntity;
                 targetPosition.Value = this.targetPosition;
+                targetPosChangedTag.ValueRW = true;
 
                 moveCommandElement.Float3 = this.targetPosition;
                 moveCommandElement.TargetEntity = this.targetEntity;

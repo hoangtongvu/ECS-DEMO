@@ -9,6 +9,10 @@ namespace Components
         public float3 Value;
     }
 
+    public struct TargetPosChangedTag : IComponentData, IEnableableComponent
+    {
+    }
+
     public struct DistanceToTarget : IComponentData
     {
         public float CurrentDistance;

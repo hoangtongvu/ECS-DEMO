@@ -107,6 +107,7 @@ namespace Systems.Simulation.Tool
                     if (!canOverrideMoveCommand) continue;
 
                     targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
+                    SystemAPI.SetComponentEnabled<TargetPosChangedTag>(unitEntity, true);
                     moveCommandElementRef.ValueRW.Float3 = toolTransformRef.ValueRO.Position;
                     SystemAPI.SetComponentEnabled<CanMoveEntityTag>(unitEntity, true);
 
