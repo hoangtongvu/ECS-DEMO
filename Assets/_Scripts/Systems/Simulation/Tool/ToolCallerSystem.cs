@@ -8,7 +8,6 @@ using Unity.Mathematics;
 using Systems.Simulation.Unit;
 using Utilities.Helpers;
 using Utilities;
-using Components.Misc.GlobalConfigs;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
 using Components.MyEntity;
@@ -59,8 +58,6 @@ namespace Systems.Simulation.Tool
         {
             var commandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
-            float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
 
             foreach (var (toolTransformRef, toolEntity) in
                 SystemAPI.Query<
