@@ -62,10 +62,9 @@ namespace Systems.Simulation.Tool
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
 
-            foreach (var (toolTransformRef, toolPickerEntityRef, toolEntity) in
+            foreach (var (toolTransformRef, toolEntity) in
                 SystemAPI.Query<
-                    RefRO<LocalTransform>
-                    , RefRW<ToolPickerEntity>>()
+                    RefRO<LocalTransform>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
