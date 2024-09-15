@@ -11,6 +11,7 @@ using Utilities;
 using Components.Misc.GlobalConfigs;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
+using Components.MyEntity;
 
 namespace Systems.Simulation.Tool
 {
@@ -36,9 +37,9 @@ namespace Systems.Simulation.Tool
                 .WithAll<
                     JoblessUnitTag
                     , LocalTransform
+                    , TargetEntity
                     , TargetPosition
                     , MoveCommandElement
-                    , DistanceToTarget
                     , UnitId>()
                 .Build();
 
@@ -69,32 +70,19 @@ namespace Systems.Simulation.Tool
                     .WithAll<DerelictToolTag>())
             {
 
-                foreach (var (unitTransformRef, targetPosRef, moveCommandElementRef, distanceToTargetRef, unitIdRef, unitEntity) in
+                foreach (var (unitTransformRef, targetEntityRef, targetPosRef, moveCommandElementRef, unitIdRef, unitEntity) in
                     SystemAPI.Query<
                         RefRO<LocalTransform>
+                        , RefRW<TargetEntity>
                         , RefRW<TargetPosition>
                         , RefRW<MoveCommandElement>
-                        , RefRW<DistanceToTarget>
                         , RefRO<UnitId>>()
                         .WithAll<JoblessUnitTag>()
                         .WithEntityAccess())
                 {
-                    // Even if we can set min distance then how we can make unit pick up tool upon stop.
-
-
-                    // calculate distance.
-                    // compare to range.
+                    
                     float distance = math.distance(toolTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
                     if (distance > toolCallRadius.Value) continue;
-
-                    if (distance <= interactRadius)
-                    {
-                        // Set as can be picked up.
-                        SystemAPI.SetComponentEnabled<CanBePickedTag>(toolEntity, true);
-                        toolPickerEntityRef.ValueRW.Value = unitEntity;
-
-                        break;
-                    }
 
                     bool canOverrideMoveCommand =
                         MoveCommandHelper.TryOverrideMoveCommand(
@@ -106,9 +94,11 @@ namespace Systems.Simulation.Tool
 
                     if (!canOverrideMoveCommand) continue;
 
+                    targetEntityRef.ValueRW.Value = toolEntity;
                     targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
                     SystemAPI.SetComponentEnabled<TargetPosChangedTag>(unitEntity, true);
                     moveCommandElementRef.ValueRW.Float3 = toolTransformRef.ValueRO.Position;
+                    moveCommandElementRef.ValueRW.TargetEntity = toolEntity;
                     SystemAPI.SetComponentEnabled<CanMoveEntityTag>(unitEntity, true);
 
                 }
