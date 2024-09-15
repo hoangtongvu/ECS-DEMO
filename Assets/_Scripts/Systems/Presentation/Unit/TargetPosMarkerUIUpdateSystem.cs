@@ -13,6 +13,7 @@ namespace Systems.Presentation.Unit
 {
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateAfter(typeof(TargetPosMarkerUISpawnSystem))]
     public partial class TargetPosMarkerUIUpdateSystem : SystemBase
     {
 
