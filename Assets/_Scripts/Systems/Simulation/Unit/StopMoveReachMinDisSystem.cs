@@ -1,6 +1,7 @@
 using Components;
 using Components.Misc.GlobalConfigs;
-using Components.Unit;
+using Components.Unit.MyMoveCommand;
+using Core.Unit.MyMoveCommand;
 using Unity.Burst;
 using Unity.Burst.CompilerServices;
 using Unity.Collections;
@@ -23,11 +24,12 @@ namespace Systems.Simulation.Unit
                 .WithAll<
                     CanMoveEntityTag
                     , DistanceToTarget
-                    , MoveAffecterICD
+                    , MoveCommandElement
                     , PhysicsVelocity>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
+            //state.Enabled = false;
         }
 
         [BurstCompile]
@@ -50,13 +52,13 @@ namespace Systems.Simulation.Unit
             void Execute(
                 EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , in DistanceToTarget distanceToTarget
-                , ref MoveAffecterICD moveAffecter
+                , ref MoveCommandElement moveCommandElement
                 , ref PhysicsVelocity physicsVelocity)
             {
                 if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveRadius)) return;
                 // velocityRef.ValueRW.Linear = 0;
                 canMoveEntityTag.ValueRW = false;
-                moveAffecter.Value = Core.Unit.MoveAffecter.None;
+                moveCommandElement.CommandSource = MoveCommandSource.None;
             }
         }
 

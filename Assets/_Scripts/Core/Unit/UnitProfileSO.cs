@@ -1,6 +1,7 @@
 using Core.MyEntity;
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
+using Core.Unit.MyMoveCommand;
 
 namespace Core.Unit
 {
@@ -10,7 +11,8 @@ namespace Core.Unit
         [Header("Unit Profile")]
         public UnitType UnitType;
 
-        [SerializedDictionary("MoveAffecter", "Priority")]
-        public SerializedDictionary<MoveAffecter, byte> MoveAffecterPriorities;
+        [SerializedDictionary("MoveCommandSource", "Priority")]
+        public SerializedDictionary<MoveCommandSource, byte> MoveCommandSourcePriorities;
+
     }
 }

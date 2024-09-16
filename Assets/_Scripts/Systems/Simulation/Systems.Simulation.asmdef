@@ -1,0 +1,30 @@
+{
+    "name": "Systems.Simulation",
+    "rootNamespace": "Systems.Simulation",
+    "references": [
+        "GUID:734d92eba21c94caba915361bd5ac177",
+        "GUID:2665a8d13d1b3f18800f46e256720795",
+        "GUID:e0cd26848372d4e5c891c569017e11f1",
+        "GUID:d3ef7cfa66fa6d74b9226de66364a629",
+        "GUID:3f4db2bc49cbd8d4b89bc688e9cc1a5e",
+        "GUID:a5baed0c9693541a5bd947d336ec7659",
+        "GUID:63afb046c8423dd448ae7aba042ea63d",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:5f3cf485eb0554709a8abbeace890c86",
+        "GUID:5be0b45410919194da97d9a58ee2e143",
+        "GUID:60678964c48f36a42bad24b9a58758d2",
+        "GUID:7f60c22ba80c59f4cab1aca2c6fea926",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:d525ad6bd40672747bde77962f1c401e",
+        "GUID:234340c04eed5674a988bc6ebde7d248"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

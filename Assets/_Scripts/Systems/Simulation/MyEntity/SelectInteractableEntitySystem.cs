@@ -5,11 +5,12 @@ using Components;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Burst;
-using Core.Unit;
 using Utilities.Helpers;
 using Components.MyEntity;
 using Unity.Transforms;
 using Components.Unit.UnitSelection;
+using Core.Unit.MyMoveCommand;
+using Components.Unit.MyMoveCommand;
 
 namespace Systems.Simulation.MyEntity
 {
@@ -25,7 +26,7 @@ namespace Systems.Simulation.MyEntity
         {
             state.RequireForUpdate<InteractableEntityTag>();
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<MoveAffecterMap>();
+            state.RequireForUpdate<MoveCommandSourceMap>();
 
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -35,7 +36,7 @@ namespace Systems.Simulation.MyEntity
                     , DistanceToTarget
                     , TargetEntity
                     , TargetPosition
-                    , MoveAffecterICD>()
+                    , MoveCommandElement>()
                 .Build();
 
             state.RequireForUpdate(query);
@@ -44,7 +45,7 @@ namespace Systems.Simulation.MyEntity
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
+            var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
 
             // Checking Hit Data.
             if (!this.TryGetInteractable(out Entity entity, out float3 pos)) return;
@@ -53,7 +54,7 @@ namespace Systems.Simulation.MyEntity
             {
                 targetEntity = entity,
                 targetPosition = pos,
-                moveAffecterMap = moveAffecterMap.Value,
+                moveCommandSourceMap = moveCommandSourceMap.Value,
             }.ScheduleParallel();
 
         }
@@ -91,7 +92,7 @@ namespace Systems.Simulation.MyEntity
 
             [ReadOnly] public Entity targetEntity;
             [ReadOnly] public float3 targetPosition;
-            [ReadOnly] public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
+            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
 
             void Execute(
                 in UnitId unitId
@@ -100,25 +101,30 @@ namespace Systems.Simulation.MyEntity
                 , in LocalTransform transform
                 , ref DistanceToTarget distanceToTarget
                 , ref TargetPosition targetPosition
+                , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
                 , ref TargetEntity targetInteractableEntity
-                , ref MoveAffecterICD moveAffecterICD)
+                , ref MoveCommandElement moveCommandElement)
             {
                 bool unitSelected = unitSelectedTag.ValueRO;
                 if (!unitSelected) return;
 
-                if (!MoveAffecterHelper.TryChangeMoveAffecter(
-                        in this.moveAffecterMap
+                bool canOverrideCommand =
+                    MoveCommandHelper.TryOverrideMoveCommand(
+                        in this.moveCommandSourceMap
                         , unitId.UnitType
-                        , ref moveAffecterICD
-                        , MoveAffecter.PlayerCommand
-                        , unitId.LocalIndex))
-                {
-                    return;
-                }
+                        , ref moveCommandElement
+                        , MoveCommandSource.PlayerCommand
+                        , unitId.LocalIndex);
+
+                if (!canOverrideCommand) return;
 
                 canMoveEntityTag.ValueRW = true;
                 targetInteractableEntity.Value = this.targetEntity;
                 targetPosition.Value = this.targetPosition;
+                targetPosChangedTag.ValueRW = true;
+
+                moveCommandElement.Float3 = this.targetPosition;
+                moveCommandElement.TargetEntity = this.targetEntity;
 
                 // Init distance to target.
                 distanceToTarget.CurrentDistance = MathHelper.GetDistance2(transform.Position, this.targetPosition);

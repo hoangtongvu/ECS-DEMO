@@ -55,6 +55,20 @@ namespace Utilities.Helpers
             return baseUICtrl;
         }
 
+        public static BaseUICtrl Spawn(
+            UIPoolMap uiPoolMap
+            , SpawnedUIMap spawnedUIMap
+            , UIType uiType
+            , float3 position)
+        {
+            var baseUICtrl = Spawn(uiPoolMap, spawnedUIMap, uiType);
+
+            if (baseUICtrl != null)
+                baseUICtrl.transform.position = position;
+
+            return baseUICtrl;
+        }
+
         public static void Despawn(
             UIPoolMap uiPoolMap
             , SpawnedUIMap spawnedUIMap

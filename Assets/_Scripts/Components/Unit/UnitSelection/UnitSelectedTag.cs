@@ -6,4 +6,12 @@ namespace Components.Unit.UnitSelection
     {
     }
 
+    public struct NewlySelectedUnitTag : IComponentData, IEnableableComponent
+    {
+    }
+
+    public struct NewlyDeselectedUnitTag : IComponentData, IEnableableComponent
+    {
+    }
+
 }

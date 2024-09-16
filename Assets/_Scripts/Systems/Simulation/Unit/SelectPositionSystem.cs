@@ -5,9 +5,12 @@ using Components;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Burst;
-using Core.Unit;
-using Utilities.Helpers;
 using Components.Unit.UnitSelection;
+using Utilities.Helpers;
+using Core.Unit.MyMoveCommand;
+using Components.Unit.MyMoveCommand;
+using Components.Misc.GlobalConfigs;
+using Components.MyEntity;
 
 namespace Systems.Simulation.Unit
 {
@@ -22,14 +25,16 @@ namespace Systems.Simulation.Unit
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<MoveAffecterMap>();
+            state.RequireForUpdate<MoveCommandSourceMap>();
 
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelectedTag
+                    UnitId
+                    , UnitSelectedTag
                     , CanMoveEntityTag
                     , TargetPosition
-                    , MoveAffecterICD>()
+                    , MoveCommandElement
+                    , MoveSpeedLinear>()
                 .Build();
 
             state.RequireForUpdate(query);
@@ -38,16 +43,18 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var moveAffecterMap = SystemAPI.GetSingleton<MoveAffecterMap>();
-
             // Checking Hit Data.
             if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
+            var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+
             new SetTargetJob()
             {
-                moveAffecterMap = moveAffecterMap.Value,
                 targetPosition = selectedPos,
-            }.ScheduleParallel();
+                unitRunSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
+                moveCommandSourceMap = moveCommandSourceMap.Value,
+            }.Run();
 
         }
 
@@ -76,32 +83,43 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         private partial struct SetTargetJob : IJobEntity
         {
-
             [ReadOnly] public float3 targetPosition;
-            [ReadOnly] public NativeHashMap<MoveAffecterId, byte> moveAffecterMap;
+            [ReadOnly] public float unitRunSpeed;
+            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
 
             void Execute(
                 in UnitId unitId
                 , EnabledRefRO<UnitSelectedTag> unitSelectedTag
                 , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
+                , ref MoveSpeedLinear moveSpeedLinear
+                , ref TargetEntity targetEntity
                 , ref TargetPosition targetPosition
-                , ref MoveAffecterICD moveAffecterICD)
+                , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
+                , ref MoveCommandElement moveCommandElement)
             {
                 bool unitSelected = unitSelectedTag.ValueRO;
                 if (!unitSelected) return;
 
-                if (!MoveAffecterHelper.TryChangeMoveAffecter(
-                        in this.moveAffecterMap
+                
+                bool canOverrideCommand =
+                    MoveCommandHelper.TryOverrideMoveCommand(
+                        in this.moveCommandSourceMap
                         , unitId.UnitType
-                        , ref moveAffecterICD
-                        , MoveAffecter.PlayerCommand
-                        , unitId.LocalIndex))
-                {
-                    return;
-                }
+                        , ref moveCommandElement
+                        , MoveCommandSource.PlayerCommand
+                        , unitId.LocalIndex);
+
+                if (!canOverrideCommand) return;
+
+                moveCommandElement.TargetEntity = Entity.Null;
+                moveCommandElement.Float3 = this.targetPosition;
+                targetEntity.Value = Entity.Null;
+                targetPosition.Value = this.targetPosition;
+                targetPosChangedTag.ValueRW = true;
+                moveSpeedLinear.Value = this.unitRunSpeed;
 
                 canMoveEntityTag.ValueRW = true;
-                targetPosition.Value = this.targetPosition;
+
             }
         }
     }

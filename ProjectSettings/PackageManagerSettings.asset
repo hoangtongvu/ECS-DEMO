@@ -46,6 +46,7 @@ MonoBehaviour:
     - com.zbase.foundation
     - org.nuget.system.runtime.compilerservices.unsafe
     - com.github-joc0de.visual-studio-solution-generator
+    - com.mackysoft.serializereference-extensions
     m_IsDefault: 0
     m_Capabilities: 0
     m_ConfigSource: 4

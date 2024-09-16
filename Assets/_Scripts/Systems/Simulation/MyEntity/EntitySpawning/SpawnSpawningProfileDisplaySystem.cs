@@ -82,8 +82,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     uiPoolMap
                     , spawnedUIMap
                     , UIType.EntitySpawningPanel
-                    , spawnPos
-                    , quaternion.identity);
+                    , spawnPos);
 
             uiSpawned.UIID = entitySpawningPanelCtrl.UIID;
 
@@ -107,8 +106,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                         uiPoolMap
                         , spawnedUIMap
                         , UIType.SpawningProfileDisplay
-                        , spawnPos
-                        , quaternion.identity);
+                        , spawnPos);
 
                 profileDisplayCtrl.ProgressBar.ClearProgress();
                 profileDisplayCtrl.SpawnCountText.SetSpawnCount(profile.SpawnCount.Value);

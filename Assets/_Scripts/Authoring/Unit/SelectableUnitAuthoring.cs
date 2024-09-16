@@ -18,6 +18,11 @@ namespace Authoring.Unit
                 AddComponent<UnitSelectedTag>(entity);
                 SetComponentEnabled<UnitSelectedTag>(entity, false);
 
+                AddComponent<NewlySelectedUnitTag>(entity);
+                SetComponentEnabled<NewlySelectedUnitTag>(entity, false);
+                AddComponent<NewlyDeselectedUnitTag>(entity);
+                SetComponentEnabled<NewlyDeselectedUnitTag>(entity, false);
+
             }
         }
     }
