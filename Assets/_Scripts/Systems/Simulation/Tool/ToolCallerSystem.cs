@@ -76,7 +76,9 @@ namespace Systems.Simulation.Tool
                         .WithAll<JoblessUnitTag>()
                         .WithEntityAccess())
                 {
-                    
+                    bool unitIsCalled = moveCommandElementRef.ValueRO.CommandSource == MoveCommandSource.ToolCall;
+                    if (unitIsCalled) continue;
+
                     float distance = math.distance(toolTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
                     if (distance > toolCallRadius.Value) continue;
 
@@ -89,6 +91,8 @@ namespace Systems.Simulation.Tool
                             , unitIdRef.ValueRO.LocalIndex);
 
                     if (!canOverrideMoveCommand) continue;
+
+                    //UnityEngine.Debug.Log($"{toolEntity.ToFixedString()} calling {unitEntity.ToFixedString()}");
 
                     targetEntityRef.ValueRW.Value = toolEntity;
                     targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
