@@ -10,6 +10,7 @@ using Utilities.Helpers;
 using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
 using Components.Misc.GlobalConfigs;
+using Components.MyEntity;
 
 namespace Systems.Simulation.Unit
 {
@@ -91,6 +92,7 @@ namespace Systems.Simulation.Unit
                 , EnabledRefRO<UnitSelectedTag> unitSelectedTag
                 , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , ref MoveSpeedLinear moveSpeedLinear
+                , ref TargetEntity targetEntity
                 , ref TargetPosition targetPosition
                 , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
                 , ref MoveCommandElement moveCommandElement)
@@ -109,7 +111,9 @@ namespace Systems.Simulation.Unit
 
                 if (!canOverrideCommand) return;
 
+                moveCommandElement.TargetEntity = Entity.Null;
                 moveCommandElement.Float3 = this.targetPosition;
+                targetEntity.Value = Entity.Null;
                 targetPosition.Value = this.targetPosition;
                 targetPosChangedTag.ValueRW = true;
                 moveSpeedLinear.Value = this.unitRunSpeed;
