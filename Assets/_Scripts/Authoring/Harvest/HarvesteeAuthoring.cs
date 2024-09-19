@@ -29,10 +29,7 @@ namespace Authoring.Harvest
                     Value = authoring.harvesteeProfileId,
                 });
 
-                AddComponent(entity, new DropResourceHpThreshold
-                {
-                    Value = 75,
-                }); // Find another way to init threshold = maxHp - maxHp * percentPerDrop
+                AddComponent<DropResourceHpThreshold>(entity);
             }
         }
     }
