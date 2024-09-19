@@ -9,6 +9,7 @@ using Utilities.Helpers;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
 using Components.Misc.GlobalConfigs;
+using Components.MyEntity;
 
 namespace Systems.Simulation.Unit
 {
@@ -45,13 +46,23 @@ namespace Systems.Simulation.Unit
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
 
-            foreach (var (unitIdRef, moveSpeedRef, transformRef, moveCommandElement, targetPosRef, entity) in
+            foreach (var (
+                unitIdRef
+                , moveSpeedRef
+                , transformRef
+                , moveCommandElement
+                , targetPosRef
+                , interactingEntityRef
+                , interactionTypeICDRef
+                , entity) in
                 SystemAPI.Query<
                     RefRO<UnitId>
                     , RefRW<MoveSpeedLinear>
                     , RefRW<LocalTransform>
                     , RefRW<MoveCommandElement>
-                    , RefRW<TargetPosition>>()
+                    , RefRW<TargetPosition>
+                    , RefRW<InteractingEntity>
+                    , RefRW<InteractionTypeICD>>()
                     .WithAll<IsAliveTag>()
                     .WithAll<NeedsInitWalkTag>()
                     .WithEntityAccess())
@@ -64,6 +75,8 @@ namespace Systems.Simulation.Unit
                         in moveCommandSourceMap.Value
                         , unitIdRef.ValueRO.UnitType
                         , ref moveCommandElement.ValueRW
+                        , ref interactingEntityRef.ValueRW
+                        , ref interactionTypeICDRef.ValueRW
                         , MoveCommandSource.PlayerCommand // Add a new Source for Walk or not this would override tool call
                         , unitIdRef.ValueRO.LocalIndex);
 

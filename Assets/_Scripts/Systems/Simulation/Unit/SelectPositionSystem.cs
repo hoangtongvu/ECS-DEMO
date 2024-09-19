@@ -95,7 +95,9 @@ namespace Systems.Simulation.Unit
                 , ref TargetEntity targetEntity
                 , ref TargetPosition targetPosition
                 , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
-                , ref MoveCommandElement moveCommandElement)
+                , ref MoveCommandElement moveCommandElement
+                , ref InteractingEntity interactingEntity
+                , ref InteractionTypeICD interactionTypeICD)
             {
                 bool unitSelected = unitSelectedTag.ValueRO;
                 if (!unitSelected) return;
@@ -106,6 +108,8 @@ namespace Systems.Simulation.Unit
                         in this.moveCommandSourceMap
                         , unitId.UnitType
                         , ref moveCommandElement
+                        , ref interactingEntity
+                        , ref interactionTypeICD
                         , MoveCommandSource.PlayerCommand
                         , unitId.LocalIndex);
 
