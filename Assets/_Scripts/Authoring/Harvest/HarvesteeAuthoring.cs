@@ -1,6 +1,7 @@
 ﻿using Components.Harvest;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
+using Core.Harvest;
 using Unity.Entities;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Authoring.Harvest
 {
     public class HarvesteeAuthoring : MonoBehaviour
     {
+        [SerializeField] private HarvesteeProfileId harvesteeProfileId;
 
         private class Baker : Baker<HarvesteeAuthoring>
         {
@@ -21,6 +23,16 @@ namespace Authoring.Harvest
                 AddComponent<HarvesteeTag>(entity);
                 AddComponent<HarvesteeHealthId>(entity);
                 AddComponent<HarvesteeHealthChangedTag>(entity);
+
+                AddComponent(entity, new HarvesteeProfileIdHolder
+                {
+                    Value = authoring.harvesteeProfileId,
+                });
+
+                AddComponent(entity, new DropResourceHpThreshold
+                {
+                    Value = 75,
+                }); // Find another way to init threshold = maxHp - maxHp * percentPerDrop
             }
         }
     }
