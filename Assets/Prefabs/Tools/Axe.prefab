@@ -148,3 +148,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolType: 1
+  baseDmg: 5
+  baseWorkSpeed: 0.5

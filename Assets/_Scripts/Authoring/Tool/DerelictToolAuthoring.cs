@@ -1,4 +1,5 @@
-﻿using Components.MyEntity.EntitySpawning;
+﻿using Components.Misc;
+using Components.MyEntity.EntitySpawning;
 using Components.Tool;
 using Core.Tool;
 using Unity.Entities;
@@ -9,6 +10,8 @@ namespace Authoring.Tool
     public class DerelictToolAuthoring : MonoBehaviour
     {
         [SerializeField] private ToolType toolType;
+        [SerializeField] private uint baseDmg = 5;
+        [SerializeField] private float baseWorkSpeed = 0.5f;
 
         private class Baker : Baker<DerelictToolAuthoring>
         {
@@ -32,6 +35,17 @@ namespace Authoring.Tool
                 {
                     Value = authoring.toolType,
                 });
+
+                AddComponent(entity, new BaseDmg
+                {
+                    Value = authoring.baseDmg,
+                });
+                AddComponent(entity, new BaseWorkSpeed
+                {
+                    Value = authoring.baseWorkSpeed,
+                });
+
+
             }
         }
 

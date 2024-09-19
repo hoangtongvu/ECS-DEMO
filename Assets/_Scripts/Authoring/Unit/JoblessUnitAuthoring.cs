@@ -1,5 +1,6 @@
 ﻿using Components;
 using Components.Damage;
+using Components.Misc;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
 using Components.Unit;
@@ -119,6 +120,15 @@ namespace Authoring.Unit
 
 
                 AddComponent<UnitTargetPosUIID>(entity);
+
+                AddComponent(entity, new BaseDmg
+                {
+                    Value = 1,
+                });
+                AddComponent(entity, new BaseWorkSpeed
+                {
+                    Value = 1f,
+                });
 
             }
         }
