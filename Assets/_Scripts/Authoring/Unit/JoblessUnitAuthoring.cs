@@ -5,6 +5,7 @@ using Components.MyEntity.EntitySpawning;
 using Components.Unit;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
+using Core.MyEntity;
 using Core.Unit;
 using Core.Unit.MyMoveCommand;
 using Unity.Entities;
@@ -100,6 +101,14 @@ namespace Authoring.Unit
                 AddComponent(entity, new TargetEntity
                 {
                     Value = Entity.Null,
+                });
+                AddComponent(entity, new InteractingEntity
+                {
+                    Value = Entity.Null,
+                });
+                AddComponent(entity, new InteractionTypeICD
+                {
+                    Value = InteractionType.None,
                 });
 
 
