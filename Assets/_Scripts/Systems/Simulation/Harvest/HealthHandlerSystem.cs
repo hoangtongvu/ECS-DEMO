@@ -21,7 +21,8 @@ namespace Systems.Simulation.Harvest
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    HarvesteeHealthId
+                    HarvesteeProfileIdHolder
+                    , HarvesteeHealthId
                     , NewlySpawnedTag>()
                 .Build();
 
@@ -34,21 +35,24 @@ namespace Systems.Simulation.Harvest
         {
             var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
 
-            foreach (var (healthIdRef, harvesteeEntity) in
+            foreach (var (profileIdRef, healthIdRef, harvesteeEntity) in
                 SystemAPI.Query<
-                    RefRW<HarvesteeHealthId>>()
+                    RefRO<HarvesteeProfileIdHolder>
+                    , RefRW<HarvesteeHealthId>>()
                     .WithAll<NewlySpawnedTag>()
                     .WithEntityAccess())
             {
+
+                uint maxHp = this.GetMaxHp(in profileIdRef.ValueRO.Value);
+
                 var healthId = new HealthId
                 {
                     Index = harvesteeEntity.Index,
                     Version = harvesteeEntity.Version,
                 };
 
-                const uint hp = 100; //Find another way to get this.
 
-                if (!harvesteeHealthMap.Value.TryAdd(healthId, hp))
+                if (!harvesteeHealthMap.Value.TryAdd(healthId, maxHp))
                 {
                     UnityEngine.Debug.LogError($"HarvesteeHealthMap already contains {healthId}");
                     continue;
@@ -70,6 +74,20 @@ namespace Systems.Simulation.Harvest
 
             SingletonUtilities.GetInstance(state.EntityManager)
                 .AddOrSetComponentData(harvesteeHealthMap);
+        }
+
+        [BurstCompile]
+        private uint GetMaxHp(in HarvesteeProfileId harvesteeProfileId)
+        {
+            var harvesteeProfileMap = SystemAPI.GetSingleton<HarvesteeProfileMap>();
+
+            if (!harvesteeProfileMap.Value.TryGetValue(harvesteeProfileId, out var harvesteeProfile))
+            {
+                UnityEngine.Debug.LogError($"HarvesteeProfileMap does not contain {harvesteeProfileId}");
+                return 0;
+            }
+
+            return harvesteeProfile.MaxHp;
         }
 
     }
