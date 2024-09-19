@@ -157,7 +157,6 @@ namespace Systems.Simulation.Tool
                         break;
                     case UnitType.Harvester:
                         ecb.AddComponent<HarvesterICD>(unitEntity);
-                        ecb.AddComponent<HarvestTargetEntity>(unitEntity);
                         break;
                 }
 
