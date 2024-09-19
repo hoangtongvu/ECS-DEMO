@@ -157,6 +157,16 @@ namespace Systems.Simulation.Tool
                         break;
                     case UnitType.Harvester:
                         ecb.AddComponent<HarvesterICD>(unitEntity);
+                        ecb.AddComponent(unitEntity, new HarvestSpeed
+                        {
+                            Value = 0.5f,
+                        });
+
+                        ecb.AddComponent(unitEntity, new HarvestTimeCounterSecond
+                        {
+                            Value = 0f,
+                        });
+
                         break;
                 }
 

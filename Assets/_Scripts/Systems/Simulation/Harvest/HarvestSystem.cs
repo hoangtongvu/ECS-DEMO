@@ -13,9 +13,6 @@ namespace Systems.Simulation.Harvest
     [BurstCompile]
     public partial struct HarvestSystem : ISystem
     {
-        private float counterSecond;
-        private float maxSecond;
-        private float countSpeed;
         private uint dmg;
 
 
@@ -25,14 +22,13 @@ namespace Systems.Simulation.Harvest
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     InteractionTypeICD
-                    , InteractingEntity>()
+                    , InteractingEntity
+                    , HarvestSpeed
+                    , HarvestTimeCounterSecond>()
                 .Build();
 
             state.RequireForUpdate(query0);
-
-            this.counterSecond = 0;
-            this.maxSecond = 1;
-            this.countSpeed = 0.5f;
+            
             this.dmg = 5;
         }
 
@@ -40,49 +36,65 @@ namespace Systems.Simulation.Harvest
         public void OnUpdate(ref SystemState state)
         {
 
-            this.counterSecond += this.countSpeed * SystemAPI.Time.DeltaTime;
-            if (this.counterSecond < this.maxSecond) return;
-            this.counterSecond = 0;
-
-
-            var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
-
-            foreach (var (interactionTypeICDRef, interactingEntityRef) in
+            foreach (var (interactionTypeICDRef, interactingEntityRef, harvestSpeedRef, harvestTimeCounterSecondRef, canMoveEntityTag) in
             SystemAPI.Query<
                 RefRO<InteractionTypeICD>
-                , RefRO<InteractingEntity>>()
-                .WithDisabled<CanMoveEntityTag>())
+                , RefRO<InteractingEntity>
+                , RefRO<HarvestSpeed>
+                , RefRW<HarvestTimeCounterSecond>
+                , EnabledRefRO<CanMoveEntityTag>>()
+                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
+                if (canMoveEntityTag.ValueRO)
+                {
+                    harvestTimeCounterSecondRef.ValueRW.Value = 0;
+                    continue;
+                }
+
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Harvest) continue;
 
                 var harvestEntity = interactingEntityRef.ValueRO.Value;
                 bool noHarvestTargetFound = harvestEntity == Entity.Null;
                 if (noHarvestTargetFound) continue;
 
-                var healthId = new HealthId
-                {
-                    Index = harvestEntity.Index,
-                    Version = harvestEntity.Version,
-                };
+                harvestTimeCounterSecondRef.ValueRW.Value += harvestSpeedRef.ValueRO.Value * SystemAPI.Time.DeltaTime;
+                if (harvestTimeCounterSecondRef.ValueRO.Value < 1f) continue;
+                harvestTimeCounterSecondRef.ValueRW.Value = 0;
 
-
-                if (!harvesteeHealthMap.Value.TryGetValue(healthId, out var healthValue))
-                {
-                    UnityEngine.Debug.LogError($"HarvesteeHealthMap does not contain {healthId}");
-                    continue;
-                }
-
-
-                harvesteeHealthMap.Value[healthId] = healthValue <= this.dmg ? 0 : healthValue - this.dmg;
-
-                SystemAPI.SetComponentEnabled<HarvesteeHealthChangedTag>(harvestEntity, true);
-
-                UnityEngine.Debug.Log($"CurrHp = {harvesteeHealthMap.Value[healthId]}");
+                this.DealDmgToHarvestee(ref state, in harvestEntity);
 
             }
 
         }
 
+        [BurstCompile]
+        private void DealDmgToHarvestee(
+            ref SystemState state
+            , in Entity harvestEntity)
+        {
+            var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
+
+            var healthId = new HealthId
+            {
+                Index = harvestEntity.Index,
+                Version = harvestEntity.Version,
+            };
+
+
+            if (!harvesteeHealthMap.Value.TryGetValue(healthId, out var healthValue))
+            {
+                UnityEngine.Debug.LogError($"HarvesteeHealthMap does not contain {healthId}");
+                return;
+            }
+
+
+            harvesteeHealthMap.Value[healthId] = healthValue <= this.dmg ? 0 : healthValue - this.dmg;
+
+            SystemAPI.SetComponentEnabled<HarvesteeHealthChangedTag>(harvestEntity, true);
+
+            UnityEngine.Debug.Log($"CurrHp = {harvesteeHealthMap.Value[healthId]}");
+
+        }
 
 
     }
