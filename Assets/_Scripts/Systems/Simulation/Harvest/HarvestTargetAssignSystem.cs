@@ -3,6 +3,7 @@ using Unity.Burst;
 using Components.MyEntity;
 using Systems.Simulation.MyEntity;
 using Components.Harvest;
+using Core.MyEntity;
 
 namespace Systems.Simulation.Harvest
 {
@@ -19,7 +20,8 @@ namespace Systems.Simulation.Harvest
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     TargetEntity
-                    , HarvestTargetEntity
+                    , InteractingEntity
+                    , InteractionTypeICD
                     , CanInteractEntityTag>()
                 .Build();
 
@@ -31,10 +33,11 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (targetEntityRef, harvestTargetRef) in
+            foreach (var (targetEntityRef, interactingEntityRef, interactionTypeICDRef) in
                 SystemAPI.Query<
                     RefRO<TargetEntity>
-                    , RefRW<HarvestTargetEntity>>()
+                    , RefRW<InteractingEntity>
+                    , RefRW<InteractionTypeICD>>()
                     .WithAll<
                         CanInteractEntityTag>())
             {
@@ -42,7 +45,8 @@ namespace Systems.Simulation.Harvest
 
                 if (!SystemAPI.HasComponent<HarvesteeTag>(targetEntity)) continue;
 
-                harvestTargetRef.ValueRW.Value = targetEntity;
+                interactingEntityRef.ValueRW.Value = targetEntity;
+                interactionTypeICDRef.ValueRW.Value = InteractionType.Harvest;
 
             }
 

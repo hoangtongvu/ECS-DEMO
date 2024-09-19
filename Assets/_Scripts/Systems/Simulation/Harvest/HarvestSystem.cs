@@ -2,6 +2,9 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.Harvest;
 using Core.Harvest;
+using Components;
+using Components.MyEntity;
+using Core.MyEntity;
 
 namespace Systems.Simulation.Harvest
 {
@@ -21,7 +24,8 @@ namespace Systems.Simulation.Harvest
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    HarvestTargetEntity>()
+                    InteractionTypeICD
+                    , InteractingEntity>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -35,22 +39,25 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+
+            this.counterSecond += this.countSpeed * SystemAPI.Time.DeltaTime;
+            if (this.counterSecond < this.maxSecond) return;
+            this.counterSecond = 0;
+
+
             var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
 
-            foreach (var harvestTargetRef in
-                SystemAPI.Query<
-                    RefRO<HarvestTargetEntity>>())
+            foreach (var (interactionTypeICDRef, interactingEntityRef) in
+            SystemAPI.Query<
+                RefRO<InteractionTypeICD>
+                , RefRO<InteractingEntity>>()
+                .WithDisabled<CanMoveEntityTag>())
             {
-                var harvestEntity = harvestTargetRef.ValueRO.Value;
-                
+                if (interactionTypeICDRef.ValueRO.Value != InteractionType.Harvest) continue;
+
+                var harvestEntity = interactingEntityRef.ValueRO.Value;
                 bool noHarvestTargetFound = harvestEntity == Entity.Null;
                 if (noHarvestTargetFound) continue;
-
-                this.counterSecond += this.countSpeed * SystemAPI.Time.DeltaTime;
-                if (counterSecond < maxSecond)
-                {
-                    continue;
-                }
 
                 var healthId = new HealthId
                 {
@@ -59,7 +66,6 @@ namespace Systems.Simulation.Harvest
                 };
 
 
-                this.counterSecond = 0;
                 if (!harvesteeHealthMap.Value.TryGetValue(healthId, out var healthValue))
                 {
                     UnityEngine.Debug.LogError($"HarvesteeHealthMap does not contain {healthId}");
