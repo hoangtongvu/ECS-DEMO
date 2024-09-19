@@ -88,6 +88,8 @@ namespace Systems.Simulation.Harvest
                 return;
             }
 
+            bool harvesteeIsDead = healthValue == 0;
+            if (harvesteeIsDead) return;
 
             harvesteeHealthMap.Value[healthId] = healthValue <= dmgValue ? 0 : healthValue - dmgValue;
 
