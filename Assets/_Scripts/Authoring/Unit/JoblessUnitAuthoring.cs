@@ -130,6 +130,11 @@ namespace Authoring.Unit
                     Value = 1f,
                 });
 
+                AddComponent(entity, new WorkTimeCounterSecond
+                {
+                    Value = 0f,
+                });
+
             }
         }
     }

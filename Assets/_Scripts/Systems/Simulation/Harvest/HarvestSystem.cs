@@ -5,6 +5,7 @@ using Core.Harvest;
 using Components;
 using Components.MyEntity;
 using Core.MyEntity;
+using Components.Misc;
 
 namespace Systems.Simulation.Harvest
 {
@@ -23,8 +24,8 @@ namespace Systems.Simulation.Harvest
                 .WithAll<
                     InteractionTypeICD
                     , InteractingEntity
-                    , HarvestSpeed
-                    , HarvestTimeCounterSecond>()
+                    , BaseWorkSpeed
+                    , WorkTimeCounterSecond>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -36,18 +37,18 @@ namespace Systems.Simulation.Harvest
         public void OnUpdate(ref SystemState state)
         {
 
-            foreach (var (interactionTypeICDRef, interactingEntityRef, harvestSpeedRef, harvestTimeCounterSecondRef, canMoveEntityTag) in
+            foreach (var (interactionTypeICDRef, interactingEntityRef, baseWorkSpeedRef, workTimeCounterSecondRef, canMoveEntityTag) in
             SystemAPI.Query<
                 RefRO<InteractionTypeICD>
                 , RefRO<InteractingEntity>
-                , RefRO<HarvestSpeed>
-                , RefRW<HarvestTimeCounterSecond>
+                , RefRO<BaseWorkSpeed>
+                , RefRW<WorkTimeCounterSecond>
                 , EnabledRefRO<CanMoveEntityTag>>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 if (canMoveEntityTag.ValueRO)
                 {
-                    harvestTimeCounterSecondRef.ValueRW.Value = 0;
+                    workTimeCounterSecondRef.ValueRW.Value = 0;
                     continue;
                 }
 
@@ -57,9 +58,9 @@ namespace Systems.Simulation.Harvest
                 bool noHarvestTargetFound = harvestEntity == Entity.Null;
                 if (noHarvestTargetFound) continue;
 
-                harvestTimeCounterSecondRef.ValueRW.Value += harvestSpeedRef.ValueRO.Value * SystemAPI.Time.DeltaTime;
-                if (harvestTimeCounterSecondRef.ValueRO.Value < 1f) continue;
-                harvestTimeCounterSecondRef.ValueRW.Value = 0;
+                workTimeCounterSecondRef.ValueRW.Value += baseWorkSpeedRef.ValueRO.Value * SystemAPI.Time.DeltaTime;
+                if (workTimeCounterSecondRef.ValueRO.Value < 1f) continue;
+                workTimeCounterSecondRef.ValueRW.Value = 0;
 
                 this.DealDmgToHarvestee(ref state, in harvestEntity);
 
