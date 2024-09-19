@@ -10,6 +10,7 @@ using Unity.Transforms;
 using Unity.Physics;
 using Unity.Mathematics;
 using Core.Utilities.Extensions;
+using Components.Misc;
 
 namespace Systems.Simulation.Tool
 {
@@ -45,13 +46,15 @@ namespace Systems.Simulation.Tool
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            foreach (var (transformRef, spawnerEntityRef, toolTypeICDRef, canBePickedTagRef, toolPickerEntityRef, toolEntity) in
+            foreach (var (transformRef, spawnerEntityRef, toolTypeICDRef, canBePickedTagRef, toolPickerEntityRef, dmgRef, speedRef, toolEntity) in
                 SystemAPI.Query<
                     RefRW<LocalTransform>
                     , RefRW<SpawnerEntityRef>
                     , RefRO<ToolTypeICD>
                     , EnabledRefRW<CanBePickedTag>
-                    , RefRW<ToolPickerEntity>>()
+                    , RefRW<ToolPickerEntity>
+                    , RefRO<BaseDmg>
+                    , RefRO<BaseWorkSpeed>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
@@ -61,7 +64,9 @@ namespace Systems.Simulation.Tool
                     , toolPickerEntityRef.ValueRO.Value
                     , toolEntity
                     , tool2UnitMap
-                    , toolTypeICDRef.ValueRO.Value);
+                    , toolTypeICDRef.ValueRO.Value
+                    , dmgRef.ValueRO.Value
+                    , speedRef.ValueRO.Value);
 
                 this.HandleToolSpawner(
                     ref state
@@ -130,12 +135,19 @@ namespace Systems.Simulation.Tool
             , in Entity unitEntity
             , in Entity toolEntity
             , in Tool2UnitMap tool2UnitMap
-            , in ToolType toolType)
+            , in ToolType toolType
+            , uint baseDmg
+            , float baseWorkSpeed)
         {
             var unitToolHolderRef = SystemAPI.GetComponentRW<UnitToolHolder>(unitEntity);
             unitToolHolderRef.ValueRW.Value = toolEntity;
 
             SystemAPI.SetComponentEnabled<JoblessUnitTag>(unitEntity, false);
+
+            var baseDmgRef = SystemAPI.GetComponentRW<BaseDmg>(unitEntity);
+            baseDmgRef.ValueRW.Value = baseDmg;
+            var baseWorkSpeedRef = SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity);
+            baseWorkSpeedRef.ValueRW.Value = baseWorkSpeed;
 
             var unitIdRef = SystemAPI.GetComponentRW<UnitId>(unitEntity);
 
@@ -157,16 +169,6 @@ namespace Systems.Simulation.Tool
                         break;
                     case UnitType.Harvester:
                         ecb.AddComponent<HarvesterICD>(unitEntity);
-                        ecb.AddComponent(unitEntity, new HarvestSpeed
-                        {
-                            Value = 0.5f,
-                        });
-
-                        ecb.AddComponent(unitEntity, new HarvestTimeCounterSecond
-                        {
-                            Value = 0f,
-                        });
-
                         break;
                 }
 
