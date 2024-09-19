@@ -23,6 +23,7 @@ namespace Systems.Simulation.Harvest
                 .WithAll<
                     HarvesteeProfileIdHolder
                     , HarvesteeHealthId
+                    , DropResourceHpThreshold
                     , NewlySpawnedTag>()
                 .Build();
 
@@ -33,32 +34,30 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
 
-            foreach (var (profileIdRef, healthIdRef, harvesteeEntity) in
+            foreach (var (profileIdRef, healthIdRef, dropThresholdRef, harvesteeEntity) in
                 SystemAPI.Query<
                     RefRO<HarvesteeProfileIdHolder>
-                    , RefRW<HarvesteeHealthId>>()
+                    , RefRW<HarvesteeHealthId>
+                    , RefRW<DropResourceHpThreshold>>()
                     .WithAll<NewlySpawnedTag>()
                     .WithEntityAccess())
             {
 
-                uint maxHp = this.GetMaxHp(in profileIdRef.ValueRO.Value);
+                var harvesteeProfile = this.GetHarvesteeProfile(in profileIdRef.ValueRO.Value);
 
-                var healthId = new HealthId
-                {
-                    Index = harvesteeEntity.Index,
-                    Version = harvesteeEntity.Version,
-                };
+                uint maxHp = harvesteeProfile.MaxHp;
+                uint hpAmountPerDrop = harvesteeProfile.ResourceDropInfo.HpAmountPerDrop;
 
+                this.InitCurrentHp(
+                    in harvesteeEntity
+                    , ref healthIdRef.ValueRW
+                    , maxHp);
 
-                if (!harvesteeHealthMap.Value.TryAdd(healthId, maxHp))
-                {
-                    UnityEngine.Debug.LogError($"HarvesteeHealthMap already contains {healthId}");
-                    continue;
-                }
-
-                healthIdRef.ValueRW.Value = healthId;
+                this.InitHpThreshold(
+                    ref dropThresholdRef.ValueRW
+                    , maxHp
+                    , hpAmountPerDrop);
 
             }
 
@@ -77,17 +76,49 @@ namespace Systems.Simulation.Harvest
         }
 
         [BurstCompile]
-        private uint GetMaxHp(in HarvesteeProfileId harvesteeProfileId)
+        private HarvesteeProfile GetHarvesteeProfile(in HarvesteeProfileId harvesteeProfileId)
         {
             var harvesteeProfileMap = SystemAPI.GetSingleton<HarvesteeProfileMap>();
 
             if (!harvesteeProfileMap.Value.TryGetValue(harvesteeProfileId, out var harvesteeProfile))
             {
                 UnityEngine.Debug.LogError($"HarvesteeProfileMap does not contain {harvesteeProfileId}");
-                return 0;
+                return default;
             }
 
-            return harvesteeProfile.MaxHp;
+            return harvesteeProfile;
+        }
+
+        [BurstCompile]
+        private void InitCurrentHp(
+            in Entity harvesteeEntity
+            , ref HarvesteeHealthId harvesteeHealthId
+            , uint maxHp)
+        {
+            var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
+
+            var healthId = new HealthId
+            {
+                Index = harvesteeEntity.Index,
+                Version = harvesteeEntity.Version,
+            };
+
+            if (!harvesteeHealthMap.Value.TryAdd(healthId, maxHp))
+            {
+                UnityEngine.Debug.LogError($"HarvesteeHealthMap already contains {healthId}");
+                return;
+            }
+
+            harvesteeHealthId.Value = healthId;
+        }
+
+        [BurstCompile]
+        private void InitHpThreshold(
+            ref DropResourceHpThreshold hpThreshold
+            , uint maxHp
+            , uint hpAmountPerDrop)
+        {
+            hpThreshold.Value = maxHp - hpAmountPerDrop;
         }
 
     }
