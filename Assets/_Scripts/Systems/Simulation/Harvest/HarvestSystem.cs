@@ -14,8 +14,6 @@ namespace Systems.Simulation.Harvest
     [BurstCompile]
     public partial struct HarvestSystem : ISystem
     {
-        private uint dmg;
-
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -24,23 +22,24 @@ namespace Systems.Simulation.Harvest
                 .WithAll<
                     InteractionTypeICD
                     , InteractingEntity
+                    , BaseDmg
                     , BaseWorkSpeed
                     , WorkTimeCounterSecond>()
                 .Build();
 
             state.RequireForUpdate(query0);
             
-            this.dmg = 5;
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
 
-            foreach (var (interactionTypeICDRef, interactingEntityRef, baseWorkSpeedRef, workTimeCounterSecondRef, canMoveEntityTag) in
+            foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, canMoveEntityTag) in
             SystemAPI.Query<
                 RefRO<InteractionTypeICD>
                 , RefRO<InteractingEntity>
+                , RefRO<BaseDmg>
                 , RefRO<BaseWorkSpeed>
                 , RefRW<WorkTimeCounterSecond>
                 , EnabledRefRO<CanMoveEntityTag>>()
@@ -62,7 +61,7 @@ namespace Systems.Simulation.Harvest
                 if (workTimeCounterSecondRef.ValueRO.Value < 1f) continue;
                 workTimeCounterSecondRef.ValueRW.Value = 0;
 
-                this.DealDmgToHarvestee(ref state, in harvestEntity);
+                this.DealDmgToHarvestee(ref state, in harvestEntity, baseDmgRef.ValueRO.Value);
 
             }
 
@@ -71,7 +70,8 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         private void DealDmgToHarvestee(
             ref SystemState state
-            , in Entity harvestEntity)
+            , in Entity harvestEntity
+            , uint dmgValue)
         {
             var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
 
@@ -89,7 +89,7 @@ namespace Systems.Simulation.Harvest
             }
 
 
-            harvesteeHealthMap.Value[healthId] = healthValue <= this.dmg ? 0 : healthValue - this.dmg;
+            harvesteeHealthMap.Value[healthId] = healthValue <= dmgValue ? 0 : healthValue - dmgValue;
 
             SystemAPI.SetComponentEnabled<HarvesteeHealthChangedTag>(harvestEntity, true);
 
