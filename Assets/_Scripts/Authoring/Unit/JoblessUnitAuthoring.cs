@@ -137,6 +137,9 @@ namespace Authoring.Unit
                     Value = 0f,
                 });
 
+                AddComponent<IsUnitWorkingTag>(entity);
+                SetComponentEnabled<IsUnitWorkingTag>(entity, false);
+
             }
         }
     }

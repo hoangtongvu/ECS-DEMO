@@ -22,7 +22,9 @@ namespace Systems.Simulation.Unit
             foreach (var timeCounterRef in
                 SystemAPI.Query<
                     RefRW<UnitIdleTimeCounter>>()
-                    .WithAll<CanMoveEntityTag>())
+                    .WithAny<
+                        CanMoveEntityTag
+                        , IsUnitWorkingTag>())
             {
                 timeCounterRef.ValueRW.Value = 0;
             }
