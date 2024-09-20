@@ -57,7 +57,12 @@ namespace Systems.Simulation.Harvest
                         , quantityPerDrop);
 
 
-                    if (hpThreshold < deductAmount) break;
+                    if (hpThreshold < deductAmount)
+                    {
+                        hpThreshold = 0;
+                        break;
+                    }
+
                     hpThreshold -= deductAmount;
 
                 }
