@@ -134,3 +134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d915081c6b6c58429ecfc498b00eba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  harvesteeProfileId:
+    HarvesteeType: 1
+    LocalIndex: 0

@@ -9,17 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c952c36f7f394a42a1cc80049147a59, type: 3}
-  m_Name: HarvesteeProfiles
+  m_Script: {fileID: 11500000, guid: bea3bfdb50b81f040837564de0c939c1, type: 3}
+  m_Name: Tool2HarvesteeDmgBonusSO
   m_EditorClassIdentifier: 
-  Profiles:
+  BonusMap:
     _serializedList:
     - Key:
+        ToolType: 1
         HarvesteeType: 1
-        LocalIndex: 0
-      Value:
-        MaxHp: 100
-        ResourceDropInfo:
-          ResourceType: 1
-          QuantityPerDrop: 5
-          HpAmountPerDrop: 25
+      Value: 2
+    - Key:
+        ToolType: 2
+        HarvesteeType: 2
+      Value: 1.5
