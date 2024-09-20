@@ -3,6 +3,7 @@ using Components.Damage;
 using Components.Misc;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
+using Components.Tool;
 using Components.Unit;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
@@ -92,6 +93,7 @@ namespace Authoring.Unit
                 {
                     Value = Entity.Null,
                 });
+                AddComponent<ToolTypeICD>(entity);
 
 
                 AddComponent<RotationFreezer>(entity);

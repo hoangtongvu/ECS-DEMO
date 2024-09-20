@@ -4,6 +4,7 @@ using Components.MyEntity;
 using Systems.Simulation.MyEntity;
 using Components.Harvest;
 using Core.MyEntity;
+using Components.Unit;
 
 namespace Systems.Simulation.Harvest
 {
@@ -33,11 +34,12 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (targetEntityRef, interactingEntityRef, interactionTypeICDRef) in
+            foreach (var (targetEntityRef, interactingEntityRef, interactionTypeICDRef, harvesteeTypeRef) in
                 SystemAPI.Query<
                     RefRO<TargetEntity>
                     , RefRW<InteractingEntity>
-                    , RefRW<InteractionTypeICD>>()
+                    , RefRW<InteractionTypeICD>
+                    , RefRW<HarvesteeTypeHolder>>()
                     .WithAll<
                         CanInteractEntityTag>())
             {
@@ -48,6 +50,9 @@ namespace Systems.Simulation.Harvest
                 interactingEntityRef.ValueRW.Value = targetEntity;
                 interactionTypeICDRef.ValueRW.Value = InteractionType.Harvest;
 
+                var harvesteeProfileIdRef = SystemAPI.GetComponentRO<HarvesteeProfileIdHolder>(targetEntity);
+
+                harvesteeTypeRef.ValueRW.Value = harvesteeProfileIdRef.ValueRO.Value.HarvesteeType;
             }
 
         }

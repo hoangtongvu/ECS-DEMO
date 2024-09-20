@@ -144,6 +144,8 @@ namespace Systems.Simulation.Tool
 
             SystemAPI.SetComponentEnabled<JoblessUnitTag>(unitEntity, false);
 
+            var toolTypeRef = SystemAPI.GetComponentRW<ToolTypeICD>(unitEntity);
+            toolTypeRef.ValueRW.Value = toolType;
             var baseDmgRef = SystemAPI.GetComponentRW<BaseDmg>(unitEntity);
             baseDmgRef.ValueRW.Value = baseDmg;
             var baseWorkSpeedRef = SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity);
@@ -169,6 +171,7 @@ namespace Systems.Simulation.Tool
                         break;
                     case UnitType.Harvester:
                         ecb.AddComponent<HarvesterICD>(unitEntity);
+                        ecb.AddComponent<HarvesteeTypeHolder>(unitEntity);
                         break;
                 }
 
