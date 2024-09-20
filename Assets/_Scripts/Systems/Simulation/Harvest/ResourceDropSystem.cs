@@ -32,7 +32,7 @@ namespace Systems.Simulation.Harvest
         public void OnUpdate(ref SystemState state)
         {
             var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
-            
+            var harvesteeProfileMap = SystemAPI.GetSingleton<HarvesteeProfileMap>();
 
             foreach (var (profileIdRef, dropResourceHpThresholdRef, harvesteeEntity) in
                 SystemAPI.Query<
@@ -43,7 +43,7 @@ namespace Systems.Simulation.Harvest
             {
 
                 uint currentHp = this.GetCurrentHp(in harvesteeHealthMap, in harvesteeEntity);
-                var harvesteeProfile = this.GetHarvesteeProfile(in profileIdRef.ValueRO.Value);
+                var harvesteeProfile = this.GetHarvesteeProfile(in harvesteeProfileMap, in profileIdRef.ValueRO.Value);
 
 
                 uint hpThreshold = dropResourceHpThresholdRef.ValueRO.Value;
@@ -93,9 +93,10 @@ namespace Systems.Simulation.Harvest
         }
 
         [BurstCompile]
-        private HarvesteeProfile GetHarvesteeProfile(in HarvesteeProfileId harvesteeProfileId)
+        private HarvesteeProfile GetHarvesteeProfile(
+            in HarvesteeProfileMap harvesteeProfileMap
+            , in HarvesteeProfileId harvesteeProfileId)
         {
-            var harvesteeProfileMap = SystemAPI.GetSingleton<HarvesteeProfileMap>();
 
             if (!harvesteeProfileMap.Value.TryGetValue(harvesteeProfileId, out var harvesteeProfile))
             {
