@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8473944424651042083}
   - component: {fileID: 264369486369415393}
   - component: {fileID: 2757000227693699482}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Knight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,4 +178,3 @@ MonoBehaviour:
   maxHp: 100
   currentHp: 100
   speed: 5
-  moveableState: 0

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6343630529342031999}
   - component: {fileID: 4235158411385561476}
   - component: {fileID: -803212738098847423}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Villager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +152,6 @@ MonoBehaviour:
   maxHp: 100
   currentHp: 100
   speed: 5
-  moveableState: 0
 --- !u!114 &-803212738098847423
 MonoBehaviour:
   m_ObjectHideFlags: 0
