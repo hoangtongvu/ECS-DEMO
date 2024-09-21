@@ -1,7 +1,8 @@
-
+using System;
 
 namespace Core
 {
+    [Flags]
     public enum CollisionLayer // TODO: Auto gen CollisionLayer based on TagManager.asset
     {
         Default = 1 << 0,

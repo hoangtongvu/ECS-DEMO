@@ -1,4 +1,5 @@
-﻿using Components.Player;
+﻿using Components.Misc;
+using Components.Player;
 using Unity.Entities;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Authoring.Player
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<PlayerTag>(entity);
+                AddComponent<ItemPickerTag>(entity);
 
             }
         }

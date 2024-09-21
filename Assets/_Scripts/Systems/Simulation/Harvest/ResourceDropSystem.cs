@@ -116,23 +116,6 @@ namespace Systems.Simulation.Harvest
             , ResourceType dropType
             , uint quantityPerDrop)
         {
-            var resourceWallet = SystemAPI.GetSingletonBuffer<ResourceWalletElement>();
-            var walletChangedRef = SystemAPI.GetSingletonRW<WalletChanged>(); //TODO: fix this Bad code
-            int walletLength = resourceWallet.Length;
-
-            for (int i = 0; i < walletLength; i++)
-            {
-                ref var walletElement = ref resourceWallet.ElementAt(i);
-
-                bool matchType = walletElement.Type == dropType;
-                if (!matchType) continue;
-
-                walletElement.Quantity += quantityPerDrop;
-                walletChangedRef.ValueRW.Value = true;
-                break;
-
-            }
-
             spawnCommandList.Value.Add(new ResourceItemSpawnCommand
             {
                 SpawnPos = float3.zero,

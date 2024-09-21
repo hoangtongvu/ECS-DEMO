@@ -7,7 +7,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Transforms;
 
-namespace Systems.Simulation.Harvest
+namespace Systems.Simulation.GameResource
 {
 
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
