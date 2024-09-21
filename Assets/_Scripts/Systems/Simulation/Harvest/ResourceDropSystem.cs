@@ -5,6 +5,8 @@ using Core.Harvest;
 using Components.GameResource;
 using Core.GameResource;
 using Unity.Mathematics;
+using Unity.Transforms;
+using Core.Utilities.Extensions;
 
 namespace Systems.Simulation.Harvest
 {
@@ -14,6 +16,8 @@ namespace Systems.Simulation.Harvest
     [BurstCompile]
     public partial struct ResourceDropSystem : ISystem
     {
+
+        private Random rand;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -27,6 +31,7 @@ namespace Systems.Simulation.Harvest
 
             state.RequireForUpdate(query0);
 
+            this.rand = new Random(1);
         }
 
         [BurstCompile]
@@ -36,10 +41,11 @@ namespace Systems.Simulation.Harvest
             var harvesteeProfileMap = SystemAPI.GetSingleton<HarvesteeProfileMap>();
             var itemSpawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
 
-            foreach (var (profileIdRef, dropResourceHpThresholdRef, harvesteeEntity) in
+            foreach (var (profileIdRef, dropResourceHpThresholdRef, transformRef, harvesteeEntity) in
                 SystemAPI.Query<
                     RefRO<HarvesteeProfileIdHolder>
-                    , RefRW<DropResourceHpThreshold>>()
+                    , RefRW<DropResourceHpThreshold>
+                    , RefRO<LocalTransform>>()
                     .WithAll<HarvesteeHealthChangedTag>()
                     .WithEntityAccess())
             {
@@ -56,6 +62,7 @@ namespace Systems.Simulation.Harvest
                 {
                     this.DropResources(
                         in itemSpawnCommandList
+                        , transformRef.ValueRO.Position
                         , harvesteeProfile.ResourceDropInfo.ResourceType
                         , quantityPerDrop);
 
@@ -113,12 +120,19 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         private void DropResources(
             in ResourceItemSpawnCommandList spawnCommandList
+            , float3 centerPos
             , ResourceType dropType
             , uint quantityPerDrop)
         {
+            float2 randomDir = this.rand.NextFloat2Direction();
+            const float dropRadius = 1.5f;
+            float2 distanceFloat2 = randomDir * dropRadius;
+
+            float3 spawnPos = centerPos.Add(x: distanceFloat2.x, z: distanceFloat2.y);
+
             spawnCommandList.Value.Add(new ResourceItemSpawnCommand
             {
-                SpawnPos = float3.zero,
+                SpawnPos = spawnPos,
                 ResourceType = dropType,
                 Quantity = quantityPerDrop,
             });
