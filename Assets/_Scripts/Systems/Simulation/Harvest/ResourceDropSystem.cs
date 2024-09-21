@@ -4,6 +4,7 @@ using Components.Harvest;
 using Core.Harvest;
 using Components.GameResource;
 using Core.GameResource;
+using Unity.Mathematics;
 
 namespace Systems.Simulation.Harvest
 {
@@ -33,6 +34,7 @@ namespace Systems.Simulation.Harvest
         {
             var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
             var harvesteeProfileMap = SystemAPI.GetSingleton<HarvesteeProfileMap>();
+            var itemSpawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
 
             foreach (var (profileIdRef, dropResourceHpThresholdRef, harvesteeEntity) in
                 SystemAPI.Query<
@@ -53,7 +55,8 @@ namespace Systems.Simulation.Harvest
                 while (currentHp <= hpThreshold)
                 {
                     this.DropResources(
-                        harvesteeProfile.ResourceDropInfo.ResourceType
+                        in itemSpawnCommandList
+                        , harvesteeProfile.ResourceDropInfo.ResourceType
                         , quantityPerDrop);
 
 
@@ -109,7 +112,8 @@ namespace Systems.Simulation.Harvest
 
         [BurstCompile]
         private void DropResources(
-            ResourceType dropType
+            in ResourceItemSpawnCommandList spawnCommandList
+            , ResourceType dropType
             , uint quantityPerDrop)
         {
             var resourceWallet = SystemAPI.GetSingletonBuffer<ResourceWalletElement>();
@@ -128,6 +132,14 @@ namespace Systems.Simulation.Harvest
                 break;
 
             }
+
+            spawnCommandList.Value.Add(new ResourceItemSpawnCommand
+            {
+                SpawnPos = float3.zero,
+                ResourceType = dropType,
+                Quantity = quantityPerDrop,
+            });
+
         }
 
     }
