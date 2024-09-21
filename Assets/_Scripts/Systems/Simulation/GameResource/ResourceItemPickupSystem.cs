@@ -7,6 +7,7 @@ using Unity.Physics;
 using Core;
 using Components.Misc;
 using Utilities.Helpers;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.GameResource
 {
@@ -44,6 +45,9 @@ namespace Systems.Simulation.GameResource
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
+
             foreach (var (resourceItemICDRef, transformRef, itemEntity) in
                 SystemAPI.Query<
                     RefRO<ResourceItemICD>
@@ -55,7 +59,7 @@ namespace Systems.Simulation.GameResource
                 bool hasHit =
                     physicsWorld.OverlapSphere(
                         transformRef.ValueRO.Position
-                        , 2f
+                        , interactRadius
                         , ref hitList
                         , new CollisionFilter
                         {
