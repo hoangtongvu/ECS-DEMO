@@ -1,12 +1,12 @@
 using Unity.Entities;
 using Unity.Burst;
 using Components.GameResource;
-using Core.GameResource;
 using Unity.Collections;
 using Unity.Transforms;
 using Unity.Physics;
 using Core;
 using Components.Misc;
+using Utilities.Helpers;
 
 namespace Systems.Simulation.GameResource
 {
@@ -65,6 +65,8 @@ namespace Systems.Simulation.GameResource
 
                 if (!hasHit) continue;
 
+
+                //This can be made a job
                 int length = hitList.Length;
 
                 for (int i = 0; i < length; i++)
@@ -75,11 +77,12 @@ namespace Systems.Simulation.GameResource
                     if (!SystemAPI.IsComponentEnabled<ItemPickerTag>(hitEntity)) continue;
 
                     var resourceWallet = SystemAPI.GetBuffer<ResourceWalletElement>(hitEntity);
+                    var walletChangedTagLookup = SystemAPI.GetComponentLookup<WalletChangedTag>();
 
-                    bool canAddResourcesToWallet = this.TryAddResourcesToWallet(
-                        ref state
-                        , hitEntity
-                        , resourceWallet
+                    bool canAddResourcesToWallet = ResourceWalletHelper.TryAddResources(
+                        in walletChangedTagLookup
+                        , in hitEntity
+                        , in resourceWallet
                         , resourceItemICDRef.ValueRO.ResourceType
                         , resourceItemICDRef.ValueRO.Quantity);
 
@@ -90,32 +93,6 @@ namespace Systems.Simulation.GameResource
 
                 }
             }
-        }
-
-        [BurstCompile]
-        private bool TryAddResourcesToWallet(
-            ref SystemState state
-            , Entity walletOwnerEntity
-            , DynamicBuffer<ResourceWalletElement> resourceWallet
-            , ResourceType addType
-            , uint addQuantity)
-        {
-            int walletLength = resourceWallet.Length;
-
-            for (int i = 0; i < walletLength; i++)
-            {
-                ref var walletElement = ref resourceWallet.ElementAt(i);
-
-                bool matchType = walletElement.Type == addType;
-                if (!matchType) continue;
-
-                walletElement.Quantity += addQuantity;
-                SystemAPI.SetComponentEnabled<WalletChangedTag>(walletOwnerEntity, true);
-
-                return true;
-            }
-
-            return false;
         }
 
 
