@@ -3,13 +3,12 @@ using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
 using Core.MyEvent.PubSub.Messages;
 using Components.GameResource;
-using Unity.Scenes;
+using Components.Player;
 
-namespace Systems.Initialization
+namespace Systems.Presentation.GameResource
 {
 
-    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
-    [UpdateBefore(typeof(SceneSystemGroup))]
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial class UpdateWalletUISystem : SystemBase
     {
 
@@ -17,8 +16,9 @@ namespace Systems.Initialization
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    WalletChanged
-                    , ResourceWalletElement>()
+                    ResourceWalletElement
+                    , WalletChangedTag
+                    , PlayerTag>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -28,7 +28,9 @@ namespace Systems.Initialization
         {
             // Update first time.
             foreach (var resourceWallet in
-                SystemAPI.Query<DynamicBuffer<ResourceWalletElement>>())
+                SystemAPI.Query<
+                    DynamicBuffer<ResourceWalletElement>>()
+                    .WithAll<PlayerTag>())
             {
                 this.UpdateUI(resourceWallet);
             }
@@ -37,17 +39,13 @@ namespace Systems.Initialization
         protected override void OnUpdate()
         {
 
-            foreach (var (walletChangedRef, resourceWallet) in
+            foreach (var resourceWallet in
                 SystemAPI.Query<
-                    RefRW<WalletChanged>
-                    , DynamicBuffer<ResourceWalletElement>>())
+                    DynamicBuffer<ResourceWalletElement>>()
+                    .WithAll<WalletChangedTag>()
+                    .WithAll<PlayerTag>())
             {
-
-                if (!walletChangedRef.ValueRO.Value) continue;
-                walletChangedRef.ValueRW.Value = false;
-
                 this.UpdateUI(resourceWallet);
-
             }
 
         }

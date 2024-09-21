@@ -29,7 +29,7 @@ namespace Systems.Simulation.GameResource
                 .WithAll<
                     ItemPickerTag
                     , ResourceWalletElement
-                    , WalletChanged>()
+                    , WalletChangedTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -75,11 +75,11 @@ namespace Systems.Simulation.GameResource
                     if (!SystemAPI.IsComponentEnabled<ItemPickerTag>(hitEntity)) continue;
 
                     var resourceWallet = SystemAPI.GetBuffer<ResourceWalletElement>(hitEntity);
-                    var walletChangedRef = SystemAPI.GetComponentRW<WalletChanged>(hitEntity);
 
                     bool canAddResourcesToWallet = this.TryAddResourcesToWallet(
-                        resourceWallet
-                        , ref walletChangedRef.ValueRW
+                        ref state
+                        , hitEntity
+                        , resourceWallet
                         , resourceItemICDRef.ValueRO.ResourceType
                         , resourceItemICDRef.ValueRO.Quantity);
 
@@ -94,8 +94,9 @@ namespace Systems.Simulation.GameResource
 
         [BurstCompile]
         private bool TryAddResourcesToWallet(
-            DynamicBuffer<ResourceWalletElement> resourceWallet
-            , ref WalletChanged walletChanged
+            ref SystemState state
+            , Entity walletOwnerEntity
+            , DynamicBuffer<ResourceWalletElement> resourceWallet
             , ResourceType addType
             , uint addQuantity)
         {
@@ -109,7 +110,7 @@ namespace Systems.Simulation.GameResource
                 if (!matchType) continue;
 
                 walletElement.Quantity += addQuantity;
-                walletChanged.Value = true;
+                SystemAPI.SetComponentEnabled<WalletChangedTag>(walletOwnerEntity, true);
 
                 return true;
             }

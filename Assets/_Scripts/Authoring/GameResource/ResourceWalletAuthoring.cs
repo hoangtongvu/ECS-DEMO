@@ -32,8 +32,8 @@ namespace Authoring.GameResource
 
                 }
 
-                // AddBuffer<ResourceWalletChangedElement>(entity);
-                AddComponent<WalletChanged>(entity);
+                AddComponent<WalletChangedTag>(entity);
+                SetComponentEnabled<WalletChangedTag>(entity, false);
 
             }
         }

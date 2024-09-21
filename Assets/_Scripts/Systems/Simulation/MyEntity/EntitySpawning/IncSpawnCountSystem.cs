@@ -9,6 +9,7 @@ using Components;
 using Core.MyEvent.PubSub.Messages;
 using Utilities.Extensions;
 using Components.Unit.UnitSelection;
+using Components.Player;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -24,7 +25,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var entityQuery0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     ResourceWalletElement
-                    , WalletChanged>()
+                    , WalletChangedTag>()
                     .Build();
 
             var entityQuery1 = SystemAPI.QueryBuilder()
@@ -51,11 +52,23 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // Only handle Player's side this time.
-            var resourceWallet = SystemAPI.GetSingletonBuffer<ResourceWalletElement>();
-            var walletChangedRef = SystemAPI.GetSingletonRW<WalletChanged>();
+
             var messageQueue = SystemAPI.GetSingleton<MessageQueue<SpawnUnitMessage>>();
             var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>();
+
+            DynamicBuffer<ResourceWalletElement> resourceWallet = default;
+            EnabledRefRW<WalletChangedTag> walletChangedTag = default;
+
+            foreach (var item in
+                SystemAPI.Query<
+                    DynamicBuffer<ResourceWalletElement>
+                    , EnabledRefRW<WalletChangedTag>>()
+                    .WithAll<PlayerTag>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+            {
+                resourceWallet = item.Item1;
+                walletChangedTag = item.Item2;
+            }
 
             // Put foreach inside while loop is more efficient in this situation.
             while (messageQueue.Value.TryDequeue(out var message))
@@ -89,7 +102,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                             , out var walletArr)) continue;
 
                         resourceWallet.CopyFrom(walletArr);
-                        walletChangedRef.ValueRW.Value = true;
+                        walletChangedTag.ValueRW = true;
 
                         profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
                     }
