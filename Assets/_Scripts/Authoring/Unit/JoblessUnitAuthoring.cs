@@ -1,5 +1,6 @@
 ﻿using Components;
 using Components.Damage;
+using Components.GameResource;
 using Components.Misc;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
@@ -13,6 +14,7 @@ using Core.Unit.MyMoveCommand;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using Utilities.Helpers;
 
 namespace Authoring.Unit
 {
@@ -32,6 +34,7 @@ namespace Authoring.Unit
 
                 AddComponent<JoblessUnitTag>(entity);
                 AddComponent<NewlySpawnedTag>(entity);
+                AddComponent<ItemPickerTag>(entity);
 
 
                 AddComponent(entity, new UnitId
@@ -140,6 +143,9 @@ namespace Authoring.Unit
                 AddComponent<IsUnitWorkingTag>(entity);
                 SetComponentEnabled<IsUnitWorkingTag>(entity, false);
 
+                ResourceWalletHelper.AddResourceWalletToEntity(this, entity);
+                AddComponent<WalletChangedTag>(entity);
+                SetComponentEnabled<WalletChangedTag>(entity, false);
             }
         }
     }

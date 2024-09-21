@@ -1,5 +1,6 @@
 using Components.GameResource;
 using Core.GameResource;
+using System;
 using Unity.Burst;
 using Unity.Entities;
 
@@ -34,6 +35,28 @@ namespace Utilities.Helpers
             }
 
             return false;
+        }
+
+
+        public static DynamicBuffer<ResourceWalletElement> AddResourceWalletToEntity(IBaker baker, Entity entity)
+        {
+            int length = Enum.GetNames(typeof(ResourceType)).Length;
+
+            var resourceWallet = baker.AddBuffer<ResourceWalletElement>(entity);
+
+            for (int i = 0; i < length; i++)
+            {
+                var type = (ResourceType)i;
+
+                resourceWallet.Add(new ResourceWalletElement
+                {
+                    Type = type,
+                    Quantity = 0,
+                });
+
+            }
+
+            return resourceWallet;
         }
     }
 }
