@@ -1,5 +1,6 @@
 ﻿using Components.Misc;
 using Components.Player;
+using Components.Unit.NearUnitDropItems;
 using Unity.Entities;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace Authoring.Player
                 AddComponent<PlayerTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
 
+                AddBuffer<NearbyUnitDropItemTimerElement>(entity);
             }
         }
     }
