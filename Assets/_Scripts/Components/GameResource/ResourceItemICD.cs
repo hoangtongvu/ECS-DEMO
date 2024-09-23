@@ -24,4 +24,9 @@ namespace Components.GameResource
         public float CounterSecond;
     }
 
+    public struct UnitCannotPickUpTimeLimit : IComponentData
+    {
+        public float Value;
+    }
+
 }

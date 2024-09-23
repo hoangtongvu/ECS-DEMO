@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.GameResource;
 using Unity.Collections;
+using Utilities;
 
 namespace Systems.Simulation.GameResource
 {
@@ -14,6 +15,12 @@ namespace Systems.Simulation.GameResource
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(new UnitCannotPickUpTimeLimit
+                {
+                    Value = 5f,
+                });
+
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitCannotPickUpTag
@@ -21,6 +28,7 @@ namespace Systems.Simulation.GameResource
                 .Build();
 
             state.RequireForUpdate(query0);
+            state.RequireForUpdate<UnitCannotPickUpTimeLimit>();
 
         }
 
@@ -28,9 +36,12 @@ namespace Systems.Simulation.GameResource
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            float timeLimitSecond = SystemAPI.GetSingleton<UnitCannotPickUpTimeLimit>().Value;
+
             new CountUpAndClearTagJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,
+                timeLimitSecond = timeLimitSecond,
             }.ScheduleParallel();
 
         }
@@ -40,7 +51,7 @@ namespace Systems.Simulation.GameResource
         private partial struct CountUpAndClearTagJob : IJobEntity
         {
             [ReadOnly] public float DeltaTime;
-            private const float timeLimitSecond = 5f; //TODO: Make this global config variable
+            [ReadOnly] public float timeLimitSecond;
 
             [BurstCompile]
             void Execute(
