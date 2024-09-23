@@ -15,6 +15,9 @@ namespace Authoring.GameResource
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<ResourceItemICD>(entity);
+
+                AddComponent<UnitCannotPickUpTag>(entity);
+                AddComponent<UnitCannotPickUpTimeCounter>(entity);
             }
         }
     }

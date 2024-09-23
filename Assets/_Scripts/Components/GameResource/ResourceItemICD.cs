@@ -15,4 +15,13 @@ namespace Components.GameResource
         public uint Quantity;
     }
 
+    public struct UnitCannotPickUpTag : IComponentData, IEnableableComponent
+    {
+    }
+
+    public struct UnitCannotPickUpTimeCounter : IComponentData
+    {
+        public float CounterSecond;
+    }
+
 }

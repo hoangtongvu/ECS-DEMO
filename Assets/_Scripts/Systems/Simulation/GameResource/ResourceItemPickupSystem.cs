@@ -23,7 +23,8 @@ namespace Systems.Simulation.GameResource
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     ResourceItemICD
-                    , LocalTransform>()
+                    , LocalTransform
+                    , UnitCannotPickUpTag>()
                 .Build();
 
             var query1 = SystemAPI.QueryBuilder()
@@ -48,10 +49,12 @@ namespace Systems.Simulation.GameResource
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
 
-            foreach (var (resourceItemICDRef, transformRef, itemEntity) in
+            foreach (var (resourceItemICDRef, transformRef, unitCannotPickupTag, itemEntity) in
                 SystemAPI.Query<
                     RefRO<ResourceItemICD>
-                    , RefRW<LocalTransform>>()
+                    , RefRW<LocalTransform>
+                    , EnabledRefRO<UnitCannotPickUpTag>>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                     .WithEntityAccess())
             {
                 var hitList = new NativeList<DistanceHit>(Allocator.Temp);
@@ -64,7 +67,7 @@ namespace Systems.Simulation.GameResource
                         , new CollisionFilter
                         {
                             BelongsTo = (uint) CollisionLayer.Default, // This make the hit able to collide with Player/Unit layer
-                            CollidesWith = (uint) (CollisionLayer.Unit | CollisionLayer.Player),
+                            CollidesWith = this.GetCollidesWith(unitCannotPickupTag.ValueRO),
                         });
 
                 if (!hasHit) continue;
@@ -97,6 +100,16 @@ namespace Systems.Simulation.GameResource
 
                 }
             }
+        }
+
+
+        [BurstCompile]
+        private uint GetCollidesWith(bool unitCannotPickupItem)
+        {
+            uint collidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Player);
+            if (unitCannotPickupItem) collidesWith = (uint)CollisionLayer.Player;
+
+            return collidesWith;
         }
 
 
