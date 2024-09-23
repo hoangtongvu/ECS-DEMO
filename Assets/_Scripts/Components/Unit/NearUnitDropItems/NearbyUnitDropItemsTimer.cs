@@ -9,4 +9,9 @@ namespace Components.Unit.NearUnitDropItems
         public float CounterSecond;
     }
 
+    public struct NearbyUnitDropItemTimeLimit : IComponentData
+    {
+        public float Value;
+    }
+
 }

@@ -3,6 +3,7 @@ using Unity.Burst;
 using Components.GameResource;
 using Unity.Transforms;
 using Components.Unit.NearUnitDropItems;
+using Utilities;
 
 namespace Systems.Simulation.Unit.NearUnitDropItems
 {
@@ -15,20 +16,29 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(new NearbyUnitDropItemTimeLimit
+                {
+                    Value = 4f,
+                });
+
+
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     NearbyUnitDropItemTimerElement>()
                 .Build();
 
             state.RequireForUpdate(query0);
+            state.RequireForUpdate<NearbyUnitDropItemTimeLimit>();
+
         }
 
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            const float timeLimitSecond = 4f;
             var spawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
+            float timeLimitSecond = SystemAPI.GetSingleton<NearbyUnitDropItemTimeLimit>().Value;
 
             foreach (var timerList in
                 SystemAPI.Query<
@@ -44,43 +54,47 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
                     if (!timeUp) continue;
 
-                    // Set unit drop item
-                    // reset timer
-
                     timer.CounterSecond = 0;
 
-                    var unitTransformRef = SystemAPI.GetComponentRO<LocalTransform>(timer.UnitEntity);
-                    var unitWallet = SystemAPI.GetBuffer<ResourceWalletElement>(timer.UnitEntity);
-                    int walletLength = unitWallet.Length;
-
-                    for (int j = 0; j < walletLength; j++)
-                    {
-                        ref var walletElement = ref unitWallet.ElementAt(j);
-
-                        if (walletElement.Quantity == 0) continue;
-
-                        spawnCommandList.Value.Add(new()
-                        {
-                            SpawnPos = unitTransformRef.ValueRO.Position,
-                            ResourceType = walletElement.Type,
-                            Quantity = walletElement.Quantity,
-                        });
-
-                        UnityEngine.Debug.Log("Dropped");
-
-                        walletElement.Quantity = 0;
-                    }
-
-                    
+                    this.SetUnitDropItems(ref state, in timer.UnitEntity, in spawnCommandList);
 
                 }
 
             }
+
+
         }
 
 
+        [BurstCompile]
+        private void SetUnitDropItems(
+            ref SystemState state
+            , in Entity unitEntity
+            , in ResourceItemSpawnCommandList spawnCommandList)
+        {
+            var unitTransformRef = SystemAPI.GetComponentRO<LocalTransform>(unitEntity);
+            var unitWallet = SystemAPI.GetBuffer<ResourceWalletElement>(unitEntity);
+            int walletLength = unitWallet.Length;
 
-        
+            for (int j = 0; j < walletLength; j++)
+            {
+                ref var walletElement = ref unitWallet.ElementAt(j);
+
+                if (walletElement.Quantity == 0) continue;
+
+                spawnCommandList.Value.Add(new()
+                {
+                    SpawnPos = unitTransformRef.ValueRO.Position,
+                    ResourceType = walletElement.Type,
+                    Quantity = walletElement.Quantity,
+                });
+
+                walletElement.Quantity = 0;
+            }
+
+        }
+
+
 
     }
 
