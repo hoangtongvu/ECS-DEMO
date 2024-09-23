@@ -7,6 +7,7 @@ using Core;
 using Components.Player;
 using Unity.Mathematics;
 using Components.Unit.NearUnitDropItems;
+using Utilities;
 
 namespace Systems.Simulation.Unit.NearUnitDropItems
 {
@@ -19,6 +20,19 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(new NearbyUnitDistanceHitList
+                {
+                    Value = new(10, Allocator.Persistent),
+                });
+
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(new NearbyUnitHitRadius
+                {
+                    Value = 5f,
+                });
+
+
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     LocalTransform
@@ -27,6 +41,8 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
                 .Build();
 
             state.RequireForUpdate(query0);
+            state.RequireForUpdate<NearbyUnitDistanceHitList>();
+
         }
 
 
@@ -34,8 +50,9 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
         public void OnUpdate(ref SystemState state)
         {
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-            const float hitRadius = 5f;
-            const int initialListCap = 10;
+            var hitList = SystemAPI.GetSingleton<NearbyUnitDistanceHitList>().Value;
+            var hitRadius = SystemAPI.GetSingleton<NearbyUnitHitRadius>().Value;
+
 
             foreach (var (transformRef, nearbyUnitDropItemTimerList) in
                 SystemAPI.Query<
@@ -43,7 +60,6 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
                     , DynamicBuffer<NearbyUnitDropItemTimerElement>>()
                     .WithAll<PlayerTag>())
             {
-                var hitList = new NativeList<DistanceHit>(initialListCap, Allocator.Temp);
 
                 bool hasHit = this.OverlapSphere(
                     in physicsWorld
