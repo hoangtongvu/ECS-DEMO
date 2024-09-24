@@ -8,6 +8,7 @@ using Components.Player;
 using Unity.Mathematics;
 using Components.Unit.NearUnitDropItems;
 using Utilities;
+using Core.Utilities.Extensions;
 
 namespace Systems.Simulation.Unit.NearUnitDropItems
 {
@@ -126,7 +127,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
                     if (oldId != newId) continue;
 
-                    hitList.RemoveAt(j);
+                    hitList.QuickRemoveAt(j);
                     j--;
                     hitListLength--;
 
@@ -137,7 +138,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
                 if (foundIdInNewList) continue;
 
-                oldList.RemoveAt(i);
+                oldList.QuickRemoveAt(i);
                 i--;
                 oldListLength--;
 
