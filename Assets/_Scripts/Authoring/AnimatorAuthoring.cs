@@ -24,7 +24,6 @@ namespace Authoring
                     }
                 });
 
-                AddBuffer<AnimationClipInfoElement>(entity);
 
             }
         }
