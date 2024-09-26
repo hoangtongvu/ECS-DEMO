@@ -20,10 +20,13 @@ namespace Systems.Simulation
             RequireForUpdate<AnimatorData>();
         }
 
+        protected override void OnStartRunning()
+        {
+            this.SetBaseAnimatorMap();
+        }
+
         protected override void OnUpdate()
         {
-
-            if (this.baseAnimatorMap == null) this.SetBaseAnimatorMap();
 
             //Sync Transform from Entity world to corresponding Transform in GameObject world.
             this.SyncAnimation();
@@ -32,7 +35,7 @@ namespace Systems.Simulation
 
         private void SetBaseAnimatorMap()
         {
-            if (SystemAPI.ManagedAPI.TryGetSingleton<BaseAnimatorMap>(out this.baseAnimatorMap)) return;
+            if (SystemAPI.ManagedAPI.TryGetSingleton(out this.baseAnimatorMap)) return;
             Debug.LogError("BaseAnimatorMap Singleton not found");
         }
 

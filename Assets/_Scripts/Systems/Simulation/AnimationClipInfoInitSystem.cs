@@ -10,6 +10,9 @@ namespace Systems.Simulation
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class AnimationClipInfoInitSystem : SystemBase
     {
+
+        private BaseAnimatorMap baseAnimatorMap;
+
         protected override void OnCreate()
         {
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
@@ -21,6 +24,11 @@ namespace Systems.Simulation
             this.RequireForUpdate(entityQuery);
         }
 
+        protected override void OnStartRunning()
+        {
+            this.SetBaseAnimatorMap();
+        }
+
         protected override void OnUpdate()
         {
 
@@ -30,11 +38,9 @@ namespace Systems.Simulation
                     , DynamicBuffer<AnimationClipInfoElement>>()
                     .WithAll<NewlySpawnedTag>())
             {
-                // Get BaseAnimatorMap.
-                if (!this.TryGetBaseAnimatorMap(out BaseAnimatorMap baseAnimatorMap)) return;
 
                 // Get corresponding BaseAnimator from Map.
-                if (!baseAnimatorMap.Value.TryGetValue(idRef.ValueRO, out Core.Animator.BaseAnimator baseAnimator))
+                if (!this.baseAnimatorMap.Value.TryGetValue(idRef.ValueRO, out Core.Animator.BaseAnimator baseAnimator))
                 {
                     UnityEngine.Debug.LogError($"Can't get BaseAnimator with {idRef.ValueRO} in BaseAnimatorMap.");
                     continue;
@@ -54,11 +60,10 @@ namespace Systems.Simulation
 
         }
 
-        private bool TryGetBaseAnimatorMap(out BaseAnimatorMap baseAnimatorMap)
+        private void SetBaseAnimatorMap()
         {
-            if (SystemAPI.ManagedAPI.TryGetSingleton<BaseAnimatorMap>(out baseAnimatorMap)) return true;
-            UnityEngine.Debug.LogError("Can't get BaseAnimatorMap Singleton.");
-            return false;
+            if (SystemAPI.ManagedAPI.TryGetSingleton(out this.baseAnimatorMap)) return;
+            UnityEngine.Debug.LogError("BaseAnimatorMap Singleton not found");
         }
 
     }
