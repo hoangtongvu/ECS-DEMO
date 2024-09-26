@@ -5,9 +5,9 @@ using Core.Animator;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Systems.Simulation
+namespace Systems.Presentation.Misc
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial class AnimationSynchronizerSystem : SystemBase
     {
 
