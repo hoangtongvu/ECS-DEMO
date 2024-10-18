@@ -2,12 +2,14 @@
 using Components.Damage;
 using Components.GameResource;
 using Components.Misc;
+using Components.Misc.Presenter;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
 using Components.Tool;
 using Components.Unit;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
+using Core.Misc.Presenter;
 using Core.MyEntity;
 using Core.Unit;
 using Core.Unit.MyMoveCommand;
@@ -21,6 +23,7 @@ namespace Authoring.Unit
     public class JoblessUnitAuthoring : MonoBehaviour
     {
         [SerializeField] private UnitType unitType; //Can put this into Unit profile SO;
+        [SerializeField] private PresenterPrefabId presenterPrefabId; //Can put this into Unit profile SO;
         [SerializeField] private ushort localIndex; //Can put this into Unit profile SO;
         [SerializeField] private int maxHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private int currentHp = 100; //Can put this into Unit profile SO;
@@ -35,7 +38,13 @@ namespace Authoring.Unit
                 AddComponent<JoblessUnitTag>(entity);
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
+                AddComponent<NeedSpawnPresenterTag>(entity);
 
+                AddComponent(entity, new PresenterPrefabIdHolder
+                {
+                    Value = authoring.presenterPrefabId,
+                });
+                AddComponent<PresenterHolder>(entity);
 
                 AddComponent(entity, new UnitId
                 {
@@ -146,6 +155,16 @@ namespace Authoring.Unit
                 ResourceWalletHelper.AddResourceWalletToEntity(this, entity);
                 AddComponent<WalletChangedTag>(entity);
                 SetComponentEnabled<WalletChangedTag>(entity, false);
+
+                AddComponent(entity, new AnimatorData
+                {
+                    Value = new()
+                    {
+                        Value = "",
+                        ValueChanged = true,
+                    }
+                });
+
             }
         }
     }
