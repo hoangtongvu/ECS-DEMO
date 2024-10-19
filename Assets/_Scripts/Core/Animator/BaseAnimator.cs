@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Collections.Generic;
 
 namespace Core.Animator
 {
@@ -10,9 +9,6 @@ namespace Core.Animator
         [SerializeField] protected AnimationClip[] clipArray;
         [SerializeField] protected string currentStateName;
 
-        [SerializeField] protected List<AnimationClip> clipList;
-
-        public List<AnimationClip> ClipList => clipList;
 
         #region LoadComponents
 
@@ -26,7 +22,6 @@ namespace Core.Animator
         protected virtual void LoadAnimationClip()
         {
             this.clipArray = animator.runtimeAnimatorController.animationClips;
-            foreach (AnimationClip clip in clipArray) this.clipList.Add(clip);
         }
 
         #endregion LoadComponents
@@ -78,15 +73,18 @@ namespace Core.Animator
 
         public virtual float GetAnimationLength(string aniName)
         {
-            var clip = this.clipList.Find(ac => ac.name == aniName);
-            if (clip == null)
+
+            int length = this.clipArray.Length;
+
+            for (int i = 0; i < length; i++)
             {
-                Debug.LogError($"Can't find animationClip in {transform.parent.name} with name: {aniName}", transform.parent.gameObject);
-                return -1;
+                var clip = clipArray[i];
+                if (clip.name != aniName) continue;
+                return clip.length;
             }
 
-
-            return clip.length;
+            Debug.LogError($"Can't find animationClip in {transform.parent.name} with name: {aniName}", transform.parent.gameObject);
+            return -1;
 
         }
 
