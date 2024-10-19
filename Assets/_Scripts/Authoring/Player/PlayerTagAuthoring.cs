@@ -1,4 +1,8 @@
-﻿using Components.Player;
+﻿using Components.Misc;
+using Components.Misc.Presenter;
+using Components.Player;
+using Components.Unit.NearUnitDropItems;
+using Core.Misc.Presenter;
 using Unity.Entities;
 using UnityEngine;
 
@@ -14,7 +18,21 @@ namespace Authoring.Player
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<PlayerTag>(entity);
+                AddComponent<ItemPickerTag>(entity);
 
+                AddBuffer<NearbyUnitDropItemTimerElement>(entity);
+
+                AddComponent<NeedSpawnPresenterTag>(entity);
+
+                AddComponent(entity, new PresenterPrefabIdHolder
+                {
+                    Value = new()
+                    {
+                        PresenterType = PresenterType.Player,
+                        LocalIndex = 0,
+                    }
+                });
+                AddComponent<PresenterHolder>(entity);
             }
         }
     }

@@ -1,21 +1,29 @@
 ﻿using Components;
 using Components.Damage;
+using Components.GameResource;
+using Components.Misc;
+using Components.Misc.Presenter;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
+using Components.Tool;
 using Components.Unit;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
+using Core.Misc.Presenter;
+using Core.MyEntity;
 using Core.Unit;
 using Core.Unit.MyMoveCommand;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using Utilities.Helpers;
 
 namespace Authoring.Unit
 {
     public class JoblessUnitAuthoring : MonoBehaviour
     {
         [SerializeField] private UnitType unitType; //Can put this into Unit profile SO;
+        [SerializeField] private PresenterPrefabId presenterPrefabId; //Can put this into Unit profile SO;
         [SerializeField] private ushort localIndex; //Can put this into Unit profile SO;
         [SerializeField] private int maxHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private int currentHp = 100; //Can put this into Unit profile SO;
@@ -29,7 +37,14 @@ namespace Authoring.Unit
 
                 AddComponent<JoblessUnitTag>(entity);
                 AddComponent<NewlySpawnedTag>(entity);
+                AddComponent<ItemPickerTag>(entity);
+                AddComponent<NeedSpawnPresenterTag>(entity);
 
+                AddComponent(entity, new PresenterPrefabIdHolder
+                {
+                    Value = authoring.presenterPrefabId,
+                });
+                AddComponent<PresenterHolder>(entity);
 
                 AddComponent(entity, new UnitId
                 {
@@ -90,6 +105,7 @@ namespace Authoring.Unit
                 {
                     Value = Entity.Null,
                 });
+                AddComponent<ToolTypeICD>(entity);
 
 
                 AddComponent<RotationFreezer>(entity);
@@ -101,6 +117,14 @@ namespace Authoring.Unit
                 {
                     Value = Entity.Null,
                 });
+                AddComponent(entity, new InteractingEntity
+                {
+                    Value = Entity.Null,
+                });
+                AddComponent(entity, new InteractionTypeICD
+                {
+                    Value = InteractionType.None,
+                });
 
 
                 AddComponent<NewlySelectedUnitTag>(entity);
@@ -110,6 +134,36 @@ namespace Authoring.Unit
 
 
                 AddComponent<UnitTargetPosUIID>(entity);
+
+                AddComponent(entity, new BaseDmg
+                {
+                    Value = 1,
+                });
+                AddComponent(entity, new BaseWorkSpeed
+                {
+                    Value = 1f,
+                });
+
+                AddComponent(entity, new WorkTimeCounterSecond
+                {
+                    Value = 0f,
+                });
+
+                AddComponent<IsUnitWorkingTag>(entity);
+                SetComponentEnabled<IsUnitWorkingTag>(entity, false);
+
+                ResourceWalletHelper.AddResourceWalletToEntity(this, entity);
+                AddComponent<WalletChangedTag>(entity);
+                SetComponentEnabled<WalletChangedTag>(entity, false);
+
+                AddComponent(entity, new AnimatorData
+                {
+                    Value = new()
+                    {
+                        Value = "",
+                        ValueChanged = true,
+                    }
+                });
 
             }
         }

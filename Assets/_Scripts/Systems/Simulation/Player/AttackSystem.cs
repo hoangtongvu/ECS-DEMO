@@ -26,7 +26,6 @@ namespace Systems.Simulation.Player
             this.RequireForUpdate<DmgValue>();
             this.RequireForUpdate<AttackData>();
             this.RequireForUpdate<AttackInput>();
-            this.RequireForUpdate<AnimationClipInfoElement>();
             this.RequireForUpdate<PlayerTag>();
             this.RequireForUpdate<AnimatorData>();
         }
@@ -37,22 +36,16 @@ namespace Systems.Simulation.Player
             PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
 
-            foreach (var (transformRef, hitboxRef, dmgValueRef, attackDataRef, attackInputRef, clipInfos) in
+            foreach (var (transformRef, hitboxRef, dmgValueRef, attackDataRef, attackInputRef) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
                     , RefRO<HitBox>
                     , RefRO<DmgValue>
                     , RefRW<AttackData>
-                    , RefRO<AttackInput>
-                    , DynamicBuffer<AnimationClipInfoElement>>()
+                    , RefRO<AttackInput>>()
                     .WithAll<PlayerTag>())
             {
 
-                if (clipInfos.IsEmpty)
-                {
-                    UnityEngine.Debug.LogError("clipInfos.IsEmpty");
-                    continue;
-                }
 
                 if (attackDataRef.ValueRO.isAttacking)
                 {

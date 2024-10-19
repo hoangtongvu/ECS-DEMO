@@ -28,6 +28,7 @@ namespace Systems.Simulation.Unit
                     RefRW<UnitIdleTimeCounter>
                     , EnabledRefRW<CanMoveEntityTag>>()
                     .WithAll<IsAliveTag>()
+                    .WithDisabled<IsUnitWorkingTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                     .WithEntityAccess())
             {

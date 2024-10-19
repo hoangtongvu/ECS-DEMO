@@ -1,8 +1,7 @@
 using Components.GameResource;
-using Core.GameResource;
-using System;
 using Unity.Entities;
 using UnityEngine;
+using Utilities.Helpers;
 
 namespace Authoring.GameResource
 {
@@ -16,24 +15,16 @@ namespace Authoring.GameResource
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                int length = Enum.GetNames(typeof(ResourceType)).Length;
+                var resourceWallet = ResourceWalletHelper.AddResourceWalletToEntity(this, entity);
+                int walletLength = resourceWallet.Length;
 
-                var resourceWallet = AddBuffer<ResourceWalletElement>(entity);
-
-                for (int i = 0; i < length; i++)
+                for (int i = 0; i < walletLength; i++)
                 {
-                    var type = (ResourceType) i;
-
-                    resourceWallet.Add(new ResourceWalletElement
-                    {
-                        Type = type,
-                        Quantity = 10,
-                    });
-
+                    resourceWallet.ElementAt(i).Quantity = 10;
                 }
 
-                // AddBuffer<ResourceWalletChangedElement>(entity);
-                AddComponent<WalletChanged>(entity);
+                AddComponent<WalletChangedTag>(entity);
+                SetComponentEnabled<WalletChangedTag>(entity, false);
 
             }
         }

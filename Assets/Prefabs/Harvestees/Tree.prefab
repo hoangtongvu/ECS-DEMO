@@ -14,8 +14,6 @@ GameObject:
   - component: {fileID: 8068611641616439932}
   - component: {fileID: 7113761027316669289}
   - component: {fileID: 7988040591970155973}
-  - component: {fileID: 9074745702988397860}
-  - component: {fileID: 8122329542973511330}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Untagged
@@ -136,27 +134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d915081c6b6c58429ecfc498b00eba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9074745702988397860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7309894390091400788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5352455240847f74fb5a53e73f5c565f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8122329542973511330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7309894390091400788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: decd4a089a413b54fae79cb4ceca7c2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  harvesteeProfileId:
+    HarvesteeType: 1
+    LocalIndex: 0

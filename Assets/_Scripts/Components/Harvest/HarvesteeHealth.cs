@@ -18,4 +18,9 @@ namespace Components.Harvest
     {
 
     }
+
+    public struct DropResourceHpThreshold : IComponentData
+    {
+        public uint Value;
+    }
 }

@@ -66,13 +66,23 @@ namespace Systems.Simulation.Tool
                     .WithAll<DerelictToolTag>())
             {
 
-                foreach (var (unitTransformRef, targetEntityRef, targetPosRef, moveCommandElementRef, unitIdRef, unitEntity) in
+                foreach (var (
+                    unitTransformRef
+                    , targetEntityRef
+                    , targetPosRef
+                    , moveCommandElementRef
+                    , unitIdRef
+                    , interactingEntityRef
+                    , interactionTypeICDRef
+                    , unitEntity) in
                     SystemAPI.Query<
                         RefRO<LocalTransform>
                         , RefRW<TargetEntity>
                         , RefRW<TargetPosition>
                         , RefRW<MoveCommandElement>
-                        , RefRO<UnitId>>()
+                        , RefRO<UnitId>
+                        , RefRW<InteractingEntity>
+                        , RefRW<InteractionTypeICD>>()
                         .WithAll<JoblessUnitTag>()
                         .WithEntityAccess())
                 {
@@ -87,6 +97,8 @@ namespace Systems.Simulation.Tool
                             commandSourceMap.Value
                             , unitIdRef.ValueRO.UnitType
                             , ref moveCommandElementRef.ValueRW
+                            , ref interactingEntityRef.ValueRW
+                            , ref interactionTypeICDRef.ValueRW
                             , MoveCommandSource.ToolCall
                             , unitIdRef.ValueRO.LocalIndex);
 

@@ -23,28 +23,20 @@ namespace Systems.Simulation.Player
         public void OnUpdate(ref SystemState state)
         {
 
-            var setAttackInputJob = new SetAttackInputJob
+            bool hardwareInputState = SystemAPI.GetSingleton<InputData>().LeftMouseData.Down;
+
+            foreach (var (attackDataRef, attackInputRef) in
+                SystemAPI.Query<
+                    RefRO<AttackData>
+                    , RefRW<AttackInput>>())
             {
-                hardwareInputState = SystemAPI.GetSingleton<InputData>().LeftMouseData.Down,
-            };
-
-            setAttackInputJob.ScheduleParallel();
-
-        }
-
-        [BurstCompile]
-        private partial struct SetAttackInputJob : IJobEntity
-        {
-            public bool hardwareInputState;
-
-            void Execute(
-                in AttackData attackData
-                , ref AttackInput attackInput)
-            {
-                attackInput.IsAttackable = this.hardwareInputState && !attackData.isAttacking;
+                attackInputRef.ValueRW.IsAttackable = hardwareInputState && !attackDataRef.ValueRO.isAttacking;
             }
 
+
         }
+
+
 
     }
 }
