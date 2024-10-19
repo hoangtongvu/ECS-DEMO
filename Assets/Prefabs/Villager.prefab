@@ -148,6 +148,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitType: 1
+  presenterPrefabId:
+    PresenterType: 2
+    LocalIndex: 0
   localIndex: 0
   maxHp: 100
   currentHp: 100
