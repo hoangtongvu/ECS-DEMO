@@ -11,8 +11,12 @@ namespace Systems.Initialization.Misc.Presenter
     public partial class SpawnPresenterSystem : SystemBase
     {
 
+        private Transform presentersHolder;
+
         protected override void OnCreate()
         {
+            this.CreatePresentersHolder();
+
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     NeedSpawnPresenterTag
@@ -45,7 +49,8 @@ namespace Systems.Initialization.Misc.Presenter
                 var newPresenter = GameObject.Instantiate(
                     presenterPrefab.Value
                     , transformRef.ValueRO.Position
-                    , transformRef.ValueRO.Rotation);
+                    , transformRef.ValueRO.Rotation
+                    , this.presentersHolder);
 
                 presenterRef.ValueRW.Value = newPresenter;
 
@@ -54,6 +59,10 @@ namespace Systems.Initialization.Misc.Presenter
 
         }
 
+        private void CreatePresentersHolder()
+        {
+            this.presentersHolder = new GameObject("PresentersHolder").transform;
+        }
 
     }
 
