@@ -19,10 +19,14 @@ namespace Systems.Presentation.Misc.Presenter
                 .Build();
 
             this.RequireForUpdate(query0);
+            this.RequireForUpdate<PresentersHolderGO>();
         }
 
         protected override void OnUpdate()
         {
+            var presentersHolder = SystemAPI.GetSingleton<PresentersHolderGO>();
+
+            if (!presentersHolder.Value.Value.gameObject.activeSelf) return;
 
             foreach (var (animDataRef, presenterRef) in
                 SystemAPI.Query<
