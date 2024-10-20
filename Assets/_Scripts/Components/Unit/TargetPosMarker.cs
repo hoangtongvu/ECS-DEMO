@@ -11,4 +11,9 @@ namespace Components.Unit
         public Entity Value;
     }
 
+    public struct TargetPosMarkerHolder : IComponentData
+    {
+        public Entity Value;
+    }
+
 }

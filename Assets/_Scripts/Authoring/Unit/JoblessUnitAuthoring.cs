@@ -134,6 +134,7 @@ namespace Authoring.Unit
 
 
                 AddComponent<UnitTargetPosUIID>(entity);
+                AddComponent<TargetPosMarkerHolder>(entity);
 
                 AddComponent(entity, new BaseDmg
                 {

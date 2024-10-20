@@ -1,88 +1,88 @@
 using Unity.Entities;
 using Components.Unit.UnitSelection;
-using Utilities.Helpers;
-using Components.ComponentMap;
-using Core.UI.Identification;
 using Unity.Mathematics;
 using Components;
 using Unity.Physics;
 using Core.Utilities.Extensions;
 using Core;
 using Components.Unit;
+using Unity.Transforms;
+using Unity.Burst;
 
 namespace Systems.Presentation.Unit
 {
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public partial class TargetPosMarkerUISpawnSystem : SystemBase
+    [BurstCompile]
+    public partial struct TargetPosMarkerUISpawnSystem : ISystem
     {
 
-        protected override void OnCreate()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     TargetPosition
-                    , UnitTargetPosUIID
+                    , TargetPosMarkerHolder
                     , NewlySelectedUnitTag
                     , NewlyDeselectedUnitTag>()
                 .Build();
 
-            this.RequireForUpdate(query);
+            state.RequireForUpdate(query);
+            state.RequireForUpdate<TargetPosMarkerPrefab>();
         }
 
-
-        protected override void OnUpdate()
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
+            var targetPosMarkerPrefab = SystemAPI.GetSingleton<TargetPosMarkerPrefab>();
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
-            foreach (var (targetPosRef, markerUIIDRef) in
+            var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
+                .CreateCommandBuffer(state.WorldUnmanaged);
+
+
+            foreach (var (targetPosRef, targetPosMarkerHolderRef) in
                 SystemAPI.Query<
                     RefRO<TargetPosition>
-                    , RefRW<UnitTargetPosUIID>>()
+                    , RefRW<TargetPosMarkerHolder>>()
                     .WithAll<NewlySelectedUnitTag>())
             {
                 //UnityEngine.Debug.Log("Unit just selected");
 
-                this.ShowMarker(
-                    in physicsWorld
-                    , spawnedUIMap
-                    , uiPoolMap
-                    , UIType.UnitTargetPosMark
+                this.SpawnMarkers(
+                    ref state
+                    , in physicsWorld
+                    , in targetPosMarkerPrefab.Value
                     , targetPosRef.ValueRO.Value
-                    , ref markerUIIDRef.ValueRW);
+                    , ref targetPosMarkerHolderRef.ValueRW);
 
             }
 
-            foreach (var markerUIIDRef in
+            foreach (var targetPosMarkerHolderRef in
                 SystemAPI.Query<
-                    RefRW<UnitTargetPosUIID>>()
+                    RefRW<TargetPosMarkerHolder>>()
                     .WithAll<NewlyDeselectedUnitTag>())
             {
                 //UnityEngine.Debug.Log("Unit just deselected");
 
-                this.HideMarker(
-                    spawnedUIMap
-                    , uiPoolMap
-                    , ref markerUIIDRef.ValueRW);
+                this.DestroyMarkers(
+                    in ecb
+                    , ref targetPosMarkerHolderRef.ValueRW);
+
             }
 
         }
 
-        private void ShowMarker(
-            in PhysicsWorldSingleton physicsWorld
-            , SpawnedUIMap spawnedUIMap
-            , UIPoolMap uiPoolMap
-            , UIType uiType
+        [BurstCompile]
+        private void SpawnMarkers(
+            ref SystemState state
+            , in PhysicsWorldSingleton physicsWorld
+            , in Entity markerPrefab
             , float3 rawPos
-            , ref UnitTargetPosUIID markerUIID)
+            , ref TargetPosMarkerHolder targetPosMarkerHolder)
         {
-            // Take raw pos from TargetPos
-            // set that raw pos's y = 100f
-            // Shoot ray from new pos -> get pos on ground
-            // add 0.05f to y of pos on ground -> it is the spawn pos
-            
+
             rawPos.y = 100f;
 
             bool hit = this.CastRay(
@@ -93,20 +93,16 @@ namespace Systems.Presentation.Unit
             if (!hit) return;
 
             float3 spawnPos = raycastHit.Position.Add(y: 0.05f);
+            var markerEntity = state.EntityManager.Instantiate(markerPrefab);
 
-            var baseUICtrl =
-                UISpawningHelper.Spawn(
-                    uiPoolMap
-                    , spawnedUIMap
-                    , uiType
-                    , spawnPos);
+            var transformRef = SystemAPI.GetComponentRW<LocalTransform>(markerEntity);
+            transformRef.ValueRW.Position = spawnPos;
 
-            markerUIID.Value = baseUICtrl.UIID;
-            baseUICtrl.gameObject.SetActive(true);
+            targetPosMarkerHolder.Value = markerEntity;
 
         }
 
-
+        [BurstCompile]
         private bool CastRay(
             in PhysicsWorldSingleton physicsWorld
             , float3 startPos
@@ -129,14 +125,13 @@ namespace Systems.Presentation.Unit
             return physicsWorld.CastRay(raycastInput, out raycastHit);
         }
 
-
-        private void HideMarker(
-            SpawnedUIMap spawnedUIMap
-            , UIPoolMap uiPoolMap
-            , ref UnitTargetPosUIID markerUIID)
+        [BurstCompile]
+        private void DestroyMarkers(
+            in EntityCommandBuffer ecb
+            , ref TargetPosMarkerHolder targetPosMarkerHolder)
         {
-            UISpawningHelper.Despawn(uiPoolMap, spawnedUIMap, markerUIID.Value);
-            markerUIID.Value = default;
+            ecb.DestroyEntity(targetPosMarkerHolder.Value);
+            targetPosMarkerHolder.Value = Entity.Null;
         }
 
     }

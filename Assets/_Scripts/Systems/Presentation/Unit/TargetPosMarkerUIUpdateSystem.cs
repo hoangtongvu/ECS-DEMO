@@ -1,114 +1,126 @@
 using Unity.Entities;
 using Components.Unit.UnitSelection;
-using Components.ComponentMap;
-using Core.UI.Identification;
 using Unity.Mathematics;
 using Components;
 using Unity.Physics;
 using Core.Utilities.Extensions;
 using Core;
 using Components.Unit;
+using Unity.Transforms;
+using Unity.Burst;
+using Unity.Collections;
 
 namespace Systems.Presentation.Unit
 {
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateAfter(typeof(TargetPosMarkerUISpawnSystem))]
-    public partial class TargetPosMarkerUIUpdateSystem : SystemBase
+    [BurstCompile]
+    public partial struct TargetPosMarkerUIUpdateSystem : ISystem
     {
 
-        protected override void OnCreate()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     TargetPosition
-                    , UnitTargetPosUIID
                     , TargetPosChangedTag
                     , UnitSelectedTag>()
                 .Build();
 
-            this.RequireForUpdate(query);
+            state.RequireForUpdate(query);
+        }
+
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
+        {
+            var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+
+            state.Dependency =
+                new UpdateMarkerJob
+                {
+                    PhysicsWorld = physicsWorld,
+                    TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
+                }.ScheduleParallel(state.Dependency);
+
         }
 
 
-        protected override void OnUpdate()
+
+        [WithAll(typeof(UnitSelectedTag))]
+        [WithAll(typeof(TargetPosChangedTag))]
+        [BurstCompile]
+        private partial struct UpdateMarkerJob : IJobEntity
         {
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+            [ReadOnly]
+            public PhysicsWorldSingleton PhysicsWorld;
 
-            foreach (var (targetPosRef, markerUIIDRef) in
-                SystemAPI.Query<
-                    RefRO<TargetPosition>
-                    , RefRO<UnitTargetPosUIID>>()
-                    .WithAll<TargetPosChangedTag>()
-                    .WithAll<UnitSelectedTag>())
+            [NativeDisableParallelForRestriction]
+            public ComponentLookup<LocalTransform> TransformLookup;
+
+            [BurstCompile]
+            void Execute(
+                TargetPosition targetPos
+                , TargetPosMarkerHolder targetPosMarkerHolder)
             {
+                bool canGetTargetMarkerPos =
+                    this.TryGetTargetMarkerPos(
+                        in PhysicsWorld
+                        , targetPos.Value
+                        , out float3 targetMarkerPos);
 
-                UIID uiID = markerUIIDRef.ValueRO.Value;
-                bool foundIdInMap = spawnedUIMap.Value.TryGetValue(uiID, out var baseUICtrl);
+                if (!canGetTargetMarkerPos) return;
 
-                if (!foundIdInMap)
-                {
-                    UnityEngine.Debug.LogError($"SpawnedUIMap has no Element with id = {uiID}");
-                }
-
-                bool canGetSpawnPos =
-                    this.TryGetSpawnPos(
-                        in physicsWorld
-                        , targetPosRef.ValueRO.Value
-                        , out float3 spawnPos);
-
-                if (!canGetSpawnPos) continue;
-
-                baseUICtrl.transform.position = spawnPos;
+                var transformRef = this.TransformLookup.GetRefRWOptional(targetPosMarkerHolder.Value);
+                transformRef.ValueRW.Position = targetMarkerPos;
 
             }
 
-
-        }
-
-        private bool TryGetSpawnPos(
+            [BurstCompile]
+            private bool TryGetTargetMarkerPos(
             in PhysicsWorldSingleton physicsWorld
             , float3 rawPos
-            , out float3 spawnPos)
-        {
-            spawnPos = float3.zero;
-            rawPos.y = 100f;
-
-            bool hit = this.CastRay(
-                in physicsWorld
-                , rawPos
-                , out var raycastHit);
-
-            if (!hit) return false;
-
-            spawnPos = raycastHit.Position.Add(y: 0.05f);
-            return true;
-        }
-
-
-        private bool CastRay(
-            in PhysicsWorldSingleton physicsWorld
-            , float3 startPos
-            , out Unity.Physics.RaycastHit raycastHit)
-        {
-            float3 rayStart = startPos;
-            float3 rayEnd = startPos.Add(y: -500f);
-
-            RaycastInput raycastInput = new()
+            , out float3 targetMarkerPos)
             {
-                Start = rayStart,
-                End = rayEnd,
-                Filter = new CollisionFilter
+                targetMarkerPos = float3.zero;
+                rawPos.y = 100f;
+
+                bool hit = this.CastRay(
+                    in physicsWorld
+                    , rawPos
+                    , out var raycastHit);
+
+                if (!hit) return false;
+
+                targetMarkerPos = raycastHit.Position.Add(y: 0.05f);
+                return true;
+            }
+
+            [BurstCompile]
+            private bool CastRay(
+                in PhysicsWorldSingleton physicsWorld
+                , float3 startPos
+                , out Unity.Physics.RaycastHit raycastHit)
+            {
+                float3 rayStart = startPos;
+                float3 rayEnd = startPos.Add(y: -500f);
+
+                RaycastInput raycastInput = new()
                 {
-                    BelongsTo = (uint) CollisionLayer.Ground,
-                    CollidesWith = (uint) CollisionLayer.Ground,
-                },
-            };
+                    Start = rayStart,
+                    End = rayEnd,
+                    Filter = new CollisionFilter
+                    {
+                        BelongsTo = (uint)CollisionLayer.Ground,
+                        CollidesWith = (uint)CollisionLayer.Ground,
+                    },
+                };
 
-            return physicsWorld.CastRay(raycastInput, out raycastHit);
+                return physicsWorld.CastRay(raycastInput, out raycastHit);
+            }
+
         }
-
 
     }
 }
