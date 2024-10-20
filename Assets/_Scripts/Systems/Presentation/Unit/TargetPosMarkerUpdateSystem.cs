@@ -14,9 +14,9 @@ namespace Systems.Presentation.Unit
 {
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    [UpdateAfter(typeof(TargetPosMarkerUISpawnSystem))]
+    [UpdateAfter(typeof(TargetPosMarkerSpawnSystem))]
     [BurstCompile]
-    public partial struct TargetPosMarkerUIUpdateSystem : ISystem
+    public partial struct TargetPosMarkerUpdateSystem : ISystem
     {
 
         [BurstCompile]

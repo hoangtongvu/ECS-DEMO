@@ -14,7 +14,7 @@ namespace Systems.Presentation.Unit
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [BurstCompile]
-    public partial struct TargetPosMarkerUISpawnSystem : ISystem
+    public partial struct TargetPosMarkerSpawnSystem : ISystem
     {
 
         [BurstCompile]
@@ -50,7 +50,7 @@ namespace Systems.Presentation.Unit
             {
                 //UnityEngine.Debug.Log("Unit just selected");
 
-                this.SpawnMarkers(
+                this.SpawnMarker(
                     ref state
                     , in physicsWorld
                     , in targetPosMarkerPrefab.Value
@@ -66,7 +66,7 @@ namespace Systems.Presentation.Unit
             {
                 //UnityEngine.Debug.Log("Unit just deselected");
 
-                this.DestroyMarkers(
+                this.DestroyMarker(
                     in ecb
                     , ref targetPosMarkerHolderRef.ValueRW);
 
@@ -75,7 +75,7 @@ namespace Systems.Presentation.Unit
         }
 
         [BurstCompile]
-        private void SpawnMarkers(
+        private void SpawnMarker(
             ref SystemState state
             , in PhysicsWorldSingleton physicsWorld
             , in Entity markerPrefab
@@ -126,7 +126,7 @@ namespace Systems.Presentation.Unit
         }
 
         [BurstCompile]
-        private void DestroyMarkers(
+        private void DestroyMarker(
             in EntityCommandBuffer ecb
             , ref TargetPosMarkerHolder targetPosMarkerHolder)
         {
