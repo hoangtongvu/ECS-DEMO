@@ -2,6 +2,7 @@ using Components.Misc.Presenter;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
+using Utilities;
 
 namespace Systems.Initialization.Misc.Presenter
 {
@@ -10,8 +11,6 @@ namespace Systems.Initialization.Misc.Presenter
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class SpawnPresenterSystem : SystemBase
     {
-
-        private Transform presentersHolder;
 
         protected override void OnCreate()
         {
@@ -31,6 +30,7 @@ namespace Systems.Initialization.Misc.Presenter
         protected override void OnUpdate()
         {
             var presenterPrefabMap = SystemAPI.GetSingleton<PresenterPrefabMap>();
+            var presentersHolder = SystemAPI.GetSingleton<PresentersHolderGO>();
 
             foreach (var (needSpawnPresenterTag, transformRef, presenterIdRef, presenterRef) in
                 SystemAPI.Query<
@@ -50,18 +50,26 @@ namespace Systems.Initialization.Misc.Presenter
                     presenterPrefab.Value
                     , transformRef.ValueRO.Position
                     , transformRef.ValueRO.Rotation
-                    , this.presentersHolder);
+                    , presentersHolder.Value);
 
                 presenterRef.ValueRW.Value = newPresenter;
 
                 needSpawnPresenterTag.ValueRW = false;
+
             }
 
         }
 
         private void CreatePresentersHolder()
         {
-            this.presentersHolder = new GameObject("PresentersHolder").transform;
+            var holderGO = new PresentersHolderGO
+            {
+                Value = new GameObject("PresentersHolder").transform,
+            };
+
+            SingletonUtilities.GetInstance(this.EntityManager)
+                .AddOrSetComponentData(holderGO);
+
         }
 
     }
