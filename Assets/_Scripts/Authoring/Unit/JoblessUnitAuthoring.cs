@@ -133,7 +133,7 @@ namespace Authoring.Unit
                 SetComponentEnabled<NewlyDeselectedUnitTag>(entity, false);
 
 
-                AddComponent<UnitTargetPosUIID>(entity);
+                AddComponent<TargetPosMarkerHolder>(entity);
 
                 AddComponent(entity, new BaseDmg
                 {

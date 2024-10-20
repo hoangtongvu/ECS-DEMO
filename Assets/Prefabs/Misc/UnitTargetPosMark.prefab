@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1854090349536225964}
   - component: {fileID: 8738831060818663353}
-  - component: {fileID: 7903560756730561265}
+  - component: {fileID: 7180388884555696286}
   m_Layer: 0
   m_Name: UnitTargetPosMark
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7903560756730561265
+--- !u!114 &7180388884555696286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,11 +94,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6790264369496058937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1c6a36d1363ba4faead77fb5d0a369, type: 3}
+  m_Script: {fileID: 11500000, guid: 0108791218662614b86b8eb4cf07e6e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIID:
-    Type: 5
-    LocalId: 0
-  CanvasType: 1
-  CanvasAnchorPreset: 0
