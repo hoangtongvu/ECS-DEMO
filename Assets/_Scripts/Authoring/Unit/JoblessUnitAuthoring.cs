@@ -134,6 +134,7 @@ namespace Authoring.Unit
 
 
                 AddComponent<TargetPosMarkerHolder>(entity);
+                AddComponent<SelectedUnitMarkerHolder>(entity);
 
                 AddComponent(entity, new BaseDmg
                 {
