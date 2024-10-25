@@ -15,7 +15,13 @@ namespace Systems.Initialization.Unit
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<TargetPosMarkerTag>();
+            var prefabEntityQuery = SystemAPI.QueryBuilder()
+                .WithAll<TargetPosMarkerTag>()
+                .WithOptions(EntityQueryOptions.IncludePrefab)
+                .Build();
+
+            state.RequireForUpdate(prefabEntityQuery);
+
         }
 
         [BurstCompile]
@@ -23,8 +29,12 @@ namespace Systems.Initialization.Unit
         {
             state.Enabled = false;
 
-            var prefabEntity = SystemAPI.GetSingletonEntity<TargetPosMarkerTag>();
-            state.EntityManager.AddComponent<Prefab>(prefabEntity);
+            var prefabEntityQuery = SystemAPI.QueryBuilder()
+                .WithAll<TargetPosMarkerTag>()
+                .WithOptions(EntityQueryOptions.IncludePrefab)
+                .Build();
+
+            var prefabEntity = prefabEntityQuery.GetSingletonEntity();
 
             SingletonUtilities.GetInstance(state.EntityManager)
                 .AddOrSetComponentData(new TargetPosMarkerPrefab

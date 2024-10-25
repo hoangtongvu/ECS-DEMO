@@ -15,7 +15,16 @@ namespace Systems.Initialization.Unit
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<SelectedUnitMarkerTag>();
+            // We don't Add prefab entity in OnCreate() due to async sub scene loading.
+            // Create duplicated prefabEntityQuery because the system only run once, caching the variable of query is redundant.
+
+            var prefabEntityQuery = SystemAPI.QueryBuilder()
+                .WithAll<SelectedUnitMarkerTag>()
+                .WithOptions(EntityQueryOptions.IncludePrefab)
+                .Build();
+
+            state.RequireForUpdate(prefabEntityQuery);
+
         }
 
         [BurstCompile]
@@ -23,8 +32,12 @@ namespace Systems.Initialization.Unit
         {
             state.Enabled = false;
 
-            var prefabEntity = SystemAPI.GetSingletonEntity<SelectedUnitMarkerTag>();
-            state.EntityManager.AddComponent<Prefab>(prefabEntity);
+            var prefabEntityQuery = SystemAPI.QueryBuilder()
+                .WithAll<SelectedUnitMarkerTag>()
+                .WithOptions(EntityQueryOptions.IncludePrefab)
+                .Build();
+
+            var prefabEntity = prefabEntityQuery.GetSingletonEntity();
 
             SingletonUtilities.GetInstance(state.EntityManager)
                 .AddOrSetComponentData(new SelectedUnitMarkerPrefab
