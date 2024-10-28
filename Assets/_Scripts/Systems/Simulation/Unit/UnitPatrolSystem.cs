@@ -11,6 +11,9 @@ using Utilities.Helpers;
 using Unity.Collections;
 using Components.MyEntity;
 using Unity.Transforms;
+using Utilities;
+using Components.Unit.Reaction;
+using Core.Unit.Reaction;
 
 namespace Systems.Simulation.Unit
 {
@@ -25,6 +28,7 @@ namespace Systems.Simulation.Unit
         public void OnCreate(ref SystemState state)
         {
             this.rand = new(1);
+            this.CreatePatrolRandomValuesMap(ref state);
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -44,31 +48,72 @@ namespace Systems.Simulation.Unit
         {
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var randomValuesMap = SystemAPI.GetSingleton<PatrolRandomValuesMap>();
 
-            foreach (var (idleTimeCounterRef, needInitWalkTag) in
+            randomValuesMap.Value.Clear();
+
+            foreach (var (idleTimeCounterRef, needInitWalkTag, entity) in
                 SystemAPI.Query<
                     RefRW<UnitIdleTimeCounter>
                     , EnabledRefRW<NeedsInitWalkTag>>()
                     .WithAll<IsAliveTag>()
                     .WithDisabled<IsUnitWorkingTag>()
+                    .WithEntityAccess()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                if (idleTimeCounterRef.ValueRO.Value >= gameGlobalConfigs.Value.UnitIdleMaxDuration)
-                {
-                    idleTimeCounterRef.ValueRW.Value = 0;
-                    needInitWalkTag.ValueRW = true;
-                }
+                bool idleTimeExceeded = idleTimeCounterRef.ValueRO.Value >= gameGlobalConfigs.Value.UnitIdleMaxDuration;
+                if (!idleTimeExceeded) continue;
+
+                idleTimeCounterRef.ValueRW.Value = 0;
+                needInitWalkTag.ValueRW = true;
+
+                this.AddRandomValuesIntoMap(
+                    in randomValuesMap
+                    , in entity
+                    , gameGlobalConfigs.Value.UnitWalkMinDistance
+                    , gameGlobalConfigs.Value.UnitWalkMaxDistance);
 
             }
 
             state.Dependency = new SetPatrolJob
             {
                 moveCommandSourceMap = moveCommandSourceMap.Value,
-                Rand = new Random(this.rand.NextUInt(1, 15)),
+                RandomizedValueMap = randomValuesMap.Value,
                 UnitWalkMinDistance = gameGlobalConfigs.Value.UnitWalkMinDistance,
                 UnitWalkMaxDistance = gameGlobalConfigs.Value.UnitWalkMaxDistance,
                 UnitWalkSpeed = gameGlobalConfigs.Value.UnitWalkSpeed,
             }.ScheduleParallel(state.Dependency);
+
+        }
+
+        [BurstCompile]
+        private void CreatePatrolRandomValuesMap(ref SystemState state)
+        {
+            var randomValuesMap = new PatrolRandomValuesMap
+            {
+                Value = new(30, Allocator.Persistent),
+            };
+
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(randomValuesMap);
+
+        }
+
+        [BurstCompile]
+        private void AddRandomValuesIntoMap(
+            in PatrolRandomValuesMap randomValuesMap
+            , in Entity keyEntity
+            , float minWalkDistance
+            , float maxWalkDistance)
+        {
+            float2 randomDir = this.rand.NextFloat2Direction();
+            float randomDis = this.rand.NextFloat(minWalkDistance, maxWalkDistance);
+
+            randomValuesMap.Value.Add(keyEntity, new()
+            {
+                RandomDir = randomDir,
+                RandomDis = randomDis,
+            });
 
         }
 
@@ -78,7 +123,7 @@ namespace Systems.Simulation.Unit
         private partial struct SetPatrolJob : IJobEntity
         {
             [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
-            [ReadOnly] public Random Rand;
+            [ReadOnly] public NativeHashMap<Entity, PatrolRandomValues> RandomizedValueMap;
             [ReadOnly] public float UnitWalkMinDistance;
             [ReadOnly] public float UnitWalkMaxDistance;
             [ReadOnly] public float UnitWalkSpeed;
@@ -96,7 +141,8 @@ namespace Systems.Simulation.Unit
                 , ref TargetPosition targetPosition
                 , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
                 , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
-                , ref AnimatorData animatorData)
+                , ref AnimatorData animatorData
+                , Entity entity)
             {
                 if (!needInitWalkTag.ValueRO) return;
                 needInitWalkTag.ValueRW = false;
@@ -113,13 +159,9 @@ namespace Systems.Simulation.Unit
 
                 if (!canOverrideCommand) return;
 
-                // Get a random direction
-                float2 randomDir = this.Rand.NextFloat2Direction();
+                var randomizedValue = this.RandomizedValueMap[entity];
 
-                // Generate a random distance between the min and max distance
-                float randomDis = this.Rand.NextFloat(this.UnitWalkMinDistance, this.UnitWalkMaxDistance);
-
-                float2 tempVector2 = randomDir * randomDis;
+                float2 tempVector2 = randomizedValue.RandomDir * randomizedValue.RandomDis;
 
                 // Calculate the random target position
                 float3 randomPoint = transform.Position + new float3(tempVector2.x, 0, tempVector2.y);
