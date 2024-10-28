@@ -6,12 +6,12 @@ using Components.Damage;
 using Utilities.Extensions;
 using Components.Unit.Reaction;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Simulation.Unit.Reaction
 {
 
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [BurstCompile]
-    public partial struct UnitIdleSystem : ISystem
+    public partial struct IdleReactionSystem : ISystem
     {
 
         [BurstCompile]
