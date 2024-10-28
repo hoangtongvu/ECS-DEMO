@@ -44,6 +44,8 @@ namespace Authoring.Unit
                 SetComponentEnabled<IdleStartedTag>(entity, false);
                 AddComponent<WorkStartedTag>(entity);
                 SetComponentEnabled<WorkStartedTag>(entity, false);
+                AddComponent<WalkStartedTag>(entity);
+                SetComponentEnabled<WalkStartedTag>(entity, false);
 
                 AddComponent(entity, new PresenterPrefabIdHolder
                 {

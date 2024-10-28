@@ -35,7 +35,6 @@ namespace Systems.Simulation.Unit
                     IsAliveTag
                     , IsUnitWorkingTag
                     , UnitIdleTimeCounter
-                    , AnimatorData
                     , NeedsInitWalkTag>()
                 .Build();
 
@@ -141,7 +140,6 @@ namespace Systems.Simulation.Unit
                 , ref TargetPosition targetPosition
                 , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
                 , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
-                , ref AnimatorData animatorData
                 , Entity entity)
             {
                 if (!needInitWalkTag.ValueRO) return;
@@ -176,9 +174,6 @@ namespace Systems.Simulation.Unit
                 targetPosChangedTag.ValueRW = true;
 
                 canMoveEntityTag.ValueRW = true;
-
-                animatorData.Value.Value = "Walking_A";
-                animatorData.Value.ValueChanged = true;
 
             }
 
