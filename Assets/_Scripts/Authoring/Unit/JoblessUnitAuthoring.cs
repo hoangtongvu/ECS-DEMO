@@ -106,8 +106,8 @@ namespace Authoring.Unit
                     Value = 0,
                 });
 
-                AddComponent<NeedsInitWalkTag>(entity);
-                SetComponentEnabled<NeedsInitWalkTag>(entity, false);
+                AddComponent<NeedInitWalkTag>(entity);
+                SetComponentEnabled<NeedInitWalkTag>(entity, false);
 
 
                 AddComponent(entity, new UnitToolHolder

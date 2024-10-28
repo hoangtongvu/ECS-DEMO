@@ -35,7 +35,7 @@ namespace Systems.Simulation.Unit
                     IsAliveTag
                     , IsUnitWorkingTag
                     , UnitIdleTimeCounter
-                    , NeedsInitWalkTag>()
+                    , NeedInitWalkTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -54,7 +54,7 @@ namespace Systems.Simulation.Unit
             foreach (var (idleTimeCounterRef, needInitWalkTag, entity) in
                 SystemAPI.Query<
                     RefRW<UnitIdleTimeCounter>
-                    , EnabledRefRW<NeedsInitWalkTag>>()
+                    , EnabledRefRW<NeedInitWalkTag>>()
                     .WithAll<IsAliveTag>()
                     .WithDisabled<IsUnitWorkingTag>()
                     .WithEntityAccess()
@@ -130,7 +130,7 @@ namespace Systems.Simulation.Unit
 
             [BurstCompile]
             void Execute(
-                EnabledRefRW<NeedsInitWalkTag> needInitWalkTag
+                EnabledRefRW<NeedInitWalkTag> needInitWalkTag
                 , in UnitId unitId
                 , ref MoveCommandElement moveCommandElement
                 , ref InteractingEntity interactingEntity
