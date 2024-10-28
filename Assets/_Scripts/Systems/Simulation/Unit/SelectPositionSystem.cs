@@ -49,12 +49,12 @@ namespace Systems.Simulation.Unit
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
 
-            new SetTargetJob()
+            state.Dependency = new SetTargetJob()
             {
                 targetPosition = selectedPos,
                 unitRunSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
                 moveCommandSourceMap = moveCommandSourceMap.Value,
-            }.Run();
+            }.ScheduleParallel(state.Dependency);
 
         }
 

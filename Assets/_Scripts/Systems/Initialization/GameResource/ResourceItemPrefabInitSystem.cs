@@ -15,7 +15,13 @@ namespace Systems.Initialization.GameResource
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<ResourceItemICD>();
+            var prefabEntityQuery = SystemAPI.QueryBuilder()
+                .WithAll<ResourceItemICD>()
+                .WithOptions(EntityQueryOptions.IncludePrefab)
+                .Build();
+
+            state.RequireForUpdate(prefabEntityQuery);
+
         }
 
         [BurstCompile]
@@ -23,13 +29,17 @@ namespace Systems.Initialization.GameResource
         {
             state.Enabled = false;
 
-            var resourceItemEntity = SystemAPI.GetSingletonEntity<ResourceItemICD>();
-            state.EntityManager.AddComponent<Prefab>(resourceItemEntity);
+            var prefabEntityQuery = SystemAPI.QueryBuilder()
+                .WithAll<ResourceItemICD>()
+                .WithOptions(EntityQueryOptions.IncludePrefab)
+                .Build();
+
+            var prefabEntity = prefabEntityQuery.GetSingletonEntity();
 
             SingletonUtilities.GetInstance(state.EntityManager)
                 .AddOrSetComponentData(new ResourceItemEntityHolder
                 {
-                    Value = resourceItemEntity,
+                    Value = prefabEntity,
                 });
 
         }

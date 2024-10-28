@@ -8,6 +8,7 @@ using Components.MyEntity.EntitySpawning;
 using Components.Tool;
 using Components.Unit;
 using Components.Unit.MyMoveCommand;
+using Components.Unit.Reaction;
 using Components.Unit.UnitSelection;
 using Core.Misc.Presenter;
 using Core.MyEntity;
@@ -39,6 +40,14 @@ namespace Authoring.Unit
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
+                AddComponent<IdleStartedTag>(entity);
+                SetComponentEnabled<IdleStartedTag>(entity, false);
+                AddComponent<WorkStartedTag>(entity);
+                SetComponentEnabled<WorkStartedTag>(entity, false);
+                AddComponent<WalkStartedTag>(entity);
+                SetComponentEnabled<WalkStartedTag>(entity, false);
+                AddComponent<RunStartedTag>(entity);
+                SetComponentEnabled<RunStartedTag>(entity, false);
 
                 AddComponent(entity, new PresenterPrefabIdHolder
                 {
@@ -97,8 +106,8 @@ namespace Authoring.Unit
                     Value = 0,
                 });
 
-                AddComponent<NeedsInitWalkTag>(entity);
-                SetComponentEnabled<NeedsInitWalkTag>(entity, false);
+                AddComponent<NeedInitWalkTag>(entity);
+                SetComponentEnabled<NeedInitWalkTag>(entity, false);
 
 
                 AddComponent(entity, new UnitToolHolder
