@@ -16,6 +16,12 @@ namespace Systems.Simulation
         private float3 startPos;
         private Transform spriteTransform;
 
+        protected override void OnCreate()
+        {
+            this.RequireForUpdate<DragSelectionData>();
+            this.RequireForUpdate<UnityTransformMap>();
+        }
+
         protected override void OnStartRunning()
         {
             var transformMap = SystemAPI.ManagedAPI.GetSingleton<UnityTransformMap>();
@@ -30,10 +36,18 @@ namespace Systems.Simulation
                     },
                 }
                 , out this.spriteTransform);
+
         }
 
         protected override void OnUpdate()
         {
+            if (this.spriteTransform == null)
+            {
+                this.Enabled = false;
+                Debug.LogWarning($"Disabled {nameof(DragUIDrawSystem)} cause can't find spriteTransform");
+                return;
+            }
+
             var dragSelectionData = SystemAPI.GetSingleton<DragSelectionData>();
 
             if (!dragSelectionData.IsDragging)
@@ -57,6 +71,7 @@ namespace Systems.Simulation
 
             float3 tempScale = new(size.x, size.y, 0);
             this.spriteTransform.localScale = tempScale * 100;
+
         }
 
 

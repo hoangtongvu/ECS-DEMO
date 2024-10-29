@@ -57,7 +57,7 @@ namespace Systems.Initialization
                     uiPoolMap
                     , spawnedUIMap
                     , UIType.TopLeftPanel);
-            topLeftPanelManager.gameObject.SetActive(true);
+            topLeftPanelManager?.gameObject.SetActive(true);
         }
 
         private void SpawnResourceDisplays(
@@ -76,6 +76,8 @@ namespace Systems.Initialization
                     , spawnedUIMap
                     , UIType.ResourceDisplay);
 
+                if (resourceDisplay == null) continue;
+
                 resourceDisplay.gameObject.SetActive(true);
                 resourceDisplays.Add(resourceDisplay);
             }
@@ -83,6 +85,8 @@ namespace Systems.Initialization
 
         private void SetDisplayIcons(List<ResourceDisplayCtrl> resourceDisplays)
         {
+            if (resourceDisplays.Count == 0) return;
+
             var profilesManagerSO = Resources.Load<ResourceProfilesManagerSO>("Misc/ResourceProfilesManager");
 
             if (profilesManagerSO == null)

@@ -17,7 +17,7 @@ namespace Utilities.Helpers
         {
             if (!uiPoolMap.Value.TryGetValue(uiType, out var uiPoolMapValue))
             {
-                Debug.LogError($"Can't find UI prefab of type {uiType}");
+                Debug.LogWarning($"Can't find UI prefab of type {uiType}");
                 return null;
             }
 
