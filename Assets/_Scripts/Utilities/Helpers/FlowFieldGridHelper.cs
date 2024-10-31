@@ -1,5 +1,9 @@
+using Components.Misc.FlowField;
 using Core.Misc.FlowField;
+using Core.UI.FlowField.GridNodePresenter;
+using UnityEngine;
 using Unity.Mathematics;
+using Utilities.Extensions;
 
 namespace Utilities.Helpers
 {
@@ -22,18 +26,33 @@ namespace Utilities.Helpers
 
         }
 
-        public static int2 MapIndexToGridPos(int gridWidth, int mapIndex)
+        public static int2 MapIndexToGridPos(int gridMapWidth, int mapIndex)
         {
-            int x = mapIndex % gridWidth;     // Column index
-            int y = mapIndex / gridWidth;     // Row index
+            int x = mapIndex % gridMapWidth;     // Column index
+            int y = mapIndex / gridMapWidth;     // Row index
             return new int2(x, y);
         }
 
-        public static int GridPosToMapIndex(int gridWidth, int2 gridPos)
-        {
-            return gridPos.y * gridWidth + gridPos.x;
-        }
+        public static int GridPosToMapIndex(int gridMapWidth, int2 gridPos) => GridPosToMapIndex(gridMapWidth, gridPos.x, gridPos.y);
 
+        public static int GridPosToMapIndex(int gridMapWidth, int x, int y) => y * gridMapWidth + x;
+
+        public static void SyncValuesToNodePresenter(
+            in GridNodePresenterConfig presenterConfig
+            , GridNodePresenterCtrl presenterCtrl
+            , in FlowFieldGridNode node)
+        {
+            if (presenterConfig.ShowCost) presenterCtrl.CostText.SetCost(node.Cost);
+            else presenterCtrl.CostText.Clear();
+
+            if (presenterConfig.ShowBestCost) presenterCtrl.BestCostText.SetBestCost(node.BestCost);
+            else presenterCtrl.BestCostText.Clear();
+
+            if (presenterConfig.ShowDirectionVector) presenterCtrl.DirectionImage.SetDirection(node.DirectionVector);
+
+            if (node.IsImpassable()) presenterCtrl.BackgroundImage.SetColor(Color.red);
+
+        }
 
     }
 
