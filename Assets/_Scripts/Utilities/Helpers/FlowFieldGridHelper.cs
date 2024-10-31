@@ -67,7 +67,24 @@ namespace Utilities.Helpers
                 presenterCtrl.DirectionImage.Hide();
             }
 
-            if (!node.IsPassable()) presenterCtrl.BackgroundImage.SetColor(Color.red);
+            if (!node.IsPassable())
+            {
+                presenterCtrl.BackgroundImage.SetColor(Color.red);
+                return;
+            }
+
+            // Define a base color (e.g., green) and a target color (e.g., brown)
+            Color baseColor = Color.white;
+            Color targetColor = new Color(0.6f, 0.3f, 0.1f); // Brown color
+
+            // Define the maximum cost for scaling purposes
+            const float maxCost = 6f; // Adjust as needed
+
+            // Interpolate between the base color and the target color based on the node's cost
+            float t = Mathf.Clamp01((node.Cost - 1) / maxCost);
+            Color interpolatedColor = Color.Lerp(baseColor, targetColor, t);
+
+            presenterCtrl.BackgroundImage.SetColor(interpolatedColor);
 
         }
 
