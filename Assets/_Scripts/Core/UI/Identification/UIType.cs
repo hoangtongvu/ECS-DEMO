@@ -8,6 +8,7 @@ namespace Core.UI.Identification
 
         TopLeftPanel = 3,
         ResourceDisplay = 4,
+        GridNodePresenter = 5,
 
     }
 }
