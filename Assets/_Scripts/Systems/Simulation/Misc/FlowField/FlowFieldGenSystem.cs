@@ -64,6 +64,10 @@ namespace Systems.Simulation.Misc
 
                     int2 directionVector = minBestCostNodePos - currentNodePos;
 
+                    // Grid map with y-axis turns down instead of up in world coordinate system
+                    // so we need to reverse the y value of directionVector.
+                    directionVector.y = -directionVector.y;
+
                     this.SetNodeDirectionFromVector(
                         ref flowFieldMap
                         , mapWidth

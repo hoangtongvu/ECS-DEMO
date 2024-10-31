@@ -31,6 +31,7 @@ namespace Core.UI.FlowField.GridNodePresenter
                 _ => 0,
             };
 
+            this.simpleDirection = simpleDirection;
             this.rectTransform.localRotation = Quaternion.Euler(0f, 0f, rotateAngle);
 
         }

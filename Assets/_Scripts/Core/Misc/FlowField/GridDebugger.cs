@@ -24,7 +24,7 @@ namespace Core.Misc.FlowField
                     Vector3 center = new Vector3(
                         drawCellRadius * 2 * x + drawCellRadius
                         , 0
-                        , drawCellRadius * 2 * y + drawCellRadius);
+                        , -(drawCellRadius * 2 * y + drawCellRadius));
 
                     Vector3 gridSize = Vector3.one * drawCellRadius * 2;
                     gridSize.y = 0;
