@@ -1,5 +1,4 @@
 using Components;
-using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -22,6 +21,8 @@ namespace Systems.Simulation
             var inputDataRef = this.GetInputDataSingletonRef();
             this.SetMoveDir(ref inputDataRef.ValueRW);
             this.SetBackspaceButtonDown(ref inputDataRef.ValueRW);
+            this.SetSpaceButtonDown(ref inputDataRef.ValueRW);
+            this.SetEnterButtonDown(ref inputDataRef.ValueRW);
 
             this.SetMouseData(ref inputDataRef.ValueRW.LeftMouseData, 0);
             this.SetMouseData(ref inputDataRef.ValueRW.RightMouseData, 1);
@@ -49,6 +50,16 @@ namespace Systems.Simulation
         private void SetBackspaceButtonDown(ref InputData inputData)
         {
             inputData.BackspaceButtonDown = Input.GetKeyDown(KeyCode.Backspace);
+        }
+
+        private void SetSpaceButtonDown(ref InputData inputData)
+        {
+            inputData.BackspaceButtonDown = Input.GetKeyDown(KeyCode.Space);
+        }
+
+        private void SetEnterButtonDown(ref InputData inputData)
+        {
+            inputData.EnterButtonDown = Input.GetKeyDown(KeyCode.Return);
         }
 
         private void SetMouseData(ref MouseData mouseData, int mouseValue)
