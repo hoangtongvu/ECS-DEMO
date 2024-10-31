@@ -4,24 +4,22 @@ using UnityEngine;
 using Components.Misc.FlowField;
 using Core.Misc.FlowField;
 using Utilities;
-using Utilities.Extensions;
 
 namespace Systems.Initialization.Misc.FlowField
 {
-    public partial struct FlowFieldGridMapLoadSystem : ISystem
+    public partial class FlowFieldGridMapLoadSystem : SystemBase
     {
-        public void OnCreate(ref SystemState state)
+        protected override void OnCreate()
         {
-            this.LoadFlowFieldGridMap(ref state);
-
+            this.LoadFlowFieldGridMap();
         }
 
-        public void OnUpdate(ref SystemState state) { }
+        protected override void OnUpdate() { }
 
-        private void LoadFlowFieldGridMap(ref SystemState state)
+        private void LoadFlowFieldGridMap()
         {
             // Load CSV text file from Resources folder
-            TextAsset csvFile = Resources.Load<TextAsset>("Misc/FlowField/TestData/TestMap10x10"); // Ensure a "CostMap.csv" file is placed in a "Resources" folder
+            TextAsset csvFile = Resources.Load<TextAsset>("Misc/FlowField/TestData/TestMap16x9");
             if (csvFile == null)
             {
                 Debug.LogError("CSV file not found in Resources!");
@@ -56,32 +54,8 @@ namespace Systems.Initialization.Misc.FlowField
                 MapWidth = mapWidth
             };
 
-            SingletonUtilities.GetInstance(state.EntityManager)
+            SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(gridMap);
-
-            //this.LogMap(in gridMap);
-
-        }
-
-        private void LogMap(in FlowFieldGridMap map)
-        {
-            int width = map.MapWidth;
-            int height = map.GetMapHeight();
-
-            // Log line per line.
-            for (int i = 0; i < height; i++)
-            {
-                string logContent = "";
-                for (int j = 0; j < width; j++)
-                {
-                    logContent += "[";
-                    logContent += map.GetNodeAt(j, i).Cost;
-                    logContent += "] ";
-                }
-
-                UnityEngine.Debug.Log(logContent);
-
-            }
 
         }
 
