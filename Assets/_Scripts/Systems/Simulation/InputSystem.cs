@@ -54,7 +54,7 @@ namespace Systems.Simulation
 
         private void SetSpaceButtonDown(ref InputData inputData)
         {
-            inputData.BackspaceButtonDown = Input.GetKeyDown(KeyCode.Space);
+            inputData.SpaceButtonDown = Input.GetKeyDown(KeyCode.Space);
         }
 
         private void SetEnterButtonDown(ref InputData inputData)
