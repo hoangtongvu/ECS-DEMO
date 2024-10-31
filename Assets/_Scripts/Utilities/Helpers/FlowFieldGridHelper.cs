@@ -4,11 +4,16 @@ using Core.UI.FlowField.GridNodePresenter;
 using UnityEngine;
 using Unity.Mathematics;
 using Utilities.Extensions;
+using Unity.Burst;
 
 namespace Utilities.Helpers
 {
+
+    [BurstCompile]
     public static class FlowFieldGridHelper
     {
+        // Burst error BC1064 due to returning float2, can be fixed using out keyword.
+        //[BurstCompile]
         public static float2 GetVectorFromDirection(SimpleDirection direction)
         {
             return direction switch
@@ -26,6 +31,8 @@ namespace Utilities.Helpers
 
         }
 
+        // Burst error BC1064 due to returning int2, can be fixed using out keyword.
+        //[BurstCompile]
         public static int2 MapIndexToGridPos(int gridMapWidth, int mapIndex)
         {
             int x = mapIndex % gridMapWidth;     // Column index
@@ -33,8 +40,10 @@ namespace Utilities.Helpers
             return new int2(x, y);
         }
 
-        public static int GridPosToMapIndex(int gridMapWidth, int2 gridPos) => GridPosToMapIndex(gridMapWidth, gridPos.x, gridPos.y);
+        [BurstCompile]
+        public static int GridPosToMapIndex(int gridMapWidth, in int2 gridPos) => GridPosToMapIndex(gridMapWidth, gridPos.x, gridPos.y);
 
+        [BurstCompile]
         public static int GridPosToMapIndex(int gridMapWidth, int x, int y) => y * gridMapWidth + x;
 
         public static void SyncValuesToNodePresenter(
@@ -50,8 +59,19 @@ namespace Utilities.Helpers
 
             if (presenterConfig.ShowDirectionVector) presenterCtrl.DirectionImage.SetDirection(node.DirectionVector);
 
-            if (node.IsImpassable()) presenterCtrl.BackgroundImage.SetColor(Color.red);
+            if (!node.IsPassable()) presenterCtrl.BackgroundImage.SetColor(Color.red);
 
+        }
+
+        [BurstCompile]
+        public static ushort GetBestCost(
+            in FlowFieldGridNode currentNode
+            , in FlowFieldGridNode neighborNode)
+        {
+            int newBestCost = currentNode.BestCost + neighborNode.Cost;
+            if (newBestCost >= ushort.MaxValue) newBestCost = ushort.MaxValue;
+
+            return (ushort)newBestCost;
         }
 
     }
