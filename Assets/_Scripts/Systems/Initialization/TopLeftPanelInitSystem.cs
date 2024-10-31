@@ -8,6 +8,7 @@ using Core.UI.Identification;
 using Core.UI.TopLeftPanel;
 using System.Collections.Generic;
 using Core.UI.TopLeftPanel.ResourceDisplay;
+using Components.Player;
 
 
 namespace Systems.Initialization
@@ -18,6 +19,7 @@ namespace Systems.Initialization
     {
         protected override void OnCreate()
         {
+            this.RequireForUpdate<PlayerTag>();
             this.RequireForUpdate<SpawnedUIMap>();
             this.RequireForUpdate<UIPoolMap>();
         }
