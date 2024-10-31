@@ -69,7 +69,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
                     float3 center = new(
                         drawCellRadius * 2 * x + drawCellRadius
-                        , 0.5f
+                        , 0.1f
                         , drawCellRadius * 2 * y + drawCellRadius);
 
 

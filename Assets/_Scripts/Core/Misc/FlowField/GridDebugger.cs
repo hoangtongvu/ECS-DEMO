@@ -27,6 +27,7 @@ namespace Core.Misc.FlowField
                         , drawCellRadius * 2 * y + drawCellRadius);
 
                     Vector3 gridSize = Vector3.one * drawCellRadius * 2;
+                    gridSize.y = 0;
 
                     Gizmos.DrawWireCube(center, gridSize);
 
