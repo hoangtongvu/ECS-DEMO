@@ -57,7 +57,15 @@ namespace Utilities.Helpers
             if (presenterConfig.ShowBestCost) presenterCtrl.BestCostText.SetBestCost(node.BestCost);
             else presenterCtrl.BestCostText.Clear();
 
-            if (presenterConfig.ShowDirectionVector) presenterCtrl.DirectionImage.SetDirection(node.DirectionVector);
+            if (presenterConfig.ShowDirectionVector)
+            {
+                presenterCtrl.DirectionImage.Show();
+                presenterCtrl.DirectionImage.SetDirection(node.DirectionVector);
+            }
+            else
+            {
+                presenterCtrl.DirectionImage.Hide();
+            }
 
             if (!node.IsPassable()) presenterCtrl.BackgroundImage.SetColor(Color.red);
 

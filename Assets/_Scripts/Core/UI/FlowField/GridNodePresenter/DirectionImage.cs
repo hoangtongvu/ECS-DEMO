@@ -18,6 +18,12 @@ namespace Core.UI.FlowField.GridNodePresenter
 
         public void SetDirection(SimpleDirection simpleDirection)
         {
+            if (simpleDirection == SimpleDirection.None)
+            {
+                this.Hide();
+                return;
+            }
+
             float rotateAngle = simpleDirection switch
             {
                 SimpleDirection.Top => 0,
@@ -36,7 +42,9 @@ namespace Core.UI.FlowField.GridNodePresenter
 
         }
 
+        public void Show() => gameObject.SetActive(true);
 
+        public void Hide() => gameObject.SetActive(false);
 
 
     }
