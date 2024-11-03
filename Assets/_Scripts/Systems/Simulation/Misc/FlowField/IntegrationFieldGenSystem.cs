@@ -36,19 +36,21 @@ namespace Systems.Simulation.Misc
             if (!inputData.BackspaceButtonDown) return;
 
 
-            var flowFieldMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
+            var flowFieldMapRef = SystemAPI.GetSingletonRW<FlowFieldGridMap>();
 
-            int2 targetPos = new(0, 0); // Temp target Pos for now.
+            int2 targetPos = new(2, 3); // Temp target Pos for now.
+            flowFieldMapRef.ValueRW.TargetGridPos = targetPos;
+
             NativeQueue<NodeAndPos> nodeAndPosQueue = new(state.WorldUpdateAllocator);
             NativeHashSet<int2> reachedPosSet = new(200, state.WorldUpdateAllocator);
             NativeArray<NodeAndPos> neighborNodeAndPosArray = new(8, Allocator.Temp);
             NativeArray<int2> neighborDirectionOrders = this.GetNeighborDirectionOrders();
 
-            var targetNode = flowFieldMap.GetNodeAt(targetPos.x, targetPos.y);
+            var targetNode = flowFieldMapRef.ValueRO.GetNodeAt(targetPos.x, targetPos.y);
             targetNode.BestCost = 0;
 
-            int targetNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldMap.MapWidth, targetPos);
-            flowFieldMap.Nodes[targetNodeIndex] = targetNode;
+            int targetNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldMapRef.ValueRO.MapWidth, targetPos);
+            flowFieldMapRef.ValueRW.Nodes[targetNodeIndex] = targetNode;
 
             nodeAndPosQueue.Enqueue(new()
             {
@@ -63,7 +65,7 @@ namespace Systems.Simulation.Misc
                 var currentNode = currentNodeAndPos.Node;
 
                 this.GetNeighborNodeAndPosArray(
-                    in flowFieldMap
+                    in flowFieldMapRef.ValueRO
                     , in reachedPosSet
                     , in neighborDirectionOrders
                     , ref neighborNodeAndPosArray
@@ -81,9 +83,9 @@ namespace Systems.Simulation.Misc
                     {
                         neighborNode.BestCost = FlowFieldGridHelper.GetBestCost(in currentNode, in neighborNode);
 
-                        // Update new best cost to node in FlowFieldMap.
-                        int neighborNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldMap.MapWidth, neighborPos);
-                        flowFieldMap.Nodes[neighborNodeIndex] = neighborNode;
+                        // Update new best cost to node in flowFieldMapRef.ValueRO.
+                        int neighborNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldMapRef.ValueRO.MapWidth, neighborPos);
+                        flowFieldMapRef.ValueRW.Nodes[neighborNodeIndex] = neighborNode;
 
                         neighborNodeAndPos.Node = neighborNode;
                         nodeAndPosQueue.Enqueue(neighborNodeAndPos);

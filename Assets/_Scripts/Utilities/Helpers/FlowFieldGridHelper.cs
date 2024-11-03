@@ -46,7 +46,30 @@ namespace Utilities.Helpers
         [BurstCompile]
         public static int GridPosToMapIndex(int gridMapWidth, int x, int y) => y * gridMapWidth + x;
 
+        public static void SyncTargetNodeValuesToNodePresenter(
+            in GridNodePresenterConfig presenterConfig
+            , GridNodePresenterCtrl presenterCtrl
+            , in FlowFieldGridNode node)
+        {
+            SetPresenterColor(presenterCtrl, in node);
+            SetPresenterCosts(in presenterConfig, presenterCtrl, in node);
+            presenterCtrl.TargetMarkImage.Show();
+
+        }
+
         public static void SyncValuesToNodePresenter(
+            in GridNodePresenterConfig presenterConfig
+            , GridNodePresenterCtrl presenterCtrl
+            , in FlowFieldGridNode node)
+        {
+            SetPresenterColor(presenterCtrl, in node);
+            SetPresenterCosts(in presenterConfig, presenterCtrl, in node);
+            SetPresenterVector(in presenterConfig, presenterCtrl, in node);
+            presenterCtrl.TargetMarkImage.Hide();
+
+        }
+
+        private static void SetPresenterCosts(
             in GridNodePresenterConfig presenterConfig
             , GridNodePresenterCtrl presenterCtrl
             , in FlowFieldGridNode node)
@@ -57,16 +80,28 @@ namespace Utilities.Helpers
             if (presenterConfig.ShowBestCost) presenterCtrl.BestCostText.SetBestCost(node.BestCost);
             else presenterCtrl.BestCostText.Clear();
 
-            if (presenterConfig.ShowDirectionVector)
-            {
-                presenterCtrl.DirectionImage.Show();
-                presenterCtrl.DirectionImage.SetDirection(node.DirectionVector);
-            }
-            else
+        }
+
+        private static void SetPresenterVector(
+            in GridNodePresenterConfig presenterConfig
+            , GridNodePresenterCtrl presenterCtrl
+            , in FlowFieldGridNode node)
+        {
+            if (!presenterConfig.ShowDirectionVector)
             {
                 presenterCtrl.DirectionImage.Hide();
+                return;
             }
 
+            presenterCtrl.DirectionImage.Show();
+            presenterCtrl.DirectionImage.SetDirection(node.DirectionVector);
+
+        }
+
+        private static void SetPresenterColor(
+            GridNodePresenterCtrl presenterCtrl
+            , in FlowFieldGridNode node)
+        {
             if (!node.IsPassable())
             {
                 presenterCtrl.BackgroundImage.SetColor(Color.red);

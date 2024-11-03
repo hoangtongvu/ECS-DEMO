@@ -52,6 +52,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             , int presenterStartIndex)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
+            int targetGridIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldGridMap.MapWidth, flowFieldGridMap.TargetGridPos);
 
             for (int i = 0; i < mapLength; i++)
             {
@@ -70,6 +71,14 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                 }
 
                 var presenterCtrl = (GridNodePresenterCtrl) baseUICtrl;
+
+                bool isTargetNode = (i == targetGridIndex);
+
+                if (isTargetNode)
+                {
+                    FlowFieldGridHelper.SyncTargetNodeValuesToNodePresenter(in presenterConfig, presenterCtrl, in node);
+                    continue;
+                }
 
                 FlowFieldGridHelper.SyncValuesToNodePresenter(in presenterConfig, presenterCtrl, in node);
                 

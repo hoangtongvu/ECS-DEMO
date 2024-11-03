@@ -8,11 +8,13 @@ namespace Core.UI.FlowField.GridNodePresenter
         [SerializeField] private BestCostText bestCostText;
         [SerializeField] private DirectionImage directionImage;
         [SerializeField] private BackgroundImage backgroundImage;
+        [SerializeField] private TargetMarkImage targetMarkImage;
 
         public CostText CostText => costText;
         public BestCostText BestCostText => bestCostText;
         public DirectionImage DirectionImage => directionImage;
         public BackgroundImage BackgroundImage => backgroundImage;
+        public TargetMarkImage TargetMarkImage => targetMarkImage;
 
         protected override void LoadComponents()
         {
@@ -21,6 +23,7 @@ namespace Core.UI.FlowField.GridNodePresenter
             this.LoadComponentInChildren(ref this.bestCostText);
             this.LoadComponentInChildren(ref this.directionImage);
             this.LoadComponentInChildren(ref this.backgroundImage);
+            this.LoadComponentInChildren(ref this.targetMarkImage);
 
         }
 
