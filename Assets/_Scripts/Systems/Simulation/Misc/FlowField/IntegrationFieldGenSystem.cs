@@ -147,6 +147,11 @@ namespace Systems.Simulation.Misc
 
                 if (!isValidGridPos) continue;
 
+                bool isReachableNeighborNode =
+                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, in currentNodePos, in neighborDir);
+
+                if (!isReachableNeighborNode) continue;
+
                 var neighborNode = flowFieldGridMap.GetNodeAt(neighborNodePos);
 
                 neighborNodeAndPosArray[arrayIndex] = new()

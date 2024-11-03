@@ -121,6 +121,11 @@ namespace Systems.Simulation.Misc
 
                 if (!isValidGridPos) continue;
 
+                bool isReachableNeighborNode =
+                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, in currentNodePos, in neighborDir);
+
+                if (!isReachableNeighborNode) continue;
+
                 neighborNodeAndPosArray[arrayIndex] = new()
                 {
                     Node = flowFieldGridMap.GetNodeAt(neighborNodePos),

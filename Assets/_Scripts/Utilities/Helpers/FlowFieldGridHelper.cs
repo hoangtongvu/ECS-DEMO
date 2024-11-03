@@ -134,6 +134,29 @@ namespace Utilities.Helpers
             return (ushort)newBestCost;
         }
 
+        [BurstCompile]
+        public static bool IsReachableNeighborNode(
+            in FlowFieldGridMap flowFieldGridMap
+            , in int2 currentNodePos
+            , in int2 neighborDir)
+        {
+            int xDir = neighborDir.x;
+            int yDir = neighborDir.y;
+
+            bool isUnitVector = xDir == 0 || yDir == 0;
+            if (isUnitVector) return true;
+
+            var firstStraightNode = flowFieldGridMap.GetNodeAt(currentNodePos.Add(addAmountX: xDir));
+            if (firstStraightNode.IsPassable()) return true;
+
+            var secondStraightNode = flowFieldGridMap.GetNodeAt(currentNodePos.Add(addAmountY: yDir));
+            if (secondStraightNode.IsPassable()) return true;
+
+            return false;
+
+        }
+
+
     }
 
 
