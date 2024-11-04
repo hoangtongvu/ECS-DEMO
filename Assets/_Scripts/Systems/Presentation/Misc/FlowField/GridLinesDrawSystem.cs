@@ -18,7 +18,7 @@ namespace Systems.Presentation.Misc.FlowField
         protected override void OnCreate()
         {
             this.RequireForUpdate<FlowFieldGridMap>();
-            this.RequireForUpdate<GridNodePresenterConfig>();
+            this.RequireForUpdate<GridDebugConfig>();
 
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddComponent<GridNodePresenterStartIndex>();
@@ -29,8 +29,8 @@ namespace Systems.Presentation.Misc.FlowField
         {
             this.Enabled = false;
 
-            var gridNodePresenterConfig = SystemAPI.GetSingleton<GridNodePresenterConfig>();
-            if (!gridNodePresenterConfig.ShowGridLines) return;
+            var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
+            if (!gridDebugConfig.ShowGridLines) return;
             
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
 

@@ -41,9 +41,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2888794676618609256}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acc16bafac57cdb4a84e015bee7b2a15, type: 3}
+  m_Script: {fileID: 11500000, guid: 84a430f8a1466784babe98bceeeade72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showCost: 1
   showBestCost: 1
   showDirectionVector: 1
+  showGridLines: 1

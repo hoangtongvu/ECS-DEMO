@@ -21,7 +21,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         {
             this.RequireForUpdate<FlowFieldGridMap>();
             this.RequireForUpdate<GridNodePresenterStartIndex>();
-            this.RequireForUpdate<GridNodePresenterConfig>();
+            this.RequireForUpdate<GridDebugConfig>();
             this.RequireForUpdate<SpawnedUIMap>();
 
         }
@@ -32,7 +32,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             var presenterStartIndex = SystemAPI.GetSingleton<GridNodePresenterStartIndex>();
-            var gridNodePresenterConfig = SystemAPI.GetSingleton<GridNodePresenterConfig>();
+            var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
 
             flowFieldGridMap.LogMapBestCost();
@@ -40,7 +40,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             this.UpdateNodePresenters(
                 spawnedUIMap
                 , in flowFieldGridMap
-                , in gridNodePresenterConfig
+                , in gridDebugConfig
                 , presenterStartIndex.Value);
 
         }
@@ -48,7 +48,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         private void UpdateNodePresenters(
             SpawnedUIMap spawnedUIMap
             , in FlowFieldGridMap flowFieldGridMap
-            , in GridNodePresenterConfig presenterConfig
+            , in GridDebugConfig gridDebugConfig
             , int presenterStartIndex)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
@@ -79,11 +79,11 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
                 if (isTargetNode)
                 {
-                    FlowFieldGridHelper.SyncTargetNodeValuesToNodePresenter(in presenterConfig, presenterCtrl, in node);
+                    FlowFieldGridHelper.SyncTargetNodeValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node);
                     continue;
                 }
 
-                FlowFieldGridHelper.SyncValuesToNodePresenter(in presenterConfig, presenterCtrl, in node);
+                FlowFieldGridHelper.SyncValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node);
                 
             }
 

@@ -19,7 +19,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         protected override void OnCreate()
         {
             this.RequireForUpdate<FlowFieldGridMap>();
-            this.RequireForUpdate<GridNodePresenterConfig>();
+            this.RequireForUpdate<GridDebugConfig>();
             this.RequireForUpdate<SpawnedUIMap>();
             this.RequireForUpdate<UIPoolMap>();
 
@@ -34,7 +34,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             var presenterStartIndexRef = SystemAPI.GetSingletonRW<GridNodePresenterStartIndex>();
-            var gridNodePresenterConfig = SystemAPI.GetSingleton<GridNodePresenterConfig>();
+            var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
 
@@ -43,7 +43,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                 , uiPoolMap
                 , in flowFieldGridMap
                 , ref presenterStartIndexRef.ValueRW
-                , in gridNodePresenterConfig
+                , in gridDebugConfig
                 , 0.5f);
 
         }
@@ -53,7 +53,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             , UIPoolMap uiPoolMap
             , in FlowFieldGridMap flowFieldGridMap
             , ref GridNodePresenterStartIndex presenterStartIndex
-            , in GridNodePresenterConfig presenterConfig
+            , in GridDebugConfig gridDebugConfig
             , float drawCellRadius)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
@@ -85,7 +85,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                         , UIType.GridNodePresenter
                         , center);
 
-                FlowFieldGridHelper.SyncValuesToNodePresenter(in presenterConfig, presenterCtrl, in node);
+                FlowFieldGridHelper.SyncValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node);
 
                 presenterCtrl.gameObject.SetActive(true);
 

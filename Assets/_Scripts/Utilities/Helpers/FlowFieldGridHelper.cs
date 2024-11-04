@@ -55,47 +55,47 @@ namespace Utilities.Helpers
             (y - gridOffset.y) * gridMapWidth + (x - gridOffset.x);
 
         public static void SyncTargetNodeValuesToNodePresenter(
-            in GridNodePresenterConfig presenterConfig
+            in GridDebugConfig gridDebugConfig
             , GridNodePresenterCtrl presenterCtrl
             , in FlowFieldGridNode node)
         {
             SetPresenterColor(presenterCtrl, in node);
-            SetPresenterCosts(in presenterConfig, presenterCtrl, in node);
+            SetPresenterCosts(in gridDebugConfig, presenterCtrl, in node);
             presenterCtrl.TargetMarkImage.Show();
 
         }
 
         public static void SyncValuesToNodePresenter(
-            in GridNodePresenterConfig presenterConfig
+            in GridDebugConfig gridDebugConfig
             , GridNodePresenterCtrl presenterCtrl
             , in FlowFieldGridNode node)
         {
             SetPresenterColor(presenterCtrl, in node);
-            SetPresenterCosts(in presenterConfig, presenterCtrl, in node);
-            SetPresenterVector(in presenterConfig, presenterCtrl, in node);
+            SetPresenterCosts(in gridDebugConfig, presenterCtrl, in node);
+            SetPresenterVector(in gridDebugConfig, presenterCtrl, in node);
             presenterCtrl.TargetMarkImage.Hide();
 
         }
 
         private static void SetPresenterCosts(
-            in GridNodePresenterConfig presenterConfig
+            in GridDebugConfig gridDebugConfig
             , GridNodePresenterCtrl presenterCtrl
             , in FlowFieldGridNode node)
         {
-            if (presenterConfig.ShowCost) presenterCtrl.CostText.SetCost(node.Cost);
+            if (gridDebugConfig.ShowCost) presenterCtrl.CostText.SetCost(node.Cost);
             else presenterCtrl.CostText.Clear();
 
-            if (presenterConfig.ShowBestCost) presenterCtrl.BestCostText.SetBestCost(node.BestCost);
+            if (gridDebugConfig.ShowBestCost) presenterCtrl.BestCostText.SetBestCost(node.BestCost);
             else presenterCtrl.BestCostText.Clear();
 
         }
 
         private static void SetPresenterVector(
-            in GridNodePresenterConfig presenterConfig
+            in GridDebugConfig gridDebugConfig
             , GridNodePresenterCtrl presenterCtrl
             , in FlowFieldGridNode node)
         {
-            if (!presenterConfig.ShowDirectionVector)
+            if (!gridDebugConfig.ShowDirectionVector)
             {
                 presenterCtrl.DirectionImage.Hide();
                 return;
