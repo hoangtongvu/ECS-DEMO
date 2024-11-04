@@ -9,6 +9,7 @@ namespace Authoring.Misc.FlowField
         [SerializeField] private bool showCost = true;
         [SerializeField] private bool showBestCost = true;
         [SerializeField] private bool showDirectionVector = true;
+        [SerializeField] private bool showGridLines = true;
 
         private class Baker : Baker<GridNodePresenterConfigAuthoring>
         {
@@ -21,6 +22,7 @@ namespace Authoring.Misc.FlowField
                     ShowCost = authoring.showCost,
                     ShowBestCost = authoring.showBestCost,
                     ShowDirectionVector = authoring.showDirectionVector,
+                    ShowGridLines = authoring.showGridLines,
                 });
 
             }

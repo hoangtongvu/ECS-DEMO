@@ -6,7 +6,6 @@ using Components.ComponentMap;
 using Core.UI.Identification;
 using Core.UI.FlowField.GridNodePresenter;
 using Components.Misc.FlowField;
-using Utilities.Extensions;
 using Utilities;
 
 namespace Systems.Presentation.Misc.FlowField.NodePresenter

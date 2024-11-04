@@ -7,6 +7,7 @@ namespace Components.Misc.FlowField
         public bool ShowCost;
         public bool ShowBestCost;
         public bool ShowDirectionVector;
+        public bool ShowGridLines;
     }
 
 }

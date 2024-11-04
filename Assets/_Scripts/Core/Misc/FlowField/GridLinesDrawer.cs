@@ -3,23 +3,25 @@ using UnityEngine;
 
 namespace Core.Misc.FlowField
 {
-    public class GridDebugger : MonoBehaviour
+    public class GridLinesDrawer : MonoBehaviour
     {
-        [SerializeField] private int2 gridMapSize = new(10, 10);
-        [SerializeField] private float drawCellRadius = 0.5f;
+        public int2 GridMapSize { get; set; }
+        public float DrawCellRadius { get; set; }
+        public int2 GridOffset { get; set; }
+        public Color DrawColor { get; set; }
 
 
         private void OnDrawGizmos()
         {
-            this.DrawGrid(this.gridMapSize, Color.yellow, this.drawCellRadius);
+            DrawGridLines(this.GridMapSize, this.GridOffset, this.DrawColor, this.DrawCellRadius);
         }
 
-        private void DrawGrid(int2 gridMapSize, Color drawColor, float drawCellRadius)
+        private static void DrawGridLines(int2 gridMapSize, int2 gridOffset, Color drawColor, float drawCellRadius)
         {
             Gizmos.color = drawColor;
-            for (int x = 0; x < gridMapSize.x; x++)
+            for (int x = gridOffset.x; x < gridMapSize.x + gridOffset.x; x++)
             {
-                for (int y = 0; y < gridMapSize.y; y++)
+                for (int y = gridOffset.y; y < gridMapSize.y + gridOffset.y; y++)
                 {
                     Vector3 center = new Vector3(
                         drawCellRadius * 2 * x + drawCellRadius

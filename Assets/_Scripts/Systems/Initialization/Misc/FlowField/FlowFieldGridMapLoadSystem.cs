@@ -13,9 +13,11 @@ namespace Systems.Initialization.Misc.FlowField
         protected override void OnCreate()
         {
             this.LoadFlowFieldGridMap();
+            this.Enabled = false;
+
         }
 
-        protected override void OnUpdate() { }
+        protected override void OnUpdate() {}
 
         private void LoadFlowFieldGridMap()
         {
@@ -61,8 +63,23 @@ namespace Systems.Initialization.Misc.FlowField
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(gridMap);
 
+            this.CreateGround(mapWidth, mapHeight);
+
         }
 
+        private void CreateGround(int mapWidth, int mapHeight)
+        {
+            const float cellRadius = 0.5f; // Find a new way to get this value
+            var planeGO = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            planeGO.name = "Ground";
+
+            float worldPosOffsetX = mapWidth % 2 == 0 ? 0 : cellRadius;
+            float worldPosOffsetY = mapHeight % 2 == 0 ? 0 : -cellRadius;
+
+            planeGO.transform.position = new(worldPosOffsetX, 0f, worldPosOffsetY);
+            planeGO.transform.localScale = new((float)mapWidth / 10, 1f, (float)mapHeight / 10);
+
+        }
 
     }
 
