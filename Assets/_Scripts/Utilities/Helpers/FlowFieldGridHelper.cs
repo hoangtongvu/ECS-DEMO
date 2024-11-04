@@ -33,18 +33,26 @@ namespace Utilities.Helpers
 
         // Burst error BC1064 due to returning int2, can be fixed using out keyword.
         //[BurstCompile]
-        public static int2 MapIndexToGridPos(int gridMapWidth, int mapIndex)
+        public static int2 MapIndexToGridPos(int gridMapWidth, in int2 gridOffset, int mapIndex)
         {
-            int x = mapIndex % gridMapWidth;     // Column index
-            int y = mapIndex / gridMapWidth;     // Row index
+            int x = mapIndex % gridMapWidth + gridOffset.x;     // Column index
+            int y = mapIndex / gridMapWidth + gridOffset.y;     // Row index
             return new int2(x, y);
+        }
+        
+        public static void MapIndexToGridPos(int gridMapWidth, in int2 gridOffset, int mapIndex, out int x, out int y)
+        {
+            x = mapIndex % gridMapWidth + gridOffset.x;     // Column index
+            y = mapIndex / gridMapWidth + gridOffset.y;     // Row index
         }
 
         [BurstCompile]
-        public static int GridPosToMapIndex(int gridMapWidth, in int2 gridPos) => GridPosToMapIndex(gridMapWidth, gridPos.x, gridPos.y);
+        public static int GridPosToMapIndex(int gridMapWidth, in int2 gridOffset, in int2 gridPos) =>
+            GridPosToMapIndex(gridMapWidth, in gridOffset, gridPos.x, gridPos.y);
 
         [BurstCompile]
-        public static int GridPosToMapIndex(int gridMapWidth, int x, int y) => y * gridMapWidth + x;
+        public static int GridPosToMapIndex(int gridMapWidth, in int2 gridOffset, int x, int y) =>
+            (y - gridOffset.y) * gridMapWidth + (x - gridOffset.x);
 
         public static void SyncTargetNodeValuesToNodePresenter(
             in GridNodePresenterConfig presenterConfig
@@ -155,6 +163,34 @@ namespace Utilities.Helpers
             return false;
 
         }
+
+        [BurstCompile]
+        public static bool IsValidGridPos(int mapWidth, int mapHeight, in int2 gridOffset, in int2 pos)
+        {
+            return IsValidGridPos(mapWidth, mapHeight, in gridOffset, pos.x, pos.y);
+        }
+
+        [BurstCompile]
+        public static bool IsValidGridPos(int mapWidth, int mapHeight, in int2 gridOffset, int x, int y)
+        {
+            return x >= gridOffset.x && x < mapWidth + gridOffset.x &&
+            y >= gridOffset.y && y < mapHeight + gridOffset.y;
+        }
+
+        [BurstCompile]
+        public static void GetGridOffset(int mapWidth, int mapHeight, out int offsetX, out int offsetY)
+        {
+            offsetX = -mapWidth + (mapWidth + 1) / 2;
+            offsetY = -mapHeight + (mapHeight + 1) / 2;
+        }
+
+        [BurstCompile]
+        public static void GetGridOffset(int mapWidth, int mapHeight, out int2 offset)
+        {
+            GetGridOffset(mapWidth, mapHeight, out int offsetX, out int offsetY);
+            offset = new(offsetX, offsetY);
+        }
+
 
 
     }

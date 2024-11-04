@@ -57,39 +57,44 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             , in GridNodePresenterConfig presenterConfig
             , float drawCellRadius)
         {
-            int2 gridMapSize = new(flowFieldGridMap.MapWidth, flowFieldGridMap.GetMapHeight());
+            int mapLength = flowFieldGridMap.Nodes.Length;
+            int2 gridOffset = flowFieldGridMap.GridOffset;
 
             bool spawnedFirstPresenter = false;
 
-            for (int y = 0; y < gridMapSize.y; y++)
+            for (int i = 0; i < mapLength; i++)
             {
-                for (int x = 0; x < gridMapSize.x; x++)
-                {
-                    var node = flowFieldGridMap.GetNodeAt(x, y);
+                var node = flowFieldGridMap.Nodes[i];
 
-                    float3 center = new(
+                FlowFieldGridHelper.MapIndexToGridPos(
+                    flowFieldGridMap.MapWidth
+                    , in gridOffset
+                    , i
+                    , out int x
+                    , out int y);
+
+                float3 center = new(
                         drawCellRadius * 2 * x + drawCellRadius
                         , 0.1f
                         , -(drawCellRadius * 2 * y + drawCellRadius));
 
 
-                    var presenterCtrl = (GridNodePresenterCtrl)
-                        UISpawningHelper.Spawn(
-                            uiPoolMap
-                            , spawnedUIMap
-                            , UIType.GridNodePresenter
-                            , center);
+                var presenterCtrl = (GridNodePresenterCtrl)
+                    UISpawningHelper.Spawn(
+                        uiPoolMap
+                        , spawnedUIMap
+                        , UIType.GridNodePresenter
+                        , center);
 
-                    FlowFieldGridHelper.SyncValuesToNodePresenter(in presenterConfig, presenterCtrl, in node);
+                FlowFieldGridHelper.SyncValuesToNodePresenter(in presenterConfig, presenterCtrl, in node);
 
-                    presenterCtrl.gameObject.SetActive(true);
+                presenterCtrl.gameObject.SetActive(true);
 
-                    if (spawnedFirstPresenter) continue;
+                if (spawnedFirstPresenter) continue;
 
-                    spawnedFirstPresenter = true;
-                    presenterStartIndex.Value = (int) presenterCtrl.UIID.LocalId;
+                spawnedFirstPresenter = true;
+                presenterStartIndex.Value = (int)presenterCtrl.UIID.LocalId;
 
-                }
             }
 
         }

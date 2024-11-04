@@ -52,7 +52,10 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             , int presenterStartIndex)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
-            int targetGridIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldGridMap.MapWidth, flowFieldGridMap.TargetGridPos);
+            int targetGridIndex = FlowFieldGridHelper.GridPosToMapIndex(
+                flowFieldGridMap.MapWidth
+                , flowFieldGridMap.GridOffset
+                , flowFieldGridMap.TargetGridPos);
 
             for (int i = 0; i < mapLength; i++)
             {

@@ -49,7 +49,10 @@ namespace Systems.Simulation.Misc
             var targetNode = flowFieldMapRef.ValueRO.GetNodeAt(targetPos.x, targetPos.y);
             targetNode.BestCost = 0;
 
-            int targetNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldMapRef.ValueRO.MapWidth, targetPos);
+            int targetNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(
+                flowFieldMapRef.ValueRO.MapWidth
+                , flowFieldMapRef.ValueRO.GridOffset
+                , targetPos);
             flowFieldMapRef.ValueRW.Nodes[targetNodeIndex] = targetNode;
 
             nodeAndPosQueue.Enqueue(new()
@@ -84,7 +87,10 @@ namespace Systems.Simulation.Misc
                         neighborNode.BestCost = FlowFieldGridHelper.GetBestCost(in currentNode, in neighborNode);
 
                         // Update new best cost to node in flowFieldMapRef.ValueRO.
-                        int neighborNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(flowFieldMapRef.ValueRO.MapWidth, neighborPos);
+                        int neighborNodeIndex =FlowFieldGridHelper.GridPosToMapIndex(
+                            flowFieldMapRef.ValueRO.MapWidth
+                            , flowFieldMapRef.ValueRO.GridOffset
+                            , neighborPos);
                         flowFieldMapRef.ValueRW.Nodes[neighborNodeIndex] = neighborNode;
 
                         neighborNodeAndPos.Node = neighborNode;
@@ -131,6 +137,7 @@ namespace Systems.Simulation.Misc
         {
             int mapWidth = flowFieldGridMap.MapWidth;
             int mapHeight = flowFieldGridMap.GetMapHeight();
+            int2 gridOffset = flowFieldGridMap.GridOffset;
 
             int arrayIndex = 0;
 
@@ -142,8 +149,7 @@ namespace Systems.Simulation.Misc
                 if (reachedPos.Contains(neighborNodePos)) continue;
 
                 bool isValidGridPos =
-                    neighborNodePos.x >= 0 && neighborNodePos.x < mapWidth &&
-                    neighborNodePos.y >= 0 && neighborNodePos.y < mapHeight;
+                    FlowFieldGridHelper.IsValidGridPos(mapWidth, mapHeight, in flowFieldGridMap.GridOffset, neighborNodePos);
 
                 if (!isValidGridPos) continue;
 

@@ -39,12 +39,13 @@ namespace Systems.Simulation.Misc
             NativeArray<NodeAndPos> neighborNodeAndPosArray = new(8, Allocator.Temp);
             NativeArray<int2> neighborDirectionOrders = this.GetNeighborDirectionOrders();
 
+            int2 gridOffset = flowFieldMap.GridOffset;
             int mapWidth = flowFieldMap.MapWidth;
             int mapHeight = flowFieldMap.GetMapHeight();
 
-            for (int y = 0; y < mapHeight; y++)
+            for (int y = gridOffset.y; y < mapHeight + gridOffset.y; y++)
             {
-                for (int x = 0; x < mapWidth; x++)
+                for (int x = gridOffset.x; x < mapWidth + gridOffset.x; x++)
                 {
                     int2 currentNodePos = new(x, y);
 
@@ -116,8 +117,7 @@ namespace Systems.Simulation.Misc
                 int2 neighborNodePos = currentNodePos + neighborDir;
 
                 bool isValidGridPos =
-                    neighborNodePos.x >= 0 && neighborNodePos.x < mapWidth &&
-                    neighborNodePos.y >= 0 && neighborNodePos.y < mapHeight;
+                    FlowFieldGridHelper.IsValidGridPos(mapWidth, mapHeight, in flowFieldGridMap.GridOffset, neighborNodePos);
 
                 if (!isValidGridPos) continue;
 
@@ -168,7 +168,7 @@ namespace Systems.Simulation.Misc
             , int2 nodeGridPos
             , int2 directionVector)
         {
-            int currentNodeMapIndex = FlowFieldGridHelper.GridPosToMapIndex(mapWidth, nodeGridPos);
+            int currentNodeMapIndex = FlowFieldGridHelper.GridPosToMapIndex(mapWidth, flowFieldMap.GridOffset, nodeGridPos);
             var currentNode = flowFieldMap.Nodes[currentNodeMapIndex];
 
             currentNode.DirectionVector = this.GetDirectionFromVector(directionVector);

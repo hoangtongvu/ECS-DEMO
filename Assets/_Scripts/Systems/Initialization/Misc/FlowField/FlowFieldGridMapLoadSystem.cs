@@ -4,6 +4,7 @@ using UnityEngine;
 using Components.Misc.FlowField;
 using Core.Misc.FlowField;
 using Utilities;
+using Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.FlowField
 {
@@ -48,10 +49,13 @@ namespace Systems.Initialization.Misc.FlowField
                 }
             }
 
+            FlowFieldGridHelper.GetGridOffset(mapWidth, mapHeight, out var gridOffset);
+
             FlowFieldGridMap gridMap = new()
             {
                 Nodes = nodes,
-                MapWidth = mapWidth
+                MapWidth = mapWidth,
+                GridOffset = gridOffset,
             };
 
             SingletonUtilities.GetInstance(this.EntityManager)
