@@ -77,6 +77,12 @@ namespace Systems.Initialization.Misc.FlowField
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(gridMap);
 
+            SingletonUtilities.GetInstance(this.EntityManager)
+                .AddOrSetComponentData(new TargetGridPos
+                {
+                    Value = new(2, 3),
+                });
+
             this.CreateGround(mapWidth, mapHeight);
 
         }

@@ -33,6 +33,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
             var costMap = SystemAPI.GetSingleton<FlowFieldCostMap>();
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
+            int2 targetPos = SystemAPI.GetSingleton<TargetGridPos>().Value;
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
@@ -46,6 +47,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             this.UpdateNodePresenters(
                 spawnedUIMap
                 , in flowFieldGridMap
+                , in targetPos
                 , in costMap
                 , mapWidth
                 , in gridOffset
@@ -57,6 +59,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         private void UpdateNodePresenters(
             SpawnedUIMap spawnedUIMap
             , in FlowFieldGridMap flowFieldGridMap
+            , in int2 targetPos
             , in FlowFieldCostMap flowFieldCostMap
             , int mapWidth
             , in int2 gridOffset
@@ -67,7 +70,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             int targetGridIndex = FlowFieldGridHelper.GridPosToMapIndex(
                 mapWidth
                 , gridOffset
-                , flowFieldGridMap.TargetGridPos);
+                , targetPos);
 
             for (int i = 0; i < mapLength; i++)
             {

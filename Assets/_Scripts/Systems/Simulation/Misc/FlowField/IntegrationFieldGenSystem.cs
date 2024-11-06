@@ -38,12 +38,10 @@ namespace Systems.Simulation.Misc
 
             var costMap = SystemAPI.GetSingleton<FlowFieldCostMap>();
             var flowFieldMapRef = SystemAPI.GetSingletonRW<FlowFieldGridMap>();
+            int2 targetPos = SystemAPI.GetSingleton<TargetGridPos>().Value;
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
-
-            int2 targetPos = new(2, 3); // Temp target Pos for now.
-            flowFieldMapRef.ValueRW.TargetGridPos = targetPos;
 
             NativeQueue<NodeAndPos> nodeAndPosQueue = new(state.WorldUpdateAllocator);
             NativeHashSet<int2> reachedPosSet = new(200, state.WorldUpdateAllocator);
