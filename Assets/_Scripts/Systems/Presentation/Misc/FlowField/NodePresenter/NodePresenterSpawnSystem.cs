@@ -35,6 +35,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
+            float mapCellSize = SystemAPI.GetSingleton<MapCellSize>().Value;
 
             var presenterStartIndexRef = SystemAPI.GetSingletonRW<GridNodePresenterStartIndex>();
             var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
@@ -49,7 +50,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                 , in gridOffset
                 , ref presenterStartIndexRef.ValueRW
                 , in gridDebugConfig
-                , 0.5f);
+                , mapCellSize);
 
         }
 
@@ -61,7 +62,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             , in int2 gridOffset
             , ref GridNodePresenterStartIndex presenterStartIndex
             , in GridDebugConfig gridDebugConfig
-            , float drawCellRadius)
+            , float drawCellSize)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
 
@@ -79,9 +80,9 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                     , out int y);
 
                 float3 center = new(
-                        drawCellRadius * 2 * x + drawCellRadius
-                        , 0.1f
-                        , -(drawCellRadius * 2 * y + drawCellRadius));
+                        drawCellSize * x + drawCellSize / 2
+                        , 0
+                        , -(drawCellSize * y + drawCellSize / 2));
 
 
                 var presenterCtrl = (GridNodePresenterCtrl)

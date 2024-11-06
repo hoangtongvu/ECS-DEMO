@@ -51,6 +51,12 @@ namespace Systems.Initialization.Misc.FlowField
                 }
             }
 
+            SingletonUtilities.GetInstance(this.EntityManager)
+                .AddOrSetComponentData(new MapCellSize
+                {
+                    Value = 1f,
+                });
+
             this.CreateMapSizeComponents(mapWidth, mapHeight);
             this.CreateMapOffsetComponent(mapWidth, mapHeight);
 

@@ -6,17 +6,17 @@ namespace Core.Misc.FlowField
     public class GridLinesDrawer : MonoBehaviour
     {
         public int2 GridMapSize { get; set; }
-        public float DrawCellRadius { get; set; }
+        public float DrawCellSize { get; set; }
         public int2 GridOffset { get; set; }
         public Color DrawColor { get; set; }
 
 
         private void OnDrawGizmos()
         {
-            DrawGridLines(this.GridMapSize, this.GridOffset, this.DrawColor, this.DrawCellRadius);
+            DrawGridLines(this.GridMapSize, this.GridOffset, this.DrawColor, this.DrawCellSize);
         }
 
-        private static void DrawGridLines(int2 gridMapSize, int2 gridOffset, Color drawColor, float drawCellRadius)
+        private static void DrawGridLines(int2 gridMapSize, int2 gridOffset, Color drawColor, float drawCellSize)
         {
             Gizmos.color = drawColor;
             for (int x = gridOffset.x; x < gridMapSize.x + gridOffset.x; x++)
@@ -24,11 +24,11 @@ namespace Core.Misc.FlowField
                 for (int y = gridOffset.y; y < gridMapSize.y + gridOffset.y; y++)
                 {
                     Vector3 center = new Vector3(
-                        drawCellRadius * 2 * x + drawCellRadius
+                        drawCellSize * x + drawCellSize / 2
                         , 0
-                        , -(drawCellRadius * 2 * y + drawCellRadius));
+                        , -(drawCellSize * y + drawCellSize / 2));
 
-                    Vector3 gridSize = Vector3.one * drawCellRadius * 2;
+                    Vector3 gridSize = Vector3.one * drawCellSize;
                     gridSize.y = 0;
 
                     Gizmos.DrawWireCube(center, gridSize);

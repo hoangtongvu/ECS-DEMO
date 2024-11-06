@@ -31,6 +31,7 @@ namespace Systems.Presentation.Misc.FlowField
             var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             if (!gridDebugConfig.ShowGridLines) return;
             
+            float mapCellSize = SystemAPI.GetSingleton<MapCellSize>().Value;
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
@@ -40,7 +41,7 @@ namespace Systems.Presentation.Misc.FlowField
             GameObject gameObject = new("GridLineDrawer");
             GridLinesDrawer gridLinesDrawer = gameObject.AddComponent<GridLinesDrawer>();
             gridLinesDrawer.GridMapSize = gridMapSize;
-            gridLinesDrawer.DrawCellRadius = 0.5f;
+            gridLinesDrawer.DrawCellSize = mapCellSize;
             gridLinesDrawer.GridOffset = gridOffset;
             gridLinesDrawer.DrawColor = Color.yellow;
 
