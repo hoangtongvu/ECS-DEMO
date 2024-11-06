@@ -32,11 +32,13 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
+            int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
+
             var presenterStartIndex = SystemAPI.GetSingleton<GridNodePresenterStartIndex>();
             var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
 
-            flowFieldGridMap.LogMapBestCost(mapWidth);
+            flowFieldGridMap.LogMapBestCost(mapWidth, mapHeight);
 
             this.UpdateNodePresenters(
                 spawnedUIMap

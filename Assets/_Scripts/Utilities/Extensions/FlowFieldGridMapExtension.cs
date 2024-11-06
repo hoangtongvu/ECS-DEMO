@@ -2,7 +2,6 @@ using Core.Misc.FlowField;
 using Utilities.Helpers;
 using Components.Misc.FlowField;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Utilities.Extensions
 {
@@ -18,12 +17,10 @@ namespace Utilities.Extensions
             return map.Nodes[mapIndex];
         }
 
-        public static void LogMapCost(this FlowFieldGridMap map, int mapWidth)
+        public static void LogMapCost(this FlowFieldGridMap map, int mapWidth, int mapHeight)
         {
-            int height = map.GetMapHeight(mapWidth);
-
             // Log line per line.
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < mapHeight; i++)
             {
                 string logContent = "";
                 for (int j = 0; j < mapWidth; j++)
@@ -39,13 +36,12 @@ namespace Utilities.Extensions
 
         }
 
-        public static void LogMapBestCost(this FlowFieldGridMap map, int mapWidth)
+        public static void LogMapBestCost(this FlowFieldGridMap map, int mapWidth, int mapHeight)
         {
             int2 gridOffset = map.GridOffset;
-            int height = map.GetMapHeight(mapWidth);
 
             // Log line per line.
-            for (int y = gridOffset.y; y < height + gridOffset.y; y++)
+            for (int y = gridOffset.y; y < mapHeight + gridOffset.y; y++)
             {
                 string logContent = "";
                 for (int x = gridOffset.x; x < mapWidth + gridOffset.x; x++)

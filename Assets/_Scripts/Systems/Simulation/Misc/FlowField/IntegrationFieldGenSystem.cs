@@ -38,6 +38,7 @@ namespace Systems.Simulation.Misc
 
             var flowFieldMapRef = SystemAPI.GetSingletonRW<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
+            int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
 
             int2 targetPos = new(2, 3); // Temp target Pos for now.
             flowFieldMapRef.ValueRW.TargetGridPos = targetPos;
@@ -71,6 +72,7 @@ namespace Systems.Simulation.Misc
                 this.GetNeighborNodeAndPosArray(
                     in flowFieldMapRef.ValueRO
                     , mapWidth
+                    , mapHeight
                     , in reachedPosSet
                     , in neighborDirectionOrders
                     , ref neighborNodeAndPosArray
@@ -132,13 +134,13 @@ namespace Systems.Simulation.Misc
         private void GetNeighborNodeAndPosArray(
             in FlowFieldGridMap flowFieldGridMap
             , int mapWidth
+            , int mapHeight
             , in NativeHashSet<int2> reachedPos
             , in NativeArray<int2> neighborDirectionOrders
             , ref NativeArray<NodeAndPos> neighborNodeAndPosArray
             , int2 currentNodePos
             , out int neighborNodeCount)
         {
-            int mapHeight = flowFieldGridMap.GetMapHeight(mapWidth);
             int2 gridOffset = flowFieldGridMap.GridOffset;
 
             int arrayIndex = 0;

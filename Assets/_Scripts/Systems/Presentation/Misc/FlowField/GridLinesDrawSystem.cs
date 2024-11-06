@@ -34,8 +34,9 @@ namespace Systems.Presentation.Misc.FlowField
             
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
+            int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
 
-            int2 gridMapSize = new(mapWidth, flowFieldGridMap.GetMapHeight(mapWidth));
+            int2 gridMapSize = new(mapWidth, mapHeight);
 
             GameObject gameObject = new("GridLineDrawer");
             GridLinesDrawer gridLinesDrawer = gameObject.AddComponent<GridLinesDrawer>();

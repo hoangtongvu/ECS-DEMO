@@ -41,7 +41,7 @@ namespace Systems.Simulation.Misc
 
             int2 gridOffset = flowFieldMap.GridOffset;
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
-            int mapHeight = flowFieldMap.GetMapHeight(mapWidth);
+            int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
 
             for (int y = gridOffset.y; y < mapHeight + gridOffset.y; y++)
             {
