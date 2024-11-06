@@ -31,15 +31,17 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             if (!Input.GetKeyDown(KeyCode.Space)) return;
 
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
+            int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             var presenterStartIndex = SystemAPI.GetSingleton<GridNodePresenterStartIndex>();
             var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
 
-            flowFieldGridMap.LogMapBestCost();
+            flowFieldGridMap.LogMapBestCost(mapWidth);
 
             this.UpdateNodePresenters(
                 spawnedUIMap
                 , in flowFieldGridMap
+                , mapWidth
                 , in gridDebugConfig
                 , presenterStartIndex.Value);
 
@@ -48,12 +50,13 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         private void UpdateNodePresenters(
             SpawnedUIMap spawnedUIMap
             , in FlowFieldGridMap flowFieldGridMap
+            , int mapWidth
             , in GridDebugConfig gridDebugConfig
             , int presenterStartIndex)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
             int targetGridIndex = FlowFieldGridHelper.GridPosToMapIndex(
-                flowFieldGridMap.MapWidth
+                mapWidth
                 , flowFieldGridMap.GridOffset
                 , flowFieldGridMap.TargetGridPos);
 

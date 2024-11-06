@@ -33,6 +33,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             this.Enabled = false;
 
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
+            int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             var presenterStartIndexRef = SystemAPI.GetSingletonRW<GridNodePresenterStartIndex>();
             var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
@@ -42,6 +43,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                 spawnedUIMap
                 , uiPoolMap
                 , in flowFieldGridMap
+                , mapWidth
                 , ref presenterStartIndexRef.ValueRW
                 , in gridDebugConfig
                 , 0.5f);
@@ -52,6 +54,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             SpawnedUIMap spawnedUIMap
             , UIPoolMap uiPoolMap
             , in FlowFieldGridMap flowFieldGridMap
+            , int mapWidth
             , ref GridNodePresenterStartIndex presenterStartIndex
             , in GridDebugConfig gridDebugConfig
             , float drawCellRadius)
@@ -66,7 +69,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                 var node = flowFieldGridMap.Nodes[i];
 
                 FlowFieldGridHelper.MapIndexToGridPos(
-                    flowFieldGridMap.MapWidth
+                    mapWidth
                     , in gridOffset
                     , i
                     , out int x

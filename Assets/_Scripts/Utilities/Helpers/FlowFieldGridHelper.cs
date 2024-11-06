@@ -145,6 +145,7 @@ namespace Utilities.Helpers
         [BurstCompile]
         public static bool IsReachableNeighborNode(
             in FlowFieldGridMap flowFieldGridMap
+            , int mapWidth
             , in int2 currentNodePos
             , in int2 neighborDir)
         {
@@ -154,10 +155,10 @@ namespace Utilities.Helpers
             bool isUnitVector = xDir == 0 || yDir == 0;
             if (isUnitVector) return true;
 
-            var firstStraightNode = flowFieldGridMap.GetNodeAt(currentNodePos.Add(addAmountX: xDir));
+            var firstStraightNode = flowFieldGridMap.GetNodeAt(mapWidth, currentNodePos.Add(addAmountX: xDir));
             if (firstStraightNode.IsPassable()) return true;
 
-            var secondStraightNode = flowFieldGridMap.GetNodeAt(currentNodePos.Add(addAmountY: yDir));
+            var secondStraightNode = flowFieldGridMap.GetNodeAt(mapWidth, currentNodePos.Add(addAmountY: yDir));
             if (secondStraightNode.IsPassable()) return true;
 
             return false;

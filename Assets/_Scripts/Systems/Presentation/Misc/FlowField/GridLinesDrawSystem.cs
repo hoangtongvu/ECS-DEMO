@@ -33,8 +33,9 @@ namespace Systems.Presentation.Misc.FlowField
             if (!gridDebugConfig.ShowGridLines) return;
             
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
+            int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
 
-            int2 gridMapSize = new(flowFieldGridMap.MapWidth, flowFieldGridMap.GetMapHeight());
+            int2 gridMapSize = new(mapWidth, flowFieldGridMap.GetMapHeight(mapWidth));
 
             GameObject gameObject = new("GridLineDrawer");
             GridLinesDrawer gridLinesDrawer = gameObject.AddComponent<GridLinesDrawer>();

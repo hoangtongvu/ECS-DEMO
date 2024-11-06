@@ -40,8 +40,8 @@ namespace Systems.Simulation.Misc
             NativeArray<int2> neighborDirectionOrders = this.GetNeighborDirectionOrders();
 
             int2 gridOffset = flowFieldMap.GridOffset;
-            int mapWidth = flowFieldMap.MapWidth;
-            int mapHeight = flowFieldMap.GetMapHeight();
+            int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
+            int mapHeight = flowFieldMap.GetMapHeight(mapWidth);
 
             for (int y = gridOffset.y; y < mapHeight + gridOffset.y; y++)
             {
@@ -122,13 +122,13 @@ namespace Systems.Simulation.Misc
                 if (!isValidGridPos) continue;
 
                 bool isReachableNeighborNode =
-                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, in currentNodePos, in neighborDir);
+                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, mapWidth, in currentNodePos, in neighborDir);
 
                 if (!isReachableNeighborNode) continue;
 
                 neighborNodeAndPosArray[arrayIndex] = new()
                 {
-                    Node = flowFieldGridMap.GetNodeAt(neighborNodePos),
+                    Node = flowFieldGridMap.GetNodeAt(mapWidth, neighborNodePos),
                     GridPos = neighborNodePos,
                 };
 
