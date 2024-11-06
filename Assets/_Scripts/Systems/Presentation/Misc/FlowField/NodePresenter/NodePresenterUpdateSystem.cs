@@ -7,6 +7,7 @@ using Components.Misc.FlowField;
 using UnityEngine;
 using Utilities.Helpers;
 using Utilities.Extensions;
+using Unity.Mathematics;
 
 namespace Systems.Presentation.Misc.FlowField.NodePresenter
 {
@@ -33,17 +34,19 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
+            int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
 
             var presenterStartIndex = SystemAPI.GetSingleton<GridNodePresenterStartIndex>();
             var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
 
-            flowFieldGridMap.LogMapBestCost(mapWidth, mapHeight);
+            flowFieldGridMap.LogMapBestCost(mapWidth, mapHeight, in gridOffset);
 
             this.UpdateNodePresenters(
                 spawnedUIMap
                 , in flowFieldGridMap
                 , mapWidth
+                , in gridOffset
                 , in gridDebugConfig
                 , presenterStartIndex.Value);
 
@@ -53,13 +56,14 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             SpawnedUIMap spawnedUIMap
             , in FlowFieldGridMap flowFieldGridMap
             , int mapWidth
+            , in int2 gridOffset
             , in GridDebugConfig gridDebugConfig
             , int presenterStartIndex)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
             int targetGridIndex = FlowFieldGridHelper.GridPosToMapIndex(
                 mapWidth
-                , flowFieldGridMap.GridOffset
+                , gridOffset
                 , flowFieldGridMap.TargetGridPos);
 
             for (int i = 0; i < mapLength; i++)

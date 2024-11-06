@@ -39,6 +39,7 @@ namespace Systems.Simulation.Misc
             var flowFieldMapRef = SystemAPI.GetSingletonRW<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
+            int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
 
             int2 targetPos = new(2, 3); // Temp target Pos for now.
             flowFieldMapRef.ValueRW.TargetGridPos = targetPos;
@@ -48,12 +49,12 @@ namespace Systems.Simulation.Misc
             NativeArray<NodeAndPos> neighborNodeAndPosArray = new(8, Allocator.Temp);
             NativeArray<int2> neighborDirectionOrders = this.GetNeighborDirectionOrders();
 
-            var targetNode = flowFieldMapRef.ValueRO.GetNodeAt(targetPos.x, targetPos.y);
+            var targetNode = flowFieldMapRef.ValueRO.GetNodeAt(mapWidth, in gridOffset, targetPos.x, targetPos.y);
             targetNode.BestCost = 0;
 
             int targetNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(
                 mapWidth
-                , flowFieldMapRef.ValueRO.GridOffset
+                , in gridOffset
                 , targetPos);
             flowFieldMapRef.ValueRW.Nodes[targetNodeIndex] = targetNode;
 
@@ -73,6 +74,7 @@ namespace Systems.Simulation.Misc
                     in flowFieldMapRef.ValueRO
                     , mapWidth
                     , mapHeight
+                    , in gridOffset
                     , in reachedPosSet
                     , in neighborDirectionOrders
                     , ref neighborNodeAndPosArray
@@ -93,7 +95,7 @@ namespace Systems.Simulation.Misc
                         // Update new best cost to node in flowFieldMapRef.ValueRO.
                         int neighborNodeIndex =FlowFieldGridHelper.GridPosToMapIndex(
                             mapWidth
-                            , flowFieldMapRef.ValueRO.GridOffset
+                            , in gridOffset
                             , neighborPos);
                         flowFieldMapRef.ValueRW.Nodes[neighborNodeIndex] = neighborNode;
 
@@ -135,14 +137,13 @@ namespace Systems.Simulation.Misc
             in FlowFieldGridMap flowFieldGridMap
             , int mapWidth
             , int mapHeight
+            , in int2 gridOffset
             , in NativeHashSet<int2> reachedPos
             , in NativeArray<int2> neighborDirectionOrders
             , ref NativeArray<NodeAndPos> neighborNodeAndPosArray
             , int2 currentNodePos
             , out int neighborNodeCount)
         {
-            int2 gridOffset = flowFieldGridMap.GridOffset;
-
             int arrayIndex = 0;
 
             for (int i = 0; i < 8; i++)
@@ -153,16 +154,16 @@ namespace Systems.Simulation.Misc
                 if (reachedPos.Contains(neighborNodePos)) continue;
 
                 bool isValidGridPos =
-                    FlowFieldGridHelper.IsValidGridPos(mapWidth, mapHeight, in flowFieldGridMap.GridOffset, neighborNodePos);
+                    FlowFieldGridHelper.IsValidGridPos(mapWidth, mapHeight, in gridOffset, neighborNodePos);
 
                 if (!isValidGridPos) continue;
 
                 bool isReachableNeighborNode =
-                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, mapWidth, in currentNodePos, in neighborDir);
+                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, mapWidth, in gridOffset, in currentNodePos, in neighborDir);
 
                 if (!isReachableNeighborNode) continue;
 
-                var neighborNode = flowFieldGridMap.GetNodeAt(mapWidth, neighborNodePos);
+                var neighborNode = flowFieldGridMap.GetNodeAt(mapWidth, in gridOffset, neighborNodePos);
 
                 neighborNodeAndPosArray[arrayIndex] = new()
                 {

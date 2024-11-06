@@ -52,13 +52,11 @@ namespace Systems.Initialization.Misc.FlowField
             }
 
             this.CreateMapSizeComponents(mapWidth, mapHeight);
-
-            FlowFieldGridHelper.GetGridOffset(mapWidth, mapHeight, out var gridOffset);
+            this.CreateMapOffsetComponent(mapWidth, mapHeight);
 
             FlowFieldGridMap gridMap = new()
             {
                 Nodes = nodes,
-                GridOffset = gridOffset,
             };
 
             SingletonUtilities.GetInstance(this.EntityManager)
@@ -80,6 +78,18 @@ namespace Systems.Initialization.Misc.FlowField
                 .AddOrSetComponentData(new FlowFieldMapHeight
                 {
                     Value = mapHeight,
+                });
+
+        }
+
+        private void CreateMapOffsetComponent(int mapWidth, int mapHeight)
+        {
+            FlowFieldGridHelper.GetGridOffset(mapWidth, mapHeight, out var gridOffset);
+
+            SingletonUtilities.GetInstance(this.EntityManager)
+                .AddOrSetComponentData(new MapGridOffset
+                {
+                    Value = gridOffset,
                 });
 
         }

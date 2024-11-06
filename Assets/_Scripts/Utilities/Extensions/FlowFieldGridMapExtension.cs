@@ -9,15 +9,16 @@ namespace Utilities.Extensions
     {
         public static int GetMapHeight(this FlowFieldGridMap map, int mapWidth) => map.Nodes.Length / mapWidth;
 
-        public static FlowFieldGridNode GetNodeAt(this FlowFieldGridMap map, int mapWidth, int2 pos) => GetNodeAt(map, mapWidth, pos.x, pos.y);
+        public static FlowFieldGridNode GetNodeAt(this FlowFieldGridMap map, int mapWidth, in int2 gridOffset, int2 pos) =>
+            GetNodeAt(map, mapWidth, in gridOffset, pos.x, pos.y);
 
-        public static FlowFieldGridNode GetNodeAt(this FlowFieldGridMap map, int mapWidth, int x, int y)
+        public static FlowFieldGridNode GetNodeAt(this FlowFieldGridMap map, int mapWidth, in int2 gridOffset, int x, int y)
         {
-            int mapIndex = FlowFieldGridHelper.GridPosToMapIndex(mapWidth, map.GridOffset, new(x, y));
+            int mapIndex = FlowFieldGridHelper.GridPosToMapIndex(mapWidth, in gridOffset, new(x, y));
             return map.Nodes[mapIndex];
         }
 
-        public static void LogMapCost(this FlowFieldGridMap map, int mapWidth, int mapHeight)
+        public static void LogMapCost(this FlowFieldGridMap map, int mapWidth, int mapHeight, in int2 gridOffset)
         {
             // Log line per line.
             for (int i = 0; i < mapHeight; i++)
@@ -26,7 +27,7 @@ namespace Utilities.Extensions
                 for (int j = 0; j < mapWidth; j++)
                 {
                     logContent += "[";
-                    logContent += map.GetNodeAt(j, i).Cost;
+                    logContent += map.GetNodeAt(mapWidth, gridOffset, j, i).Cost;
                     logContent += "] ";
                 }
 
@@ -36,10 +37,8 @@ namespace Utilities.Extensions
 
         }
 
-        public static void LogMapBestCost(this FlowFieldGridMap map, int mapWidth, int mapHeight)
+        public static void LogMapBestCost(this FlowFieldGridMap map, int mapWidth, int mapHeight, in int2 gridOffset)
         {
-            int2 gridOffset = map.GridOffset;
-
             // Log line per line.
             for (int y = gridOffset.y; y < mapHeight + gridOffset.y; y++)
             {
@@ -47,7 +46,7 @@ namespace Utilities.Extensions
                 for (int x = gridOffset.x; x < mapWidth + gridOffset.x; x++)
                 {
                     logContent += "[";
-                    logContent += map.GetNodeAt(mapWidth, x, y).BestCost;
+                    logContent += map.GetNodeAt(mapWidth, gridOffset, x, y).BestCost;
                     logContent += "] ";
                 }
 

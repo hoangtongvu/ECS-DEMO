@@ -34,6 +34,8 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
+            int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
+
             var presenterStartIndexRef = SystemAPI.GetSingletonRW<GridNodePresenterStartIndex>();
             var gridDebugConfig = SystemAPI.GetSingleton<GridDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
@@ -44,6 +46,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                 , uiPoolMap
                 , in flowFieldGridMap
                 , mapWidth
+                , in gridOffset
                 , ref presenterStartIndexRef.ValueRW
                 , in gridDebugConfig
                 , 0.5f);
@@ -55,12 +58,12 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             , UIPoolMap uiPoolMap
             , in FlowFieldGridMap flowFieldGridMap
             , int mapWidth
+            , in int2 gridOffset
             , ref GridNodePresenterStartIndex presenterStartIndex
             , in GridDebugConfig gridDebugConfig
             , float drawCellRadius)
         {
             int mapLength = flowFieldGridMap.Nodes.Length;
-            int2 gridOffset = flowFieldGridMap.GridOffset;
 
             bool spawnedFirstPresenter = false;
 
