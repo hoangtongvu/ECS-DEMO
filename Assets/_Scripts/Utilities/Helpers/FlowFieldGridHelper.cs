@@ -57,10 +57,11 @@ namespace Utilities.Helpers
         public static void SyncTargetNodeValuesToNodePresenter(
             in GridDebugConfig gridDebugConfig
             , GridNodePresenterCtrl presenterCtrl
-            , in FlowFieldGridNode node)
+            , in FlowFieldGridNode node
+            , byte nodeCost)
         {
-            SetPresenterColor(presenterCtrl, in node);
-            SetPresenterCosts(in gridDebugConfig, presenterCtrl, in node);
+            SetPresenterColor(presenterCtrl, nodeCost);
+            SetPresenterCosts(in gridDebugConfig, presenterCtrl, in node, nodeCost);
             presenterCtrl.TargetMarkImage.Show();
 
         }
@@ -68,10 +69,11 @@ namespace Utilities.Helpers
         public static void SyncValuesToNodePresenter(
             in GridDebugConfig gridDebugConfig
             , GridNodePresenterCtrl presenterCtrl
-            , in FlowFieldGridNode node)
+            , in FlowFieldGridNode node
+            , byte nodeCost)
         {
-            SetPresenterColor(presenterCtrl, in node);
-            SetPresenterCosts(in gridDebugConfig, presenterCtrl, in node);
+            SetPresenterColor(presenterCtrl, nodeCost);
+            SetPresenterCosts(in gridDebugConfig, presenterCtrl, in node, nodeCost);
             SetPresenterVector(in gridDebugConfig, presenterCtrl, in node);
             presenterCtrl.TargetMarkImage.Hide();
 
@@ -80,9 +82,10 @@ namespace Utilities.Helpers
         private static void SetPresenterCosts(
             in GridDebugConfig gridDebugConfig
             , GridNodePresenterCtrl presenterCtrl
-            , in FlowFieldGridNode node)
+            , in FlowFieldGridNode node
+            , byte cost)
         {
-            if (gridDebugConfig.ShowCost) presenterCtrl.CostText.SetCost(node.Cost);
+            if (gridDebugConfig.ShowCost) presenterCtrl.CostText.SetCost(cost);
             else presenterCtrl.CostText.Clear();
 
             if (gridDebugConfig.ShowBestCost) presenterCtrl.BestCostText.SetBestCost(node.BestCost);
@@ -108,9 +111,11 @@ namespace Utilities.Helpers
 
         private static void SetPresenterColor(
             GridNodePresenterCtrl presenterCtrl
-            , in FlowFieldGridNode node)
+            , byte nodeCost)
         {
-            if (!node.IsPassable())
+            bool nodePassable = nodeCost != byte.MaxValue;
+
+            if (!nodePassable)
             {
                 presenterCtrl.BackgroundImage.SetColor(Color.red);
                 return;
@@ -124,7 +129,7 @@ namespace Utilities.Helpers
             const float maxCost = 6f; // Adjust as needed
 
             // Interpolate between the base color and the target color based on the node's cost
-            float t = Mathf.Clamp01((node.Cost - 1) / maxCost);
+            float t = Mathf.Clamp01((nodeCost - 1) / maxCost);
             Color interpolatedColor = Color.Lerp(baseColor, targetColor, t);
 
             presenterCtrl.BackgroundImage.SetColor(interpolatedColor);
@@ -134,9 +139,9 @@ namespace Utilities.Helpers
         [BurstCompile]
         public static ushort GetBestCost(
             in FlowFieldGridNode currentNode
-            , in FlowFieldGridNode neighborNode)
+            , in byte neighborNodeCost)
         {
-            int newBestCost = currentNode.BestCost + neighborNode.Cost;
+            int newBestCost = currentNode.BestCost + neighborNodeCost;
             if (newBestCost >= ushort.MaxValue) newBestCost = ushort.MaxValue;
 
             return (ushort)newBestCost;
@@ -144,9 +149,7 @@ namespace Utilities.Helpers
 
         [BurstCompile]
         public static bool IsReachableNeighborNode(
-            in FlowFieldGridMap flowFieldGridMap
-            , int mapWidth
-            , in int2 gridOffset
+            in FlowFieldCostMap costMap
             , in int2 currentNodePos
             , in int2 neighborDir)
         {
@@ -156,11 +159,11 @@ namespace Utilities.Helpers
             bool isUnitVector = xDir == 0 || yDir == 0;
             if (isUnitVector) return true;
 
-            var firstStraightNode = flowFieldGridMap.GetNodeAt(mapWidth, in gridOffset, currentNodePos.Add(addAmountX: xDir));
-            if (firstStraightNode.IsPassable()) return true;
+            bool firstStraightNodePassable = costMap.IsNodePassable(currentNodePos.Add(addAmountX: xDir));
+            if (firstStraightNodePassable) return true;
 
-            var secondStraightNode = flowFieldGridMap.GetNodeAt(mapWidth, in gridOffset, currentNodePos.Add(addAmountY: yDir));
-            if (secondStraightNode.IsPassable()) return true;
+            bool secondStraightNodePassable = costMap.IsNodePassable(currentNodePos.Add(addAmountY: yDir));
+            if (secondStraightNodePassable) return true;
 
             return false;
 
@@ -193,6 +196,8 @@ namespace Utilities.Helpers
             offset = new(offsetX, offsetY);
         }
 
+        [BurstCompile]
+        public static bool IsNodePassable(byte nodeCost) => nodeCost != byte.MaxValue;
 
 
     }

@@ -35,6 +35,7 @@ namespace Systems.Simulation.Misc
             var inputData = SystemAPI.GetSingleton<InputData>();
             if (!inputData.EnterButtonDown) return;
 
+            var costMap = SystemAPI.GetSingleton<FlowFieldCostMap>();
             var flowFieldMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             NativeArray<NodeAndPos> neighborNodeAndPosArray = new(8, Allocator.Temp);
             NativeArray<int2> neighborDirectionOrders = this.GetNeighborDirectionOrders();
@@ -51,6 +52,7 @@ namespace Systems.Simulation.Misc
 
                     this.GetNeighborNodeAndPosArray(
                         in flowFieldMap
+                        , in costMap
                         , mapWidth
                         , mapHeight
                         , in gridOffset
@@ -104,6 +106,7 @@ namespace Systems.Simulation.Misc
         [BurstCompile]
         private void GetNeighborNodeAndPosArray(
             in FlowFieldGridMap flowFieldGridMap
+            , in FlowFieldCostMap costMap
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -125,7 +128,7 @@ namespace Systems.Simulation.Misc
                 if (!isValidGridPos) continue;
 
                 bool isReachableNeighborNode =
-                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, mapWidth, in gridOffset, in currentNodePos, in neighborDir);
+                    FlowFieldGridHelper.IsReachableNeighborNode(in costMap, in currentNodePos, in neighborDir);
 
                 if (!isReachableNeighborNode) continue;
 

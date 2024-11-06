@@ -31,6 +31,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         {
             if (!Input.GetKeyDown(KeyCode.Space)) return;
 
+            var costMap = SystemAPI.GetSingleton<FlowFieldCostMap>();
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
@@ -45,6 +46,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             this.UpdateNodePresenters(
                 spawnedUIMap
                 , in flowFieldGridMap
+                , in costMap
                 , mapWidth
                 , in gridOffset
                 , in gridDebugConfig
@@ -55,6 +57,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         private void UpdateNodePresenters(
             SpawnedUIMap spawnedUIMap
             , in FlowFieldGridMap flowFieldGridMap
+            , in FlowFieldCostMap flowFieldCostMap
             , int mapWidth
             , in int2 gridOffset
             , in GridDebugConfig gridDebugConfig
@@ -69,6 +72,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             for (int i = 0; i < mapLength; i++)
             {
                 var node = flowFieldGridMap.Nodes[i];
+                var nodeCost = flowFieldCostMap.Value[i];
 
                 UIID presenterId = new()
                 {
@@ -88,11 +92,11 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
 
                 if (isTargetNode)
                 {
-                    FlowFieldGridHelper.SyncTargetNodeValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node);
+                    FlowFieldGridHelper.SyncTargetNodeValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node, nodeCost);
                     continue;
                 }
 
-                FlowFieldGridHelper.SyncValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node);
+                FlowFieldGridHelper.SyncValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node, nodeCost);
                 
             }
 

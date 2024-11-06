@@ -18,25 +18,6 @@ namespace Utilities.Extensions
             return map.Nodes[mapIndex];
         }
 
-        public static void LogMapCost(this FlowFieldGridMap map, int mapWidth, int mapHeight, in int2 gridOffset)
-        {
-            // Log line per line.
-            for (int i = 0; i < mapHeight; i++)
-            {
-                string logContent = "";
-                for (int j = 0; j < mapWidth; j++)
-                {
-                    logContent += "[";
-                    logContent += map.GetNodeAt(mapWidth, gridOffset, j, i).Cost;
-                    logContent += "] ";
-                }
-
-                UnityEngine.Debug.Log(logContent);
-
-            }
-
-        }
-
         public static void LogMapBestCost(this FlowFieldGridMap map, int mapWidth, int mapHeight, in int2 gridOffset)
         {
             // Log line per line.

@@ -32,6 +32,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
         {
             this.Enabled = false;
 
+            var costMap = SystemAPI.GetSingleton<FlowFieldCostMap>();
             var flowFieldGridMap = SystemAPI.GetSingleton<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
@@ -46,6 +47,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                 spawnedUIMap
                 , uiPoolMap
                 , in flowFieldGridMap
+                , in costMap
                 , mapWidth
                 , in gridOffset
                 , ref presenterStartIndexRef.ValueRW
@@ -58,6 +60,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             SpawnedUIMap spawnedUIMap
             , UIPoolMap uiPoolMap
             , in FlowFieldGridMap flowFieldGridMap
+            , in FlowFieldCostMap costMap
             , int mapWidth
             , in int2 gridOffset
             , ref GridNodePresenterStartIndex presenterStartIndex
@@ -71,6 +74,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
             for (int i = 0; i < mapLength; i++)
             {
                 var node = flowFieldGridMap.Nodes[i];
+                var nodeCost = costMap.Value[i];
 
                 FlowFieldGridHelper.MapIndexToGridPos(
                     mapWidth
@@ -92,7 +96,7 @@ namespace Systems.Presentation.Misc.FlowField.NodePresenter
                         , UIType.GridNodePresenter
                         , center);
 
-                FlowFieldGridHelper.SyncValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node);
+                FlowFieldGridHelper.SyncValuesToNodePresenter(in gridDebugConfig, presenterCtrl, in node, nodeCost);
 
                 presenterCtrl.gameObject.SetActive(true);
 

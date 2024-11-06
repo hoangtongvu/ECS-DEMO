@@ -36,6 +36,7 @@ namespace Systems.Simulation.Misc
             if (!inputData.BackspaceButtonDown) return;
 
 
+            var costMap = SystemAPI.GetSingleton<FlowFieldCostMap>();
             var flowFieldMapRef = SystemAPI.GetSingletonRW<FlowFieldGridMap>();
             int mapWidth = SystemAPI.GetSingleton<FlowFieldMapWidth>().Value;
             int mapHeight = SystemAPI.GetSingleton<FlowFieldMapHeight>().Value;
@@ -72,6 +73,7 @@ namespace Systems.Simulation.Misc
 
                 this.GetNeighborNodeAndPosArray(
                     in flowFieldMapRef.ValueRO
+                    , in costMap
                     , mapWidth
                     , mapHeight
                     , in gridOffset
@@ -87,13 +89,15 @@ namespace Systems.Simulation.Misc
                     var neighborNodeAndPos = neighborNodeAndPosArray[i];
                     var neighborNode = neighborNodeAndPos.Node;
                     int2 neighborPos = neighborNodeAndPos.GridPos;
+                    byte neighborCost = costMap.GetCostAt(neighborPos);
 
-                    if (neighborNode.IsPassable())
+                    bool neighborNodePassable = FlowFieldGridHelper.IsNodePassable(neighborCost);
+                    if (neighborNodePassable)
                     {
-                        neighborNode.BestCost = FlowFieldGridHelper.GetBestCost(in currentNode, in neighborNode);
+                        neighborNode.BestCost = FlowFieldGridHelper.GetBestCost(in currentNode, neighborCost);
 
                         // Update new best cost to node in flowFieldMapRef.ValueRO.
-                        int neighborNodeIndex =FlowFieldGridHelper.GridPosToMapIndex(
+                        int neighborNodeIndex = FlowFieldGridHelper.GridPosToMapIndex(
                             mapWidth
                             , in gridOffset
                             , neighborPos);
@@ -135,6 +139,7 @@ namespace Systems.Simulation.Misc
         [BurstCompile]
         private void GetNeighborNodeAndPosArray(
             in FlowFieldGridMap flowFieldGridMap
+            , in FlowFieldCostMap costMap
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -159,7 +164,7 @@ namespace Systems.Simulation.Misc
                 if (!isValidGridPos) continue;
 
                 bool isReachableNeighborNode =
-                    FlowFieldGridHelper.IsReachableNeighborNode(in flowFieldGridMap, mapWidth, in gridOffset, in currentNodePos, in neighborDir);
+                    FlowFieldGridHelper.IsReachableNeighborNode(in costMap, in currentNodePos, in neighborDir);
 
                 if (!isReachableNeighborNode) continue;
 

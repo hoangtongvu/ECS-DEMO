@@ -5,6 +5,8 @@ using Components.Misc.FlowField;
 using Core.Misc.FlowField;
 using Utilities;
 using Utilities.Helpers;
+using Utilities.Extensions;
+using Unity.Mathematics;
 
 namespace Systems.Initialization.Misc.FlowField
 {
@@ -35,6 +37,7 @@ namespace Systems.Initialization.Misc.FlowField
             int mapHeight = lines.Length;
 
             var nodes = new NativeArray<FlowFieldGridNode>(mapWidth * mapHeight, Allocator.Persistent);
+            var costs = new NativeArray<byte>(mapWidth * mapHeight, Allocator.Persistent);
 
             // Parse CSV and fill in the FlowFieldGridNode array
             for (int y = 0; y < mapHeight; y++)
@@ -43,11 +46,14 @@ namespace Systems.Initialization.Misc.FlowField
                 for (int x = 0; x < mapWidth; x++)
                 {
                     byte cost = byte.Parse(row[x].Trim());
-                    nodes[y * mapWidth + x] = new FlowFieldGridNode
+                    int arrayIndex = y * mapWidth + x;
+
+                    nodes[arrayIndex] = new FlowFieldGridNode
                     {
-                        Cost = cost,
                         BestCost = ushort.MaxValue,
                     };
+
+                    costs[arrayIndex] = cost;
                 }
             }
 
@@ -57,8 +63,11 @@ namespace Systems.Initialization.Misc.FlowField
                     Value = 1f,
                 });
 
+            FlowFieldGridHelper.GetGridOffset(mapWidth, mapHeight, out var gridOffset);
+
             this.CreateMapSizeComponents(mapWidth, mapHeight);
-            this.CreateMapOffsetComponent(mapWidth, mapHeight);
+            this.CreateMapOffsetComponent(in gridOffset);
+            this.CreateCostMap(in costs, mapWidth, mapHeight, in gridOffset);
 
             FlowFieldGridMap gridMap = new()
             {
@@ -88,15 +97,28 @@ namespace Systems.Initialization.Misc.FlowField
 
         }
 
-        private void CreateMapOffsetComponent(int mapWidth, int mapHeight)
+        private void CreateMapOffsetComponent(in int2 gridOffset)
         {
-            FlowFieldGridHelper.GetGridOffset(mapWidth, mapHeight, out var gridOffset);
-
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(new MapGridOffset
                 {
                     Value = gridOffset,
                 });
+
+        }
+
+        private void CreateCostMap(in NativeArray<byte> costs, int mapWidth, int mapHeight, in int2 offset)
+        {
+            var costMap = new FlowFieldCostMap
+            {
+                Value = costs,
+                Width = mapWidth,
+                Height = mapHeight,
+                Offset = offset,
+            };
+
+            SingletonUtilities.GetInstance(this.EntityManager)
+                .AddOrSetComponentData(costMap);
 
         }
 
