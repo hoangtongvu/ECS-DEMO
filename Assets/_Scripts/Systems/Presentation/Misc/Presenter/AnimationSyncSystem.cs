@@ -28,16 +28,17 @@ namespace Systems.Presentation.Misc.Presenter
 
             if (!presentersHolder.Value.Value.gameObject.activeSelf) return;
 
-            foreach (var (animDataRef, presenterRef) in
+            foreach (var (animDataRef, animatorTransitionDurationRef, presenterRef) in
                 SystemAPI.Query<
                     RefRW<AnimatorData>
+                    , RefRO<AnimatorTransitionDuration>
                     , RefRO<PresenterHolder>>()
                     .WithDisabled<NeedSpawnPresenterTag>())
             {
                 if (!animDataRef.ValueRO.Value.ValueChanged) continue;
 
                 BasePresenter presenter = presenterRef.ValueRO.Value.Value;
-                presenter.BaseAnimator.ChangeAnimationState(animDataRef.ValueRO.Value.Value.ToString());
+                presenter.BaseAnimator.WaitPlay(animDataRef.ValueRO.Value.Value.ToString(), animatorTransitionDurationRef.ValueRO.Value);
                 animDataRef.ValueRW.Value.ValueChanged = false;
 
             }

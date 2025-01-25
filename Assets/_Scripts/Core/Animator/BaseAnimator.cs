@@ -49,12 +49,17 @@ namespace Core.Animator
             return 0;
         }
 
-
-
-        public virtual void ChangeAnimationState(string newStateName)
+        public virtual void PlayImmediately(string newStateName)
         {
             if (currentStateName == newStateName) return;
             animator.Play(newStateName);
+            currentStateName = newStateName;
+        }
+        
+        public virtual void WaitPlay(string newStateName, float transitionDuration)
+        {
+            if (currentStateName == newStateName) return;
+            animator.CrossFadeInFixedTime(newStateName, transitionDuration);
             currentStateName = newStateName;
         }
 
