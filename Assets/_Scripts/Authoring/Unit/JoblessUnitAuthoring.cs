@@ -174,6 +174,10 @@ namespace Authoring.Unit
                         ValueChanged = true,
                     }
                 });
+                AddComponent(entity, new AnimatorTransitionDuration
+                {
+                    Value = 0.2f, // Default value for now.
+                });
 
             }
         }

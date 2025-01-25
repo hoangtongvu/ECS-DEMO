@@ -23,6 +23,7 @@ namespace Authoring
                         ValueChanged = false,
                     }
                 });
+                AddComponent<AnimatorTransitionDuration>(entity);
 
 
             }
