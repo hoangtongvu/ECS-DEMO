@@ -86,6 +86,9 @@ namespace Utilities
             return this.singletonEntity;
         }
 
+        /// <summary>
+        /// Should not use this because Unity ECS has bad support GetSingleton IEnableable.
+        /// </summary>
         public void SetComponentEnabled<T>(bool value) where T : IComponentData, IEnableableComponent
         {
             if (!this.entityManager.HasComponent<T>(this.singletonEntity))
