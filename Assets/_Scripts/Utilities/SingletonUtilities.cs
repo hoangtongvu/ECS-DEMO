@@ -86,6 +86,14 @@ namespace Utilities
             return this.singletonEntity;
         }
 
+        public void SetComponentEnabled<T>(bool value) where T : IComponentData, IEnableableComponent
+        {
+            if (!this.entityManager.HasComponent<T>(this.singletonEntity))
+                Debug.LogError($"Singleton Entity doesn't have Component {nameof(T)} to enable");
+
+            this.entityManager.SetComponentEnabled<T>(this.singletonEntity, value);
+        }
+
     }
 
     public static class SingletonUtilitiesManagedExtensions
