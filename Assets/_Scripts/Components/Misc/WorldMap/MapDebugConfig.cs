@@ -4,8 +4,9 @@ namespace Components.Misc.WorldMap
 {
     public struct MapDebugConfig : IComponentData
     {
-        public bool ShowCost;
-        public bool ShowGridLines;
+        public bool ShowCellCosts;
+        public bool ShowCellGridLines;
+        public bool ShowChunks;
     }
 
 }

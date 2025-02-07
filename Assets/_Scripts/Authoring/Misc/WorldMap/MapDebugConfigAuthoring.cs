@@ -6,8 +6,9 @@ namespace Authoring.Misc.WorldMap
 {
     public class GridDebugConfigAuthoring : MonoBehaviour
     {
-        [SerializeField] private bool showCost = true;
-        [SerializeField] private bool showGridLines = true;
+        [SerializeField] private bool showCellCosts = true;
+        [SerializeField] private bool showCellGridLines = true;
+        [SerializeField] private bool showChunks = true;
 
         private class Baker : Baker<GridDebugConfigAuthoring>
         {
@@ -17,8 +18,9 @@ namespace Authoring.Misc.WorldMap
 
                 AddComponent(entity, new MapDebugConfig
                 {
-                    ShowCost = authoring.showCost,
-                    ShowGridLines = authoring.showGridLines,
+                    ShowCellCosts = authoring.showCellCosts,
+                    ShowCellGridLines = authoring.showCellGridLines,
+                    ShowChunks = authoring.showChunks,
                 });
 
             }

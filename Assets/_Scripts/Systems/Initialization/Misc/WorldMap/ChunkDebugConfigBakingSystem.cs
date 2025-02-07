@@ -19,7 +19,7 @@ namespace Systems.Initialization.Misc.WorldMap
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(new ChunkDebugConfig
                 {
-                    ChunkGridLineColors = colorArray,
+                    GridLineColorPalette = colorArray,
                 });
         }
 

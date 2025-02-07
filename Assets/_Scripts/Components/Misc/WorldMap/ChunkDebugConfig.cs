@@ -6,7 +6,7 @@ namespace Components.Misc.WorldMap
 {
     public struct ChunkDebugConfig : IComponentData
     {
-        public NativeArray<Color> ChunkGridLineColors;
+        public NativeArray<Color> GridLineColorPalette;
     }
 
 }

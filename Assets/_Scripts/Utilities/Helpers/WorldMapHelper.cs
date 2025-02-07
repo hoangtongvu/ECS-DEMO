@@ -101,7 +101,7 @@ namespace Utilities.Helpers
             , CellPresenterCtrl presenterCtrl
             , byte cost)
         {
-            if (debugConfig.ShowCost) presenterCtrl.CostText.SetCost(cost);
+            if (debugConfig.ShowCellCosts) presenterCtrl.CostText.SetCost(cost);
             else presenterCtrl.CostText.Clear();
 
         }
