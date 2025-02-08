@@ -9,7 +9,7 @@ using Core.Utilities.Extensions;
 namespace Systems.Initialization.Misc.WorldMap
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(ChunkListInitSystem))]
+    [UpdateAfter(typeof(ChunkComponentsInitSystem))]
     [UpdateAfter(typeof(TestMapInitSystem))] //Note: CreateChunksSystem needs to update after WorldMapChangedTag writer systems
     [BurstCompile]
     public partial struct CreateChunksSystem : ISystem
@@ -28,6 +28,7 @@ namespace Systems.Initialization.Misc.WorldMap
             if (!worldMapChanged) return;
 
             var chunkList = SystemAPI.GetSingleton<ChunkList>();
+            var chunkIndexToExitsMap = SystemAPI.GetSingleton<ChunkIndexToExitsMap>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
             int2 gridMapSize = new(costMap.Width, costMap.Height);
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
@@ -55,8 +56,11 @@ namespace Systems.Initialization.Misc.WorldMap
                     this.AssignChunkIndexToCells(in costMap, new int2(x, y), maxChunkSize, newChunkIndex);
 
                 }
+
             }
-            
+
+            this.ReCreateChunkIndexToExitsMap(in chunkIndexToExitsMap, in chunkList);
+
         }
 
         [BurstCompile]
@@ -132,6 +136,23 @@ namespace Systems.Initialization.Misc.WorldMap
             }
 
         }
+
+        [BurstCompile]
+        private void ReCreateChunkIndexToExitsMap(
+            in ChunkIndexToExitsMap chunkIndexToExitsMap
+            , in ChunkList chunkList)
+        {
+            chunkIndexToExitsMap.Value.Clear();
+            int addAmount = chunkList.Value.Length;
+
+            chunkIndexToExitsMap.Value.AddReplicate(new ChunkExitRange
+            {
+                StartIndex = -1,
+                Amount = 0,
+            }, addAmount);
+
+        }
+
 
     }
 

@@ -9,25 +9,6 @@ namespace Utilities.Helpers
     [BurstCompile]
     public static class WorldMapHelper
     {
-        // Burst error BC1064 due to returning float2, can be fixed using out keyword.
-        //[BurstCompile]
-        //public static float2 GetVectorFromDirection(SimpleDirection direction)
-        //{
-        //    return direction switch
-        //    {
-        //        SimpleDirection.Top => new float2(0, 1),
-        //        SimpleDirection.Bottom => new float2(0, -1),
-        //        SimpleDirection.Left => new float2(-1, 0),
-        //        SimpleDirection.Right => new float2(1, 0),
-        //        SimpleDirection.TopLeft => math.normalize(new float2(-1, 1)),
-        //        SimpleDirection.TopRight => math.normalize(new float2(1, 1)),
-        //        SimpleDirection.BottomLeft => math.normalize(new float2(-1, -1)),
-        //        SimpleDirection.BottomRight => math.normalize(new float2(1, -1)),
-        //        _ => float2.zero,
-        //    };
-
-        //}
-
         // Burst error BC1064 due to returning int2, can be fixed using out keyword.
         //[BurstCompile]
         public static int2 MapIndexToGridPos(int gridMapWidth, in int2 gridOffset, int mapIndex)
@@ -51,40 +32,6 @@ namespace Utilities.Helpers
         public static int GridPosToMapIndex(int gridMapWidth, in int2 gridOffset, int x, int y) =>
             (y - gridOffset.y) * gridMapWidth + (x - gridOffset.x);
 
-        //[BurstCompile]
-        //public static bool IsReachableNeighborNode(
-        //    in FlowFieldCostMap costMap
-        //    , in int2 currentNodePos
-        //    , in int2 neighborDir)
-        //{
-        //    int xDir = neighborDir.x;
-        //    int yDir = neighborDir.y;
-
-        //    bool isUnitVector = xDir == 0 || yDir == 0;
-        //    if (isUnitVector) return true;
-
-        //    bool firstStraightNodePassable = costMap.IsNodePassable(currentNodePos.Add(addAmountX: xDir));
-        //    if (firstStraightNodePassable) return true;
-
-        //    bool secondStraightNodePassable = costMap.IsNodePassable(currentNodePos.Add(addAmountY: yDir));
-        //    if (secondStraightNodePassable) return true;
-
-        //    return false;
-
-        //}
-
-        //public static void SyncTargetNodeValuesToNodePresenter(
-        //    in GridDebugConfig gridDebugConfig
-        //    , GridNodePresenterCtrl presenterCtrl
-        //    , in FlowFieldGridNode node
-        //    , byte nodeCost)
-        //{
-        //    SetPresenterColor(presenterCtrl, nodeCost);
-        //    SetPresenterCosts(in gridDebugConfig, presenterCtrl, in node, nodeCost);
-        //    presenterCtrl.TargetMarkImage.Show();
-
-        //}
-
         public static void SyncValuesToNodePresenter(
             in MapDebugConfig debugConfig
             , CellPresenterCtrl presenterCtrl
@@ -95,7 +42,6 @@ namespace Utilities.Helpers
             //presenterCtrl.TargetMarkImage.Hide();
 
         }
-
         private static void SetPresenterCosts(
             in MapDebugConfig debugConfig
             , CellPresenterCtrl presenterCtrl
