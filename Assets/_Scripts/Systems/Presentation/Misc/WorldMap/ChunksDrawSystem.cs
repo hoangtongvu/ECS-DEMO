@@ -44,8 +44,6 @@ namespace Systems.Presentation.Misc.WorldMap
 
             if (!Input.GetKeyDown(KeyCode.Space)) return;
 
-            chunksDrawer.IsInitialized = true;
-
             ChunksDrawerConfig config = new()
             {
                 CellSize = mapCellSize,

@@ -17,8 +17,6 @@ namespace Core.Misc.WorldMap
         private readonly List<Color> chunkColors = new();
         private ChunksDrawerConfig config;
 
-        public bool IsInitialized { get; set; }
-
 
         public void ApplyConfig(in ChunksDrawerConfig config)
         {
@@ -46,7 +44,7 @@ namespace Core.Misc.WorldMap
 
         private void OnDrawGizmos()
         {
-            if (!this.IsInitialized) return;
+            if (!this.config.Chunks.IsCreated) return;
 
             DrawChunks(
                 this.config.Chunks
