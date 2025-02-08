@@ -67,6 +67,8 @@ namespace Systems.Initialization.Misc.WorldMap
                     Amount = totalExits,
                 };
 
+                borderCellPositions.Dispose();
+
             }
 
         }
