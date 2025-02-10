@@ -121,15 +121,11 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 
                     float finalCost = finalCostComputer.GetCost();
 
-                    // Store cost to chunk
-                    bool canAdd = innerPathCostMap.Value.TryAdd(new InnerPathKey
+                    innerPathCostMap.Value.TryAdd(new InnerPathKey
                     {
                         FirstCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos0),
                         SecondCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos1),
                     }, finalCost);
-
-                    if (!canAdd) continue;
-                    UnityEngine.Debug.Log($"{pos0}, {pos1} - finalCost: {finalCost}");
 
                 }
 
