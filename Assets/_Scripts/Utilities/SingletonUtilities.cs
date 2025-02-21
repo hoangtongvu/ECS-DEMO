@@ -53,7 +53,7 @@ namespace Utilities
 
 #endif
 
-        private static void DestroyInstance() => InstanceField.Data = default;
+        public static void DestroyInstance() => InstanceField.Data = default;
 
 
         public bool HasSingleton<T>() where T : IComponentData => this.entityManager.HasComponent<T>(this.singletonEntity);

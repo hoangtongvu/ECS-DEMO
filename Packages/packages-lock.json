@@ -14,6 +14,15 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.darksun.core.testing": {
+      "version": "https://github.com/hoangtongvu/com.darksun.core.testing.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.entities": "1.2.0"
+      },
+      "hash": "32d0986d3d2a725a7288fa80f2d4385f4580401a"
+    },
     "com.github-joc0de.visual-studio-solution-generator": {
       "version": "1.0.13",
       "depth": 0,
