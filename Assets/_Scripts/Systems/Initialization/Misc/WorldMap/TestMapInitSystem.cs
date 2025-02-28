@@ -72,7 +72,7 @@ namespace Systems.Initialization.Misc.WorldMap
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(new TargetCellPos
                 {
-                    Value = new(2, 3),
+                    Value = new(0, 0),
                 });
 
             SingletonUtilities.GetInstance(this.EntityManager)

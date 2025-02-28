@@ -8,8 +8,17 @@ namespace Core.Misc.WorldMap.ChunkInnerPathCost
     public struct InnerPathKey : IEquatable<InnerPathKey>
     {
         [FieldOffset(0)] private readonly int2 raw;
-        [FieldOffset(0)] public int FirstCellMapIndex;
-        [FieldOffset(4)] public int SecondCellMapIndex;
+        [FieldOffset(0)] private int FirstCellMapIndex;
+        [FieldOffset(4)] private int SecondCellMapIndex;
+
+
+        public InnerPathKey(int firstCellMapIndex, int secondCellMapIndex) : this()
+        {
+            (this.FirstCellMapIndex, this.SecondCellMapIndex) = firstCellMapIndex <= secondCellMapIndex
+                ? (firstCellMapIndex, secondCellMapIndex)
+                : (secondCellMapIndex, firstCellMapIndex);
+
+        }
 
         public override bool Equals(object obj)
         {

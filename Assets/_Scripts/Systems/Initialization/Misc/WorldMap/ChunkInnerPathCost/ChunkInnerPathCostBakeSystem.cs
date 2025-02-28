@@ -121,11 +121,10 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 
                     float finalCost = finalCostComputer.GetCost();
 
-                    innerPathCostMap.Value.TryAdd(new InnerPathKey
-                    {
-                        FirstCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos0),
-                        SecondCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos1),
-                    }, finalCost);
+                    int firstCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos0);
+                    int secondCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos1);
+
+                    innerPathCostMap.Value.TryAdd(new InnerPathKey(firstCellMapIndex, secondCellMapIndex), finalCost);
 
                 }
 
