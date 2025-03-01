@@ -10,6 +10,7 @@ using Core.Misc.WorldMap.ChunkInnerPathCost;
 using Utilities.Helpers;
 using Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost;
 using Core.Misc.WorldMap;
+using Utilities.Helpers.Misc.WorldMap;
 
 namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 {
@@ -55,7 +56,8 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             var cellPosRangeMap = SystemAPI.GetSingleton<CellPosRangeMap>();
             var cellPositionsContainer = SystemAPI.GetSingleton<CellPositionsContainer>();
             var chunkList = SystemAPI.GetSingleton<ChunkList>();
-            var chunkIndexToExitsMap = SystemAPI.GetSingleton<ChunkIndexToExitsMap>();
+            var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
+            var chunkExitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
             var chunkExitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
 
@@ -67,12 +69,17 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             };
 
             int chunkListLength = chunkList.Value.Length;
-            for (int i = 0; i < chunkListLength; i++)
+            for (int chunkIndex = 0; chunkIndex < chunkListLength; chunkIndex++)
             {
-                var chunkExitRange = chunkIndexToExitsMap.Value[i];
-                var exits = this.GetExitsFromChunk(in chunkExitsContainer, in chunkExitRange, Allocator.Temp);
+                ChunkExitHelper.GetExitsFromChunk(
+                    in chunkIndexToExitIndexesMap
+                    , in chunkExitIndexesContainer
+                    , in chunkExitsContainer
+                    , chunkIndex
+                    , Allocator.Temp
+                    , out var exits);
 
-                this.BakeChunkInnerPathCosts(in costMap, in innerPathCostMap, ref finalCostComputer, in exits, chunkExitRange.Amount);
+                this.BakeChunkInnerPathCosts(in costMap, in innerPathCostMap, ref finalCostComputer, chunkIndex, in exits, exits.Length);
 
                 exits.Dispose();
 
@@ -81,48 +88,31 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
         }
 
         [BurstCompile]
-        private NativeArray<ChunkExit> GetExitsFromChunk(
-            in ChunkExitsContainer chunkExitsContainer
-            , in ChunkExitRange chunkExitRange
-            , Allocator allocator)
-        {
-            var exits = new NativeArray<ChunkExit>(chunkExitRange.Amount, allocator);
-            int upperBound = chunkExitRange.StartIndex + chunkExitRange.Amount;
-            int tempIndex = 0;
-
-            for (int j = chunkExitRange.StartIndex; j < upperBound; j++)
-            {
-                exits[tempIndex] = chunkExitsContainer.Value[j];
-                tempIndex++;
-            }
-
-            return exits;
-
-        }
-
-        [BurstCompile]
         private void BakeChunkInnerPathCosts(
             in WorldTileCostMap costMap
             , in InnerPathCostMap innerPathCostMap
             , ref FinalCostComputer finalCostComputer
+            , int chunkIndex
             , in NativeArray<ChunkExit> exits
             , int exitCount)
         {
             for (int j = 0; j < exitCount; j++)
             {
-                int2 pos0 = exits[j].InnerCellPos;
+                ChunkExitHelper.GetUnsafeCellBelongToChunkFromExit(in costMap, exits[j], chunkIndex, out _, out int cell0MapIndex);
+                int2 pos0 = WorldMapHelper.MapIndexToGridPos(costMap.Width, in costMap.Offset, cell0MapIndex);
 
                 for (int k = j + 1; k < exitCount; k++)
                 {
-                    int2 pos1 = exits[k].InnerCellPos;
+                    ChunkExitHelper.GetUnsafeCellBelongToChunkFromExit(in costMap, exits[k], chunkIndex, out _, out int cell1MapIndex);
+                    int2 pos1 = WorldMapHelper.MapIndexToGridPos(costMap.Width, in costMap.Offset, cell1MapIndex);
 
                     finalCostComputer.Pos0 = pos0;
                     finalCostComputer.Pos1 = pos1;
 
                     float finalCost = finalCostComputer.GetCost();
 
-                    int firstCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos0);
-                    int secondCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in pos1);
+                    int firstCellMapIndex = cell0MapIndex;
+                    int secondCellMapIndex = cell1MapIndex;
 
                     innerPathCostMap.Value.TryAdd(new InnerPathKey(firstCellMapIndex, secondCellMapIndex), finalCost);
 
