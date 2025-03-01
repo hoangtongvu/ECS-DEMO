@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using Unity.Collections;
 using Utilities.Extensions;
 using Core.Utilities.Extensions;
+using Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.WorldMap
 {
@@ -30,9 +31,13 @@ namespace Systems.Initialization.Misc.WorldMap
 
             var chunkList = SystemAPI.GetSingleton<ChunkList>();
             var chunkExitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
-            var chunkIndexToExitsMap = SystemAPI.GetSingleton<ChunkIndexToExitsMap>();
+            var chunkExitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
+            var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
             var neighborCellDirections = SystemAPI.GetSingleton<NeighborCellDirections>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
+
+            // This is used to remove duplicated Exits and store the index of non-duplicated exit in ChunkExitContainer
+            NativeHashMap<ChunkExit, int> chunkExitHashMap = new(500, Allocator.Temp);
 
             int length = chunkList.Value.Length;
 
@@ -40,7 +45,7 @@ namespace Systems.Initialization.Misc.WorldMap
             {
                 Chunk chunk = chunkList.Value[i];
 
-                int rangeStartIndex = chunkExitsContainer.Value.Length;
+                int rangeStartIndex = chunkExitIndexesContainer.Value.Length;
                 int totalExits = 0;
 
                 NativeArray<int2> borderCellPositions = this.GetBorderCellPositions(chunk, Allocator.Temp);
@@ -52,7 +57,9 @@ namespace Systems.Initialization.Misc.WorldMap
                     this.TraverseNeighborsAndCreateExits(
                         in costMap
                         , in chunkExitsContainer
+                        , in chunkExitIndexesContainer
                         , in neighborCellDirections.Value
+                        , in chunkExitHashMap
                         , in cellPos
                         , cell.ChunkIndex
                         , out int singleCellExitAmount);
@@ -61,7 +68,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
                 }
 
-                chunkIndexToExitsMap.Value[i] = new ChunkExitRange()
+                chunkIndexToExitIndexesMap.Value[i] = new()
                 {
                     StartIndex = rangeStartIndex,
                     Amount = totalExits,
@@ -70,6 +77,8 @@ namespace Systems.Initialization.Misc.WorldMap
                 borderCellPositions.Dispose();
 
             }
+
+            chunkExitHashMap.Dispose();
 
         }
 
@@ -124,7 +133,9 @@ namespace Systems.Initialization.Misc.WorldMap
         private void TraverseNeighborsAndCreateExits(
             in WorldTileCostMap costMap
             , in ChunkExitsContainer chunkExitsContainer
+            , in ChunkExitIndexesContainer chunkExitIndexesContainer
             , in NativeArray<int2> neighborCellDirections
+            , in NativeHashMap<ChunkExit, int> chunkExitHashMap
             , in int2 cellPos
             , int cellChunkIndex
             , out int singleCellExitAmount)
@@ -135,11 +146,13 @@ namespace Systems.Initialization.Misc.WorldMap
             int2 bottomRightMapCellPos = costMap.Offset + new int2(costMap.Width - 1, costMap.Height - 1);
 
             NativeArray<bool> straightNeighborPassableStates = new(4, Allocator.Temp);
-
+            
             this.TraverseStraightNeighbors(
                 in costMap
                 , in chunkExitsContainer
+                , in chunkExitIndexesContainer
                 , in neighborCellDirections
+                , in chunkExitHashMap
                 , ref straightNeighborPassableStates
                 , in topLeftMapCellPos
                 , in bottomRightMapCellPos
@@ -150,7 +163,9 @@ namespace Systems.Initialization.Misc.WorldMap
             this.TraverseDiagonalNeighbors(
                 in costMap
                 , in chunkExitsContainer
+                , in chunkExitIndexesContainer
                 , in neighborCellDirections
+                , in chunkExitHashMap
                 , ref straightNeighborPassableStates
                 , in topLeftMapCellPos
                 , in bottomRightMapCellPos
@@ -166,7 +181,9 @@ namespace Systems.Initialization.Misc.WorldMap
         private void TraverseStraightNeighbors(
             in WorldTileCostMap costMap
             , in ChunkExitsContainer chunkExitsContainer
+            , in ChunkExitIndexesContainer chunkExitIndexesContainer
             , in NativeArray<int2> neighborCellDirections
+            , in NativeHashMap<ChunkExit, int> chunkExitHashMap
             , ref NativeArray<bool> straightNeighborPassableStates
             , in int2 topLeftMapCellPos
             , in int2 bottomRightMapCellPos
@@ -190,7 +207,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 if (!isNeighborPassable) continue;
                 if (neighborCell.ChunkIndex == cellChunkIndex) continue;
 
-                this.CreateExit(in chunkExitsContainer, in cellPos, in neighborPos);
+                this.CreateAndAddExitToContainer(in costMap, in chunkExitsContainer, in chunkExitIndexesContainer, in chunkExitHashMap, in cellPos, in neighborPos);
                 singleCellExitAmount++;
 
             }
@@ -201,7 +218,9 @@ namespace Systems.Initialization.Misc.WorldMap
         private void TraverseDiagonalNeighbors(
             in WorldTileCostMap costMap
             , in ChunkExitsContainer chunkExitsContainer
+            , in ChunkExitIndexesContainer chunkExitIndexesContainer
             , in NativeArray<int2> neighborCellDirections
+            , in NativeHashMap<ChunkExit, int> chunkExitHashMap
             , ref NativeArray<bool> straightNeighborPassableStates
             , in int2 topLeftMapCellPos
             , in int2 bottomRightMapCellPos
@@ -222,7 +241,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 if (neighborCell.ChunkIndex == cellChunkIndex) continue;
                 if (!this.IsDiagonalCellReachable(i, in straightNeighborPassableStates)) continue;
 
-                this.CreateExit(in chunkExitsContainer, in cellPos, in neighborPos);
+                this.CreateAndAddExitToContainer(in costMap, in chunkExitsContainer, in chunkExitIndexesContainer, in chunkExitHashMap, in cellPos, in neighborPos);
                 singleCellExitAmount++;
 
             }
@@ -237,18 +256,30 @@ namespace Systems.Initialization.Misc.WorldMap
         }
 
         [BurstCompile]
-        private void CreateExit(
-            in ChunkExitsContainer chunkExitsContainer
+        private void CreateAndAddExitToContainer(
+            in WorldTileCostMap costMap
+            , in ChunkExitsContainer chunkExitsContainer
+            , in ChunkExitIndexesContainer chunkExitIndexesContainer
+            , in NativeHashMap<ChunkExit, int> chunkExitHashMap
             , in int2 cellPos
             , in int2 neighborCellPos)
         {
-            ChunkExit exit = new()
+            int firstCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in cellPos);
+            int secondCellMapIndex = WorldMapHelper.GridPosToMapIndex(costMap.Width, in costMap.Offset, in neighborCellPos);
+
+            ChunkExit exit = new(firstCellMapIndex, secondCellMapIndex);
+
+            if (chunkExitHashMap.ContainsKey(exit))
             {
-                InnerCellPos = cellPos,
-                NeighborCellPos = neighborCellPos,
-            };
+                chunkExitIndexesContainer.Value.Add(chunkExitHashMap[exit]);
+                return;
+            }
 
             chunkExitsContainer.Value.Add(exit);
+            int exitIndexInContainer = chunkExitsContainer.Value.Length - 1;
+
+            chunkExitHashMap.Add(exit, exitIndexInContainer);
+            chunkExitIndexesContainer.Value.Add(exitIndexInContainer);
 
         }
 

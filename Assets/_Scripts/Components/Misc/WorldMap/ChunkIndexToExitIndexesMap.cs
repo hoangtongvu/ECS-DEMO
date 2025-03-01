@@ -4,9 +4,9 @@ using Unity.Entities;
 
 namespace Components.Misc.WorldMap
 {
-    public struct ChunkIndexToExitsMap : IComponentData
+    public struct ChunkIndexToExitIndexesMap : IComponentData
     {
-        public NativeList<ChunkExitRange> Value;
+        public NativeList<ChunkExitIndexRange> Value;
     }
 
 }

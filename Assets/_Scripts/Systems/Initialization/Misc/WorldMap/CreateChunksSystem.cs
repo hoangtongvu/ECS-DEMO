@@ -28,7 +28,7 @@ namespace Systems.Initialization.Misc.WorldMap
             if (!worldMapChanged) return;
 
             var chunkList = SystemAPI.GetSingleton<ChunkList>();
-            var chunkIndexToExitsMap = SystemAPI.GetSingleton<ChunkIndexToExitsMap>();
+            var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
             int2 gridMapSize = new(costMap.Width, costMap.Height);
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
@@ -59,7 +59,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
             }
 
-            this.ReCreateChunkIndexToExitsMap(in chunkIndexToExitsMap, in chunkList);
+            this.ReCreateChunkIndexToExitsMap(in chunkIndexToExitIndexesMap, in chunkList);
 
         }
 
@@ -139,20 +139,19 @@ namespace Systems.Initialization.Misc.WorldMap
 
         [BurstCompile]
         private void ReCreateChunkIndexToExitsMap(
-            in ChunkIndexToExitsMap chunkIndexToExitsMap
+            in ChunkIndexToExitIndexesMap chunkIndexToExitIndexesMap
             , in ChunkList chunkList)
         {
-            chunkIndexToExitsMap.Value.Clear();
+            chunkIndexToExitIndexesMap.Value.Clear();
             int addAmount = chunkList.Value.Length;
 
-            chunkIndexToExitsMap.Value.AddReplicate(new ChunkExitRange
+            chunkIndexToExitIndexesMap.Value.AddReplicate(new ChunkExitIndexRange
             {
                 StartIndex = -1,
                 Amount = 0,
             }, addAmount);
 
         }
-
 
     }
 

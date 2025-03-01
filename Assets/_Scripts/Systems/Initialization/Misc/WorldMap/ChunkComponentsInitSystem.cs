@@ -18,8 +18,9 @@ namespace Systems.Initialization.Misc.WorldMap
             state.RequireForUpdate<WorldMapChangedTag>();
 
             this.InitChunkList(ref state);
-            this.InitChunkIndexToExitsMap(ref state);
             this.InitChunkExitsContainer(ref state);
+            this.InitChunkIndexToExitIndexesMap(ref state);
+            this.InitChunkExitIndexesContainer(ref state);
 
             state.Enabled = false;
         }
@@ -43,19 +44,6 @@ namespace Systems.Initialization.Misc.WorldMap
         }
 
         [BurstCompile]
-        private void InitChunkIndexToExitsMap(ref SystemState state)
-        {
-            NativeList<ChunkExitRange> chunkIndexToExitsMap = new(100, Allocator.Persistent);
-
-            SingletonUtilities.GetInstance(state.EntityManager)
-                .AddOrSetComponentData(new ChunkIndexToExitsMap
-                {
-                    Value = chunkIndexToExitsMap,
-                });
-
-        }
-
-        [BurstCompile]
         private void InitChunkExitsContainer(ref SystemState state)
         {
             NativeList<ChunkExit> chunkExitsContainer = new(400, Allocator.Persistent);
@@ -64,6 +52,32 @@ namespace Systems.Initialization.Misc.WorldMap
                 .AddOrSetComponentData(new ChunkExitsContainer
                 {
                     Value = chunkExitsContainer,
+                });
+
+        }
+
+        [BurstCompile]
+        private void InitChunkIndexToExitIndexesMap(ref SystemState state)
+        {
+            NativeList<ChunkExitIndexRange> chunkIndexToExitIndexesMap = new(100, Allocator.Persistent);
+
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(new ChunkIndexToExitIndexesMap
+                {
+                    Value = chunkIndexToExitIndexesMap,
+                });
+
+        }
+
+        [BurstCompile]
+        private void InitChunkExitIndexesContainer(ref SystemState state)
+        {
+            NativeList<int> chunkExitIndexesContainer = new(400, Allocator.Persistent);
+
+            SingletonUtilities.GetInstance(state.EntityManager)
+                .AddOrSetComponentData(new ChunkExitIndexesContainer
+                {
+                    Value = chunkExitIndexesContainer,
                 });
 
         }

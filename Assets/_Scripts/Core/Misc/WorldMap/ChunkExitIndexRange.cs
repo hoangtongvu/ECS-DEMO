@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Misc.WorldMap
 {
-    public struct ChunkExitRange
+    public struct ChunkExitIndexRange
     {
         public int StartIndex;
         public int Amount;
