@@ -47,6 +47,35 @@ namespace Tests.EditMode.Utilities
 
         }
 
+        [TestCase(10)]
+        [TestCase(11)]
+        public void ReverseListTest(int length)
+        {
+            // Arrange
+            var toBeModifiedList = new NativeList<TestElement>(length, Allocator.Temp);
+            var verifyList = new NativeList<TestElement>(length, Allocator.Temp);
+
+            for (int i = 0; i < length; i++)
+            {
+                toBeModifiedList.Add(new(i));
+            }
+
+            for (int i = length - 1; i >= 0; i--)
+            {
+                verifyList.Add(toBeModifiedList[i]);
+            }
+
+            // Act
+            toBeModifiedList.Reverse();
+
+            // Assert
+            for (int i = 0; i < length; i++)
+            {
+                Assert.True(toBeModifiedList[i] == verifyList[i]);
+            }
+
+        }
+
         private void PrintList<T>(NativeList<T> list)
             where T : unmanaged
         {
@@ -62,4 +91,5 @@ namespace Tests.EditMode.Utilities
         }
 
     }
+
 }
