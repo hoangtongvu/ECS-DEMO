@@ -18,7 +18,7 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
     [UpdateAfter(typeof(TestMapInitSystem))]
     [UpdateAfter(typeof(CreateChunkExitsSystem))]
     [BurstCompile]
-    public partial struct ChunkInnerPathCostBakeSystem : ISystem
+    public partial struct InnerPathCostBakeSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -98,12 +98,16 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
         {
             for (int j = 0; j < exitCount; j++)
             {
-                ChunkExitHelper.GetUnsafeCellBelongToChunkFromExit(in costMap, exits[j], chunkIndex, out _, out int cell0MapIndex);
+                ChunkExitHelper.GetUnsafeInnerCellFromExit(in costMap, exits[j], chunkIndex, out _, out int cell0MapIndex);
                 int2 pos0 = WorldMapHelper.MapIndexToGridPos(costMap.Width, in costMap.Offset, cell0MapIndex);
 
                 for (int k = j + 1; k < exitCount; k++)
                 {
-                    ChunkExitHelper.GetUnsafeCellBelongToChunkFromExit(in costMap, exits[k], chunkIndex, out _, out int cell1MapIndex);
+                    ChunkExitHelper.GetUnsafeInnerCellFromExit(in costMap, exits[k], chunkIndex, out _, out int cell1MapIndex);
+
+                    bool canSkipPathWithCostOfZero = cell0MapIndex == cell1MapIndex;
+                    if (canSkipPathWithCostOfZero) continue;
+
                     int2 pos1 = WorldMapHelper.MapIndexToGridPos(costMap.Width, in costMap.Offset, cell1MapIndex);
 
                     finalCostComputer.Pos0 = pos0;
