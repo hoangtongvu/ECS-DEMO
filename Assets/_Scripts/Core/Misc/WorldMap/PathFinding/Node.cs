@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Core.Misc.WorldMap.PathFinding
 {
@@ -7,6 +6,8 @@ namespace Core.Misc.WorldMap.PathFinding
     {
         public int ParentNodeIndex;
         public int NodeIndex;
+        public int ChunkIndex;
+        public bool IsExitOrdered;
         public float GCost;
         public float FCost;
 
@@ -37,6 +38,11 @@ namespace Core.Misc.WorldMap.PathFinding
         }
 
         public int CompareTo(Node other) => this.FCost.CompareTo(other.FCost);
+
+        public override string ToString()
+        {
+            return $"{nameof(ParentNodeIndex)}: {ParentNodeIndex}, {nameof(NodeIndex)}: {NodeIndex}, {nameof(ChunkIndex)}: {ChunkIndex}, {nameof(IsExitOrdered)}: {IsExitOrdered}, {nameof(GCost)}: {GCost}, {nameof(FCost)}: {FCost}";
+        }
 
     }
 
