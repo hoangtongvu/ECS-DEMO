@@ -21,7 +21,7 @@
       "dependencies": {
         "com.unity.entities": "1.2.0"
       },
-      "hash": "32d0986d3d2a725a7288fa80f2d4385f4580401a"
+      "hash": "ac4b538af1a1aaf9b0d9e0e20f49954c504eaf91"
     },
     "com.github-joc0de.visual-studio-solution-generator": {
       "version": "1.0.13",
