@@ -25,6 +25,24 @@ namespace Utilities.Helpers
         }
 
         [BurstCompile]
+        public static void GridPosToWorldPos(in int2 gridPos, out float3 worldPos)
+        {
+            const float cellRadius = 0.5f;
+            float worldPosOffsetX = cellRadius;
+            float worldPosOffsetY = -cellRadius;
+            worldPos = new(gridPos.x + worldPosOffsetX, 0f, -gridPos.y + worldPosOffsetY);
+        }
+
+        [BurstCompile]
+        public static void WorldPosToGridPos(in float3 worldPos, out int2 gridPos)
+        {
+            const float cellRadius = 0.5f;
+            gridPos = new(
+                (int)math.floor(worldPos.x / cellRadius / 2)
+                , (int)math.floor(-worldPos.z / cellRadius / 2));
+        }
+
+        [BurstCompile]
         public static int GridPosToMapIndex(int gridMapWidth, in int2 gridOffset, in int2 gridPos) =>
             GridPosToMapIndex(gridMapWidth, in gridOffset, gridPos.x, gridPos.y);
 
