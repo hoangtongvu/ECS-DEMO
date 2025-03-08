@@ -166,7 +166,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in chunkExitIndexesContainer
                 , in neighborCellDirections
                 , in chunkExitHashMap
-                , ref straightNeighborPassableStates
+                , in straightNeighborPassableStates
                 , in topLeftMapCellPos
                 , in bottomRightMapCellPos
                 , in cellPos
@@ -221,7 +221,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in ChunkExitIndexesContainer chunkExitIndexesContainer
             , in NativeArray<int2> neighborCellDirections
             , in NativeHashMap<ChunkExit, int> chunkExitHashMap
-            , ref NativeArray<bool> straightNeighborPassableStates
+            , in NativeArray<bool> straightNeighborPassableStates
             , in int2 topLeftMapCellPos
             , in int2 bottomRightMapCellPos
             , in int2 cellPos
@@ -252,7 +252,7 @@ namespace Systems.Initialization.Misc.WorldMap
         private bool IsValidCellInMap(in int2 topLeftMapCellPos, in int2 bottomRightMapCellPos, in int2 pos)
         {
             return pos.x >= topLeftMapCellPos.x && pos.x <= bottomRightMapCellPos.x &&
-            pos.y >= topLeftMapCellPos.y && pos.y < bottomRightMapCellPos.y;
+            pos.y >= topLeftMapCellPos.y && pos.y <= bottomRightMapCellPos.y;
         }
 
         [BurstCompile]
