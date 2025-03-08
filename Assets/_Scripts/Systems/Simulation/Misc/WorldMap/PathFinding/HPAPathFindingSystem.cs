@@ -86,7 +86,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                     , in cellPosRangeMap
                     , in cellPositionsContainer
                     , in innerPathCostMap
-                    , in startPos
+                    , startPos
                     , in endPos
                     , Allocator.Temp);
 
@@ -115,7 +115,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             , in CellPosRangeMap cellPosRangeMap
             , in CellPositionsContainer cellPositionsContainer
             , in InnerPathCostMap innerPathCostMap
-            , in int2 startPos
+            , int2 startPos
             , in int2 endPos
             , Allocator allocator)
         {
@@ -123,6 +123,9 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
 
             costMap.GetCellAt(startPos, out Cell startCell);
             costMap.GetCellAt(endPos, out Cell endCell);
+
+            if (!startCell.IsPassable())
+                WorldMapHelper.GetValidStartCell(in costMap, ref startPos, out startCell);
 
             int startChunkIndex = startCell.ChunkIndex;
             int endChunkIndex = endCell.ChunkIndex;
@@ -322,7 +325,8 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 , in exitsContainer
                 , in path
                 , in nodeList
-                , nodeToTraceBack);
+                , nodeToTraceBack
+                , in startPos);
 
             openList.Dispose();
             closedList.Dispose();
@@ -393,7 +397,8 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             , in ChunkExitsContainer chunkExitsContainer
             , in NativeList<int2> path
             , in NativeHashMap<int, Node> nodeList
-            , Node currentNode)
+            , Node currentNode
+            , in int2 startPos)
         {
             // Remove duplicated way points due to same exits' inner cells of chunks whose size is 1x1.
             var antiDuplicatedHashSet = new NativeHashSet<int2>(nodeList.Count * 2, Allocator.Temp);
@@ -428,6 +433,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
 
             }
 
+            path.Add(startPos);
             path.Reverse();
             antiDuplicatedHashSet.Dispose();
 
