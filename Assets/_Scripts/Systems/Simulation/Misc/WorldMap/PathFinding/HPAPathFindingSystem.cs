@@ -1,6 +1,5 @@
 using Unity.Entities;
 using Unity.Burst;
-using UnityEngine;
 using Unity.Collections;
 using Unity.Mathematics;
 using Core.Misc.WorldMap;
@@ -15,6 +14,10 @@ using Core.Misc.WorldMap.ChunkInnerPathCost;
 using Utilities.Helpers.Misc.WorldMap;
 using System.Collections.Generic;
 using Core.Utilities.Extensions;
+using Components.Misc.WorldMap.PathFinding;
+using Components;
+using Components.Unit.MyMoveCommand;
+using Unity.Transforms;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {
@@ -43,8 +46,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            if (!UnityEngine.Input.GetKeyDown(KeyCode.F)) return;
-
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
             var cellPosRangeMap = SystemAPI.GetSingleton<CellPosRangeMap>();
             var cellPositionsContainer = SystemAPI.GetSingleton<CellPositionsContainer>();
@@ -53,27 +54,55 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             var exitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
 
-            int2 startPos = new(-4, -4);
-            int2 endPos = SystemAPI.GetSingleton<TargetCellPos>().Value;
-
-            NativeList<int2> path = this.GetPath(
-                in costMap
-                , in chunkIndexToExitIndexesMap
-                , in exitIndexesContainer
-                , in exitsContainer
-                , in cellPosRangeMap
-                , in cellPositionsContainer
-                , in innerPathCostMap
-                , in startPos
-                , in endPos
-                , Allocator.Temp);
-
-            foreach (var waypoint in path)
+            foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag) in
+                SystemAPI.Query<
+                    RefRO<LocalTransform>
+                    , RefRO<MoveCommandElement>
+                    , RefRW<TargetPosition>
+                    , RefRW<DistanceToTarget>
+                    , DynamicBuffer<WaypointElement>
+                    , EnabledRefRW<CanMoveEntityTag>
+                    , EnabledRefRW<CanFindPathTag>>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                Debug.Log(waypoint);
-            }
+                if (!canFindPathTag.ValueRO) continue;
+                canFindPathTag.ValueRW = false;
+                canMoveEntityTag.ValueRW = true;
 
-            path.Dispose();
+                waypoints.Clear();
+
+                // Init targetPos && distanceToTarget
+                targetPosRef.ValueRW.Value = transformRef.ValueRO.Position;
+                distanceToTargetRef.ValueRW.CurrentDistance = 0;
+
+                WorldMapHelper.WorldPosToGridPos(in transformRef.ValueRO.Position, out int2 startPos);
+                WorldMapHelper.WorldPosToGridPos(in moveCommandElementRef.ValueRO.Float3, out int2 endPos);
+
+                NativeList<int2> path = this.GetPath(
+                    in costMap
+                    , in chunkIndexToExitIndexesMap
+                    , in exitIndexesContainer
+                    , in exitsContainer
+                    , in cellPosRangeMap
+                    , in cellPositionsContainer
+                    , in innerPathCostMap
+                    , in startPos
+                    , in endPos
+                    , Allocator.Temp);
+
+                int pathLength = path.Length;
+
+                for (int i = pathLength - 1; i >= 0; i--)
+                {
+                    waypoints.Add(new()
+                    {
+                        Value = path[i],
+                    });
+                }
+
+                path.Dispose();
+
+            }
 
         }
 
@@ -121,7 +150,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 , endChunkIndex);
 
             // 2. From exit's innerCell of destination chunk, go directly to destination cell
-            if (!path[^1].Equals(endPos)) path.Add(endPos);
+            if (path.Length == 0 || !path[^1].Equals(endPos)) path.Add(endPos);
 
             return path;
 

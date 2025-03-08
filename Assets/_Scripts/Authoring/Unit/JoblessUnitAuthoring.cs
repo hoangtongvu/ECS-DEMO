@@ -181,6 +181,8 @@ namespace Authoring.Unit
                 });
 
                 AddBuffer<WaypointElement>(entity);
+                AddComponent<CanFindPathTag>(entity);
+                SetComponentEnabled<CanFindPathTag>(entity, false);
 
             }
         }
