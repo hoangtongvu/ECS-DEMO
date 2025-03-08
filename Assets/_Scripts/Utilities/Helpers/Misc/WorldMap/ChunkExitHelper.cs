@@ -41,7 +41,17 @@ namespace Utilities.Helpers.Misc.WorldMap
             , Allocator allocator
             , out NativeArray<int> exitIndexes)
         {
-            var indexRange = chunkIndexToExitIndexesMap.Value[chunkIndex];
+            ChunkExitIndexRange indexRange;
+
+            try
+            {
+                indexRange = chunkIndexToExitIndexesMap.Value[chunkIndex];
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+                throw new System.IndexOutOfRangeException($"chunkIndex = {chunkIndex} is out of range in container of '{chunkIndexToExitIndexesMap.Value.Length}' length");
+            }
+
             int upperBound = indexRange.StartIndex + indexRange.Amount;
 
             exitIndexes = new NativeArray<int>(indexRange.Amount, allocator);
