@@ -1,4 +1,5 @@
 ﻿using Components.Camera;
+using Components.Misc.Tween;
 using Unity.Entities;
 using UnityEngine;
 
@@ -20,6 +21,10 @@ namespace Authoring.Camera
                 {
                     Value = authoring.AddPos,
                 });
+
+                AddComponent<QuaternionTweenData>(entity);
+                AddComponent<CanQuaternionTweenTag>(entity);
+                SetComponentEnabled<CanQuaternionTweenTag>(entity, false);
 
             }
         }

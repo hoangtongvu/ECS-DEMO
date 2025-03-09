@@ -4,6 +4,7 @@ using Core.Misc.GameView;
 using Components.Camera;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Components.Misc.Tween;
 
 namespace Systems.Simulation.Misc.GameView
 {
@@ -34,13 +35,26 @@ namespace Systems.Simulation.Misc.GameView
             float3 newAngle = angleMap[(int)currentGameView];
 
             RefRW<LocalTransform> transformRef = default;
+            RefRW<QuaternionTweenData> quaternionTweenDataRef = default;
+            EnabledRefRW<CanQuaternionTweenTag> canQuaternionTweenTag = default;
 
-            foreach (var item in SystemAPI.Query<RefRW<LocalTransform>>().WithAll<CameraEntityTag>())
+            foreach (var item in
+                SystemAPI.Query<
+                    RefRW<LocalTransform>
+                    , RefRW<QuaternionTweenData>
+                    , EnabledRefRW<CanQuaternionTweenTag>>()
+                    .WithAll<CameraEntityTag>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                transformRef = item;
+                transformRef = item.Item1;
+                quaternionTweenDataRef = item.Item2;
+                canQuaternionTweenTag = item.Item3;
             }
 
-            transformRef.ValueRW = transformRef.ValueRW.WithRotation(quaternion.EulerXYZ(math.radians(newAngle)));
+            quaternionTweenDataRef.ValueRW.LifeTimeCounterSecond = 0f;
+            quaternionTweenDataRef.ValueRW.BaseSpeed = 2f;
+            quaternionTweenDataRef.ValueRW.Target = quaternion.EulerXYZ(math.radians(newAngle)).value;
+            canQuaternionTweenTag.ValueRW = true;
 
         }
 
