@@ -31,7 +31,7 @@ namespace Systems.Presentation.Misc.WorldMap
             if (!gridDebugConfig.ShowCellGridLines) return;
 
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
-            float mapCellSize = SystemAPI.GetSingleton<MapCellSize>().Value;
+            half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
 
             int2 gridMapSize = new(costMap.Width, costMap.Height);
@@ -39,7 +39,7 @@ namespace Systems.Presentation.Misc.WorldMap
             GameObject gameObject = new("GridLineDrawer");
             GridLinesDrawer gridLinesDrawer = gameObject.AddComponent<GridLinesDrawer>();
             gridLinesDrawer.GridMapSize = gridMapSize;
-            gridLinesDrawer.DrawCellSize = mapCellSize;
+            gridLinesDrawer.CellRadius = cellRadius;
             gridLinesDrawer.GridOffset = gridOffset;
             gridLinesDrawer.DrawColor = Color.yellow;
 

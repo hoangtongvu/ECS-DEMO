@@ -7,6 +7,7 @@ using Core.UI.Identification;
 using Components.Misc.WorldMap;
 using Core.UI.WorldMapDebug;
 using Utilities;
+using UnityEngine;
 
 namespace Systems.Presentation.Misc.WorldMap
 {
@@ -33,7 +34,7 @@ namespace Systems.Presentation.Misc.WorldMap
 
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
-            float mapCellSize = SystemAPI.GetSingleton<MapCellSize>().Value;
+            half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
             var presenterStartIndexRef = SystemAPI.GetSingletonRW<CellPresenterStartIndex>();
             var debugConfig = SystemAPI.GetSingleton<MapDebugConfig>();
@@ -48,7 +49,7 @@ namespace Systems.Presentation.Misc.WorldMap
                 , in gridOffset
                 , ref presenterStartIndexRef.ValueRW
                 , in debugConfig
-                , mapCellSize);
+                , cellRadius);
 
         }
 
@@ -60,7 +61,7 @@ namespace Systems.Presentation.Misc.WorldMap
             , in int2 gridOffset
             , ref CellPresenterStartIndex presenterStartIndex
             , in MapDebugConfig debugConfig
-            , float drawCellSize)
+            , half drawCellRadius)
         {
             int mapLength = costMap.Value.Length;
 
@@ -78,9 +79,9 @@ namespace Systems.Presentation.Misc.WorldMap
                     , out int y);
 
                 float3 center = new(
-                        drawCellSize * x + drawCellSize / 2
+                        drawCellRadius * 2 * x + drawCellRadius
                         , 0
-                        , -(drawCellSize * y + drawCellSize / 2));
+                        , -(drawCellRadius * 2 * y + drawCellRadius));
 
 
                 var presenterCtrl = (CellPresenterCtrl)
@@ -91,6 +92,9 @@ namespace Systems.Presentation.Misc.WorldMap
                         , center);
 
                 WorldMapHelper.SyncValuesToNodePresenter(in debugConfig, presenterCtrl, nodeCost);
+
+                Vector2 originalSize = presenterCtrl.GetComponent<RectTransform>().sizeDelta;
+                presenterCtrl.GetComponent<RectTransform>().sizeDelta *= drawCellRadius * 2;
 
                 presenterCtrl.gameObject.SetActive(true);
 

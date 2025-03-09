@@ -4,6 +4,7 @@ using UnityEngine;
 using Components.Misc.WorldMap;
 using Core.Misc.WorldMap;
 using Utilities;
+using Unity.Mathematics;
 
 namespace Systems.Presentation.Misc.WorldMap
 {
@@ -16,7 +17,7 @@ namespace Systems.Presentation.Misc.WorldMap
             this.RequireForUpdate<ChunkList>();
             this.RequireForUpdate<MapDebugConfig>();
             this.RequireForUpdate<ChunkDebugConfig>();
-            this.RequireForUpdate<MapCellSize>();
+            this.RequireForUpdate<CellRadius>();
         }
 
         protected override void OnStartRunning()
@@ -40,13 +41,13 @@ namespace Systems.Presentation.Misc.WorldMap
             var chunkList = SystemAPI.GetSingleton<ChunkList>().Value;
             var chunkDebugConfig = SystemAPI.GetSingleton<ChunkDebugConfig>();
             var chunksDrawer = SystemAPI.ManagedAPI.GetSingleton<ChunksDrawerRef>().Value;
-            float mapCellSize = SystemAPI.GetSingleton<MapCellSize>().Value;
+            half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
             if (!Input.GetKeyDown(KeyCode.Space)) return;
 
             ChunksDrawerConfig config = new()
             {
-                CellSize = mapCellSize,
+                CellRadius = cellRadius,
                 Chunks = chunkList,
                 ColorPalette = chunkDebugConfig.GridLineColorPalette,
             };
