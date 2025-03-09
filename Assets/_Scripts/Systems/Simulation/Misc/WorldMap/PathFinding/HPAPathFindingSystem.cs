@@ -53,6 +53,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             var exitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
             var exitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
+            half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
             foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag) in
                 SystemAPI.Query<
@@ -75,8 +76,8 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 targetPosRef.ValueRW.Value = transformRef.ValueRO.Position;
                 distanceToTargetRef.ValueRW.CurrentDistance = 0;
 
-                WorldMapHelper.WorldPosToGridPos(in transformRef.ValueRO.Position, out int2 startPos);
-                WorldMapHelper.WorldPosToGridPos(in moveCommandElementRef.ValueRO.Float3, out int2 endPos);
+                WorldMapHelper.WorldPosToGridPos(in cellRadius, in transformRef.ValueRO.Position, out int2 startPos);
+                WorldMapHelper.WorldPosToGridPos(in cellRadius, in moveCommandElementRef.ValueRO.Float3, out int2 endPos);
 
                 NativeList<int2> path = this.GetPath(
                     in costMap

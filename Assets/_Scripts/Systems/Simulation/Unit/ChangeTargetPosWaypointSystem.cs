@@ -1,5 +1,6 @@
 using Components;
 using Components.Misc.GlobalConfigs;
+using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.PathFinding;
 using Unity.Burst;
 using Unity.Burst.CompilerServices;
@@ -35,11 +36,13 @@ namespace Systems.Simulation.Unit
         public void OnUpdate(ref SystemState state)
         {
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             float stopMoveRadius = 0.1f;// TODO: Find another way to get this min dis.
 
             new ChangeTargetPosJob
             {
                 StopMoveRadius = stopMoveRadius,
+                CellRadius = cellRadius,
             }.ScheduleParallel();
 
         }
@@ -49,6 +52,7 @@ namespace Systems.Simulation.Unit
         private partial struct ChangeTargetPosJob : IJobEntity
         {
             [ReadOnly] public float StopMoveRadius;
+            [ReadOnly] public half CellRadius;
 
             private void Execute(
                 EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
@@ -61,7 +65,7 @@ namespace Systems.Simulation.Unit
                 if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveRadius)) return;
                 if (!waypoints.TryPop(out var waypoint)) return;
 
-                WorldMapHelper.GridPosToWorldPos(in waypoint.Value, out float3 worldPos);
+                WorldMapHelper.GridPosToWorldPos(in this.CellRadius, in waypoint.Value, out float3 worldPos);
                 targetPosition.Value = worldPos;
                 targetPosChangedTag.ValueRW = true;
 

@@ -57,10 +57,11 @@ namespace Systems.Initialization.Misc.WorldMap
                 }
             }
 
+            half cellRadius = new(0.7f);
             SingletonUtilities.GetInstance(this.EntityManager)
-                .AddOrSetComponentData(new MapCellSize
+                .AddOrSetComponentData(new CellRadius
                 {
-                    Value = 1f,
+                    Value = cellRadius,
                 });
 
             WorldMapHelper.GetGridOffset(mapWidth, mapHeight, out var gridOffset);
@@ -81,7 +82,7 @@ namespace Systems.Initialization.Misc.WorldMap
                     Value = true,
                 });
 
-            this.CreateGround(mapWidth, mapHeight);
+            this.CreateGround(mapWidth, mapHeight, in cellRadius);
 
         }
 
@@ -110,17 +111,17 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
-        private void CreateGround(int mapWidth, int mapHeight)
+        private void CreateGround(int mapWidth, int mapHeight, in half cellRadius)
         {
-            const float cellRadius = 0.5f; // Find a new way to get this value
             var planeGO = GameObject.CreatePrimitive(PrimitiveType.Plane);
             planeGO.name = "Ground";
 
             float worldPosOffsetX = mapWidth % 2 == 0 ? 0 : cellRadius;
             float worldPosOffsetY = mapHeight % 2 == 0 ? 0 : -cellRadius;
+            float mapScaleRatio = cellRadius * 2;
 
             planeGO.transform.position = new(worldPosOffsetX, 0f, worldPosOffsetY);
-            planeGO.transform.localScale = new((float)mapWidth / 10, 1f, (float)mapHeight / 10);
+            planeGO.transform.localScale = new((float)mapWidth / 10 * mapScaleRatio, 1f, (float)mapHeight / 10 * mapScaleRatio);
 
         }
 

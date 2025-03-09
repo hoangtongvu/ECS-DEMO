@@ -1,6 +1,7 @@
 using Core.Utilities.Helpers;
 using System.Collections.Generic;
 using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Core.Misc.WorldMap
@@ -9,7 +10,7 @@ namespace Core.Misc.WorldMap
     {
         public NativeList<Chunk> Chunks;
         public NativeArray<Color> ColorPalette;
-        public float CellSize;
+        public half CellRadius;
     }
 
     public class ChunksDrawer : MonoBehaviour
@@ -49,14 +50,14 @@ namespace Core.Misc.WorldMap
             DrawChunks(
                 this.config.Chunks
                 , this.chunkColors
-                , this.config.CellSize);
+                , this.config.CellRadius);
 
         }
 
         private static void DrawChunks(
             NativeList<Chunk> chunks
             , List<Color> chunkColors
-            , float cellWorldSize)
+            , half cellRadius)
         {
             int length = chunks.Length;
 
@@ -65,12 +66,12 @@ namespace Core.Misc.WorldMap
                 var chunk = chunks[i];
                 Gizmos.color = chunkColors[i];
 
-                float chunkWorldSize = (chunk.BottomRightCellPos.x - chunk.TopLeftCellPos.x + 1) * cellWorldSize;
+                float chunkWorldSize = (chunk.BottomRightCellPos.x - chunk.TopLeftCellPos.x + 1) * cellRadius * 2;
 
                 Vector3 center = new(
-                    cellWorldSize * chunk.TopLeftCellPos.x + chunkWorldSize / 2
+                    cellRadius * 2 * chunk.TopLeftCellPos.x + chunkWorldSize / 2
                     , 0
-                    , -(cellWorldSize * chunk.TopLeftCellPos.y + chunkWorldSize / 2));
+                    , -(cellRadius * 2 * chunk.TopLeftCellPos.y + chunkWorldSize / 2));
 
                 Vector3 cubeDrawSize = Vector3.one * chunkWorldSize;
                 cubeDrawSize.y = 0;
