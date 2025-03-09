@@ -15,6 +15,7 @@ namespace Systems.Initialization.Misc.WorldMap
     {
         protected override void OnCreate()
         {
+            this.RequireForUpdate<TestMapTag>();
         }
 
         protected override void OnUpdate()

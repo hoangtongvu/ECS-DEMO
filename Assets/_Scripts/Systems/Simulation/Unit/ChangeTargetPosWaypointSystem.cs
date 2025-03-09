@@ -30,6 +30,9 @@ namespace Systems.Simulation.Unit
 
             state.RequireForUpdate(entityQuery);
             
+            state.RequireForUpdate<GameGlobalConfigsICD>();
+            state.RequireForUpdate<CellRadius>();
+
         }
 
         [BurstCompile]
