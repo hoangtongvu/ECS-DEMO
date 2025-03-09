@@ -14,6 +14,8 @@ namespace Authoring.Camera
             {
                 Entity entity = GetEntity(authoring, TransformUsageFlags.Dynamic);
 
+                AddComponent<CameraEntityTag>(entity);
+
                 AddComponent(entity, new AddPos
                 {
                     Value = authoring.AddPos,
