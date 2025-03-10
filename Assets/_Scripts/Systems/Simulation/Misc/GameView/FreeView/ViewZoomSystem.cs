@@ -3,6 +3,7 @@ using UnityEngine;
 using Components.Misc.GameView;
 using Components.Camera;
 using Core.Utilities.Extensions;
+using Components.Misc.Tween;
 
 namespace Systems.Simulation.Misc.GameView.FreeView
 {
@@ -30,10 +31,30 @@ namespace Systems.Simulation.Misc.GameView.FreeView
 
             if (scrollAxis == 0) return;
 
-            var addPosRef = SystemAPI.GetSingletonRW<AddPos>();
-            const float zoomSpeed = 1000f; // TODO: Extract this into component.
+            const float zoomSpeed = 5000f; // TODO: Extract this into component.
 
-            addPosRef.ValueRW.Value = addPosRef.ValueRO.Value.Add(y: -scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime);
+            foreach (var (addPosRef, addPosTweenDataRef, canAddPosTweenTag) in
+                SystemAPI.Query<
+                    RefRO<AddPos>
+                    , RefRW<AddPosTweenData>
+                    , EnabledRefRW<CanAddPosTweenTag>>()
+                    .WithAll<CameraEntityTag>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+            {
+                TweenData tweenData = new()
+                {
+                    BaseSpeed = 2f,
+                    LifeTimeCounterSecond = 0f,
+                    Target = new()
+                    {
+                        Float3 = addPosRef.ValueRO.Value.Add(y: -scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime),
+                    },
+                };
+
+                addPosTweenDataRef.ValueRW.Value = tweenData;
+                canAddPosTweenTag.ValueRW = true;
+
+            }
 
         }
 

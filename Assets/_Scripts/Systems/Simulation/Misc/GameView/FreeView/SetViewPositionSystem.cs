@@ -4,6 +4,7 @@ using Core.Misc.GameView;
 using Components.Camera;
 using Unity.Mathematics;
 using Unity.Burst;
+using Components.Misc.Tween;
 
 namespace Systems.Simulation.Misc.GameView.FreeView
 {
@@ -34,10 +35,29 @@ namespace Systems.Simulation.Misc.GameView.FreeView
             GameViewType currentGameView = SystemAPI.GetSingleton<CurrentGameView>().Value;
             if (currentGameView != GameViewType.FreeView) return;
 
-            var addPosRef = SystemAPI.GetSingletonRW<AddPos>();
-
             const float defaultOffsetY = 15;
-            addPosRef.ValueRW.Value = new float3(0, defaultOffsetY, 0);
+
+            TweenData tweenData = new()
+            {
+                BaseSpeed = 2f,
+                LifeTimeCounterSecond = 0f,
+                Target = new()
+                {
+                    Float3 = new float3(0, defaultOffsetY, 0),
+                },
+            };
+
+            foreach (var (addPosTweenDataRef, canAddPosTweenTag) in
+                SystemAPI.Query<
+                    RefRW<AddPosTweenData>
+                    , EnabledRefRW<CanAddPosTweenTag>>()
+                    .WithAll<CameraEntityTag>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+            {
+                addPosTweenDataRef.ValueRW.Value = tweenData;
+                canAddPosTweenTag.ValueRW = true;
+
+            }
 
         }
 

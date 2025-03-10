@@ -26,6 +26,10 @@ namespace Authoring.Camera
                 AddComponent<CanQuaternionTweenTag>(entity);
                 SetComponentEnabled<CanQuaternionTweenTag>(entity, false);
 
+                AddComponent<AddPosTweenData>(entity);
+                AddComponent<CanAddPosTweenTag>(entity);
+                SetComponentEnabled<CanAddPosTweenTag>(entity, false);
+
             }
         }
     }
