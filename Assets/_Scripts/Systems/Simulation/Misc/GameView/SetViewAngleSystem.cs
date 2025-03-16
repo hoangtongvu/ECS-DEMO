@@ -4,7 +4,7 @@ using Core.Misc.GameView;
 using Components.Camera;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Components.Misc.Tween;
+using TweenLib.StandardTweeners;
 
 namespace Systems.Simulation.Misc.GameView
 {
@@ -34,27 +34,24 @@ namespace Systems.Simulation.Misc.GameView
 
             float3 newAngle = angleMap[(int)currentGameView];
 
-            RefRW<LocalTransform> transformRef = default;
-            RefRW<QuaternionTweenData> quaternionTweenDataRef = default;
-            EnabledRefRW<CanQuaternionTweenTag> canQuaternionTweenTag = default;
+            RefRW<TransformRotationTweener_TweenData> quaternionTweenDataRef = default;
+            EnabledRefRW<Can_TransformRotationTweener_TweenTag> canQuaternionTweenTag = default;
 
             foreach (var item in
                 SystemAPI.Query<
-                    RefRW<LocalTransform>
-                    , RefRW<QuaternionTweenData>
-                    , EnabledRefRW<CanQuaternionTweenTag>>()
+                    RefRW<TransformRotationTweener_TweenData>
+                    , EnabledRefRW<Can_TransformRotationTweener_TweenTag>>()
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                transformRef = item.Item1;
-                quaternionTweenDataRef = item.Item2;
-                canQuaternionTweenTag = item.Item3;
+                quaternionTweenDataRef = item.Item1;
+                canQuaternionTweenTag = item.Item2;
             }
 
-            quaternionTweenDataRef.ValueRW.LifeTimeCounterSecond = 0f;
-            quaternionTweenDataRef.ValueRW.BaseSpeed = 2f;
-            quaternionTweenDataRef.ValueRW.Target = quaternion.EulerXYZ(math.radians(newAngle)).value;
-            canQuaternionTweenTag.ValueRW = true;
+            TransformRotationTweener.TweenBuilder.Create()
+                .WithBaseSpeed(2f)
+                .WithTarget(quaternion.EulerXYZ(math.radians(newAngle)).value)
+                .Build(ref quaternionTweenDataRef.ValueRW, canQuaternionTweenTag);
 
         }
 

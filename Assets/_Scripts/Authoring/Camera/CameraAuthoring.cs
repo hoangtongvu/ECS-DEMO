@@ -2,6 +2,7 @@
 using Components.Misc.Tween;
 using Unity.Entities;
 using UnityEngine;
+using Unity.Transforms;
 
 namespace Authoring.Camera
 {
@@ -22,13 +23,13 @@ namespace Authoring.Camera
                     Value = authoring.AddPos,
                 });
 
-                AddComponent<QuaternionTweenData>(entity);
-                AddComponent<CanQuaternionTweenTag>(entity);
-                SetComponentEnabled<CanQuaternionTweenTag>(entity, false);
-
                 AddComponent<AddPosTweenData>(entity);
                 AddComponent<CanAddPosTweenTag>(entity);
                 SetComponentEnabled<CanAddPosTweenTag>(entity, false);
+
+                AddComponent<Can_TransformRotationTweener_TweenTag>(entity);
+                SetComponentEnabled<Can_TransformRotationTweener_TweenTag>(entity, false);
+                AddComponent<TransformRotationTweener_TweenData>(entity);
 
             }
         }
