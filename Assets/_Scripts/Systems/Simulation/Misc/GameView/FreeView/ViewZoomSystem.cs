@@ -3,7 +3,7 @@ using UnityEngine;
 using Components.Misc.GameView;
 using Components.Camera;
 using Core.Utilities.Extensions;
-using Components.Misc.Tween;
+using Utilities.Tweeners.Camera;
 
 namespace Systems.Simulation.Misc.GameView.FreeView
 {
@@ -36,23 +36,15 @@ namespace Systems.Simulation.Misc.GameView.FreeView
             foreach (var (addPosRef, addPosTweenDataRef, canAddPosTweenTag) in
                 SystemAPI.Query<
                     RefRO<AddPos>
-                    , RefRW<AddPosTweenData>
-                    , EnabledRefRW<CanAddPosTweenTag>>()
+                    , RefRW<AddPosTweener_TweenData>
+                    , EnabledRefRW<Can_AddPosTweener_TweenTag>>()
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                TweenData tweenData = new()
-                {
-                    BaseSpeed = 2f,
-                    LifeTimeCounterSecond = 0f,
-                    Target = new()
-                    {
-                        Float3 = addPosRef.ValueRO.Value.Add(y: -scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime),
-                    },
-                };
-
-                addPosTweenDataRef.ValueRW.Value = tweenData;
-                canAddPosTweenTag.ValueRW = true;
+                AddPosTweener.TweenBuilder.Create()
+                    .WithBaseSpeed(2f)
+                    .WithTarget(addPosRef.ValueRO.Value.Add(y: -scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime))
+                    .Build(ref addPosTweenDataRef.ValueRW, canAddPosTweenTag);
 
             }
 

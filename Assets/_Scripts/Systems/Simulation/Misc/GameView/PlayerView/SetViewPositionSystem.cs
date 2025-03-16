@@ -4,7 +4,7 @@ using Core.Misc.GameView;
 using Components.Camera;
 using Unity.Mathematics;
 using Unity.Burst;
-using Components.Misc.Tween;
+using Utilities.Tweeners.Camera;
 
 namespace Systems.Simulation.Misc.GameView.PlayerView
 {
@@ -37,25 +37,17 @@ namespace Systems.Simulation.Misc.GameView.PlayerView
 
             float3 playerViewCamOffset = SystemAPI.GetSingleton<PlayerViewCamOffset>().Value;
 
-            TweenData tweenData = new()
-            {
-                BaseSpeed = 2f,
-                LifeTimeCounterSecond = 0f,
-                Target = new()
-                {
-                    Float3 = playerViewCamOffset,
-                },
-            };
-
             foreach (var (addPosTweenDataRef, canAddPosTweenTag) in
                 SystemAPI.Query<
-                    RefRW<AddPosTweenData>
-                    , EnabledRefRW<CanAddPosTweenTag>>()
+                    RefRW<AddPosTweener_TweenData>
+                    , EnabledRefRW<Can_AddPosTweener_TweenTag>>()
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                addPosTweenDataRef.ValueRW.Value = tweenData;
-                canAddPosTweenTag.ValueRW = true;
+                AddPosTweener.TweenBuilder.Create()
+                    .WithBaseSpeed(2f)
+                    .WithTarget(playerViewCamOffset)
+                    .Build(ref addPosTweenDataRef.ValueRW, canAddPosTweenTag);
 
             }
 
