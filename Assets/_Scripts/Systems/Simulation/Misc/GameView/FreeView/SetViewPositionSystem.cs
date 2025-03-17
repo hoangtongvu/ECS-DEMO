@@ -37,17 +37,24 @@ namespace Systems.Simulation.Misc.GameView.FreeView
 
             const float defaultOffsetY = 15;
 
-            foreach (var (addPosTweenDataRef, canAddPosTweenTag) in
+            foreach (var (addPosYTweenDataRef, canAddPosYTweenTag, addPosXZTweenDataRef, canAddPosXZTweenTag) in
                 SystemAPI.Query<
-                    RefRW<AddPosTweener_TweenData>
-                    , EnabledRefRW<Can_AddPosTweener_TweenTag>>()
+                    RefRW<AddPosYTweener_TweenData>
+                    , EnabledRefRW<Can_AddPosYTweener_TweenTag>
+                    , RefRW<AddPosXZTweener_TweenData>
+                    , EnabledRefRW < Can_AddPosXZTweener_TweenTag >> ()
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                AddPosTweener.TweenBuilder.Create()
+                AddPosYTweener.TweenBuilder.Create()
                     .WithBaseSpeed(2f)
-                    .WithTarget(new float3(0, defaultOffsetY, 0))
-                    .Build(ref addPosTweenDataRef.ValueRW, canAddPosTweenTag);
+                    .WithTarget(defaultOffsetY)
+                    .Build(ref addPosYTweenDataRef.ValueRW, canAddPosYTweenTag);
+
+                AddPosXZTweener.TweenBuilder.Create()
+                    .WithBaseSpeed(2f)
+                    .WithTarget(float2.zero)
+                    .Build(ref addPosXZTweenDataRef.ValueRW, canAddPosXZTweenTag);
 
             }
 

@@ -2,7 +2,6 @@ using Unity.Entities;
 using UnityEngine;
 using Components.Misc.GameView;
 using Components.Camera;
-using Core.Utilities.Extensions;
 using Utilities.Tweeners.Camera;
 
 namespace Systems.Simulation.Misc.GameView.FreeView
@@ -33,17 +32,16 @@ namespace Systems.Simulation.Misc.GameView.FreeView
 
             const float zoomSpeed = 5000f; // TODO: Extract this into component.
 
-            foreach (var (addPosRef, addPosTweenDataRef, canAddPosTweenTag) in
+            foreach (var (addPosTweenDataRef, canAddPosTweenTag) in
                 SystemAPI.Query<
-                    RefRO<AddPos>
-                    , RefRW<AddPosTweener_TweenData>
-                    , EnabledRefRW<Can_AddPosTweener_TweenTag>>()
+                    RefRW<AddPosYTweener_TweenData>
+                    , EnabledRefRW<Can_AddPosYTweener_TweenTag>>()
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                AddPosTweener.TweenBuilder.Create()
+                AddPosYTweener.TweenBuilder.Create()
                     .WithBaseSpeed(2f)
-                    .WithTarget(addPosRef.ValueRO.Value.Add(y: -scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime))
+                    .WithTarget(addPosTweenDataRef.ValueRO.Target - scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime)
                     .Build(ref addPosTweenDataRef.ValueRW, canAddPosTweenTag);
 
             }

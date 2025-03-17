@@ -22,9 +22,13 @@ namespace Authoring.Camera
                     Value = authoring.AddPos,
                 });
 
-                AddComponent<AddPosTweener_TweenData>(entity);
-                AddComponent<Can_AddPosTweener_TweenTag>(entity);
-                SetComponentEnabled<Can_AddPosTweener_TweenTag>(entity, false);
+                AddComponent<AddPosYTweener_TweenData>(entity);
+                AddComponent<Can_AddPosYTweener_TweenTag>(entity);
+                SetComponentEnabled<Can_AddPosYTweener_TweenTag>(entity, false);
+                
+                AddComponent<AddPosXZTweener_TweenData>(entity);
+                AddComponent<Can_AddPosXZTweener_TweenTag>(entity);
+                SetComponentEnabled<Can_AddPosXZTweener_TweenTag>(entity, false);
 
                 AddComponent<Can_TransformRotationTweener_TweenTag>(entity);
                 SetComponentEnabled<Can_TransformRotationTweener_TweenTag>(entity, false);

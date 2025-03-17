@@ -37,17 +37,24 @@ namespace Systems.Simulation.Misc.GameView.PlayerView
 
             float3 playerViewCamOffset = SystemAPI.GetSingleton<PlayerViewCamOffset>().Value;
 
-            foreach (var (addPosTweenDataRef, canAddPosTweenTag) in
+            foreach (var (addPosXZTweenDataRef, canAddPosXZTweenTag, addPosYTweenDataRef, canAddPosYTweenTag) in
                 SystemAPI.Query<
-                    RefRW<AddPosTweener_TweenData>
-                    , EnabledRefRW<Can_AddPosTweener_TweenTag>>()
+                    RefRW<AddPosXZTweener_TweenData>
+                    , EnabledRefRW<Can_AddPosXZTweener_TweenTag>
+                    , RefRW<AddPosYTweener_TweenData>
+                    , EnabledRefRW <Can_AddPosYTweener_TweenTag>>()
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                AddPosTweener.TweenBuilder.Create()
+                AddPosXZTweener.TweenBuilder.Create()
                     .WithBaseSpeed(2f)
-                    .WithTarget(playerViewCamOffset)
-                    .Build(ref addPosTweenDataRef.ValueRW, canAddPosTweenTag);
+                    .WithTarget(playerViewCamOffset.xz)
+                    .Build(ref addPosXZTweenDataRef.ValueRW, canAddPosXZTweenTag);
+
+                AddPosYTweener.TweenBuilder.Create()
+                    .WithBaseSpeed(2f)
+                    .WithTarget(playerViewCamOffset.y)
+                    .Build(ref addPosYTweenDataRef.ValueRW, canAddPosYTweenTag);
 
             }
 
