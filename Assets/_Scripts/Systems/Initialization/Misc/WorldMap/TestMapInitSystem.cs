@@ -72,12 +72,6 @@ namespace Systems.Initialization.Misc.WorldMap
             this.CreateCostMap(in costMap, mapWidth, mapHeight, in gridOffset);
 
             SingletonUtilities.GetInstance(this.EntityManager)
-                .AddOrSetComponentData(new TargetCellPos
-                {
-                    Value = new(0, 0),
-                });
-
-            SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(new WorldMapChangedTag
                 {
                     Value = true,

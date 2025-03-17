@@ -39,7 +39,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             state.RequireForUpdate<ChunkExitIndexesContainer>();
             state.RequireForUpdate<ChunkExitsContainer>();
             state.RequireForUpdate<InnerPathCostMap>();
-            state.RequireForUpdate<TargetCellPos>();
 
         }
 
