@@ -14,7 +14,7 @@ namespace Systems.Initialization.Misc.GameView
     [BurstCompile]
     public partial struct GameViewComponentsInitSystem : ISystem
     {
-        [BurstCompile]
+        //[BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             this.InitCurrentGameView(ref state);
@@ -31,7 +31,7 @@ namespace Systems.Initialization.Misc.GameView
 
         }
 
-        [BurstCompile]
+        //[BurstCompile]
         private void InitCurrentGameView(ref SystemState state)
         {
             SingletonUtilities.GetInstance(state.EntityManager)
@@ -45,7 +45,7 @@ namespace Systems.Initialization.Misc.GameView
 
         }
 
-        [BurstCompile]
+        //[BurstCompile]
         private void InitFixedAngleMap(ref SystemState state)
         {
             int length = Enum.GetNames(typeof(GameViewType)).Length;
@@ -62,7 +62,7 @@ namespace Systems.Initialization.Misc.GameView
 
         }
 
-        [BurstCompile]
+        //[BurstCompile]
         private void InitPlayerViewCamOffset(ref SystemState state)
         {
             SingletonUtilities.GetInstance(state.EntityManager)
