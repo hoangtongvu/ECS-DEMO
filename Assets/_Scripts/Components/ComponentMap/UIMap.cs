@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Components.ComponentMap
 {
-    public class UIPoolMapValue
+    public class UIPrefabAndPool
     {
         public uint GlobalID;
         public GameObject Prefab;
@@ -13,7 +13,7 @@ namespace Components.ComponentMap
         public Transform DefaultHolderTransform; // this is parent transform for default.
     }
 
-    public class UIPoolMap : BaseMap<UIType, UIPoolMapValue> { }
+    public class UIPrefabAndPoolMap : BaseMap<UIType, UIPrefabAndPool> { }
 
     public class SpawnedUIMap : BaseMap<UIID, BaseUICtrl> { }
 

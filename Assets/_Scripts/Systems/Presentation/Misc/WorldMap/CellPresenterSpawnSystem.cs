@@ -21,7 +21,7 @@ namespace Systems.Presentation.Misc.WorldMap
             this.RequireForUpdate<WorldTileCostMap>();
             this.RequireForUpdate<MapDebugConfig>();
             this.RequireForUpdate<SpawnedUIMap>();
-            this.RequireForUpdate<UIPoolMap>();
+            this.RequireForUpdate<UIPrefabAndPoolMap>();
 
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddComponent<CellPresenterStartIndex>();
@@ -39,11 +39,11 @@ namespace Systems.Presentation.Misc.WorldMap
             var presenterStartIndexRef = SystemAPI.GetSingletonRW<CellPresenterStartIndex>();
             var debugConfig = SystemAPI.GetSingleton<MapDebugConfig>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
+            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
 
             this.SpawnNodePresenters(
                 spawnedUIMap
-                , uiPoolMap
+                , uiPrefabAndPoolMap
                 , in costMap
                 , costMap.Width /*mapWidth*/
                 , in gridOffset
@@ -55,7 +55,7 @@ namespace Systems.Presentation.Misc.WorldMap
 
         private void SpawnNodePresenters(
             SpawnedUIMap spawnedUIMap
-            , UIPoolMap uiPoolMap
+            , UIPrefabAndPoolMap uiPrefabAndPoolMap
             , in WorldTileCostMap costMap
             , int mapWidth
             , in int2 gridOffset
@@ -86,7 +86,7 @@ namespace Systems.Presentation.Misc.WorldMap
 
                 var presenterCtrl = (CellPresenterCtrl)
                     UISpawningHelper.Spawn(
-                        uiPoolMap
+                        uiPrefabAndPoolMap
                         , spawnedUIMap
                         , UIType.WorldMapCellPresenter
                         , center);

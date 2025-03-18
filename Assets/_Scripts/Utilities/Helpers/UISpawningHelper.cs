@@ -8,13 +8,13 @@ namespace Utilities.Helpers
 {
     public static class UISpawningHelper
     {
-        // UIPoolMap and SpawnedUIMap are classes, could be pass into function as reference, no need 'in' keyword.
+        // uiPrefabAndPoolMap and SpawnedUIMap are classes, could be pass into function as reference, no need 'in' keyword.
         public static BaseUICtrl Spawn(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , UIType uiType)
         {
-            if (!uiPoolMap.Value.TryGetValue(uiType, out var uiPoolMapValue))
+            if (!uiPrefabAndPoolMap.Value.TryGetValue(uiType, out var uiPoolMapValue))
             {
                 Debug.LogError($"Can't find UI prefab of type {uiType}");
                 return null;
@@ -42,24 +42,24 @@ namespace Utilities.Helpers
         }
 
         public static BaseUICtrl Spawn(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , UIType uiType
             , float3 position
             , quaternion quaternion)
         {
-            var baseUICtrl = Spawn(uiPoolMap, spawnedUIMap, uiType);
+            var baseUICtrl = Spawn(uiPrefabAndPoolMap, spawnedUIMap, uiType);
             baseUICtrl?.transform.SetPositionAndRotation(position, quaternion);
             return baseUICtrl;
         }
 
         public static BaseUICtrl Spawn(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , UIType uiType
             , float3 position)
         {
-            var baseUICtrl = Spawn(uiPoolMap, spawnedUIMap, uiType);
+            var baseUICtrl = Spawn(uiPrefabAndPoolMap, spawnedUIMap, uiType);
 
             if (baseUICtrl != null)
                 baseUICtrl.transform.position = position;
@@ -68,7 +68,7 @@ namespace Utilities.Helpers
         }
 
         public static void Despawn(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , UIID uiID)
         {
@@ -78,7 +78,7 @@ namespace Utilities.Helpers
                 return;
             }
 
-            if (!uiPoolMap.Value.TryGetValue(uiID.Type, out var uiPoolMapValue))
+            if (!uiPrefabAndPoolMap.Value.TryGetValue(uiID.Type, out var uiPoolMapValue))
             {
                 Debug.LogError($"Can't find UI prefab of type {uiID.Type}");
                 return;
@@ -91,7 +91,7 @@ namespace Utilities.Helpers
             uiPoolMapValue.UIPool.AddToPool(baseUICtrl);
         }
 
-        private static Transform GetParentTransform(UIPoolMapValue uiPoolMapValue) => uiPoolMapValue.DefaultHolderTransform;
+        private static Transform GetParentTransform(UIPrefabAndPool uiPrefabAndPool) => uiPrefabAndPool.DefaultHolderTransform;
 
         private static void AddSpawnedUIIntoMap(
             SpawnedUIMap spawnedUIMap

@@ -14,13 +14,13 @@ namespace Systems.Initialization.UI
     {
         protected override void OnCreate()
         {
-            var uiPoolMap = new UIPoolMap
+            var uiPrefabAndPoolMap = new UIPrefabAndPoolMap
             {
-                Value = new Dictionary<UIType, UIPoolMapValue>(),
+                Value = new Dictionary<UIType, UIPrefabAndPool>(),
             };
 
             SingletonUtilities.GetInstance(EntityManager)
-                .AddOrSetComponentData(uiPoolMap);
+                .AddOrSetComponentData(uiPrefabAndPoolMap);
 
             SingletonUtilities.GetInstance(EntityManager)
                 .AddOrSetComponentData(new SpawnedUIMap
@@ -29,7 +29,7 @@ namespace Systems.Initialization.UI
                 });
 
             this.LoadAllUIPrefabs(out var uiCtrls);
-            this.AddUIsIntoMap(uiPoolMap, uiCtrls);
+            this.AddUIsIntoMap(uiPrefabAndPoolMap, uiCtrls);
 
             this.Enabled = false;
 
@@ -41,7 +41,7 @@ namespace Systems.Initialization.UI
 
         private void LoadAllUIPrefabs(out BaseUICtrl[] uiCtrls) => uiCtrls = Resources.LoadAll<BaseUICtrl>("UI");
 
-        private void AddUIsIntoMap(UIPoolMap uiMap, BaseUICtrl[] uiCtrls)
+        private void AddUIsIntoMap(UIPrefabAndPoolMap uiPrefabAndPoolMap, BaseUICtrl[] uiCtrls)
         {
             foreach (var uiCtrl in uiCtrls)
             {
@@ -55,9 +55,9 @@ namespace Systems.Initialization.UI
                     , canvasAnchorPreset
                     , out var objPool);
 
-                bool canAddIntoUIMap = uiMap.Value.TryAdd(
+                bool canAddIntoUIMap = uiPrefabAndPoolMap.Value.TryAdd(
                     type
-                    , new UIPoolMapValue
+                    , new UIPrefabAndPool
                     {
                         GlobalID = 0,
                         Prefab = uiCtrl.gameObject,
