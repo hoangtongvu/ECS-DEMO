@@ -9,10 +9,8 @@ using Core.UI.TopLeftPanel;
 using System.Collections.Generic;
 using Core.UI.TopLeftPanel.ResourceDisplay;
 
-
-namespace Systems.Initialization
+namespace Systems.Initialization.UI
 {
-
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class TopLeftPanelInitSystem : SystemBase
     {
