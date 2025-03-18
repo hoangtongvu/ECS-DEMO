@@ -18,7 +18,7 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
         protected override void OnClick()
         {
             GameplayMessenger.MessagePublisher
-                .Publish(new SpawnUnitMessage(this.spawningProfileDisplayCtrl.UIID));
+                .Publish(new SpawnUnitMessage(this.spawningProfileDisplayCtrl.RuntimeUIID));
             
         }
 

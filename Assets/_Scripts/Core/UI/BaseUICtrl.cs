@@ -5,9 +5,12 @@ namespace Core.UI
 {
     public abstract class BaseUICtrl : SaiMonoBehaviour
     {
-        public UIID UIID = new();
+        public UIID RuntimeUIID;
         public CanvasType CanvasType;
         public CanvasAnchorPreset CanvasAnchorPreset;
 
+        public abstract UIType GetUIType();
+
     }
+
 }

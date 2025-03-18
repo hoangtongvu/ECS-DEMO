@@ -84,7 +84,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     , UIType.EntitySpawningPanel
                     , spawnPos);
 
-            uiSpawned.UIID = entitySpawningPanelCtrl.UIID;
+            uiSpawned.UIID = entitySpawningPanelCtrl.RuntimeUIID;
 
             entitySpawningPanelCtrl.gameObject.SetActive(true);
         }
@@ -111,7 +111,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 profileDisplayCtrl.ProgressBar.ClearProgress();
                 profileDisplayCtrl.SpawnCountText.SetSpawnCount(profile.SpawnCount.Value);
 
-                profile.UIID = profileDisplayCtrl.UIID;
+                profile.UIID = profileDisplayCtrl.RuntimeUIID;
 
                 profileDisplayCtrl.ProfilePic.sprite = profile.UnitSprite.Value;
                 entitySpawningPanelCtrl.SpawningDisplaysHolder.Add(profileDisplayCtrl);

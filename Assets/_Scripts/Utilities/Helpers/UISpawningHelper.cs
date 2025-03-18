@@ -8,32 +8,32 @@ namespace Utilities.Helpers
 {
     public static class UISpawningHelper
     {
-        // uiPrefabAndPoolMap and SpawnedUIMap are classes, could be pass into function as reference, no need 'in' keyword.
         public static BaseUICtrl Spawn(
             UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , UIType uiType)
         {
-            if (!uiPrefabAndPoolMap.Value.TryGetValue(uiType, out var uiPoolMapValue))
+            if (!uiPrefabAndPoolMap.Value.TryGetValue(uiType, out var uiPrefabAndPool))
             {
                 Debug.LogError($"Can't find UI prefab of type {uiType}");
                 return null;
             }
 
-            uint newID = uiPoolMapValue.GlobalID + 1;
-            var uiPool = uiPoolMapValue.UIPool;
+            uint newID = uiPrefabAndPool.GlobalID + 1;
+            var uiPool = uiPrefabAndPool.UIPool;
 
             // Obj pool has no ref to prefab so it can't spawn new instance itself.
             // Instantiate with parent as parameter.
             if (!uiPool.TryGetFromPool(out BaseUICtrl baseUICtrl))
             {
                 baseUICtrl =
-                    Object.Instantiate(uiPoolMapValue.Prefab, GetParentTransform(uiPoolMapValue), false) // false to keep relative position.
+                    Object.Instantiate(uiPrefabAndPool.Prefab, GetParentTransform(uiPrefabAndPool), false) // false to keep relative position.
                     .GetComponent<BaseUICtrl>();
 
                 // Set ID.
-                baseUICtrl.UIID.LocalId = newID;
-                uiPoolMapValue.GlobalID = newID;
+                baseUICtrl.RuntimeUIID.Type = baseUICtrl.GetUIType();
+                baseUICtrl.RuntimeUIID.LocalId = newID;
+                uiPrefabAndPool.GlobalID = newID;
 
             }
 
@@ -97,8 +97,8 @@ namespace Utilities.Helpers
             SpawnedUIMap spawnedUIMap
             , BaseUICtrl baseUICtrl)
         {
-            if (spawnedUIMap.Value.TryAdd(baseUICtrl.UIID, baseUICtrl)) return;
-            Debug.LogError($"SpawnedUIMap has already contained ID = {baseUICtrl.UIID}");
+            if (spawnedUIMap.Value.TryAdd(baseUICtrl.RuntimeUIID, baseUICtrl)) return;
+            Debug.LogError($"SpawnedUIMap has already contained ID = {baseUICtrl.RuntimeUIID}");
         }
 
     }

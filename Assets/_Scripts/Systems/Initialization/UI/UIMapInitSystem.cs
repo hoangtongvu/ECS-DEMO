@@ -45,7 +45,7 @@ namespace Systems.Initialization.UI
         {
             foreach (var uiCtrl in uiCtrls)
             {
-                UIType type = uiCtrl.UIID.Type;
+                UIType type = uiCtrl.GetUIType();
                 CanvasType canvasType = uiCtrl.CanvasType;
                 CanvasAnchorPreset canvasAnchorPreset = uiCtrl.CanvasAnchorPreset;
 

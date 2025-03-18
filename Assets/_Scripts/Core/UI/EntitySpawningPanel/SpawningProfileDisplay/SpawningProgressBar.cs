@@ -36,7 +36,7 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
 
         private void Handle(SetProgressBarMessage message)
         {
-            if (!message.UIID.Equals(this.spawningProfileDisplayCtrl.UIID)) return;
+            if (!message.UIID.Equals(this.spawningProfileDisplayCtrl.RuntimeUIID)) return;
             if (message.Value > 1) Debug.LogWarning($"Progress value is greater than 1, is potentially a bug");
             this.SetProgress(message.Value);
         }

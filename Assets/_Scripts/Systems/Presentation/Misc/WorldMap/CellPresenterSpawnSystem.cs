@@ -101,7 +101,7 @@ namespace Systems.Presentation.Misc.WorldMap
                 if (spawnedFirstPresenter) continue;
 
                 spawnedFirstPresenter = true;
-                presenterStartIndex.Value = (int)presenterCtrl.UIID.LocalId;
+                presenterStartIndex.Value = (int)presenterCtrl.RuntimeUIID.LocalId;
 
             }
 
