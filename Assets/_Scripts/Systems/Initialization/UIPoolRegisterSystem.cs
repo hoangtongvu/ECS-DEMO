@@ -8,7 +8,6 @@ using ZBase.Foundation.PubSub;
 
 namespace Systems.Initialization
 {
-
     [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
     public partial class UIPoolRegisterSystem : SystemBase
     {
@@ -37,7 +36,6 @@ namespace Systems.Initialization
                     continue;
                 }
 
-
                 if (!uiMap.Value
                     .TryAdd(
                         data.Type
@@ -65,6 +63,6 @@ namespace Systems.Initialization
 
         private bool CanvasTypeIsNone(UIPoolRegisterMessage data) => data.CanvasType == CanvasType.None;
 
-
     }
+
 }

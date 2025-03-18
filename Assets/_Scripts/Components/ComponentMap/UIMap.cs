@@ -18,4 +18,3 @@ namespace Components.ComponentMap
     public class SpawnedUIMap : BaseMap<UIID, BaseUICtrl> { }
 
 }
-
