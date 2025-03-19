@@ -46,7 +46,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 }
             }
 
-            half cellRadius = new(0.7f);
+            half cellRadius = new(1f);
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddOrSetComponentData(new CellRadius
                 {
