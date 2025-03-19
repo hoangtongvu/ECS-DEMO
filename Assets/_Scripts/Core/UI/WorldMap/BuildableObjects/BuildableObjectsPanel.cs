@@ -7,15 +7,19 @@ namespace Core.UI.WorldMap.BuildableObjects
     [GenerateUIType("BuildableObjectsPanel")]
     public partial class BuildableObjectsPanel : BaseUICtrl
     {
+        private ISubscription subscription;
+
         private void Start()
         {
             this.gameObject.SetActive(false);
-            GameplayMessenger.MessageSubscriber
+            this.subscription = GameplayMessenger.MessageSubscriber
                 .Subscribe<BuildModeToggleMessage>(this.HandleMessage);
 
         }
 
-        void HandleMessage(BuildModeToggleMessage message)
+        private void OnDestroy() => this.subscription.Dispose();
+
+        private void HandleMessage(BuildModeToggleMessage message)
         {
             this.gameObject.SetActive(!this.gameObject.activeSelf);
         }
