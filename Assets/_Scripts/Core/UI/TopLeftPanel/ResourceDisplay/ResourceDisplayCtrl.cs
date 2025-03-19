@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Core.UI.TopLeftPanel.ResourceDisplay
 {
-    public class ResourceDisplayCtrl : BaseUICtrl
+    [GenerateUIType("ResourceDisplay")]
+    public partial class ResourceDisplayCtrl : BaseUICtrl
     {
         [SerializeField] private ResourceImage resourceImage;
         [SerializeField] private QuantityText quantityText;
 
         public ResourceType ResourceType;
-
 
         public ResourceImage ResourceImage => resourceImage;
         public QuantityText QuantityText => quantityText;
@@ -20,5 +20,7 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
             this.LoadComponentInChildren(ref this.resourceImage);
             this.LoadComponentInChildren(ref this.quantityText);
         }
+
     }
+
 }

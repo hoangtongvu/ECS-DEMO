@@ -9,17 +9,15 @@ using Core.UI.TopLeftPanel;
 using System.Collections.Generic;
 using Core.UI.TopLeftPanel.ResourceDisplay;
 
-
-namespace Systems.Initialization
+namespace Systems.Initialization.UI
 {
-
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class TopLeftPanelInitSystem : SystemBase
     {
         protected override void OnCreate()
         {
             this.RequireForUpdate<SpawnedUIMap>();
-            this.RequireForUpdate<UIPoolMap>();
+            this.RequireForUpdate<UIPrefabAndPoolMap>();
         }
 
         protected override void OnUpdate()
@@ -27,17 +25,17 @@ namespace Systems.Initialization
             this.Enabled = false;
 
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
+            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
 
 
             this.SpawnTopLeftPanel(
-                uiPoolMap
+                uiPrefabAndPoolMap
                 , spawnedUIMap
                 , out var topLeftPanelManager);
 
 
             this.SpawnResourceDisplays(
-                uiPoolMap
+                uiPrefabAndPoolMap
                 , spawnedUIMap
                 , out var resourceDisplays);
 
@@ -48,20 +46,20 @@ namespace Systems.Initialization
 
 
         private void SpawnTopLeftPanel(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , out TopLeftPanelManager topLeftPanelManager)
         {
             topLeftPanelManager = (TopLeftPanelManager)
                 UISpawningHelper.Spawn(
-                    uiPoolMap
+                    uiPrefabAndPoolMap
                     , spawnedUIMap
                     , UIType.TopLeftPanel);
             topLeftPanelManager.gameObject.SetActive(true);
         }
 
         private void SpawnResourceDisplays(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , out List<ResourceDisplayCtrl> resourceDisplays)
         {
@@ -72,7 +70,7 @@ namespace Systems.Initialization
             for (int i = 0; i < length; i++)
             {
                 var resourceDisplay = (ResourceDisplayCtrl) UISpawningHelper.Spawn(
-                    uiPoolMap
+                    uiPrefabAndPoolMap
                     , spawnedUIMap
                     , UIType.ResourceDisplay);
 

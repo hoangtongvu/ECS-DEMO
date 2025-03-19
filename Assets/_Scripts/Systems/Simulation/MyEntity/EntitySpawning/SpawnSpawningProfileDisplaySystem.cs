@@ -33,7 +33,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         protected override void OnUpdate()
         {
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var uiPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPoolMap>();
+            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
 
 
             foreach (var (spawningProfiles, uiSpawnedRef, transformRef) in
@@ -49,14 +49,14 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
 
                 this.SpawnEntitySpawningPanel(
-                    uiPoolMap
+                    uiPrefabAndPoolMap
                     , spawnedUIMap
                     , spawnPos
                     , ref uiSpawnedRef.ValueRW
                     , out var entitySpawningPanelCtrl);
 
                 this.SpawnProfileDisplays(
-                    uiPoolMap
+                    uiPrefabAndPoolMap
                     , spawnedUIMap
                     , spawningProfiles
                     , spawnPos
@@ -70,7 +70,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
 
         private void SpawnEntitySpawningPanel(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , float3 spawnPos
             , ref UISpawned uiSpawned
@@ -79,18 +79,18 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
             entitySpawningPanelCtrl =
                 (EntitySpawningPanelCtrl) UISpawningHelper.Spawn(
-                    uiPoolMap
+                    uiPrefabAndPoolMap
                     , spawnedUIMap
                     , UIType.EntitySpawningPanel
                     , spawnPos);
 
-            uiSpawned.UIID = entitySpawningPanelCtrl.UIID;
+            uiSpawned.UIID = entitySpawningPanelCtrl.RuntimeUIID;
 
             entitySpawningPanelCtrl.gameObject.SetActive(true);
         }
 
         private void SpawnProfileDisplays(
-            UIPoolMap uiPoolMap
+            UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
             , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
             , float3 spawnPos
@@ -103,7 +103,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
                 var profileDisplayCtrl =
                     (SpawningProfileDisplayCtrl) UISpawningHelper.Spawn(
-                        uiPoolMap
+                        uiPrefabAndPoolMap
                         , spawnedUIMap
                         , UIType.SpawningProfileDisplay
                         , spawnPos);
@@ -111,7 +111,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 profileDisplayCtrl.ProgressBar.ClearProgress();
                 profileDisplayCtrl.SpawnCountText.SetSpawnCount(profile.SpawnCount.Value);
 
-                profile.UIID = profileDisplayCtrl.UIID;
+                profile.UIID = profileDisplayCtrl.RuntimeUIID;
 
                 profileDisplayCtrl.ProfilePic.sprite = profile.UnitSprite.Value;
                 entitySpawningPanelCtrl.SpawningDisplaysHolder.Add(profileDisplayCtrl);

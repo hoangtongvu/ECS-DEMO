@@ -2,7 +2,8 @@ using UnityEngine;
 
 namespace Core.UI.WorldMapDebug
 {
-    public class CellPresenterCtrl : BaseUICtrl
+    [GenerateUIType("WorldMapCellPresenter")]
+    public partial class CellPresenterCtrl : BaseUICtrl
     {
         [SerializeField] private CostText costText;
         [SerializeField] private BackgroundImage backgroundImage;
@@ -15,10 +16,8 @@ namespace Core.UI.WorldMapDebug
             base.LoadComponents();
             this.LoadComponentInChildren(ref this.costText);
             this.LoadComponentInChildren(ref this.backgroundImage);
-
         }
 
     }
-
 
 }
