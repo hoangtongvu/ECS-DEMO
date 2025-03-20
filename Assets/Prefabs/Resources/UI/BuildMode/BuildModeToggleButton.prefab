@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: -7278208130513813962}
   - component: {fileID: 2932606834111461319}
   m_Layer: 5
-  m_Name: BuildModeTriggerButton
+  m_Name: BuildModeToggleButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

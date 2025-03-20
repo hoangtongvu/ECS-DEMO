@@ -1,4 +1,4 @@
-﻿using Core.MyEvent.PubSub.Messages.UI;
+﻿using Core.MyEvent.PubSub.Messages.WorldBuilding;
 using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
 

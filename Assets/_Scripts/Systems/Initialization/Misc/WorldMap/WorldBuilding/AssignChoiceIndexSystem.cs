@@ -8,9 +8,9 @@ using ZBase.Foundation.PubSub;
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial class ResetChoiceIndexSystem : SystemBase
+    public partial class AssignChoiceIndexSystem : SystemBase
     {
-        private NativeQueue<BuildModeToggleMessage> messageQueue;
+        private NativeQueue<ChooseBuildableObjectMessage> messageQueue;
         private ISubscription subscription;
 
         protected override void OnCreate()
@@ -18,7 +18,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             this.messageQueue = new(Allocator.Persistent);
 
             this.subscription = GameplayMessenger.MessageSubscriber
-                .Subscribe<BuildModeToggleMessage>(message => this.messageQueue.Enqueue(message));
+                .Subscribe<ChooseBuildableObjectMessage>(message => this.messageQueue.Enqueue(message));
 
             this.RequireForUpdate<BuildableObjectChoiceIndex>();
         }
@@ -29,8 +29,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 
             while (this.messageQueue.TryDequeue(out var data))
             {
-                if (choiceIndexRef.ValueRO.Value == BuildableObjectChoiceIndex.NoChoice) continue;
-                choiceIndexRef.ValueRW.Value = BuildableObjectChoiceIndex.NoChoice;
+                choiceIndexRef.ValueRW.Value = data.choiceIndex;
             }
 
         }

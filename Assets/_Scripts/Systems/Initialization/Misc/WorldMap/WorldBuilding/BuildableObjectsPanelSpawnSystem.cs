@@ -3,12 +3,13 @@ using Unity.Burst;
 using Utilities.Helpers;
 using Components.ComponentMap;
 using Core.UI.Identification;
+using Components.Misc.WorldMap.WorldBuilding;
 
-namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
+namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct PlayerBuildObjectSystem : ISystem
+    public partial struct BuildableObjectsPanelSpawnSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -23,8 +24,10 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
 
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
+            var runtimeUIIDRef = SystemAPI.GetSingletonRW<BuildableObjectsPanelRuntimeUIID>();
 
-            UISpawningHelper.Spawn(uiPrefabAndPoolMap, spawnedUIMap, UIType.BuildableObjectsPanel);
+            runtimeUIIDRef.ValueRW.Value =
+                UISpawningHelper.Spawn(uiPrefabAndPoolMap, spawnedUIMap, UIType.BuildableObjectsPanel).RuntimeUIID;
 
         }
 
