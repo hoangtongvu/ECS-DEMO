@@ -6,6 +6,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
     public class BuildableObjectSOElement
     {
         public GameObject Prefab;
+        public string Name;
         public Sprite PreviewSprite;
         public int SquareRadius;
     }

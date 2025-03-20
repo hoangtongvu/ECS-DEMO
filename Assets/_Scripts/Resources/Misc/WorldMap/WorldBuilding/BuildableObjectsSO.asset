@@ -15,13 +15,16 @@ MonoBehaviour:
   BuildableObjects:
   - Prefab: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
       type: 3}
+    Name: Tree
     PreviewSprite: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4, type: 3}
     SquareRadius: 1
   - Prefab: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
       type: 3}
+    Name: House
     PreviewSprite: {fileID: 21300000, guid: ed5474fc2732ba54f99fae691ce9cdf8, type: 3}
     SquareRadius: 2
   - Prefab: {fileID: 9115495792767966074, guid: 136dbed38cae8cc419daa750f6417450,
       type: 3}
+    Name: ToolSpawner
     PreviewSprite: {fileID: 21300000, guid: 223a61bc9202046408dd1a38e0051eeb, type: 3}
     SquareRadius: 2

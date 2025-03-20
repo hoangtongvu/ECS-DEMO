@@ -39,6 +39,7 @@ namespace Authoring.Misc.WorldMap.WorldBuilding
                     buffer.Add(new()
                     {
                         Entity = GetEntity(buildableObjectData.Prefab, TransformUsageFlags.None),
+                        Name = buildableObjectData.Name,
                         PreviewSprite = buildableObjectData.PreviewSprite,
                         SquareRadius = buildableObjectData.SquareRadius,
                     });
