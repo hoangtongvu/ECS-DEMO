@@ -9,7 +9,7 @@ namespace Components.Misc.WorldMap.WorldBuilding
         public Entity Entity;
         public FixedString64Bytes Name;
         public UnityObjectRef<Sprite> PreviewSprite;
-        public int SquareRadius;
+        public int GridSquareSize;
     }
 
 }

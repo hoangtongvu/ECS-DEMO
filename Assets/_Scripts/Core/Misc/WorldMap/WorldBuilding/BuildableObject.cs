@@ -7,7 +7,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
     {
         public Entity Entity;
         public UnityObjectRef<Sprite> PreviewSprite;
-        public int SquareRadius;
+        public int GridSquareSize;
     }
 
 }

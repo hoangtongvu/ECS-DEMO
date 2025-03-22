@@ -41,7 +41,7 @@ namespace Authoring.Misc.WorldMap.WorldBuilding
                         Entity = GetEntity(buildableObjectData.Prefab, TransformUsageFlags.None),
                         Name = buildableObjectData.Name,
                         PreviewSprite = buildableObjectData.PreviewSprite,
-                        SquareRadius = buildableObjectData.SquareRadius,
+                        GridSquareSize = buildableObjectData.GridSquareSize,
                     });
                 }
 

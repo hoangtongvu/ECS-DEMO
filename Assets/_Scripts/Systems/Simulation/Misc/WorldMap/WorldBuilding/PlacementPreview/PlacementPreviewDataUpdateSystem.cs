@@ -54,14 +54,14 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
             WorldMapHelper.GridPosToWorldPos(in cellRadius, in gridPos, out float3 centerPosOfCell);
 
             float3 spriteStartPos = centerPosOfCell;
-            float plusAmount = (float)buildableObjectElement.SquareRadius * cellRadius - cellRadius;
+            float plusAmount = (float)buildableObjectElement.GridSquareSize * cellRadius - cellRadius;
 
             spriteStartPos = spriteStartPos.Add(x: plusAmount, z: -plusAmount);
 
             placementPreviewDataRef.ValueRW.TopLeftCellCenterPos = spriteStartPos.With(y: raycastHit.Position.y + 0.2f);
-            placementPreviewDataRef.ValueRW.PlacementSpriteScale = cellRadius * 2 * 100 * buildableObjectElement.SquareRadius;
+            placementPreviewDataRef.ValueRW.PlacementSpriteScale = cellRadius * 2 * 100 * buildableObjectElement.GridSquareSize;
             placementPreviewDataRef.ValueRW.IsBuildable =
-                this.AreAllCellsPassable(in costMap, in gridPos, buildableObjectElement.SquareRadius);
+                this.AreAllCellsPassable(in costMap, in gridPos, buildableObjectElement.GridSquareSize);
 
         }
 

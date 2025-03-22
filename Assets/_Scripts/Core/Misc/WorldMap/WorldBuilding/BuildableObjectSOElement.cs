@@ -8,7 +8,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
         public GameObject Prefab;
         public string Name;
         public Sprite PreviewSprite;
-        public int SquareRadius;
+        public int GridSquareSize;
     }
 
 }
