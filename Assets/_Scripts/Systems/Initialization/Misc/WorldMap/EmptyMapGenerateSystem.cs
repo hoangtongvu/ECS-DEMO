@@ -8,8 +8,7 @@ using Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.WorldMap
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(WorldMapChangedTagClearSystem))]
+    [UpdateInGroup(typeof(MapGenerateSystemGroup))]
     public partial class EmptyMapGenerateSystem : SystemBase
     {
         protected override void OnCreate()
