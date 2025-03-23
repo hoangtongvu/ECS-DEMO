@@ -5,8 +5,8 @@ namespace Components.MyEntity.EntitySpawning
 {
     public struct SpawnDuration
     {
-        public float DurationPerSpawn;
-        public float DurationCounterSecond;
+        public float SpawnDurationSeconds;
+        public float DurationCounterSeconds;
     }
 
     public struct EntitySpawningProfileElement : IBufferElementData

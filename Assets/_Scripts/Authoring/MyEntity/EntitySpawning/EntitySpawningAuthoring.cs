@@ -41,8 +41,8 @@ namespace Authoring.MyEntity.EntitySpawning
 
                         SpawnDuration = new()
                         {
-                            DurationPerSpawn = profile.DurationPerSpawn,
-                            DurationCounterSecond = 0,
+                            SpawnDurationSeconds = profile.SpawnDurationSeconds,
+                            DurationCounterSeconds = 0,
                         },
 
                     });

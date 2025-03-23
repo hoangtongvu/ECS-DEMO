@@ -44,7 +44,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                     // This means when nothing to spawned, UI won't update.
                     float progressValue =
-                        profile.SpawnDuration.DurationCounterSecond / profile.SpawnDuration.DurationPerSpawn;
+                        profile.SpawnDuration.DurationCounterSeconds / profile.SpawnDuration.SpawnDurationSeconds;
 
                     GameplayMessenger.MessagePublisher.Publish(new SetProgressBarMessage
                     {

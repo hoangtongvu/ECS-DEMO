@@ -16,7 +16,7 @@ MonoBehaviour:
   ProfilePicture: {fileID: 21300000, guid: 6f34760afcacfa946a441a9f5bda8873, type: 3}
   Name: 
   Prefab: {fileID: 3552774824711469151, guid: abf102b7e42e9874183ffb8ec9d78bfb, type: 3}
-  DurationPerSpawn: 3
+  SpawnDurationSeconds: 3
   BaseCosts:
     _serializedList:
     - Key: 0
@@ -24,14 +24,6 @@ MonoBehaviour:
     - Key: 1
       Value: 5
   UnitType: 2
-  MoveAffecterPriorities:
-    _serializedList:
-    - Key: 1
-      Value: 0
-    - Key: 2
-      Value: 1
-    - Key: 3
-      Value: 2
   MoveCommandSourcePriorities:
     _serializedList:
     - Key: 1
