@@ -5,14 +5,13 @@ using Unity.Transforms;
 using Components.ComponentMap;
 using Utilities.Helpers;
 using Components.Unit.UnitSelection;
+using Core.UI.EntitySpawningPanel;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class DespawnEntitySpawningPanelSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             var query = SystemAPI.QueryBuilder()
@@ -40,13 +39,14 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 bool canDespawn = uiSpawnedRef.ValueRO.IsSpawned;
                 if (!canDespawn) continue;
 
+                spawnedUIMap.Value.TryGetValue(uiSpawnedRef.ValueRO.UIID.Value, out var spawningPanel);
 
-                this.DespawnProfileDisplays(uiPrefabAndPoolMap, spawnedUIMap, spawningProfiles);
+                this.DespawnProfileDisplays(uiPrefabAndPoolMap, spawnedUIMap, ((EntitySpawningPanelCtrl)spawningPanel).SpawningDisplaysHolder);
 
                 this.DespawnEntitySpawningPanel(uiPrefabAndPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
 
-                // TODO: Use event to despawn is much more easier cause we don't need any return.
                 uiSpawnedRef.ValueRW.IsSpawned = false;
+
             }
 
         }
@@ -54,15 +54,18 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         private void DespawnProfileDisplays(
             UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
-            , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles)
+            , SpawningDisplaysHolder spawningDisplaysHolder)
         {
-            for (int i = 0; i < spawningProfiles.Length; i++)
-            {
-                ref var profile = ref spawningProfiles.ElementAt(i);
-                UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, profile.UIID.Value);
+            int length = spawningDisplaysHolder.SpawningProfileDisplayCtrls.Count;
 
-                profile.UIID = null;
+            for (int i = 0; i < length; i++)
+            {
+                var runtimeUIID = spawningDisplaysHolder.SpawningProfileDisplayCtrls[i].RuntimeUIID;
+                UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, runtimeUIID);
             }
+            
+            spawningDisplaysHolder.SpawningProfileDisplayCtrls.Clear();
+
         }
 
         private void DespawnEntitySpawningPanel(
@@ -75,4 +78,5 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         }
 
     }
+
 }

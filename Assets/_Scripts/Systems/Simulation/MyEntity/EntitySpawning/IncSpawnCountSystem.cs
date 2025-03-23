@@ -13,12 +13,10 @@ using Components.Player;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
-
     [BurstCompile]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial struct IncSpawnCountSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -48,11 +46,9 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
         }
 
-
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-
             var messageQueue = SystemAPI.GetSingleton<MessageQueue<SpawnUnitMessage>>();
             var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>();
 
@@ -70,46 +66,28 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 walletChangedTag = item.Item2;
             }
 
-            // Put foreach inside while loop is more efficient in this situation.
             while (messageQueue.Value.TryDequeue(out var message))
             {
-                // Turn whole these below into IJobEntity?
-                foreach (var (profiles, localCostMap) in
-                    SystemAPI.Query<
-                        DynamicBuffer<EntitySpawningProfileElement>
-                        , DynamicBuffer<LocalCostMapElement>>()
-                        .WithAll<UnitSelectedTag>())
-                {
+                var profiles = SystemAPI.GetBuffer<EntitySpawningProfileElement>(message.SpawnerEntity);
+                var localCostMap = SystemAPI.GetBuffer<LocalCostMapElement>(message.SpawnerEntity);
 
-                    for (int i = 0; i < profiles.Length; i++)
-                    {
-                        ref var profile = ref profiles.ElementAt(i);
+                ref var profile = ref profiles.ElementAt(message.SpawningProfileElementIndex);
 
-                        if (!profile.CanIncSpawnCount) continue;
+                if (!this.HaveEnoughResources(
+                    resourceWallet
+                    , localCostMap
+                    , message.SpawningProfileElementIndex
+                    , resourceCount.Value
+                    , out var walletArr)) continue;
 
-                        if (!profile.UIID.HasValue)
-                        {
-                            UnityEngine.Debug.LogError($"Profile UIID with order of {i} is null.");
-                            continue;
-                        }
+                resourceWallet.CopyFrom(walletArr);
+                walletChangedTag.ValueRW = true;
 
-                        if (!this.IdMatched(message.ProfileID, profile.UIID.Value)) continue;
-                        if (!this.HaveEnoughResources(
-                            resourceWallet
-                            , localCostMap
-                            , i
-                            , resourceCount.Value
-                            , out var walletArr)) continue;
+                profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
 
-                        resourceWallet.CopyFrom(walletArr);
-                        walletChangedTag.ValueRW = true;
-
-                        profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
-                    }
-                }
             }
-        }
 
+        }
 
         [BurstCompile]
         private bool IdMatched(UIID first, UIID second) => first.Equals(second);
@@ -164,8 +142,6 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             return localCostMap[costMapIndex].Cost;
         }
 
-
     }
-
 
 }

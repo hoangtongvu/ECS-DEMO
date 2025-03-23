@@ -1,3 +1,4 @@
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,9 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
         [SerializeField] private IncSpawnCountButton incSpawnCountButton;
         [SerializeField] private SpawningProgressBar progressBar;
         [SerializeField] private SpawnCountText spawnCountText;
+
+        public Entity SpawnerEntity;
+        public int SpawningProfileElementIndex;
 
         public Image ProfilePic => profilePic;
         public IncSpawnCountButton IncSpawnCountButton => incSpawnCountButton;

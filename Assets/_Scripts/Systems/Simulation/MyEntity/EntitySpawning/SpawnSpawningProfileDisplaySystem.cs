@@ -12,11 +12,9 @@ using Components.Unit.UnitSelection;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class SpawnEntitySpawningPanelSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             var query = SystemAPI.QueryBuilder()
@@ -35,13 +33,13 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
 
-
-            foreach (var (spawningProfiles, uiSpawnedRef, transformRef) in
+            foreach (var (spawningProfiles, uiSpawnedRef, transformRef, spawnerEntity) in
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
                     , RefRW<UISpawned>
                     , RefRO<LocalTransform>>()
-                    .WithAll<UnitSelectedTag>())
+                    .WithAll<UnitSelectedTag>()
+                    .WithEntityAccess())
             {
                 bool canSpawn = !uiSpawnedRef.ValueRO.IsSpawned;
                 if (!canSpawn) continue;
@@ -60,14 +58,14 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                     , spawnedUIMap
                     , spawningProfiles
                     , spawnPos
-                    , entitySpawningPanelCtrl);
+                    , entitySpawningPanelCtrl
+                    , in spawnerEntity);
 
                 uiSpawnedRef.ValueRW.IsSpawned = true;
 
             }
 
         }
-
 
         private void SpawnEntitySpawningPanel(
             UIPrefabAndPoolMap uiPrefabAndPoolMap
@@ -76,7 +74,6 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             , ref UISpawned uiSpawned
             , out EntitySpawningPanelCtrl entitySpawningPanelCtrl)
         {
-
             entitySpawningPanelCtrl =
                 (EntitySpawningPanelCtrl) UISpawningHelper.Spawn(
                     uiPrefabAndPoolMap
@@ -94,7 +91,8 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             , SpawnedUIMap spawnedUIMap
             , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
             , float3 spawnPos
-            , EntitySpawningPanelCtrl entitySpawningPanelCtrl)
+            , EntitySpawningPanelCtrl entitySpawningPanelCtrl
+            , in Entity spawnerEntity)
         {
             for (int i = 0; i < spawningProfiles.Length; i++)
             {
@@ -111,14 +109,18 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 profileDisplayCtrl.ProgressBar.ClearProgress();
                 profileDisplayCtrl.SpawnCountText.SetSpawnCount(profile.SpawnCount.Value);
 
-                profile.UIID = profileDisplayCtrl.RuntimeUIID;
+                profileDisplayCtrl.SpawnerEntity = spawnerEntity;
+                profileDisplayCtrl.SpawningProfileElementIndex = i;
 
                 profileDisplayCtrl.ProfilePic.sprite = profile.UnitSprite.Value;
                 entitySpawningPanelCtrl.SpawningDisplaysHolder.Add(profileDisplayCtrl);
 
                 profileDisplayCtrl.gameObject.SetActive(true);
+
             }
+
         }
 
     }
+
 }
