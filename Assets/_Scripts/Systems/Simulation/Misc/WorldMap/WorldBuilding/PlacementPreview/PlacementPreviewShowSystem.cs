@@ -1,5 +1,6 @@
 using Components.Misc.WorldMap.WorldBuilding;
 using Components.Misc.WorldMap.WorldBuilding.PlacementPreview;
+using Core.Utilities.Extensions;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -37,7 +38,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
             var placementData = SystemAPI.GetSingleton<PlacementPreviewData>();
 
-            placementPreviewTransformRef.ValueRW.Position = placementData.TopLeftCellCenterPos;
+            placementPreviewTransformRef.ValueRW.Position = placementData.BuildingCenterPosOnGround.Add(y: 0.2f);
             placementPreviewTransformRef.ValueRW.Scale = placementData.PlacementSpriteScale;
 
             var spriteRenderer = this.placementPreviewSpriteQuery.GetSingletonRW<SpriteRenderer>();

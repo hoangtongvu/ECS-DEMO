@@ -5,7 +5,8 @@ namespace Components.Misc.WorldMap.WorldBuilding.PlacementPreview
 {
     public struct PlacementPreviewData : IComponentData
     {
-        public float3 TopLeftCellCenterPos;
+        public int2 TopLeftCellGridPos;
+        public float3 BuildingCenterPosOnGround;
         public float PlacementSpriteScale;
         public bool IsBuildable;
     }

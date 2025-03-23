@@ -10,6 +10,7 @@ namespace Components.Misc.WorldMap.WorldBuilding
         public FixedString64Bytes Name;
         public UnityObjectRef<Sprite> PreviewSprite;
         public int GridSquareSize;
+        public float ObjectHeight;
     }
 
 }

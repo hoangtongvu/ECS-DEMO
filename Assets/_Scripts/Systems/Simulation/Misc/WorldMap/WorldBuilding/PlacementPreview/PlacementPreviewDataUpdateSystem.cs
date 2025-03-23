@@ -58,7 +58,8 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
             spriteStartPos = spriteStartPos.Add(x: plusAmount, z: -plusAmount);
 
-            placementPreviewDataRef.ValueRW.TopLeftCellCenterPos = spriteStartPos.With(y: raycastHit.Position.y + 0.2f);
+            placementPreviewDataRef.ValueRW.TopLeftCellGridPos = gridPos;
+            placementPreviewDataRef.ValueRW.BuildingCenterPosOnGround = spriteStartPos.With(y: raycastHit.Position.y);
             placementPreviewDataRef.ValueRW.PlacementSpriteScale = cellRadius * 2 * 100 * buildableObjectElement.GridSquareSize;
             placementPreviewDataRef.ValueRW.IsBuildable =
                 this.AreAllCellsPassable(in costMap, in gridPos, buildableObjectElement.GridSquareSize);

@@ -42,6 +42,7 @@ namespace Authoring.Misc.WorldMap.WorldBuilding
                         Name = buildableObjectData.Name,
                         PreviewSprite = buildableObjectData.PreviewSprite,
                         GridSquareSize = buildableObjectData.GridSquareSize,
+                        ObjectHeight = buildableObjectData.ObjectHeight,
                     });
                 }
 
