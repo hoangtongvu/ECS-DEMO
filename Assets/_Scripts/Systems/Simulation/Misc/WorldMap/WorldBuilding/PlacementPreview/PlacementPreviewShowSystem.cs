@@ -55,8 +55,6 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
             spriteRenderer.color = newColor;
 
-            // NOTE: We haven't handle case: raycast can't hit the ground.
-
         }
 
         private void HideSprite(ref LocalTransform spriteTransform) => spriteTransform.Scale = 0;
