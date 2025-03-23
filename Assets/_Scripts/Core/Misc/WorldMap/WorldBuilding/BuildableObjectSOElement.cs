@@ -9,6 +9,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
         public string Name;
         public Sprite PreviewSprite;
         public int GridSquareSize;
+        public float ObjectHeight;
     }
 
 }
