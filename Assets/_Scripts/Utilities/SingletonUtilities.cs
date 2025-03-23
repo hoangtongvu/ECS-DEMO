@@ -53,7 +53,7 @@ namespace Utilities
 
 #endif
 
-        private static void DestroyInstance() => InstanceField.Data = default;
+        public static void DestroyInstance() => InstanceField.Data = default;
 
 
         public bool HasSingleton<T>() where T : IComponentData => this.entityManager.HasComponent<T>(this.singletonEntity);
@@ -84,6 +84,17 @@ namespace Utilities
                 this.entityManager.AddComponent<T>(this.singletonEntity);
 
             return this.singletonEntity;
+        }
+
+        /// <summary>
+        /// Should not use this because Unity ECS has bad support GetSingleton IEnableable.
+        /// </summary>
+        public void SetComponentEnabled<T>(bool value) where T : IComponentData, IEnableableComponent
+        {
+            if (!this.entityManager.HasComponent<T>(this.singletonEntity))
+                Debug.LogError($"Singleton Entity doesn't have Component {nameof(T)} to enable");
+
+            this.entityManager.SetComponentEnabled<T>(this.singletonEntity, value);
         }
 
     }

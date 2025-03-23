@@ -396,8 +396,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093d1f3c98040c14cb8fd6df7b9844b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIID:
-    Type: 2
+  RuntimeUIID:
+    Type: 0
     LocalId: 0
   CanvasType: 1
   CanvasAnchorPreset: 0

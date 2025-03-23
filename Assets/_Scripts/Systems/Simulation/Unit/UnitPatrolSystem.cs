@@ -14,10 +14,10 @@ using Unity.Transforms;
 using Utilities;
 using Components.Unit.Reaction;
 using Core.Unit.Reaction;
+using Components.Misc.WorldMap.PathFinding;
 
 namespace Systems.Simulation.Unit
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
     public partial struct UnitPatrolSystem : ISystem
@@ -116,17 +116,15 @@ namespace Systems.Simulation.Unit
 
         }
 
-
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct SetPatrolJob : IJobEntity
         {
             [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
             [ReadOnly] public NativeHashMap<Entity, PatrolRandomValues> RandomizedValueMap;
-            [ReadOnly] public float UnitWalkMinDistance;
-            [ReadOnly] public float UnitWalkMaxDistance;
+            [ReadOnly] public float UnitWalkMinDistance; // Need to del
+            [ReadOnly] public float UnitWalkMaxDistance; // Need to del
             [ReadOnly] public float UnitWalkSpeed;
-
 
             [BurstCompile]
             void Execute(
@@ -137,9 +135,7 @@ namespace Systems.Simulation.Unit
                 , ref InteractionTypeICD interactionTypeICD
                 , in LocalTransform transform
                 , ref MoveSpeedLinear moveSpeed
-                , ref TargetPosition targetPosition
-                , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
-                , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
+                , EnabledRefRW<CanFindPathTag> canFindPathTag
                 , Entity entity)
             {
                 if (!needInitWalkTag.ValueRO) return;
@@ -170,15 +166,12 @@ namespace Systems.Simulation.Unit
                 // Set move speed
                 moveSpeed.Value = this.UnitWalkSpeed;
 
-                targetPosition.Value = randomPoint;
-                targetPosChangedTag.ValueRW = true;
-
-                canMoveEntityTag.ValueRW = true;
+                canFindPathTag.ValueRW = true;
 
             }
 
         }
 
-
     }
+
 }

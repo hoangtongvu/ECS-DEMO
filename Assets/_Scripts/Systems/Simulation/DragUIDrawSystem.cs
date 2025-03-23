@@ -34,6 +34,14 @@ namespace Systems.Simulation
 
         protected override void OnUpdate()
         {
+            // Note: This is temp fix.
+            bool canRun = this.spriteTransform != null;
+            if (!canRun)
+            {
+                this.Enabled = false;
+                return;
+            }
+
             var dragSelectionData = SystemAPI.GetSingleton<DragSelectionData>();
 
             if (!dragSelectionData.IsDragging)

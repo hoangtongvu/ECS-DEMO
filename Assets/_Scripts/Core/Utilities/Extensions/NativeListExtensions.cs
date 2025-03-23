@@ -7,7 +7,6 @@ namespace Core.Utilities.Extensions
     [BurstCompile]
     public static class NativeListExtensions
     {
-
         [BurstCompile]
         public static void QuickRemoveAt<T>(this NativeList<T> list, int index)
             where T : unmanaged
@@ -24,7 +23,20 @@ namespace Core.Utilities.Extensions
             list.RemoveAt(length - 1);
         }
 
+        [BurstCompile]
+        public static void Reverse<T>(this NativeList<T> list)
+            where T : unmanaged
+        {
+            int listLength =  list.Length;
+            for (int i = 0; i < listLength / 2; i++)
+            {
+                var temp = list[i];
+                list[i] = list[listLength - 1 - i];
+                list[listLength - 1 - i] = temp;
+            }
 
+        }
 
     }
+
 }

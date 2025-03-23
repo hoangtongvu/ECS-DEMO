@@ -1,26 +1,23 @@
 using Unity.Entities;
-using Components.Unit;
 using Core;
 using Components;
 using Unity.Mathematics;
-using Unity.Collections;
 using Unity.Burst;
-using Utilities.Helpers;
 using Components.MyEntity;
 using Unity.Transforms;
 using Components.Unit.UnitSelection;
 using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
+using Utilities.Jobs;
+using Components.Misc.GlobalConfigs;
 
 namespace Systems.Simulation.MyEntity
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(DragSelectionSystem))]
     [BurstCompile]
     public partial struct SelectInteractableEntitySystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -46,16 +43,19 @@ namespace Systems.Simulation.MyEntity
         public void OnUpdate(ref SystemState state)
         {
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
 
             // Checking Hit Data.
             if (!this.TryGetInteractable(out Entity entity, out float3 pos)) return;
 
-            new SetTargetJob()
+            state.Dependency = new SetTargetJob()
             {
-                targetEntity = entity,
-                targetPosition = pos,
-                moveCommandSourceMap = moveCommandSourceMap.Value,
-            }.ScheduleParallel();
+                TargetEntity = entity,
+                TargetPosition = pos,
+                NewMoveCommandSource = MoveCommandSource.PlayerCommand,
+                UnitMoveSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
+                MoveCommandSourceMap = moveCommandSourceMap.Value,
+            }.ScheduleParallel(state.Dependency);
 
         }
 
@@ -84,57 +84,6 @@ namespace Systems.Simulation.MyEntity
             return false;
         }
 
-
-        [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
-        [BurstCompile]
-        private partial struct SetTargetJob : IJobEntity
-        {
-
-            [ReadOnly] public Entity targetEntity;
-            [ReadOnly] public float3 targetPosition;
-            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
-
-            void Execute(
-                in UnitId unitId
-                , EnabledRefRO<UnitSelectedTag> unitSelectedTag
-                , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
-                , in LocalTransform transform
-                , ref DistanceToTarget distanceToTarget
-                , ref TargetPosition targetPosition
-                , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
-                , ref TargetEntity targetInteractableEntity
-                , ref MoveCommandElement moveCommandElement
-                , ref InteractingEntity interactingEntity
-                , ref InteractionTypeICD interactionTypeICD)
-            {
-                bool unitSelected = unitSelectedTag.ValueRO;
-                if (!unitSelected) return;
-
-                bool canOverrideCommand =
-                    MoveCommandHelper.TryOverrideMoveCommand(
-                        in this.moveCommandSourceMap
-                        , unitId.UnitType
-                        , ref moveCommandElement
-                        , ref interactingEntity
-                        , ref interactionTypeICD
-                        , MoveCommandSource.PlayerCommand
-                        , unitId.LocalIndex);
-
-                if (!canOverrideCommand) return;
-
-                canMoveEntityTag.ValueRW = true;
-                targetInteractableEntity.Value = this.targetEntity;
-                targetPosition.Value = this.targetPosition;
-                targetPosChangedTag.ValueRW = true;
-
-                moveCommandElement.Float3 = this.targetPosition;
-                moveCommandElement.TargetEntity = this.targetEntity;
-
-                // Init distance to target.
-                distanceToTarget.CurrentDistance = MathHelper.GetDistance2(transform.Position, this.targetPosition);
-
-            }
-        }
-
     }
+
 }

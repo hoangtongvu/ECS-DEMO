@@ -1,12 +1,12 @@
 using NUnit.Framework;
 using Unity.Collections;
 using Core.Utilities.Extensions;
+using Core.Testing.Assertions;
 
 namespace Tests.EditMode.Utilities
 {
     public partial class NativeListExtensionsTest
     {
-
         [Test]
         public void QuickRemoveAtTest()
         {
@@ -47,6 +47,32 @@ namespace Tests.EditMode.Utilities
 
         }
 
+        [TestCase(10)]
+        [TestCase(11)]
+        public void ReverseListTest(int length)
+        {
+            // Arrange
+            var toBeModifiedList = new NativeList<TestElement>(length, Allocator.Temp);
+            var verifyList = new NativeList<TestElement>(length, Allocator.Temp);
+
+            for (int i = 0; i < length; i++)
+            {
+                toBeModifiedList.Add(new(i));
+            }
+
+            for (int i = length - 1; i >= 0; i--)
+            {
+                verifyList.Add(toBeModifiedList[i]);
+            }
+
+            // Act
+            toBeModifiedList.Reverse();
+
+            // Assert
+            NativeListAssert.AreEqual(verifyList, toBeModifiedList);
+
+        }
+
         private void PrintList<T>(NativeList<T> list)
             where T : unmanaged
         {
@@ -62,4 +88,5 @@ namespace Tests.EditMode.Utilities
         }
 
     }
+
 }

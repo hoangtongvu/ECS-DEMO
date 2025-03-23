@@ -3,6 +3,7 @@ using Components.Damage;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;
+using Components.Misc.WorldMap.PathFinding;
 using Components.MyEntity;
 using Components.MyEntity.EntitySpawning;
 using Components.Tool;
@@ -178,6 +179,10 @@ namespace Authoring.Unit
                 {
                     Value = 0.2f, // Default value for now.
                 });
+
+                AddBuffer<WaypointElement>(entity);
+                AddComponent<CanFindPathTag>(entity);
+                SetComponentEnabled<CanFindPathTag>(entity, false);
 
             }
         }

@@ -3,7 +3,8 @@ using UnityEngine.UI;
 
 namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
 {
-    public class SpawningProfileDisplayCtrl : BaseUICtrl
+    [GenerateUIType("SpawningProfileDisplay")]
+    public partial class SpawningProfileDisplayCtrl : BaseUICtrl
     {
         [SerializeField] private Image profilePic;
         [SerializeField] private IncSpawnCountButton incSpawnCountButton;
@@ -15,7 +16,6 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
         public SpawningProgressBar ProgressBar => progressBar;
         public SpawnCountText SpawnCountText => spawnCountText;
 
-
         protected override void LoadComponents()
         {
             base.LoadComponents();
@@ -26,4 +26,5 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
         }
 
     }
+
 }

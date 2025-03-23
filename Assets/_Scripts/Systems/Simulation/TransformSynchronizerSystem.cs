@@ -43,10 +43,13 @@ namespace Systems.Simulation
 
                 float3 enityPos = transformRef.ValueRO.Position;
                 gameObjTransform.position = new Vector3(enityPos.x, enityPos.y, enityPos.z);
+
+                gameObjTransform.transform.rotation = transformRef.ValueRO.Rotation;
+
             }
+
         }
 
-
-
     }
+
 }

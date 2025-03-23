@@ -3,24 +3,20 @@ using Components.Unit;
 using Core;
 using Components;
 using Unity.Mathematics;
-using Unity.Collections;
 using Unity.Burst;
 using Components.Unit.UnitSelection;
-using Utilities.Helpers;
 using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
 using Components.Misc.GlobalConfigs;
-using Components.MyEntity;
+using Utilities.Jobs;
 
 namespace Systems.Simulation.Unit
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(DragSelectionSystem))]
     [BurstCompile]
     public partial struct SelectPositionSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -51,9 +47,11 @@ namespace Systems.Simulation.Unit
 
             state.Dependency = new SetTargetJob()
             {
-                targetPosition = selectedPos,
-                unitRunSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
-                moveCommandSourceMap = moveCommandSourceMap.Value,
+                TargetEntity = Entity.Null,
+                TargetPosition = selectedPos,
+                NewMoveCommandSource = MoveCommandSource.PlayerCommand,
+                UnitMoveSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
+                MoveCommandSourceMap = moveCommandSourceMap.Value,
             }.ScheduleParallel(state.Dependency);
 
         }
@@ -78,53 +76,6 @@ namespace Systems.Simulation.Unit
             return false;
         }
 
-
-        [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
-        [BurstCompile]
-        private partial struct SetTargetJob : IJobEntity
-        {
-            [ReadOnly] public float3 targetPosition;
-            [ReadOnly] public float unitRunSpeed;
-            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
-
-            void Execute(
-                in UnitId unitId
-                , EnabledRefRO<UnitSelectedTag> unitSelectedTag
-                , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
-                , ref MoveSpeedLinear moveSpeedLinear
-                , ref TargetEntity targetEntity
-                , ref TargetPosition targetPosition
-                , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
-                , ref MoveCommandElement moveCommandElement
-                , ref InteractingEntity interactingEntity
-                , ref InteractionTypeICD interactionTypeICD)
-            {
-                bool unitSelected = unitSelectedTag.ValueRO;
-                if (!unitSelected) return;
-
-                
-                bool canOverrideCommand =
-                    MoveCommandHelper.TryOverrideMoveCommand(
-                        in this.moveCommandSourceMap
-                        , unitId.UnitType
-                        , ref moveCommandElement
-                        , ref interactingEntity
-                        , ref interactionTypeICD
-                        , MoveCommandSource.PlayerCommand
-                        , unitId.LocalIndex);
-
-                if (!canOverrideCommand) return;
-
-                moveCommandElement.TargetEntity = Entity.Null;
-                moveCommandElement.Float3 = this.targetPosition;
-                targetEntity.Value = Entity.Null;
-                targetPosition.Value = this.targetPosition;
-                targetPosChangedTag.ValueRW = true;
-                moveSpeedLinear.Value = this.unitRunSpeed;
-
-                canMoveEntityTag.ValueRW = true;
-
-            }
-        }
     }
+
 }
