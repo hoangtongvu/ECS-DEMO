@@ -320,8 +320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d2ae6cdbd99354396df69c2954ffc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIID:
-    Type: 4
+  RuntimeUIID:
+    Type: 0
     LocalId: 0
   CanvasType: 2
   CanvasAnchorPreset: 1

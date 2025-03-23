@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Core.UI.TopLeftPanel
 {
-    public class TopLeftPanelManager : BaseUICtrl
+    [GenerateUIType("TopLeftPanel")]
+    public partial class TopLeftPanelManager : BaseUICtrl
     {
         [SerializeField] private List<ResourceDisplayCtrl> resourceDisplayCtrls;
 
@@ -19,10 +20,13 @@ namespace Core.UI.TopLeftPanel
         {
             foreach (var resourceDisplayCtrl in this.resourceDisplayCtrls)
             {
-                if (resourceDisplayCtrl.UIID.Equals(uiId)) continue;
+                if (resourceDisplayCtrl.RuntimeUIID.Equals(uiId)) continue;
                 this.resourceDisplayCtrls.Remove(resourceDisplayCtrl);
                 break;
             }
+
         }
+
     }
+
 }

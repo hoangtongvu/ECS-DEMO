@@ -11,8 +11,9 @@ using Utilities.Helpers;
 namespace Systems.Initialization.Misc.WorldMap
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateAfter(typeof(MapChangedSystemGroup))] //Note: CreateChunksSystem needs to update after WorldMapChangedTag writer systems
     [UpdateAfter(typeof(ChunkComponentsInitSystem))]
-    [UpdateAfter(typeof(TestMapInitSystem))] //Note: CreateChunksSystem needs to update after WorldMapChangedTag writer systems
+    [UpdateAfter(typeof(CreateChunksSystem))]
     [BurstCompile]
     public partial struct CreateChunkExitsSystem : ISystem
     {
@@ -35,6 +36,9 @@ namespace Systems.Initialization.Misc.WorldMap
             var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
             var neighborCellDirections = SystemAPI.GetSingleton<NeighborCellDirections>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
+
+            chunkExitsContainer.Value.Clear();
+            chunkExitIndexesContainer.Value.Clear();
 
             // This is used to remove duplicated Exits and store the index of non-duplicated exit in ChunkExitContainer
             NativeHashMap<ChunkExit, int> chunkExitHashMap = new(500, Allocator.Temp);

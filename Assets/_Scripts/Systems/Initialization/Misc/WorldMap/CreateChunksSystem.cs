@@ -9,8 +9,8 @@ using Core.Utilities.Extensions;
 namespace Systems.Initialization.Misc.WorldMap
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateAfter(typeof(MapChangedSystemGroup))] //Note: CreateChunksSystem needs to update after WorldMapChangedTag writer systems
     [UpdateAfter(typeof(ChunkComponentsInitSystem))]
-    [UpdateAfter(typeof(TestMapInitSystem))] //Note: CreateChunksSystem needs to update after WorldMapChangedTag writer systems
     [BurstCompile]
     public partial struct CreateChunksSystem : ISystem
     {
@@ -32,6 +32,9 @@ namespace Systems.Initialization.Misc.WorldMap
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
             int2 gridMapSize = new(costMap.Width, costMap.Height);
             int2 gridOffset = SystemAPI.GetSingleton<MapGridOffset>().Value;
+
+            chunkList.Value.Clear();
+            this.ResetChunkIndexesOnMap(in costMap);
 
             int xBound = gridMapSize.x + gridOffset.x;
             int yBound = gridMapSize.y + gridOffset.y;
@@ -60,6 +63,19 @@ namespace Systems.Initialization.Misc.WorldMap
             }
 
             this.ReCreateChunkIndexToExitsMap(in chunkIndexToExitIndexesMap, in chunkList);
+
+        }
+
+        [BurstCompile]
+        private void ResetChunkIndexesOnMap(
+            in WorldTileCostMap costMap)
+        {
+            int length = costMap.Value.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                costMap.Value.ElementAt(i).ResetCellChunkIndex();
+            }
 
         }
 
