@@ -15,7 +15,7 @@ using Utilities.Helpers.Misc.WorldMap;
 namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(MapGenerateSystemGroup))]
+    [UpdateAfter(typeof(MapChangedSystemGroup))]
     [UpdateAfter(typeof(CreateChunkExitsSystem))]
     [BurstCompile]
     public partial struct InnerPathCostBakeSystem : ISystem
@@ -60,6 +60,8 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             var chunkExitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
             var chunkExitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
+
+            innerPathCostMap.Value.Clear();
 
             FinalCostComputer finalCostComputer = new()
             {
