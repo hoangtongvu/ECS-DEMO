@@ -2,7 +2,6 @@
 using Core.GameResource;
 using Core.MyEntity;
 using System;
-using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Authoring.MyEntity.EntitySpawning
     public class EntitySpawningAuthoring : MonoBehaviour
     {
         public float SpawnRadius = 3f;
-        public List<EntityProfileSO> EntityProfileSOs;
+        public EntitySpawningProfilesSO SpawningProfiles;
 
         private class Baker : Baker<EntitySpawningAuthoring>
         {
@@ -21,7 +20,10 @@ namespace Authoring.MyEntity.EntitySpawning
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
-                foreach (var profile in authoring.EntityProfileSOs)
+                if (authoring.SpawningProfiles == null)
+                    throw new NullReferenceException($"{nameof(authoring.SpawningProfiles)} is null");
+
+                foreach (var profile in authoring.SpawningProfiles.GetProfiles())
                 {
                     buffer.Add(new()
                     {
@@ -50,7 +52,7 @@ namespace Authoring.MyEntity.EntitySpawning
                 var localCostBuffer = AddBuffer<LocalCostMapElement>(entity);
 
                 int enumLength = Enum.GetNames(typeof(ResourceType)).Length;
-                foreach (var profile in authoring.EntityProfileSOs)
+                foreach (var profile in authoring.SpawningProfiles.GetProfiles())
                 {
                     for (int i = 0; i < enumLength; i++)
                     {
