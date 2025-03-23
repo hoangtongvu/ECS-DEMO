@@ -38,6 +38,12 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
             var placementData = SystemAPI.GetSingleton<PlacementPreviewData>();
 
+            if (!placementData.CanPlacementPreview)
+            {
+                this.HideSprite(ref placementPreviewTransformRef.ValueRW);
+                return;
+            }
+
             placementPreviewTransformRef.ValueRW.Position = placementData.BuildingCenterPosOnGround.Add(y: 0.2f);
             placementPreviewTransformRef.ValueRW.Scale = placementData.PlacementSpriteScale;
 

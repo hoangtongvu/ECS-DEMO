@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utilities;
 using Utilities.Extensions;
 using Utilities.Helpers;
@@ -35,6 +36,15 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
         protected override void OnUpdate()
         {
+            var placementPreviewDataRef = SystemAPI.GetSingletonRW<PlacementPreviewData>();
+
+            bool mouseHoverOnUI = EventSystem.current.IsPointerOverGameObject();
+            if (mouseHoverOnUI)
+            {
+                placementPreviewDataRef.ValueRW.CanPlacementPreview = false;
+                return;
+            }
+
             this.EntityManager.CompleteDependencyBeforeRW<LocalTransform>();
             int choiceIndex = SystemAPI.GetSingleton<BuildableObjectChoiceIndex>().Value;
 
@@ -43,11 +53,14 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             bool canHit = this.CastRayToGround(in physicsWorld, out var raycastHit);
 
-            if (!canHit) return;
+            if (!canHit)
+            {
+                placementPreviewDataRef.ValueRW.CanPlacementPreview = false;
+                return;
+            }
 
             half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             var buildableObjectElement = SystemAPI.GetSingletonBuffer<PlayerBuildableObjectElement>()[choiceIndex];
-            var placementPreviewDataRef = SystemAPI.GetSingletonRW<PlacementPreviewData>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
 
             WorldMapHelper.WorldPosToGridPos(in cellRadius, raycastHit.Position, out int2 gridPos);
@@ -58,6 +71,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
             spriteStartPos = spriteStartPos.Add(x: plusAmount, z: -plusAmount);
 
+            placementPreviewDataRef.ValueRW.CanPlacementPreview = true;
             placementPreviewDataRef.ValueRW.TopLeftCellGridPos = gridPos;
             placementPreviewDataRef.ValueRW.BuildingCenterPosOnGround = spriteStartPos.With(y: raycastHit.Position.y);
             placementPreviewDataRef.ValueRW.PlacementSpriteScale = cellRadius * 2 * 100 * buildableObjectElement.GridSquareSize;

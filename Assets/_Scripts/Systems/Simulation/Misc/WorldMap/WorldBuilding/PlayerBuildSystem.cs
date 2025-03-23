@@ -24,6 +24,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
             if (!Input.GetMouseButtonDown(0)) return;
 
             var placementPreviewData = SystemAPI.GetSingleton<PlacementPreviewData>();
+            if (!placementPreviewData.CanPlacementPreview) return;
             if (!placementPreviewData.IsBuildable) return;
 
             var commandQueue = SystemAPI.GetSingleton<BuildCommandQueue>();
