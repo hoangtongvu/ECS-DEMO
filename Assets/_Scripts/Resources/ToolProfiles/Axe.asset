@@ -16,7 +16,7 @@ MonoBehaviour:
   ProfilePicture: {fileID: 21300000, guid: 223a61bc9202046408dd1a38e0051eeb, type: 3}
   Name: Axe
   Prefab: {fileID: 8250307934144521707, guid: e55f6ffc27f263543bffc3ac820995fa, type: 3}
-  DurationPerSpawn: 3
+  SpawnDurationSeconds: 3
   BaseCosts:
     _serializedList:
     - Key: 0

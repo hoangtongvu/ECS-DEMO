@@ -129,10 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnRadius: 3
-  SpawningProfiles:
-  - EntityProfileSO: {fileID: 11400000, guid: c5119fdad1588b14395d0a35f7fe00e0, type: 2}
-    CanSpawn: 0
-    SpawnCount: 0
+  SpawningProfiles: {fileID: 11400000, guid: 20345db04a01a074b8c73d7e2ffefbe5, type: 2}
 --- !u!114 &7752727647623985391
 MonoBehaviour:
   m_ObjectHideFlags: 0

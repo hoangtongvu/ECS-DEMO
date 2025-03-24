@@ -1,14 +1,12 @@
 using Core.Misc;
-using Core.UI.Identification;
 using Unity.Entities;
 
 namespace Components.MyEntity.EntitySpawning
 {
-
     public struct SpawnDuration
     {
-        public float DurationPerSpawn;
-        public float DurationCounterSecond;
+        public float SpawnDurationSeconds;
+        public float DurationCounterSeconds;
     }
 
     public struct EntitySpawningProfileElement : IBufferElementData
@@ -21,7 +19,6 @@ namespace Components.MyEntity.EntitySpawning
         public ChangedFlagValue<int> SpawnCount;
 
         public SpawnDuration SpawnDuration;
-        public UIID? UIID;
 
     }
 

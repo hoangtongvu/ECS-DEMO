@@ -43,11 +43,11 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                     if (profile.SpawnCount.Value <= 0) continue;
 
-                    profile.SpawnDuration.DurationCounterSecond += this.DeltaTime;
+                    profile.SpawnDuration.DurationCounterSeconds += this.DeltaTime;
 
-                    if (profile.SpawnDuration.DurationCounterSecond >= profile.SpawnDuration.DurationPerSpawn)
+                    if (profile.SpawnDuration.DurationCounterSeconds >= profile.SpawnDuration.SpawnDurationSeconds)
                     {
-                        profile.SpawnDuration.DurationCounterSecond = 0;
+                        profile.SpawnDuration.DurationCounterSeconds = 0;
                         profile.CanSpawnState = true;
                     }
                 }

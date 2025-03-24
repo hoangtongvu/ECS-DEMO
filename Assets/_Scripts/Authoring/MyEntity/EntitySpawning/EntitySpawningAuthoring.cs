@@ -1,7 +1,7 @@
 ﻿using Components.MyEntity.EntitySpawning;
 using Core.GameResource;
+using Core.MyEntity;
 using System;
-using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -10,8 +10,7 @@ namespace Authoring.MyEntity.EntitySpawning
     public class EntitySpawningAuthoring : MonoBehaviour
     {
         public float SpawnRadius = 3f;
-        public List<Core.MyEntity.SpawningProfile> SpawningProfiles;
-
+        public EntitySpawningProfilesSO SpawningProfiles;
 
         private class Baker : Baker<EntitySpawningAuthoring>
         {
@@ -21,26 +20,29 @@ namespace Authoring.MyEntity.EntitySpawning
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
-                foreach (var profile in authoring.SpawningProfiles)
+                if (authoring.SpawningProfiles == null)
+                    throw new NullReferenceException($"{nameof(authoring.SpawningProfiles)} is null");
+
+                foreach (var profile in authoring.SpawningProfiles.GetProfiles())
                 {
                     buffer.Add(new()
                     {
-                        PrefabToSpawn = GetEntity(profile.EntityProfileSO.Prefab, TransformUsageFlags.Dynamic),
-                        UnitSprite = profile.EntityProfileSO.ProfilePicture,
-                        CanSpawnState = profile.CanSpawn,
+                        PrefabToSpawn = GetEntity(profile.Prefab, TransformUsageFlags.Dynamic),
+                        UnitSprite = profile.ProfilePicture,
+                        CanSpawnState = false,
 
                         CanIncSpawnCount = true,
 
                         SpawnCount = new()
                         {
-                            Value = profile.SpawnCount,
+                            Value = 0,
                             ValueChanged = false,
                         },
 
                         SpawnDuration = new()
                         {
-                            DurationPerSpawn = profile.EntityProfileSO.DurationPerSpawn,
-                            DurationCounterSecond = 0,
+                            SpawnDurationSeconds = profile.SpawnDurationSeconds,
+                            DurationCounterSeconds = 0,
                         },
 
                     });
@@ -50,11 +52,11 @@ namespace Authoring.MyEntity.EntitySpawning
                 var localCostBuffer = AddBuffer<LocalCostMapElement>(entity);
 
                 int enumLength = Enum.GetNames(typeof(ResourceType)).Length;
-                foreach (var profile in authoring.SpawningProfiles)
+                foreach (var profile in authoring.SpawningProfiles.GetProfiles())
                 {
                     for (int i = 0; i < enumLength; i++)
                     {
-                        profile.EntityProfileSO.BaseCosts.TryGetValue((ResourceType)i, out var tempCost);
+                        profile.BaseCosts.TryGetValue((ResourceType)i, out var tempCost);
 
                         localCostBuffer.Add(new()
                         {
@@ -64,9 +66,7 @@ namespace Authoring.MyEntity.EntitySpawning
                     }
                 }
 
-                
             }
-
             
         }
 
@@ -75,7 +75,6 @@ namespace Authoring.MyEntity.EntitySpawning
             Gizmos.DrawWireSphere(transform.position, this.SpawnRadius);
         }
 
-        
-
     }
+
 }

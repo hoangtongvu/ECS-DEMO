@@ -7,11 +7,9 @@ using Core.MyEvent.PubSub.Messages;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
-
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class SetSpawnCountTextSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             var query = SystemAPI.QueryBuilder()
@@ -23,35 +21,40 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             this.RequireForUpdate(query);
         }
 
-
         protected override void OnUpdate()
         {
-
-            foreach (var (spawningProfiles, uiSpawnedRef) in
+            foreach (var (spawningProfiles, uiSpawnedRef, spawnerEntity) in
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<UISpawned>>())
+                    , RefRO<UISpawned>>()
+                    .WithEntityAccess())
             {
                 if (!uiSpawnedRef.ValueRO.IsSpawned) continue;
 
-                foreach (var profile in spawningProfiles)
+                int profileCount = spawningProfiles.Length;
+
+                for (int i = 0; i < profileCount; i++)
                 {
+                    var profile = spawningProfiles[i];
+
                     if (!profile.SpawnCount.ValueChanged) continue;
-                    this.UpdateUI(in profile);
+                    this.UpdateUI(in spawnerEntity, i, in profile);
                 }
+
             }
 
         }
 
-        private void UpdateUI(in EntitySpawningProfileElement profile)
+        private void UpdateUI(in Entity spawnerEntity, int profileIndex, in EntitySpawningProfileElement profile)
         {
             GameplayMessenger.MessagePublisher.Publish(new SetIntTextMessage
             {
-                UIID = profile.UIID.Value,
+                SpawnerEntity = spawnerEntity,
+                SpawningProfileElementIndex = profileIndex,
                 Value = profile.SpawnCount.Value,
             });
         }
-        
 
     }
+
 }

@@ -27,7 +27,9 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
 
         private void Handle(SetIntTextMessage message)
         {
-            if (!message.UIID.Equals(this.spawningProfileDisplayCtrl.RuntimeUIID)) return;
+            if (!message.SpawnerEntity.Equals(this.spawningProfileDisplayCtrl.SpawnerEntity)) return;
+            if (message.SpawningProfileElementIndex != this.spawningProfileDisplayCtrl.SpawningProfileElementIndex) return;
+
             if (message.Value < 0) Debug.LogWarning($"SpawnCount value is greater than 1, is potentially a bug");
             this.SetSpawnCount(message.Value);
         }
@@ -35,4 +37,5 @@ namespace Core.UI.EntitySpawningPanel.SpawningProfileDisplay
         public void SetSpawnCount(int value) => this.text.text = value.ToString();
 
     }
+
 }

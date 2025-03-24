@@ -405,6 +405,7 @@ MonoBehaviour:
   incSpawnCountButton: {fileID: 7285389287214552395}
   progressBar: {fileID: 7059756165954914532}
   spawnCountText: {fileID: 5541476913471918565}
+  SpawningProfileElementIndex: 0
 --- !u!114 &7285389287214552395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,4 +419,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 5625069851195845900}
-  spawningProfileDisplayCtrl: {fileID: 5627687236498127547}
+  displayCtrl: {fileID: 5627687236498127547}

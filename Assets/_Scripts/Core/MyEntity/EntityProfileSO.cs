@@ -12,9 +12,11 @@ namespace Core.MyEntity
         public Sprite ProfilePicture;
         public string Name;
         public GameObject Prefab;
-        public float DurationPerSpawn;
+        public float SpawnDurationSeconds;
 
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseCosts;
+
     }
+
 }

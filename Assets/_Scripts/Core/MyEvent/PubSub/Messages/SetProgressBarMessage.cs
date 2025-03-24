@@ -1,8 +1,8 @@
-﻿using Core.UI.Identification;
+﻿using Unity.Entities;
 using ZBase.Foundation.PubSub;
 
 namespace Core.MyEvent.PubSub.Messages
 {
-    public readonly record struct SetProgressBarMessage(UIID UIID, float Value) : IMessage;
+    public readonly record struct SetProgressBarMessage(Entity SpawnerEntity, int SpawningProfileElementIndex, float Value) : IMessage;
 
 }

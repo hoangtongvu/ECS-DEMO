@@ -8,6 +8,8 @@ namespace Core.UI.EntitySpawningPanel
     {
         [SerializeField] private List<SpawningProfileDisplayCtrl> spawningProfileDisplayCtrls;
 
+        public List<SpawningProfileDisplayCtrl> SpawningProfileDisplayCtrls => spawningProfileDisplayCtrls;
+
         public void Add(SpawningProfileDisplayCtrl profileDisplayCtrl)
         {
             this.spawningProfileDisplayCtrls.Add(profileDisplayCtrl);
