@@ -2,7 +2,6 @@ using Components.MyEntity.EntitySpawning;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Core.UI.Identification;
 using Components.GameResource;
 using Core.GameResource;
 using Components;
@@ -10,6 +9,8 @@ using Core.MyEvent.PubSub.Messages;
 using Utilities.Extensions;
 using Components.Unit.UnitSelection;
 using Components.Player;
+using Components.MyEntity.EntitySpawning.GlobalCostMap;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {
@@ -35,14 +36,19 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var entityQuery2 = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitSelectedTag
-                    , EntitySpawningProfileElement
-                    , LocalCostMapElement>()
+                    , EntitySpawningProfileElement>()
                     .Build();
-
+            
+            var entityQuery3 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    EntityToCostMapIndexMap
+                    , EntitySpawningCostsContainer>()
+                    .Build();
 
             state.RequireForUpdate(entityQuery0);
             state.RequireForUpdate(entityQuery1);
             state.RequireForUpdate(entityQuery2);
+            state.RequireForUpdate(entityQuery3);
 
         }
 
@@ -51,6 +57,9 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         {
             var messageQueue = SystemAPI.GetSingleton<MessageQueue<SpawnUnitMessage>>();
             var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>();
+
+            var entityToCostMapIndexMap = SystemAPI.GetSingleton<EntityToCostMapIndexMap>();
+            var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
 
             DynamicBuffer<ResourceWalletElement> resourceWallet = default;
             EnabledRefRW<WalletChangedTag> walletChangedTag = default;
@@ -69,19 +78,21 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             while (messageQueue.Value.TryDequeue(out var message))
             {
                 var profiles = SystemAPI.GetBuffer<EntitySpawningProfileElement>(message.SpawnerEntity);
-                var localCostMap = SystemAPI.GetBuffer<LocalCostMapElement>(message.SpawnerEntity);
 
                 ref var profile = ref profiles.ElementAt(message.SpawningProfileElementIndex);
 
                 if (!this.HaveEnoughResources(
                     resourceWallet
-                    , localCostMap
-                    , message.SpawningProfileElementIndex
+                    , in entityToCostMapIndexMap
+                    , in entitySpawningCostsContainer
+                    , in profile.PrefabToSpawn
                     , resourceCount.Value
                     , out var walletArr)) continue;
 
                 resourceWallet.CopyFrom(walletArr);
                 walletChangedTag.ValueRW = true;
+
+                walletArr.Dispose();
 
                 profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
 
@@ -90,18 +101,14 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         }
 
         [BurstCompile]
-        private bool IdMatched(UIID first, UIID second) => first.Equals(second);
-
-        // TODO: Turn this into job?
-        [BurstCompile]
         private bool HaveEnoughResources(
             DynamicBuffer<ResourceWalletElement> resourceWallet
-            , DynamicBuffer<LocalCostMapElement> localCostMap
-            , int bufferIndex
+            , in EntityToCostMapIndexMap entityToCostMapIndexMap
+            , in EntitySpawningCostsContainer entitySpawningCostsContainer
+            , in Entity prefabEntity
             , int resourceCount
             , out NativeArray<ResourceWalletElement> walletArr)
         {
-
             walletArr = resourceWallet.ToNativeArray(Allocator.Temp);
 
             int length = walletArr.Length;
@@ -111,8 +118,9 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 ResourceType resourceType = (ResourceType)i;
 
                 uint cost = this.GetCost(
-                    localCostMap
-                    , bufferIndex
+                    in entityToCostMapIndexMap
+                    , in entitySpawningCostsContainer
+                    , in prefabEntity
                     , resourceCount
                     , resourceType);
 
@@ -133,13 +141,18 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
         [BurstCompile]
         private uint GetCost(
-            DynamicBuffer<LocalCostMapElement> localCostMap
-            , int bufferIndex
+            in EntityToCostMapIndexMap entityToCostMapIndexMap
+            , in EntitySpawningCostsContainer entitySpawningCostsContainer
+            , in Entity prefabEntity
             , int resourceCount
             , ResourceType resourceType)
         {
-            int costMapIndex = bufferIndex * resourceCount + (int) resourceType;
-            return localCostMap[costMapIndex].Cost;
+            if (!entityToCostMapIndexMap.Value.TryGetValue(prefabEntity, out int costMapIndex))
+                throw new KeyNotFoundException($"{nameof(entityToCostMapIndexMap)} does not contain key: {prefabEntity}");
+
+            int costIndexInContainer = costMapIndex * resourceCount + (int)resourceType;
+            return entitySpawningCostsContainer.Value[costIndexInContainer];
+
         }
 
     }
