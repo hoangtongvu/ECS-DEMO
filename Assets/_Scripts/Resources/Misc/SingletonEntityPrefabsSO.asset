@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SingletonEntityPrefabsSO
   m_EditorClassIdentifier: 
   Prefabs:
+  - {fileID: 8841375258564314883, guid: fcc28cdea4caa6c418a1e7733fd2afc6, type: 3}
   - {fileID: 5594501744089507189, guid: 4ae554c3ea0a266449f65b500ba5365a, type: 3}
   - {fileID: 6528450187025802841, guid: b00219f127284714a97bca3abbc560f7, type: 3}
   - {fileID: 2898093071364489471, guid: c3aa7501bb8466d4b85fc13baeabf7da, type: 3}
