@@ -1,3 +1,4 @@
+using Components.Camera;
 using Components.Misc.GameView;
 using Core.Misc.GameView;
 using System;
@@ -20,6 +21,8 @@ namespace Systems.Initialization.Misc.GameView
             this.InitCurrentGameView(ref state);
             this.InitFixedAngleMap(ref state);
             this.InitPlayerViewCamOffset(ref state);
+
+            state.RequireForUpdate<CameraEntityTag>();
         }
 
         [BurstCompile]

@@ -1,3 +1,4 @@
+using Components.Camera;
 using Components.Misc.GameView;
 using Unity.Burst;
 using Unity.Entities;
@@ -12,6 +13,7 @@ namespace Systems.Initialization.Misc.GameView
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<GameViewChangedTag>();
+            state.RequireForUpdate<CameraEntityTag>();
         }
 
         [BurstCompile]

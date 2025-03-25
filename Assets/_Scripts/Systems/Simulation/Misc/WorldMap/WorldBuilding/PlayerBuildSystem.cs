@@ -14,6 +14,8 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
         protected override void OnCreate()
         {
             this.RequireForUpdate<PlacementPreviewData>();
+            this.RequireForUpdate<BuildableObjectChoiceIndex>();
+            this.RequireForUpdate<PlayerBuildableObjectElement>();
         }
 
         protected override void OnUpdate()

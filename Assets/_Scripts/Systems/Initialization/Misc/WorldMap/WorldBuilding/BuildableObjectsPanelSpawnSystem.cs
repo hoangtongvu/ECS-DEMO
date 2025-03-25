@@ -3,6 +3,7 @@ using Utilities.Helpers;
 using Components.ComponentMap;
 using Core.UI.Identification;
 using Components.Misc.WorldMap.WorldBuilding;
+using Utilities;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
@@ -13,7 +14,10 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
         {
             this.RequireForUpdate<UIPrefabAndPoolMap>();
             this.RequireForUpdate<SpawnedUIMap>();
-            this.RequireForUpdate<BuildableObjectsPanelRuntimeUIID>();
+
+            SingletonUtilities.GetInstance(this.EntityManager)
+                .AddComponent<BuildableObjectsPanelRuntimeUIID>();
+
         }
 
         protected override void OnUpdate()

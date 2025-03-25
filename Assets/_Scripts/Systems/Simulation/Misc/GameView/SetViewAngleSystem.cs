@@ -21,6 +21,9 @@ namespace Systems.Simulation.Misc.GameView
                 .Build();
 
             state.RequireForUpdate(query0);
+            state.RequireForUpdate<TransformRotationTweener_TweenData>();
+            state.RequireForUpdate<Can_TransformRotationTweener_TweenTag>();
+            state.RequireForUpdate<CameraEntityTag>();
             
         }
 
