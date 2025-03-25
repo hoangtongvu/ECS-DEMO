@@ -60,6 +60,7 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             var chunkExitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
             var chunkExitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
+            var highestExitCount = SystemAPI.GetSingleton<HighestExitCount>().Value;
 
             innerPathCostMap.Value.Clear();
 
@@ -70,6 +71,9 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
                 CellPositionsContainer = cellPositionsContainer,
             };
 
+            var exits = new NativeList<ChunkExit>(highestExitCount, Allocator.Temp);
+            exits.AddReplicate(default, highestExitCount);
+
             int chunkListLength = chunkList.Value.Length;
             for (int chunkIndex = 0; chunkIndex < chunkListLength; chunkIndex++)
             {
@@ -78,14 +82,14 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
                     , in chunkExitIndexesContainer
                     , in chunkExitsContainer
                     , chunkIndex
-                    , Allocator.Temp
-                    , out var exits);
+                    , ref exits
+                    , out int exitCount);
 
-                this.BakeChunkInnerPathCosts(in costMap, in innerPathCostMap, ref finalCostComputer, chunkIndex, in exits, exits.Length);
-
-                exits.Dispose();
+                this.BakeChunkInnerPathCosts(in costMap, in innerPathCostMap, ref finalCostComputer, chunkIndex, in exits, exitCount);
 
             }
+
+            exits.Dispose();
 
         }
 
@@ -95,7 +99,7 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             , in InnerPathCostMap innerPathCostMap
             , ref FinalCostComputer finalCostComputer
             , int chunkIndex
-            , in NativeArray<ChunkExit> exits
+            , in NativeList<ChunkExit> exits
             , int exitCount)
         {
             for (int j = 0; j < exitCount; j++)

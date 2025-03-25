@@ -17,10 +17,17 @@ namespace Systems.Initialization.Misc.WorldMap
         {
             state.RequireForUpdate<WorldMapChangedTag>();
 
+            var su = SingletonUtilities.GetInstance(state.EntityManager);
+
             this.InitChunkList(ref state);
             this.InitChunkExitsContainer(ref state);
             this.InitChunkIndexToExitIndexesMap(ref state);
             this.InitChunkExitIndexesContainer(ref state);
+
+            su.AddOrSetComponentData(new HighestExitCount
+            {
+                Value = int.MinValue,
+            });
 
             state.Enabled = false;
         }

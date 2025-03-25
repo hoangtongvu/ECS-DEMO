@@ -36,9 +36,11 @@ namespace Systems.Initialization.Misc.WorldMap
             var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
             var neighborCellDirections = SystemAPI.GetSingleton<NeighborCellDirections>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
+            var highestExitCountRef = SystemAPI.GetSingletonRW<HighestExitCount>();
 
             chunkExitsContainer.Value.Clear();
             chunkExitIndexesContainer.Value.Clear();
+            highestExitCountRef.ValueRW.Value = int.MinValue;
 
             // This is used to remove duplicated Exits and store the index of non-duplicated exit in ChunkExitContainer
             NativeHashMap<ChunkExit, int> chunkExitHashMap = new(500, Allocator.Temp);
@@ -79,6 +81,8 @@ namespace Systems.Initialization.Misc.WorldMap
                 };
 
                 borderCellPositions.Dispose();
+
+                highestExitCountRef.ValueRW.Value = math.max(totalExits, highestExitCountRef.ValueRO.Value);
 
             }
 

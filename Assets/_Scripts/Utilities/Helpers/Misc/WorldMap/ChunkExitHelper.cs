@@ -14,13 +14,13 @@ namespace Utilities.Helpers.Misc.WorldMap
             , in ChunkExitIndexesContainer chunkExitIndexesContainer
             , in ChunkExitsContainer chunkExitsContainer
             , int chunkIndex
-            , Allocator allocator
-            , out NativeArray<ChunkExit> exits)
+            , ref NativeList<ChunkExit> exits
+            , out int exitCount)
         {
             var indexRange = chunkIndexToExitIndexesMap.Value[chunkIndex];
             int upperBound = indexRange.StartIndex + indexRange.Amount;
 
-            exits = new NativeArray<ChunkExit>(indexRange.Amount, allocator);
+            exitCount = indexRange.Amount;
             int tempIndex = 0;
 
             for (int i = indexRange.StartIndex; i < upperBound; i++)
