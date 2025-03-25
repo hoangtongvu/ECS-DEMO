@@ -27,6 +27,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
                 .AddComponent<PlacementPreviewData>();
 
             this.RequireForUpdate<PlacementPreviewSpriteTag>();
+            this.RequireForUpdate<BuildableObjectChoiceIndex>();
         }
 
         protected override void OnStartRunning()

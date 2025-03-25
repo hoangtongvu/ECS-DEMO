@@ -22,6 +22,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
             this.RequireForUpdate(this.placementPreviewSpriteQuery);
             this.RequireForUpdate<PlacementPreviewData>();
+            this.RequireForUpdate<BuildableObjectChoiceIndex>();
         }
 
         protected override void OnUpdate()
