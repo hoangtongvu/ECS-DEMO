@@ -1,52 +1,44 @@
 using Unity.Entities;
-using UnityEngine;
 using Unity.Mathematics;
 using Components;
-using Components.CustomIdentification;
-using Components.ComponentMap;
 using Core.Utilities.Extensions;
-using Core.CustomIdentification;
+using Unity.Transforms;
+using Unity.Burst;
 
 namespace Systems.Simulation
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public partial class DragUIDrawSystem : SystemBase
+    public partial struct DragUIDrawSystem : ISystem
     {
         private float3 startPos;
-        private Transform spriteTransform;
+        private EntityQuery dragSpriteQuery;
 
-        protected override void OnStartRunning()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
-            var transformMap = SystemAPI.ManagedAPI.GetSingleton<UnityTransformMap>();
+            this.dragSpriteQuery = SystemAPI.QueryBuilder()
+                .WithAllRW<LocalTransform, PostTransformMatrix>()
+                .WithAll<DragSelectionSpriteTag>()
+                .Build();
 
-            transformMap.Value.TryGetValue(
-                new UniqueIdICD
-                {
-                    BaseId = new UniqueId
-                    {
-                        Id = 1,
-                        Kind = UniqueKind.None,
-                    },
-                }
-                , out this.spriteTransform);
+            state.RequireForUpdate(this.dragSpriteQuery);
+
         }
 
-        protected override void OnUpdate()
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
-            // Note: This is temp fix.
-            bool canRun = this.spriteTransform != null;
-            if (!canRun)
-            {
-                this.Enabled = false;
-                return;
-            }
+            state.EntityManager.CompleteDependencyBeforeRW<LocalTransform>();
+            state.EntityManager.CompleteDependencyBeforeRW<PostTransformMatrix>();
+
+            var transformRef = this.dragSpriteQuery.GetSingletonRW<LocalTransform>();
+            var postTransformMatrixRef = this.dragSpriteQuery.GetSingletonRW<PostTransformMatrix>();
 
             var dragSelectionData = SystemAPI.GetSingleton<DragSelectionData>();
 
             if (!dragSelectionData.IsDragging)
             {
-                this.spriteTransform.localScale = float3.zero;
+                transformRef.ValueRW.Scale = 0f;
                 return;
             }
 
@@ -54,19 +46,26 @@ namespace Systems.Simulation
 
             float3 currentPos = dragSelectionData.CurrentWorldPos;
 
-            float3 centerPos = math.lerp(this.startPos, currentPos, 0.5f);
+            float3 centerPos = (this.startPos + currentPos) / 2;
 
             float2 size =
                 new float2(this.startPos.x, this.startPos.z) -
                 new float2(currentPos.x, currentPos.z);
 
             // set sprite pos = centerPos.
-            this.spriteTransform.position = centerPos.Add(y: 0.05f);
+            transformRef.ValueRW.Position = centerPos.Add(y: 0.05f);
 
-            float3 tempScale = new(size.x, size.y, 0);
-            this.spriteTransform.localScale = tempScale * 100;
+            float3 tempScale = new(size.x, size.y, 1f); // Note: Set z = 0 make this sprite rotate, dunno why. So any value different than 0 is OK.
+
+            transformRef.ValueRW.Scale = 100;
+
+            postTransformMatrixRef.ValueRW.Value = float4x4.TRS(
+                float3.zero
+                , quaternion.EulerXYZ(float3.zero)
+                , tempScale);
+
         }
 
-
     }
+
 }
