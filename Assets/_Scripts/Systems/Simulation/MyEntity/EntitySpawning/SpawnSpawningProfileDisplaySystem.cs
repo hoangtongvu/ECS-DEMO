@@ -26,6 +26,8 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 .Build();
 
             this.RequireForUpdate(query);
+            this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<UIPrefabAndPoolMap>();
         }
 
         protected override void OnUpdate()

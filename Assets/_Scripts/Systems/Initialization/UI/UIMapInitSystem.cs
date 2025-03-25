@@ -1,4 +1,5 @@
 using Components.ComponentMap;
+using Components.UI.MyCanvas;
 using Core.UI;
 using Core.UI.Identification;
 using Core.UI.MyCanvas;
@@ -14,6 +15,15 @@ namespace Systems.Initialization.UI
     {
         protected override void OnCreate()
         {
+            this.RequireForUpdate<CanvasesCtrlHolder>();
+        }
+
+        protected override void OnUpdate()
+        {
+            this.Enabled = false;
+
+            var canvasesCtrl = SystemAPI.GetSingleton<CanvasesCtrlHolder>();
+
             var uiPrefabAndPoolMap = new UIPrefabAndPoolMap
             {
                 Value = new Dictionary<UIType, UIPrefabAndPool>(),
@@ -29,19 +39,13 @@ namespace Systems.Initialization.UI
                 });
 
             this.LoadAllUIPrefabs(out var uiCtrls);
-            this.AddUIsIntoMap(uiPrefabAndPoolMap, uiCtrls);
+            this.AddUIsIntoMap(uiPrefabAndPoolMap, canvasesCtrl.Value, uiCtrls);
 
-            this.Enabled = false;
-
-        }
-
-        protected override void OnUpdate()
-        {
         }
 
         private void LoadAllUIPrefabs(out BaseUICtrl[] uiCtrls) => uiCtrls = Resources.LoadAll<BaseUICtrl>("UI");
 
-        private void AddUIsIntoMap(UIPrefabAndPoolMap uiPrefabAndPoolMap, BaseUICtrl[] uiCtrls)
+        private void AddUIsIntoMap(UIPrefabAndPoolMap uiPrefabAndPoolMap, CanvasesCtrl canvasesCtrl, BaseUICtrl[] uiCtrls)
         {
             foreach (var uiCtrl in uiCtrls)
             {
@@ -50,7 +54,8 @@ namespace Systems.Initialization.UI
                 CanvasAnchorPreset canvasAnchorPreset = uiCtrl.CanvasAnchorPreset;
 
                 this.CreateUIPoolGameObj(
-                    type
+                    canvasesCtrl
+                    , type
                     , canvasType
                     , canvasAnchorPreset
                     , out var objPool);
@@ -73,7 +78,8 @@ namespace Systems.Initialization.UI
         }
 
         private void CreateUIPoolGameObj(
-            UIType type
+            CanvasesCtrl canvasesCtrl
+            , UIType type
             , CanvasType canvasType
             , CanvasAnchorPreset canvasAnchorPreset
             , out BaseUIPool objPool)
@@ -81,22 +87,22 @@ namespace Systems.Initialization.UI
             GameObject newGameObject = new($"{type} Pool");
             newGameObject.AddComponent<RectTransform>();
 
-            newGameObject.transform.SetParent(this.GetParentTransform(canvasType, canvasAnchorPreset));
+            newGameObject.transform.SetParent(this.GetParentTransform(canvasesCtrl, canvasType, canvasAnchorPreset));
             newGameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
 
             objPool = newGameObject.AddComponent<BaseUIPool>();
         }
 
-        private Transform GetParentTransform(CanvasType canvasType, CanvasAnchorPreset canvasAnchorPreset)
+        private Transform GetParentTransform(CanvasesCtrl canvasesCtrl, CanvasType canvasType, CanvasAnchorPreset canvasAnchorPreset)
         {
             switch (canvasType)
             {
                 case CanvasType.WorldSpace:
-                    return CanvasesCtrl.Instance.WorldSpaceCanvasTransform;
+                    return canvasesCtrl.WorldSpaceCanvasTransform;
 
                 case CanvasType.Overlay:
                     int index = (int)canvasAnchorPreset;
-                    return CanvasesCtrl.Instance.OverlayCanvasManager.GetAnchorPresetTransform(index);
+                    return canvasesCtrl.OverlayCanvasManager.GetAnchorPresetTransform(index);
 
                 default:
                     throw new System.Exception($"canvasType is {CanvasType.None}");
