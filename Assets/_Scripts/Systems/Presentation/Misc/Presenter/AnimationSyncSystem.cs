@@ -8,7 +8,6 @@ namespace Systems.Presentation.Misc.Presenter
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial class AnimationSyncSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             var query0 = SystemAPI.QueryBuilder()
@@ -19,15 +18,12 @@ namespace Systems.Presentation.Misc.Presenter
                 .Build();
 
             this.RequireForUpdate(query0);
-            this.RequireForUpdate<PresentersHolderGO>();
+            this.RequireForUpdate<PresentersHolderScene>();
+
         }
 
         protected override void OnUpdate()
         {
-            var presentersHolder = SystemAPI.GetSingleton<PresentersHolderGO>();
-
-            if (!presentersHolder.Value.Value.gameObject.activeSelf) return;
-
             foreach (var (animDataRef, animatorTransitionDurationRef, presenterRef) in
                 SystemAPI.Query<
                     RefRW<AnimatorData>
@@ -45,7 +41,6 @@ namespace Systems.Presentation.Misc.Presenter
 
         }
 
-        
-
     }
+
 }

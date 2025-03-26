@@ -6,15 +6,12 @@ using Utilities;
 
 namespace Systems.Initialization.Misc.Presenter
 {
-
-
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class SpawnPresenterSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
-            this.CreatePresentersHolder();
+            this.CreatePresentersHolderScene();
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -25,12 +22,13 @@ namespace Systems.Initialization.Misc.Presenter
                 .Build();
 
             this.RequireForUpdate(query0);
+
         }
 
         protected override void OnUpdate()
         {
             var presenterPrefabMap = SystemAPI.GetSingleton<PresenterPrefabMap>();
-            var presentersHolder = SystemAPI.GetSingleton<PresentersHolderGO>();
+            var presentersScene = SystemAPI.GetSingleton<PresentersHolderScene>();
 
             foreach (var (needSpawnPresenterTag, transformRef, presenterIdRef, presenterRef) in
                 SystemAPI.Query<
@@ -39,7 +37,6 @@ namespace Systems.Initialization.Misc.Presenter
                     , RefRO<PresenterPrefabIdHolder>
                     , RefRW<PresenterHolder>>())
             {
-
                 if (!presenterPrefabMap.Value.TryGetValue(presenterIdRef.ValueRO.Value, out var presenterPrefab))
                 {
                     Debug.LogError($"Can't find any presenter prefab with id {presenterIdRef.ValueRO.Value}");
@@ -49,10 +46,11 @@ namespace Systems.Initialization.Misc.Presenter
                 var newPresenter = GameObject.Instantiate(
                     presenterPrefab.Value
                     , transformRef.ValueRO.Position
-                    , transformRef.ValueRO.Rotation
-                    , presentersHolder.Value);
+                    , transformRef.ValueRO.Rotation);
 
                 presenterRef.ValueRW.Value = newPresenter;
+
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
 
                 needSpawnPresenterTag.ValueRW = false;
 
@@ -60,15 +58,13 @@ namespace Systems.Initialization.Misc.Presenter
 
         }
 
-        private void CreatePresentersHolder()
+        private void CreatePresentersHolderScene()
         {
-            var holderGO = new PresentersHolderGO
-            {
-                Value = new GameObject("PresentersHolder").transform,
-            };
-
             SingletonUtilities.GetInstance(this.EntityManager)
-                .AddOrSetComponentData(holderGO);
+                .AddOrSetComponentData(new PresentersHolderScene
+                {
+                    Value = UnityEngine.SceneManagement.SceneManager.CreateScene("PresentersScene"),
+                });
 
         }
 
