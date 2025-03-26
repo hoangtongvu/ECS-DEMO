@@ -9,8 +9,10 @@ namespace Core.UI.MyCanvas
     {
         [SerializeField] private CanvasesCtrl Target;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             if (this.Target == false) this.Target = this.GetComponent<CanvasesCtrl>();
 
             MapRegisterMessenger.MessagePublisher.Publish(new RegisterMessage<CanvasesCtrl>
