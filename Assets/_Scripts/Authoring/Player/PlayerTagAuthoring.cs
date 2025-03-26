@@ -10,7 +10,6 @@ namespace Authoring.Player
 {
     public class PlayerTagAuthoring : MonoBehaviour
     {
-
         private class Baker : Baker<PlayerTagAuthoring>
         {
             public override void Bake(PlayerTagAuthoring authoring)
@@ -33,7 +32,12 @@ namespace Authoring.Player
                     }
                 });
                 AddComponent<PresenterHolder>(entity);
+                AddComponent<TransformAccessArrayIndex>(entity);
+
             }
+
         }
+
     }
+
 }

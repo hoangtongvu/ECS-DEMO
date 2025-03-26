@@ -1,7 +1,9 @@
 using Components.Misc.Presenter;
+using Core.Misc.Presenter;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utilities;
 
 namespace Systems.Initialization.Misc.Presenter
@@ -11,14 +13,18 @@ namespace Systems.Initialization.Misc.Presenter
     {
         protected override void OnCreate()
         {
-            this.CreatePresentersHolderScene();
+            var su = SingletonUtilities.GetInstance(this.EntityManager);
+
+            this.CreatePresentersHolderScene(su, out var newScene);
+            this.CreatePresentersTransformAccessArrayGOHolder(su, in newScene);
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     NeedSpawnPresenterTag
                     , LocalTransform
                     , PresenterPrefabIdHolder
-                    , PresenterHolder>()
+                    , PresenterHolder
+                    , TransformAccessArrayIndex>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -29,13 +35,15 @@ namespace Systems.Initialization.Misc.Presenter
         {
             var presenterPrefabMap = SystemAPI.GetSingleton<PresenterPrefabMap>();
             var presentersScene = SystemAPI.GetSingleton<PresentersHolderScene>();
+            var presentersTransformAccessArrayGOHolder = SystemAPI.GetSingleton<PresentersTransformAccessArrayGOHolder>();
 
-            foreach (var (needSpawnPresenterTag, transformRef, presenterIdRef, presenterRef) in
+            foreach (var (needSpawnPresenterTag, transformRef, presenterIdRef, presenterRef, transformAccessArrayIndexRef) in
                 SystemAPI.Query<
                     EnabledRefRW<NeedSpawnPresenterTag>
                     , RefRO<LocalTransform>
                     , RefRO<PresenterPrefabIdHolder>
-                    , RefRW<PresenterHolder>>())
+                    , RefRW<PresenterHolder>
+                    , RefRW<TransformAccessArrayIndex>>())
             {
                 if (!presenterPrefabMap.Value.TryGetValue(presenterIdRef.ValueRO.Value, out var presenterPrefab))
                 {
@@ -50,7 +58,9 @@ namespace Systems.Initialization.Misc.Presenter
 
                 presenterRef.ValueRW.Value = newPresenter;
 
-                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
+                SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
+                presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray.Add(newPresenter.transform);
+                transformAccessArrayIndexRef.ValueRW.Value = presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray.length - 1; 
 
                 needSpawnPresenterTag.ValueRW = false;
 
@@ -58,14 +68,28 @@ namespace Systems.Initialization.Misc.Presenter
 
         }
 
-        private void CreatePresentersHolderScene()
+        private void CreatePresentersHolderScene(SingletonUtilities su, out Scene newScene)
         {
-            SingletonUtilities.GetInstance(this.EntityManager)
-                .AddOrSetComponentData(new PresentersHolderScene
-                {
-                    Value = UnityEngine.SceneManagement.SceneManager.CreateScene("PresentersScene"),
-                });
+            newScene = SceneManager.CreateScene("PresentersScene");
 
+            su.AddOrSetComponentData(new PresentersHolderScene
+            {
+                Value = newScene,
+            });
+
+        }
+
+        private void CreatePresentersTransformAccessArrayGOHolder(SingletonUtilities su, in Scene presentersHolderScene)
+        {
+            var newGO = new GameObject("*PresentersTransformAccessArrayGO");
+            
+            su.AddOrSetComponentData(new PresentersTransformAccessArrayGOHolder
+            {
+                Value = newGO.AddComponent<PresentersTransformAccessArrayGO>(),
+            });
+
+            SceneManager.MoveGameObjectToScene(newGO, presentersHolderScene);
+        
         }
 
     }

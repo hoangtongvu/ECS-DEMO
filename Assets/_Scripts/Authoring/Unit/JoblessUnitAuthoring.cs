@@ -55,6 +55,7 @@ namespace Authoring.Unit
                     Value = authoring.presenterPrefabId,
                 });
                 AddComponent<PresenterHolder>(entity);
+                AddComponent<TransformAccessArrayIndex>(entity);
 
                 AddComponent(entity, new UnitId
                 {
@@ -185,6 +186,9 @@ namespace Authoring.Unit
                 SetComponentEnabled<CanFindPathTag>(entity, false);
 
             }
+
         }
+
     }
+
 }
