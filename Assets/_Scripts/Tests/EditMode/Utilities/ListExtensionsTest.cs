@@ -6,9 +6,8 @@ namespace Tests.EditMode.Utilities
 {
     public partial class ListExtensionsTest
     {
-
         [Test]
-        public void QuickRemoveAtTest()
+        public void RemoveAtSwapBackTest()
         {
             var testList = new List<TestElement>()
             {
@@ -23,7 +22,7 @@ namespace Tests.EditMode.Utilities
             for (int i = 0; i < testList.Count; i++)
             {
                 if (testList[i].Value != 5) continue;
-                testList.QuickRemoveAt(i);
+                testList.RemoveAtSwapBack(i);
                 i--;
             }
 

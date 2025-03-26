@@ -8,16 +8,13 @@ using Components.Player;
 using Unity.Mathematics;
 using Components.Unit.NearUnitDropItems;
 using Utilities;
-using Core.Utilities.Extensions;
 
 namespace Systems.Simulation.Unit.NearUnitDropItems
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct TimerListUpdateSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -33,7 +30,6 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
                     Value = 5f,
                 });
 
-
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     LocalTransform
@@ -46,7 +42,6 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
         }
 
-
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
@@ -54,14 +49,12 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
             var hitList = SystemAPI.GetSingleton<NearbyUnitDistanceHitList>().Value;
             var hitRadius = SystemAPI.GetSingleton<NearbyUnitHitRadius>().Value;
 
-
             foreach (var (transformRef, nearbyUnitDropItemTimerList) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
                     , DynamicBuffer<NearbyUnitDropItemTimerElement>>()
                     .WithAll<PlayerTag>())
             {
-
                 bool hasHit = this.OverlapSphere(
                     in physicsWorld
                     , transformRef.ValueRO.Position
@@ -86,6 +79,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
                 this.AddRemainingToOldList(in nearbyUnitDropItemTimerList, in hitList, hitListLength);
 
             }
+
         }
 
         [BurstCompile]
@@ -104,8 +98,8 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
                     BelongsTo = (uint)CollisionLayer.Player,
                     CollidesWith = (uint)CollisionLayer.Unit,
                 });
-        }
 
+        }
 
         [BurstCompile]
         private void RemoveUnusedElements(
@@ -114,7 +108,6 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
             , in NativeList<DistanceHit> hitList
             , ref int hitListLength)
         {
-
             for (int i = 0; i < oldListLength; i++)
             {
                 var oldId = oldList[i].UnitEntity;
@@ -127,7 +120,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
                     if (oldId != newId) continue;
 
-                    hitList.QuickRemoveAt(j);
+                    hitList.RemoveAtSwapBack(j);
                     j--;
                     hitListLength--;
 
@@ -138,7 +131,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
                 if (foundIdInNewList) continue;
 
-                oldList.QuickRemoveAt(i);
+                oldList.RemoveAtSwapBack(i);
                 i--;
                 oldListLength--;
 
@@ -152,7 +145,6 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
             , in NativeList<DistanceHit> hitList
             , int hitListLength)
         {
-
             for (int i = 0; i < hitListLength; i++)
             {
                 oldList.Add(new()
@@ -163,8 +155,6 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
             }
 
         }
-
-        
 
     }
 

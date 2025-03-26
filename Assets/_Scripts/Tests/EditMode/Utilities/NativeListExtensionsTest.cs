@@ -8,7 +8,7 @@ namespace Tests.EditMode.Utilities
     public partial class NativeListExtensionsTest
     {
         [Test]
-        public void QuickRemoveAtTest()
+        public void RemoveAtSwapBackTest()
         {
             var testList = new NativeList<TestElement>(10, Allocator.Persistent)
             {
@@ -23,7 +23,7 @@ namespace Tests.EditMode.Utilities
             for (int i = 0; i < testList.Length; i++)
             {
                 if (testList[i].Value != 5) continue;
-                testList.QuickRemoveAt(i);
+                global::Core.Utilities.Extensions.NativeListExtensions.RemoveAtSwapBack(testList, i);
                 i--;
             }
 
