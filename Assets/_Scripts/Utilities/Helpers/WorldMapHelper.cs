@@ -130,39 +130,39 @@ namespace Utilities.Helpers
         /// Radius limit of 5.
         /// </summary>
         [BurstCompile]
-        public static void GetValidStartCell(
+        public static void GetPassableCellAroundObstacle(
             in WorldTileCostMap costMap
             , ref int2 originalCellPos
-            , out Cell validStartCell)
+            , out Cell passableCell)
         {
             const int radiusAroundOriginalPosLimit = 5;
             int currentRadius = 1;
-            validStartCell = default;
+            passableCell = default;
 
             while (currentRadius <= radiusAroundOriginalPosLimit)
             {
                 for (int x = originalCellPos.x - currentRadius; x <= originalCellPos.x + currentRadius; x++)
                 {
                     int y = originalCellPos.y - currentRadius;
-                    if (CheckAndSetCell(in costMap, x, y, ref validStartCell, ref originalCellPos)) return;
+                    if (CheckAndSetCell(in costMap, x, y, ref passableCell, ref originalCellPos)) return;
                 }
 
                 for (int x = originalCellPos.x - currentRadius; x <= originalCellPos.x + currentRadius; x++)
                 {
                     int y = originalCellPos.y + currentRadius;
-                    if (CheckAndSetCell(in costMap, x, y, ref validStartCell, ref originalCellPos)) return;
+                    if (CheckAndSetCell(in costMap, x, y, ref passableCell, ref originalCellPos)) return;
                 }
 
                 for (int y = originalCellPos.y - currentRadius + 1; y <= originalCellPos.y + currentRadius - 1; y++)
                 {
                     int x = originalCellPos.x - currentRadius;
-                    if (CheckAndSetCell(in costMap, x, y, ref validStartCell, ref originalCellPos)) return;
+                    if (CheckAndSetCell(in costMap, x, y, ref passableCell, ref originalCellPos)) return;
                 }
 
                 for (int y = originalCellPos.y - currentRadius + 1; y <= originalCellPos.y + currentRadius - 1; y++)
                 {
                     int x = originalCellPos.x + currentRadius;
-                    if (CheckAndSetCell(in costMap, x, y, ref validStartCell, ref originalCellPos)) return;
+                    if (CheckAndSetCell(in costMap, x, y, ref passableCell, ref originalCellPos)) return;
                 }
 
                 currentRadius++;

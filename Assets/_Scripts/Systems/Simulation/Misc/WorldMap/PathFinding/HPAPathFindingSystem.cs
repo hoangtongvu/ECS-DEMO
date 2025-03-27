@@ -87,7 +87,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                     , in cellPositionsContainer
                     , in innerPathCostMap
                     , startPos
-                    , in endPos
+                    , endPos
                     , Allocator.Temp);
 
                 int pathLength = path.Length;
@@ -116,7 +116,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             , in CellPositionsContainer cellPositionsContainer
             , in InnerPathCostMap innerPathCostMap
             , int2 startPos
-            , in int2 endPos
+            , int2 endPos
             , Allocator allocator)
         {
             NativeList<int2> path = new(10, allocator);
@@ -125,7 +125,10 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             costMap.GetCellAt(endPos, out Cell endCell);
 
             if (!startCell.IsPassable())
-                WorldMapHelper.GetValidStartCell(in costMap, ref startPos, out startCell);
+                WorldMapHelper.GetPassableCellAroundObstacle(in costMap, ref startPos, out startCell);
+
+            if (!endCell.IsPassable())
+                WorldMapHelper.GetPassableCellAroundObstacle(in costMap, ref endPos, out endCell);
 
             int startChunkIndex = startCell.ChunkIndex;
             int endChunkIndex = endCell.ChunkIndex;
