@@ -93,10 +93,7 @@ namespace Authoring.Unit
                 AddComponent<TargetPosition>(entity);
                 AddComponent<TargetPosChangedTag>(entity);
                 SetComponentEnabled<TargetPosChangedTag>(entity, false);
-                AddComponent(entity, new DistanceToTarget
-                {
-                    MinDistance = 1f, //TODO: Find another way to get this value;
-                });
+                AddComponent<DistanceToTarget>(entity);
                 AddComponent<AbsoluteDistanceXZToTarget>(entity);
                 AddComponent(entity, new MoveCommandElement
                 {

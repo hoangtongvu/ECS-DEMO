@@ -15,7 +15,6 @@ namespace Components
     public struct DistanceToTarget : IComponentData
     {
         public float CurrentDistance;
-        public float MinDistance;
     }
 
     public struct AbsoluteDistanceXZToTarget : IComponentData
