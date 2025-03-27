@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8068611641616439932}
   - component: {fileID: 7113761027316669289}
   - component: {fileID: 7988040591970155973}
+  - component: {fileID: 5824179652873199118}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Untagged
@@ -137,3 +138,16 @@ MonoBehaviour:
   harvesteeProfileId:
     HarvesteeType: 1
     LocalIndex: 0
+--- !u!114 &5824179652873199118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7309894390091400788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64f958cd92f1b6040ac77b4067401444, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityGridSquareSize: 1
