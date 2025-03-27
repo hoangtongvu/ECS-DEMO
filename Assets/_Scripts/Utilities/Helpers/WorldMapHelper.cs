@@ -190,6 +190,9 @@ namespace Utilities.Helpers
 
         }
 
+        [BurstCompile]
+        public static float GridLengthToWorldLength(in half cellRadius, int gridLength) => cellRadius * 2 * gridLength;
+
     }
 
 }

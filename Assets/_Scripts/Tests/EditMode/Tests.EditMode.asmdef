@@ -8,6 +8,7 @@
         "Components",
         "Unity.Entities",
         "Unity.Collections",
+        "Unity.Mathematics",
         "Systems.Initialization",
         "Systems.Simulation",
         "Systems.Presentation",
