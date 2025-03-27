@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Configs:
     EntityMoveSpeedScale: 1
-    UnitStopMoveRadius: 1
     UnitInteractRadius: 1.5
+    UnitWalkSpeed: 3
+    UnitRunSpeed: 7
+    UnitIdleMaxDuration: 3
+    UnitWalkMinDistance: 2
+    UnitWalkMaxDistance: 5
