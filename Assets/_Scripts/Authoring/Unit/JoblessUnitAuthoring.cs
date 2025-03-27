@@ -97,6 +97,7 @@ namespace Authoring.Unit
                 {
                     MinDistance = 1f, //TODO: Find another way to get this value;
                 });
+                AddComponent<AbsoluteDistanceXZToTarget>(entity);
                 AddComponent(entity, new MoveCommandElement
                 {
                     CommandSource = MoveCommandSource.None,
@@ -128,6 +129,10 @@ namespace Authoring.Unit
                 AddComponent(entity, new TargetEntity
                 {
                     Value = Entity.Null,
+                });
+                AddComponent(entity, new TargetEntityWorldSquareRadius
+                {
+                    Value = half.zero,
                 });
                 AddComponent(entity, new InteractingEntity
                 {

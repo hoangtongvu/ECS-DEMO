@@ -54,7 +54,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
             half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
-            foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag) in
+            foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag, entity) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
                     , RefRO<MoveCommandElement>
@@ -63,6 +63,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                     , DynamicBuffer<WaypointElement>
                     , EnabledRefRW<CanMoveEntityTag>
                     , EnabledRefRW<CanFindPathTag>>()
+                    .WithEntityAccess()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 if (!canFindPathTag.ValueRO) continue;
@@ -74,6 +75,13 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 // Init targetPos && distanceToTarget
                 targetPosRef.ValueRW.Value = transformRef.ValueRO.Position;
                 distanceToTargetRef.ValueRW.CurrentDistance = 0;
+
+                var absoluteDistanceXZToTargetRef = SystemAPI.GetComponentRW<AbsoluteDistanceXZToTarget>(entity);
+                absoluteDistanceXZToTargetRef.ValueRW = new()
+                {
+                    X = 0,
+                    Z = 0,
+                };
 
                 WorldMapHelper.WorldPosToGridPos(in cellRadius, in transformRef.ValueRO.Position, out int2 startPos);
                 WorldMapHelper.WorldPosToGridPos(in cellRadius, in moveCommandElementRef.ValueRO.Float3, out int2 endPos);

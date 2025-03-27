@@ -18,6 +18,7 @@ namespace Utilities.Jobs
     public partial struct SetTargetJob : IJobEntity
     {
         [ReadOnly] public Entity TargetEntity;
+        [ReadOnly] public half TargetEntityWorldSquareRadius;
         [ReadOnly] public float UnitMoveSpeed;
         [ReadOnly] public float3 TargetPosition;
         [ReadOnly] public MoveCommandSource NewMoveCommandSource;
@@ -30,6 +31,7 @@ namespace Utilities.Jobs
             , EnabledRefRW<CanFindPathTag> canFindPathTag
             , ref MoveSpeedLinear moveSpeedLinear
             , ref TargetEntity targetEntity
+            , ref TargetEntityWorldSquareRadius worldSquareRadius
             , ref MoveCommandElement moveCommandElement
             , ref InteractingEntity interactingEntity
             , ref InteractionTypeICD interactionTypeICD)
@@ -53,6 +55,7 @@ namespace Utilities.Jobs
             moveCommandElement.Float3 = this.TargetPosition;
 
             targetEntity.Value = this.TargetEntity;
+            worldSquareRadius.Value = this.TargetEntityWorldSquareRadius;
 
             moveSpeedLinear.Value = this.UnitMoveSpeed;
             canFindPathTag.ValueRW = true;

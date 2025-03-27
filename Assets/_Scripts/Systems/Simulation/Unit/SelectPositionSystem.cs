@@ -48,6 +48,7 @@ namespace Systems.Simulation.Unit
             state.Dependency = new SetTargetJob()
             {
                 TargetEntity = Entity.Null,
+                TargetEntityWorldSquareRadius = new(0.1f), // TODO: Assign this using DefaultStopMoveWorldRadius instead.
                 TargetPosition = selectedPos,
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
                 UnitMoveSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
