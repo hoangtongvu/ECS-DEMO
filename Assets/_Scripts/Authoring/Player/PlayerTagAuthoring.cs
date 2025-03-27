@@ -32,6 +32,7 @@ namespace Authoring.Player
                     }
                 });
                 AddComponent<PresenterHolder>(entity);
+                AddComponent<AnimatorHolder>(entity);
                 AddComponent<TransformAccessArrayIndex>(entity);
 
             }

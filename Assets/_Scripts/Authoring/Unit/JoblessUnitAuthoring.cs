@@ -55,6 +55,7 @@ namespace Authoring.Unit
                     Value = authoring.presenterPrefabId,
                 });
                 AddComponent<PresenterHolder>(entity);
+                AddComponent<AnimatorHolder>(entity);
                 AddComponent<TransformAccessArrayIndex>(entity);
 
                 AddComponent(entity, new UnitId

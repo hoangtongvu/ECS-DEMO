@@ -1,19 +1,14 @@
 using Core.Animator;
-using UnityEngine;
 
 namespace Core.Misc.Presenter
 {
     public class BasePresenter : SaiMonoBehaviour
     {
-        [SerializeField] private BaseAnimator baseAnimator;
-
-        public BaseAnimator BaseAnimator => baseAnimator;
-
-        protected override void LoadComponents()
+        public bool TryGetBaseAnimator(out BaseAnimator baseAnimator)
         {
-            base.LoadComponents();
-            this.LoadComponentInCtrl(ref baseAnimator);
+            return this.gameObject.TryGetComponent<BaseAnimator>(out baseAnimator);
         }
 
     }
+
 }

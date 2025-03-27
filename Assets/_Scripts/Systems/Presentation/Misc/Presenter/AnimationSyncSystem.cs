@@ -1,6 +1,5 @@
 using Components;
 using Components.Misc.Presenter;
-using Core.Misc.Presenter;
 using Unity.Entities;
 
 namespace Systems.Presentation.Misc.Presenter
@@ -14,7 +13,8 @@ namespace Systems.Presentation.Misc.Presenter
                 .WithAll<
                     NeedSpawnPresenterTag
                     , AnimatorData
-                    , PresenterHolder>()
+                    , AnimatorTransitionDuration
+                    , AnimatorHolder>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -24,17 +24,16 @@ namespace Systems.Presentation.Misc.Presenter
 
         protected override void OnUpdate()
         {
-            foreach (var (animDataRef, animatorTransitionDurationRef, presenterRef) in
+            foreach (var (animDataRef, animatorTransitionDurationRef, animatorRef) in
                 SystemAPI.Query<
                     RefRW<AnimatorData>
                     , RefRO<AnimatorTransitionDuration>
-                    , RefRO<PresenterHolder>>()
+                    , RefRO<AnimatorHolder>>()
                     .WithDisabled<NeedSpawnPresenterTag>())
             {
                 if (!animDataRef.ValueRO.Value.ValueChanged) continue;
 
-                BasePresenter presenter = presenterRef.ValueRO.Value.Value;
-                presenter.BaseAnimator.WaitPlay(animDataRef.ValueRO.Value.Value.ToString(), animatorTransitionDurationRef.ValueRO.Value);
+                animatorRef.ValueRO.Value.Value.WaitPlay(animDataRef.ValueRO.Value.Value.ToString(), animatorTransitionDurationRef.ValueRO.Value);
                 animDataRef.ValueRW.Value.ValueChanged = false;
 
             }
