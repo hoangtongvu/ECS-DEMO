@@ -9,6 +9,7 @@ using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
 using Components.Misc.GlobalConfigs;
 using Utilities.Jobs;
+using Components.Misc;
 
 namespace Systems.Simulation.Unit
 {
@@ -44,11 +45,12 @@ namespace Systems.Simulation.Unit
 
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
 
             state.Dependency = new SetTargetJob()
             {
                 TargetEntity = Entity.Null,
-                TargetEntityWorldSquareRadius = new(0.1f), // TODO: Assign this using DefaultStopMoveWorldRadius instead.
+                TargetEntityWorldSquareRadius = defaultStopMoveWorldRadius,
                 TargetPosition = selectedPos,
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
                 UnitMoveSpeed = gameGlobalConfigs.Value.UnitRunSpeed,

@@ -1,5 +1,5 @@
 using Components;
-using Components.Misc.GlobalConfigs;
+using Components.Misc;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.PathFinding;
 using Unity.Burst;
@@ -30,17 +30,16 @@ namespace Systems.Simulation.Unit
 
             state.RequireForUpdate(entityQuery);
             
-            state.RequireForUpdate<GameGlobalConfigsICD>();
             state.RequireForUpdate<CellRadius>();
+            state.RequireForUpdate<DefaultStopMoveWorldRadius>();
 
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
-            float stopMoveRadius = 0.1f;// TODO: Find another way to get this min dis.
+            var stopMoveRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
 
             new ChangeTargetPosJob
             {
@@ -54,7 +53,7 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         private partial struct ChangeTargetPosJob : IJobEntity
         {
-            [ReadOnly] public float StopMoveRadius;
+            [ReadOnly] public half StopMoveRadius;
             [ReadOnly] public half CellRadius;
 
             private void Execute(

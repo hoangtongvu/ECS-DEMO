@@ -1,10 +1,13 @@
 using Components;
+using Components.Misc;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
 using Unity.Burst;
 using Unity.Burst.CompilerServices;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics;
 
 namespace Systems.Simulation.Unit
@@ -26,18 +29,27 @@ namespace Systems.Simulation.Unit
                 .Build();
 
             state.RequireForUpdate(entityQuery);
+            state.RequireForUpdate<DefaultStopMoveWorldRadius>();
 
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new StopMoveJob().ScheduleParallel();
+            var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
+
+            new StopMoveJob()
+            {
+                StopMoveWorldRadius = defaultStopMoveWorldRadius,
+            }.ScheduleParallel();
+
         }
 
         [BurstCompile]
         private partial struct StopMoveJob : IJobEntity
         {
+            [ReadOnly] public half StopMoveWorldRadius;
+
             [BurstCompile]
             void Execute(
                 EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
@@ -47,7 +59,7 @@ namespace Systems.Simulation.Unit
                 , DynamicBuffer<WaypointElement> waypoints)
             {
                 if (!waypoints.IsEmpty) return;
-                if (Hint.Likely(distanceToTarget.CurrentDistance >= 0.1f)) return; // TODO: Find another way to get this min dis.
+                if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveWorldRadius)) return; // TODO: Find another way to get this min dis.
                 // velocityRef.ValueRW.Linear = 0;
                 canMoveEntityTag.ValueRW = false;
                 moveCommandElement.CommandSource = MoveCommandSource.None;
