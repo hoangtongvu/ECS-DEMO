@@ -10,6 +10,8 @@ using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
 using Utilities.Jobs;
 using Components.Misc.GlobalConfigs;
+using Components.Misc.WorldMap;
+using Utilities.Helpers;
 
 namespace Systems.Simulation.MyEntity
 {
@@ -37,6 +39,8 @@ namespace Systems.Simulation.MyEntity
                 .Build();
 
             state.RequireForUpdate(query);
+            state.RequireForUpdate<CellRadius>();
+
         }
 
         [BurstCompile]
@@ -44,13 +48,16 @@ namespace Systems.Simulation.MyEntity
         {
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
             // Checking Hit Data.
-            if (!this.TryGetInteractable(out Entity entity, out float3 pos)) return;
+            bool canGetInteractable = this.TryGetInteractable(ref state, in cellRadius, out Entity entity, out float3 pos, out half worldSquareRadius);
+            if (!canGetInteractable) return;
 
             state.Dependency = new SetTargetJob()
             {
                 TargetEntity = entity,
+                TargetEntityWorldSquareRadius = worldSquareRadius,
                 TargetPosition = pos,
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
                 UnitMoveSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
@@ -60,10 +67,16 @@ namespace Systems.Simulation.MyEntity
         }
 
         [BurstCompile]
-        private bool TryGetInteractable(out Entity entity, out float3 pos)
+        private bool TryGetInteractable(
+            ref SystemState state
+            , in half cellRadius
+            , out Entity entity
+            , out float3 pos
+            , out half worldSquareRadius)
         {
             entity = Entity.Null;
             pos = float3.zero;
+            worldSquareRadius = half.zero;
 
             var selectionHits = SystemAPI.GetSingletonBuffer<SelectionHitElement>();
             if (selectionHits.IsEmpty) return false;
@@ -75,7 +88,13 @@ namespace Systems.Simulation.MyEntity
                 if (hit.SelectionType != SelectionType.InteractableEntity) continue;
 
                 entity = hit.HitEntity;
-                pos = hit.HitPos;
+                pos = SystemAPI.GetComponent<LocalTransform>(entity).Position;
+
+                int entityGridSquareSize = SystemAPI.GetComponent<EntityGridSquareSize>(entity).Value;
+                float entityWorldSquareSize =
+                    WorldMapHelper.GridLengthToWorldLength(in cellRadius, entityGridSquareSize);
+
+                worldSquareRadius = new(entityWorldSquareSize / 2);
 
                 selectionHits.RemoveAt(i);
                 return true;

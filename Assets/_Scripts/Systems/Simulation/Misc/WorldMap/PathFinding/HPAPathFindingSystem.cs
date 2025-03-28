@@ -54,7 +54,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
             half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
-            foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag) in
+            foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag, entity) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
                     , RefRO<MoveCommandElement>
@@ -63,6 +63,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                     , DynamicBuffer<WaypointElement>
                     , EnabledRefRW<CanMoveEntityTag>
                     , EnabledRefRW<CanFindPathTag>>()
+                    .WithEntityAccess()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 if (!canFindPathTag.ValueRO) continue;
@@ -74,6 +75,13 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 // Init targetPos && distanceToTarget
                 targetPosRef.ValueRW.Value = transformRef.ValueRO.Position;
                 distanceToTargetRef.ValueRW.CurrentDistance = 0;
+
+                var absoluteDistanceXZToTargetRef = SystemAPI.GetComponentRW<AbsoluteDistanceXZToTarget>(entity);
+                absoluteDistanceXZToTargetRef.ValueRW = new()
+                {
+                    X = 0,
+                    Z = 0,
+                };
 
                 WorldMapHelper.WorldPosToGridPos(in cellRadius, in transformRef.ValueRO.Position, out int2 startPos);
                 WorldMapHelper.WorldPosToGridPos(in cellRadius, in moveCommandElementRef.ValueRO.Float3, out int2 endPos);
@@ -87,7 +95,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                     , in cellPositionsContainer
                     , in innerPathCostMap
                     , startPos
-                    , in endPos
+                    , endPos
                     , Allocator.Temp);
 
                 int pathLength = path.Length;
@@ -116,7 +124,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             , in CellPositionsContainer cellPositionsContainer
             , in InnerPathCostMap innerPathCostMap
             , int2 startPos
-            , in int2 endPos
+            , int2 endPos
             , Allocator allocator)
         {
             NativeList<int2> path = new(10, allocator);
@@ -125,7 +133,10 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             costMap.GetCellAt(endPos, out Cell endCell);
 
             if (!startCell.IsPassable())
-                WorldMapHelper.GetValidStartCell(in costMap, ref startPos, out startCell);
+                WorldMapHelper.GetPassableCellAroundObstacle(in costMap, ref startPos, out startCell);
+
+            if (!endCell.IsPassable())
+                WorldMapHelper.GetPassableCellAroundObstacle(in costMap, ref endPos, out endCell);
 
             int startChunkIndex = startCell.ChunkIndex;
             int endChunkIndex = endCell.ChunkIndex;

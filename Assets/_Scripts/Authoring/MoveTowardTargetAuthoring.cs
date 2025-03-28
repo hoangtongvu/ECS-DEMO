@@ -22,10 +22,7 @@ namespace Authoring
                 });
 
 
-                AddComponent(entity, new DistanceToTarget
-                {
-                    MinDistance = authoring.MinDistance,
-                });
+                AddComponent<DistanceToTarget>(entity);
 
 
 

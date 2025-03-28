@@ -2,16 +2,15 @@ using Unity.Entities;
 using Components;
 using Unity.Burst;
 using Components.MyEntity;
-using Components.Misc.GlobalConfigs;
+using Unity.Mathematics;
+using Components.Misc.WorldMap;
 
 namespace Systems.Simulation.MyEntity
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct SetCanInteractFlagSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -19,17 +18,18 @@ namespace Systems.Simulation.MyEntity
                 .WithAll<
                     TargetEntity
                     , DistanceToTarget
+                    , AbsoluteDistanceXZToTarget
                     , CanInteractEntityTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
+            state.RequireForUpdate<CellRadius>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
-            float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
+            half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
             // Clear components.
             foreach (var (tagRef, targetEntityRef) in SystemAPI.Query<EnabledRefRW<CanInteractEntityTag>, RefRW<TargetEntity>>())
@@ -38,22 +38,27 @@ namespace Systems.Simulation.MyEntity
                 targetEntityRef.ValueRW.Value = Entity.Null;
             }
 
-            foreach (var (distanceToTargetRef, targetEntityRef, entity) in
+            foreach (var (absoluteDistanceXZToTargetRef, targetEntityRef, targetEntityWorldSquareRadiusRef, entity) in
                 SystemAPI.Query<
-                    RefRO<DistanceToTarget>
-                    , RefRO<TargetEntity>>()
+                    RefRO<AbsoluteDistanceXZToTarget>
+                    , RefRO<TargetEntity>
+                    , RefRO<TargetEntityWorldSquareRadius>> ()
                     .WithDisabled<CanInteractEntityTag>()
                     .WithEntityAccess())
             {
-
                 if (targetEntityRef.ValueRO.Value == Entity.Null) continue;
-                if (distanceToTargetRef.ValueRO.CurrentDistance > interactRadius) continue;
-                //UnityEngine.Debug.Log(distanceToTargetRef.ValueRO.CurrentDistance);
+
+                float interactRadius = targetEntityWorldSquareRadiusRef.ValueRO.Value + cellRadius * 2;
+
+                if (absoluteDistanceXZToTargetRef.ValueRO.X > interactRadius) continue;
+                if (absoluteDistanceXZToTargetRef.ValueRO.Z > interactRadius) continue;
+
                 SystemAPI.SetComponentEnabled<CanInteractEntityTag>(entity, true);
+
             }
 
         }
 
-
     }
+
 }

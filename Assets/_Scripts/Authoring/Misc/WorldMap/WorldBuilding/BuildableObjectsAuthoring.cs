@@ -1,4 +1,5 @@
-﻿using Components.Misc.WorldMap.WorldBuilding;
+﻿using Components.Misc.WorldMap;
+using Components.Misc.WorldMap.WorldBuilding;
 using Core;
 using Core.Misc.WorldMap.WorldBuilding;
 using Unity.Entities;
@@ -36,14 +37,29 @@ namespace Authoring.Misc.WorldMap.WorldBuilding
 
                 foreach (var buildableObjectData in authoring.buildableObjectsSO.BuildableObjects)
                 {
+                    var buildableEntity = GetEntity(buildableObjectData.Prefab, TransformUsageFlags.None);
+
                     buffer.Add(new()
                     {
-                        Entity = GetEntity(buildableObjectData.Prefab, TransformUsageFlags.None),
+                        Entity = buildableEntity,
                         Name = buildableObjectData.Name,
                         PreviewSprite = buildableObjectData.PreviewSprite,
                         GridSquareSize = buildableObjectData.GridSquareSize,
                         ObjectHeight = buildableObjectData.ObjectHeight,
                     });
+
+                    var buildableEntityHolder = CreateAdditionalEntity(TransformUsageFlags.None, entityName: "BuildableEntityHolder");
+
+                    AddComponent(buildableEntityHolder, new EntityGridSquareSize
+                    {
+                        Value = buildableObjectData.GridSquareSize,
+                    });
+
+                    AddComponent(buildableEntityHolder, new EntityGridSquareSize.ToRegisterEntity
+                    {
+                        Value = buildableEntity,
+                    });
+
                 }
 
             }
