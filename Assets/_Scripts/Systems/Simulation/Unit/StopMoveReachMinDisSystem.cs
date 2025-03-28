@@ -59,7 +59,7 @@ namespace Systems.Simulation.Unit
                 , DynamicBuffer<WaypointElement> waypoints)
             {
                 if (!waypoints.IsEmpty) return;
-                if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveWorldRadius)) return; // TODO: Find another way to get this min dis.
+                if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveWorldRadius)) return;
                 // velocityRef.ValueRW.Linear = 0;
                 canMoveEntityTag.ValueRW = false;
                 moveCommandElement.CommandSource = MoveCommandSource.None;
