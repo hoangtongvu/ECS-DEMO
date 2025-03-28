@@ -18,7 +18,7 @@ MonoBehaviour:
     Name: Tree
     PreviewSprite: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4, type: 3}
     GridSquareSize: 1
-    ObjectHeight: 3
+    ObjectHeight: 0.9
   - Prefab: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
       type: 3}
     Name: House
