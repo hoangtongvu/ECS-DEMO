@@ -3,7 +3,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Initialization.Misc
+namespace Systems.Baking.Misc
 {
     [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
     [BurstCompile]

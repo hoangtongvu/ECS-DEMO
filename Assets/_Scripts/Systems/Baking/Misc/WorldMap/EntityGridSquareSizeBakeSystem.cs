@@ -3,7 +3,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Initialization.Misc.WorldMap
+namespace Systems.Baking.Misc.WorldMap
 {
     [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
     public partial struct EntityGridSquareSizeBakeSystem : ISystem
