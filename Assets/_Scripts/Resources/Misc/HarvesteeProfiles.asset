@@ -23,3 +23,12 @@ MonoBehaviour:
           ResourceType: 1
           QuantityPerDrop: 5
           HpAmountPerDrop: 25
+    - Key:
+        HarvesteeType: 2
+        LocalIndex: 0
+      Value:
+        MaxHp: 100
+        ResourceDropInfo:
+          ResourceType: 3
+          QuantityPerDrop: 5
+          HpAmountPerDrop: 25

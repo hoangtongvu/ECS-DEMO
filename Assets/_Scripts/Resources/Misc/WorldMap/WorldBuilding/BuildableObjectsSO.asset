@@ -31,3 +31,15 @@ MonoBehaviour:
     PreviewSprite: {fileID: 21300000, guid: 223a61bc9202046408dd1a38e0051eeb, type: 3}
     GridSquareSize: 5
     ObjectHeight: 2
+  - Prefab: {fileID: 7309894390091400788, guid: 2afcb35a6e7e2884d8781889dbc859f3,
+      type: 3}
+    Name: RockPit
+    PreviewSprite: {fileID: 21300000, guid: 02c56d58c16f55441af8086bb2c8e236, type: 3}
+    GridSquareSize: 1
+    ObjectHeight: 0.6
+  - Prefab: {fileID: 9115495792767966074, guid: a492c0a594144a84084624c553eac045,
+      type: 3}
+    Name: PickaxeSpawner
+    PreviewSprite: {fileID: 21300000, guid: d0462d85729ce134887063bb9cfe9c33, type: 3}
+    GridSquareSize: 2
+    ObjectHeight: 2
