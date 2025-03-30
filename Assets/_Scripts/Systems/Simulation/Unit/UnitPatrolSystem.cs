@@ -40,6 +40,8 @@ namespace Systems.Simulation.Unit
 
             state.RequireForUpdate(query0);
 
+            state.RequireForUpdate<MoveCommandSourceMap>();
+
         }
 
         [BurstCompile]

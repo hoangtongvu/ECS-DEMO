@@ -1,5 +1,6 @@
 using Components;
 using Core.GameResource;
+using Core.Unit.MyMoveCommand;
 using System;
 using Unity.Entities;
 using Utilities;
@@ -9,6 +10,7 @@ using Utilities;
 namespace Systems.Initialization
 {
     public partial class ResourceTypeLengthInitSystem : EnumLengthInitSystem<ResourceType> { }
+    public partial class MoveCommandSourceLengthInitSystem : EnumLengthInitSystem<MoveCommandSource> { }
 
 
 

@@ -58,7 +58,7 @@ namespace Authoring.Unit
                 AddComponent<AnimatorHolder>(entity);
                 AddComponent<TransformAccessArrayIndex>(entity);
 
-                AddComponent(entity, new UnitId
+                AddComponent(entity, new Components.Unit.UnitId
                 {
                     UnitType = authoring.unitType,
                     LocalIndex = authoring.localIndex,

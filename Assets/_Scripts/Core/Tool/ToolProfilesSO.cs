@@ -18,7 +18,7 @@ namespace Core.Tool
     }
 
     [CreateAssetMenu(fileName = "ToolProfilesSO", menuName = "SO/GameEntity/ToolProfilesSO")]
-    public class ToolProfilesSO : GameEntityProfilesSO<ToolType, ToolProfileElement>
+    public class ToolProfilesSO : GameEntityProfilesSO<ToolId, ToolProfileElement>
     {
         public static readonly string DefaultAssetPath = "Misc/ToolProfilesSO";
     }

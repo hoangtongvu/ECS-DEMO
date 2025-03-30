@@ -1,5 +1,7 @@
+using Components;
+using Components.GameEntity;
+using Components.Unit;
 using Components.Unit.MyMoveCommand;
-using Core.Unit;
 using Core.Unit.MyMoveCommand;
 using System;
 using Unity.Collections;
@@ -7,41 +9,55 @@ using Unity.Entities;
 using UnityEngine;
 using Utilities;
 
-
 namespace Systems.Initialization
 {
-
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class MoveCommandSourceMapInitSystem : SystemBase
     {
+        private EntityQuery query;
+
         protected override void OnCreate()
         {
-            this.LoadUnitProfileSOs(out var unitProfiles);
+            this.query = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitProfilesSOHolder
+                    , AfterBakedPrefabsElement>()
+                .Build();
 
-            int length = unitProfiles.Length;
+            this.RequireForUpdate(this.query);
+            this.RequireForUpdate<EnumLength<MoveCommandSource>>();
+
+        }
+
+        protected override void OnUpdate()
+        {
+            this.Enabled = false;
+
+            var profiles = this.query.GetSingleton<UnitProfilesSOHolder>().Value.Value.Profiles;
+            var su = SingletonUtilities.GetInstance(this.EntityManager);
+
+            int profileCount = profiles.Count;
             int enumLength = Enum.GetNames(typeof(MoveCommandSource)).Length;
-            int initialCap = length * enumLength;
+            int initialCap = profileCount * enumLength;
 
             var commandSourceMap = new MoveCommandSourceMap
             {
                 Value = new(initialCap, Allocator.Persistent),
             };
 
-            for (int i = 0; i < length; i++)
+            foreach (var pair in profiles)
             {
-                var profile = unitProfiles[i];
-
-                // Add all exist in Dictionary first.
+                // Add all priorities exist in Dictionary first.
                 byte maxPriority = 0;
                 for (int j = 0; j < enumLength; j++)
                 {
                     var commandSource = (MoveCommandSource)j;
-                    if (!profile.MoveCommandSourcePriorities.TryGetValue(commandSource, out byte priority)) continue;
+                    if (!pair.Value.MoveCommandSourcePriorities.TryGetValue(commandSource, out byte priority)) continue;
 
-                    var commandSourceId = new MoveCommandSourceId(profile.UnitType, commandSource, profile.LocalIndex);
+                    var commandSourceId = new MoveCommandSourceId(pair.Key.UnitType, commandSource, pair.Key.VariantIndex);
                     if (commandSourceMap.Value.TryAdd(commandSourceId, priority))
                     {
-                        //Debug.Log($"Added [{commandSourceId}] with value: {priority}");
+                        Debug.Log($"Added [{commandSourceId}] with value: {priority}");
                         maxPriority = maxPriority < priority ? priority : maxPriority;
                         continue;
                     }
@@ -56,9 +72,8 @@ namespace Systems.Initialization
                 for (int j = 0; j < enumLength; j++)
                 {
                     var commandSource = (MoveCommandSource)j;
-                    if (profile.MoveCommandSourcePriorities.ContainsKey(commandSource)) continue;
-
-                    var commandSourceId = new MoveCommandSourceId(profile.UnitType, commandSource, profile.LocalIndex);
+                    if (pair.Value.MoveCommandSourcePriorities.ContainsKey(commandSource)) continue;
+                    var commandSourceId = new MoveCommandSourceId(pair.Key.UnitType, commandSource, pair.Key.VariantIndex);
 
                     if (commandSourceMap.Value.TryAdd(commandSourceId, maxPriority))
                     {
@@ -68,24 +83,15 @@ namespace Systems.Initialization
                     }
 
                     Debug.LogError($"MoveCommandSource already contains MoveCommandSourceId: {commandSourceId}");
+
                 }
 
-
-                
             }
 
-
-            SingletonUtilities.GetInstance(EntityManager)
-                .AddOrSetComponentData(commandSourceMap);
-
+            su.AddOrSetComponentData(commandSourceMap);
 
         }
 
-        protected override void OnUpdate()
-        {
-            this.Enabled = false;
-        }
-
-        private void LoadUnitProfileSOs(out UnitProfileSO[] unitProfiles) => unitProfiles = Resources.LoadAll<UnitProfileSO>("UnitProfiles");
     }
+
 }

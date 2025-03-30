@@ -1,5 +1,4 @@
-﻿using Components.Unit;
-using Core.Unit;
+﻿using Core.Unit;
 using Unity.Entities;
 using UnityEngine;
 
@@ -10,19 +9,22 @@ namespace Authoring.Unit
         [SerializeField] private UnitType unitType;
         [SerializeField] private ushort localIndex;
 
-
         private class Baker : Baker<UnitIdAuthoring>
         {
             public override void Bake(UnitIdAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new UnitId
+                AddComponent(entity, new Components.Unit.UnitId
                 {
                     UnitType = authoring.unitType,
                     LocalIndex = authoring.localIndex,
                 });
+
             }
+
         }
+
     }
+
 }

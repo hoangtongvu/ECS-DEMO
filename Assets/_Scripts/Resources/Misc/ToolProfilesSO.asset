@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Profiles:
     _serializedList:
-    - Key: 1
+    - Key:
+        ToolType: 1
+        VariantIndex: 0
       Value:
         Name: NormalAxe
         ProfilePicture: {fileID: 21300000, guid: 223a61bc9202046408dd1a38e0051eeb,
@@ -33,7 +35,9 @@ MonoBehaviour:
           _serializedList:
           - Key: 0
             Value: 2
-    - Key: 2
+    - Key:
+        ToolType: 2
+        VariantIndex: 0
       Value:
         Name: NormalPickaxe
         ProfilePicture: {fileID: 21300000, guid: d0462d85729ce134887063bb9cfe9c33,

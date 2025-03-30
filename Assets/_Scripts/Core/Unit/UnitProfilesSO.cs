@@ -23,7 +23,7 @@ namespace Core.Unit
     }
 
     [CreateAssetMenu(fileName = "UnitProfilesSO", menuName = "SO/GameEntity/UnitProfilesSO")]
-    public class UnitProfilesSO : GameEntityProfilesSO<UnitType, UnitProfileElement>
+    public class UnitProfilesSO : GameEntityProfilesSO<UnitId, UnitProfileElement>
     {
         public static readonly string DefaultAssetPath = "Misc/UnitProfilesSO";
     }

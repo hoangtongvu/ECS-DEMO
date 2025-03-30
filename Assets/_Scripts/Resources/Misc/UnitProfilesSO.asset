@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Profiles:
     _serializedList:
-    - Key: 1
+    - Key:
+        UnitType: 1
+        VariantIndex: 0
       Value:
         Name: NormalVillager
         ProfilePicture: {fileID: 21300000, guid: 40110438554b1d341bcfe47fad6030e4,
@@ -41,7 +43,9 @@ MonoBehaviour:
             Value: 1
           - Key: 3
             Value: 2
-    - Key: 2
+    - Key:
+        UnitType: 2
+        VariantIndex: 0
       Value:
         Name: NormalKnight
         ProfilePicture: {fileID: 21300000, guid: 6f34760afcacfa946a441a9f5bda8873,
@@ -69,7 +73,9 @@ MonoBehaviour:
             Value: 1
           - Key: 3
             Value: 2
-    - Key: 3
+    - Key:
+        UnitType: 3
+        VariantIndex: 0
       Value:
         Name: NormalHarvester
         ProfilePicture: {fileID: 0}
