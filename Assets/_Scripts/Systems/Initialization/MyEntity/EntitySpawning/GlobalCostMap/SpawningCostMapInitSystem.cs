@@ -1,4 +1,5 @@
 using Components.MyEntity.EntitySpawning.GlobalCostMap;
+using Components.MyEntity.EntitySpawning.GlobalCostMap.Containers;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -28,6 +29,16 @@ namespace Systems.Initialization.MyEntity.EntitySpawning.GlobalCostMap
             su.AddOrSetComponentData(new EntitySpawningCostsContainer
             {
                 Value = new(60, Allocator.Persistent),
+            });
+            
+            su.AddOrSetComponentData(new EntitySpawningDurationsContainer
+            {
+                Value = new(20, Allocator.Persistent),
+            });
+
+            su.AddOrSetComponentData(new EntitySpawningSpritesContainer
+            {
+                Value = new(20, Allocator.Persistent),
             });
 
             state.Enabled = false;

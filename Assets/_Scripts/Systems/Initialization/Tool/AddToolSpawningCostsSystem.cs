@@ -1,13 +1,16 @@
 using Components;
 using Components.GameEntity;
 using Components.MyEntity.EntitySpawning.GlobalCostMap;
+using Components.MyEntity.EntitySpawning.GlobalCostMap.Containers;
 using Components.Tool;
 using Core.GameResource;
 using Unity.Entities;
+using Unity.Scenes;
 
 namespace Systems.Initialization.Tool
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateAfter(typeof(SceneSystemGroup))]
     public partial class AddToolSpawningCostsSystem : SystemBase
     {
         private EntityQuery query;
@@ -35,6 +38,8 @@ namespace Systems.Initialization.Tool
             var latestCostMapIndexRef = SystemAPI.GetSingletonRW<LatestCostMapIndex>();
             var entityToCostMapIndexMap = SystemAPI.GetSingleton<EntityToCostMapIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
+            var durationsContainer = SystemAPI.GetSingleton<EntitySpawningDurationsContainer>();
+            var spritesContainer = SystemAPI.GetSingleton<EntitySpawningSpritesContainer>();
 
             int tempIndex = 0;
 
@@ -47,7 +52,8 @@ namespace Systems.Initialization.Tool
 
                 if (!entityToCostMapIndexMap.Value.TryAdd(key, value)) continue;
 
-                latestCostMapIndexRef.ValueRW.Value++;
+                durationsContainer.Value.Add(profile.Value.SpawnDurationSeconds);
+                spritesContainer.Value.Add(profile.Value.ProfilePicture);
 
                 for (int i = 0; i < resourceCount; i++)
                 {
@@ -55,6 +61,7 @@ namespace Systems.Initialization.Tool
                     entitySpawningCostsContainer.Value.Add(tempCost);
                 }
 
+                latestCostMapIndexRef.ValueRW.Value++;
                 tempIndex++;
 
             }

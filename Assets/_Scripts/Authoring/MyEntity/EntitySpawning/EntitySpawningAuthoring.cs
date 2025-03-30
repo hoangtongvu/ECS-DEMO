@@ -16,6 +16,9 @@ namespace Authoring.MyEntity.EntitySpawning
             public override void Bake(EntitySpawningAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
+
+                AddComponent<NewlySpawnedTag>(entity);
+
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
                 if (authoring.SpawningProfiles == null)
@@ -26,7 +29,6 @@ namespace Authoring.MyEntity.EntitySpawning
                     buffer.Add(new()
                     {
                         PrefabToSpawn = GetEntity(profile.Prefab, TransformUsageFlags.Dynamic),
-                        UnitSprite = profile.ProfilePicture,
                         CanSpawnState = false,
                         CanIncSpawnCount = true,
                         SpawnCount = new()
@@ -34,12 +36,7 @@ namespace Authoring.MyEntity.EntitySpawning
                             Value = 0,
                             ValueChanged = false,
                         },
-                        SpawnDuration = new()
-                        {
-                            SpawnDurationSeconds = profile.SpawnDurationSeconds,
-                            DurationCounterSeconds = 0,
-                        },
-
+                        
                     });
 
                 }
