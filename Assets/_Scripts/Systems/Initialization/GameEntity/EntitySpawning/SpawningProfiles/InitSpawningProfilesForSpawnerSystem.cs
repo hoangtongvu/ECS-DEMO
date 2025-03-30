@@ -1,13 +1,13 @@
 using Components.GameEntity;
 using Components.MyEntity.EntitySpawning;
-using Components.MyEntity.EntitySpawning.GlobalCostMap;
-using Components.MyEntity.EntitySpawning.GlobalCostMap.Containers;
+using Components.MyEntity.EntitySpawning.SpawningProfiles;
+using Components.MyEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.Tool;
 using System.Collections.Generic;
 using Systems.Initialization.Misc.WorldMap;
 using Unity.Entities;
 
-namespace Systems.Initialization.GameEntity.EntitySpawning
+namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateAfter(typeof(AddSpawningProfilesSystemGroup))]

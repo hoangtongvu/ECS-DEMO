@@ -1,7 +1,7 @@
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Components.MyEntity.EntitySpawning.GlobalCostMap.Containers
+namespace Components.MyEntity.EntitySpawning.SpawningProfiles.Containers
 {
     public struct EntitySpawningDurationsContainer : IComponentData
     {

@@ -9,8 +9,8 @@ using Core.MyEvent.PubSub.Messages;
 using Utilities.Extensions;
 using Components.Unit.UnitSelection;
 using Components.Player;
-using Components.MyEntity.EntitySpawning.GlobalCostMap;
 using System.Collections.Generic;
+using Components.MyEntity.EntitySpawning.SpawningProfiles;
 
 namespace Systems.Simulation.MyEntity.EntitySpawning
 {

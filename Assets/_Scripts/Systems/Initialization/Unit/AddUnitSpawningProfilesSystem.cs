@@ -1,10 +1,10 @@
 using Components;
 using Components.GameEntity;
-using Components.MyEntity.EntitySpawning.GlobalCostMap;
-using Components.MyEntity.EntitySpawning.GlobalCostMap.Containers;
+using Components.MyEntity.EntitySpawning.SpawningProfiles;
+using Components.MyEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.Unit;
 using Core.GameResource;
-using Systems.Initialization.GameEntity.EntitySpawning;
+using Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles;
 using Unity.Entities;
 
 namespace Systems.Initialization.Unit

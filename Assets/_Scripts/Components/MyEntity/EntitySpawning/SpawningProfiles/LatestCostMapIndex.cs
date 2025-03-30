@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Components.MyEntity.EntitySpawning.GlobalCostMap
+namespace Components.MyEntity.EntitySpawning.SpawningProfiles
 {
     public struct LatestCostMapIndex : IComponentData
     {

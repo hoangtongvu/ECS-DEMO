@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Scenes;
 
-namespace Systems.Initialization.GameEntity.EntitySpawning
+namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateAfter(typeof(SceneSystemGroup))]

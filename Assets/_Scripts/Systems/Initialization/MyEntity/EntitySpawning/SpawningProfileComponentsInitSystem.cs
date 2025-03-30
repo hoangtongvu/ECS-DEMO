@@ -1,5 +1,5 @@
-using Components.MyEntity.EntitySpawning.GlobalCostMap;
-using Components.MyEntity.EntitySpawning.GlobalCostMap.Containers;
+using Components.MyEntity.EntitySpawning.SpawningProfiles;
+using Components.MyEntity.EntitySpawning.SpawningProfiles.Containers;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
