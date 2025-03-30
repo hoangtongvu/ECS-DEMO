@@ -43,6 +43,8 @@ namespace Systems.Initialization.MyEntity.EntitySpawning.GlobalCostMap
             state.RequireForUpdate(query);
             state.RequireForUpdate<EnumLength<ResourceType>>();
 
+            state.Enabled = false;
+
         }
 
         [BurstCompile]

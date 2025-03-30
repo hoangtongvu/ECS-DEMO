@@ -1,4 +1,5 @@
 ﻿using Components.Misc;
+using Components.Misc.Presenter;
 using Components.MyEntity.EntitySpawning;
 using Components.Tool;
 using Core.Tool;
@@ -45,9 +46,12 @@ namespace Authoring.Tool
                     Value = authoring.baseWorkSpeed,
                 });
 
+                AddComponent<NeedSpawnPresenterTag>(entity);
 
             }
+
         }
 
     }
+
 }
