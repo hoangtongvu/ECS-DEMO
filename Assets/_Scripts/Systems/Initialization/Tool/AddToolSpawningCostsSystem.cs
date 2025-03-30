@@ -10,7 +10,7 @@ using Unity.Entities;
 namespace Systems.Initialization.Tool
 {
     [UpdateInGroup(typeof(AddSpawningProfilesSystemGroup))]
-    public partial class AddToolSpawningCostsSystem : SystemBase
+    public partial class AddToolSpawningProfilesSystem : SystemBase
     {
         private EntityQuery query;
 
