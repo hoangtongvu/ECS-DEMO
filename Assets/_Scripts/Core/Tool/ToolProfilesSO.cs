@@ -11,6 +11,8 @@ namespace Core.Tool
         [Header("Tool ProfileElement")]
         public ToolType ToolType;
 
+        public float SpawnDurationSeconds;
+
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;
     }

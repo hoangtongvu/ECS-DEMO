@@ -28,6 +28,7 @@ MonoBehaviour:
         PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: e55f6ffc27f263543bffc3ac820995fa,
           type: 3}
         ToolType: 1
+        SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -45,6 +46,7 @@ MonoBehaviour:
         PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: eb43ad21f1fb5e24c87ef85ac8137741,
           type: 3}
         ToolType: 2
+        SpawnDurationSeconds: 4
         BaseSpawningCosts:
           _serializedList:
           - Key: 0

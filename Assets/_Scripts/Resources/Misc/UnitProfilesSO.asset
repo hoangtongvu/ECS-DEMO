@@ -28,6 +28,7 @@ MonoBehaviour:
         PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: 0c1e1657d2ad0794488880ebc03ed100,
           type: 3}
         UnitType: 1
+        SpawnDurationSeconds: 5
         BaseSpawningCosts:
           _serializedList:
           - Key: 2
@@ -53,6 +54,7 @@ MonoBehaviour:
         PrimaryEntityPrefab: {fileID: 3552774824711469151, guid: abf102b7e42e9874183ffb8ec9d78bfb,
           type: 3}
         UnitType: 2
+        SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -78,6 +80,7 @@ MonoBehaviour:
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 0}
         UnitType: 3
+        SpawnDurationSeconds: 5
         BaseSpawningCosts:
           _serializedList:
           - Key: 2

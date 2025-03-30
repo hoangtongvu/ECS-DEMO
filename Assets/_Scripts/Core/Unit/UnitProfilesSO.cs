@@ -12,6 +12,8 @@ namespace Core.Unit
         [Header("Unit ProfileElement")]
         public UnitType UnitType;
 
+        public float SpawnDurationSeconds;
+
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;
 
