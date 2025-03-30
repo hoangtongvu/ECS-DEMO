@@ -131,7 +131,7 @@ namespace Systems.Simulation.Unit
             [BurstCompile]
             void Execute(
                 EnabledRefRW<NeedInitWalkTag> needInitWalkTag
-                , in UnitId unitId
+                , in UnitIdHolder unitIdHolder
                 , ref MoveCommandElement moveCommandElement
                 , ref InteractingEntity interactingEntity
                 , ref InteractionTypeICD interactionTypeICD
@@ -146,12 +146,12 @@ namespace Systems.Simulation.Unit
                 bool canOverrideCommand =
                     MoveCommandHelper.TryOverrideMoveCommand(
                         in moveCommandSourceMap
-                        , unitId.UnitType
+                        , unitIdHolder.Value.UnitType
                         , ref moveCommandElement
                         , ref interactingEntity
                         , ref interactionTypeICD
                         , MoveCommandSource.PlayerCommand
-                        , unitId.LocalIndex);
+                        , unitIdHolder.Value.VariantIndex);
 
                 if (!canOverrideCommand) return;
 

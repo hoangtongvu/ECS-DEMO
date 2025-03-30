@@ -13,7 +13,6 @@ using Components.Unit.Reaction;
 using Components.Unit.UnitSelection;
 using Core.Misc.Presenter;
 using Core.MyEntity;
-using Core.Unit;
 using Core.Unit.MyMoveCommand;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -24,9 +23,7 @@ namespace Authoring.Unit
 {
     public class JoblessUnitAuthoring : MonoBehaviour
     {
-        [SerializeField] private UnitType unitType; //Can put this into Unit profile SO;
         [SerializeField] private PresenterPrefabId presenterPrefabId; //Can put this into Unit profile SO;
-        [SerializeField] private ushort localIndex; //Can put this into Unit profile SO;
         [SerializeField] private int maxHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private int currentHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private float speed = 5f; //Can put this into Unit profile SO;
@@ -57,12 +54,6 @@ namespace Authoring.Unit
                 AddComponent<PresenterHolder>(entity);
                 AddComponent<AnimatorHolder>(entity);
                 AddComponent<TransformAccessArrayIndex>(entity);
-
-                AddComponent(entity, new Components.Unit.UnitId
-                {
-                    UnitType = authoring.unitType,
-                    LocalIndex = authoring.localIndex,
-                });
 
                 AddComponent<SelectableUnitTag>(entity);
                 AddComponent<UnitSelectedTag>(entity);

@@ -39,7 +39,7 @@ namespace Systems.Simulation.Tool
                     , TargetEntity
                     , TargetPosition
                     , MoveCommandElement
-                    , UnitId>()
+                    , UnitIdHolder>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -71,7 +71,7 @@ namespace Systems.Simulation.Tool
                     , targetEntityRef
                     , targetPosRef
                     , moveCommandElementRef
-                    , unitIdRef
+                    , unitIdHolderRef
                     , interactingEntityRef
                     , interactionTypeICDRef
                     , unitEntity) in
@@ -80,7 +80,7 @@ namespace Systems.Simulation.Tool
                         , RefRW<TargetEntity>
                         , RefRW<TargetPosition>
                         , RefRW<MoveCommandElement>
-                        , RefRO<UnitId>
+                        , RefRO<UnitIdHolder>
                         , RefRW<InteractingEntity>
                         , RefRW<InteractionTypeICD>>()
                         .WithAll<JoblessUnitTag>()
@@ -95,12 +95,12 @@ namespace Systems.Simulation.Tool
                     bool canOverrideMoveCommand =
                         MoveCommandHelper.TryOverrideMoveCommand(
                             commandSourceMap.Value
-                            , unitIdRef.ValueRO.UnitType
+                            , unitIdHolderRef.ValueRO.Value.UnitType
                             , ref moveCommandElementRef.ValueRW
                             , ref interactingEntityRef.ValueRW
                             , ref interactionTypeICDRef.ValueRW
                             , MoveCommandSource.ToolCall
-                            , unitIdRef.ValueRO.LocalIndex);
+                            , unitIdHolderRef.ValueRO.Value.VariantIndex);
 
                     if (!canOverrideMoveCommand) continue;
 
