@@ -5,16 +5,13 @@ using Components.MyEntity.EntitySpawning.GlobalCostMap.Containers;
 using Components.Tool;
 using System.Collections.Generic;
 using Systems.Initialization.Misc.WorldMap;
-using Systems.Initialization.Tool;
-using Systems.Initialization.Unit;
 using Unity.Entities;
 
 namespace Systems.Initialization.GameEntity.EntitySpawning
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(MapChangedSystemGroup))]
-    [UpdateAfter(typeof(AddToolSpawningCostsSystem))]
-    [UpdateAfter(typeof(AddUnitSpawningCostsSystem))]
+    [UpdateAfter(typeof(AddSpawningProfilesSystemGroup))]
+    [UpdateAfter(typeof(MapChangedSystemGroup))] // Make sure update after entity spawned to prevent missing NewlySpawnedTag.
     public partial struct InitSpawningProfilesForSpawnersSystem : ISystem
     {
         private EntityQuery query;

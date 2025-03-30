@@ -4,13 +4,12 @@ using Components.MyEntity.EntitySpawning.GlobalCostMap;
 using Components.MyEntity.EntitySpawning.GlobalCostMap.Containers;
 using Components.Tool;
 using Core.GameResource;
+using Systems.Initialization.GameEntity.EntitySpawning;
 using Unity.Entities;
-using Unity.Scenes;
 
 namespace Systems.Initialization.Tool
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(SceneSystemGroup))]
+    [UpdateInGroup(typeof(AddSpawningProfilesSystemGroup))]
     public partial class AddToolSpawningCostsSystem : SystemBase
     {
         private EntityQuery query;
