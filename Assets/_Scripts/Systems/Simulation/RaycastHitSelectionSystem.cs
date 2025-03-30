@@ -8,7 +8,7 @@ using Components.Unit;
 using Core;
 using Components.Camera;
 using Components.Harvest;
-using Components.MyEntity;
+using Components.GameEntity;
 
 namespace Systems.Simulation
 {

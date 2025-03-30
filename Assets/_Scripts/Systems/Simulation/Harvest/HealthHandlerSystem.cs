@@ -3,8 +3,8 @@ using Unity.Burst;
 using Components.Harvest;
 using Unity.Collections;
 using Utilities;
-using Components.MyEntity.EntitySpawning;
 using Core.Harvest;
+using Components.GameEntity.EntitySpawning;
 
 namespace Systems.Simulation.Harvest
 {

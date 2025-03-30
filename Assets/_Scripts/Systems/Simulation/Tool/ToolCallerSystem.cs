@@ -10,7 +10,7 @@ using Utilities.Helpers;
 using Utilities;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
-using Components.MyEntity;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Tool
 {

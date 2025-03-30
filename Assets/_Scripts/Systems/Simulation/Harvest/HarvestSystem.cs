@@ -3,13 +3,13 @@ using Unity.Burst;
 using Components.Harvest;
 using Core.Harvest;
 using Components;
-using Components.MyEntity;
-using Core.MyEntity;
 using Components.Misc;
 using Components.Tool;
 using Components.Unit;
 using Core.Tool;
 using Unity.Mathematics;
+using Core.GameEntity;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Harvest
 {

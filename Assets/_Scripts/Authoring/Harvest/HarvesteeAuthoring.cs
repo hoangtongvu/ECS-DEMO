@@ -1,6 +1,6 @@
-﻿using Components.Harvest;
-using Components.MyEntity;
-using Components.MyEntity.EntitySpawning;
+﻿using Components.GameEntity;
+using Components.GameEntity.EntitySpawning;
+using Components.Harvest;
 using Core.Harvest;
 using Unity.Entities;
 using UnityEngine;

@@ -1,7 +1,7 @@
 using Components.Player;
 using Unity.Burst;
 using Unity.Entities;
-using Components.MyEntity.EntitySpawning;
+using Components.GameEntity.EntitySpawning;
 
 namespace Systems.Simulation.Player
 {

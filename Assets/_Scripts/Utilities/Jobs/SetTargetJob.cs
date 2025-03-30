@@ -1,4 +1,3 @@
-using Components.MyEntity;
 using Components;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
@@ -10,6 +9,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Utilities.Helpers;
 using Components.Misc.WorldMap.PathFinding;
+using Components.GameEntity;
 
 namespace Utilities.Jobs
 {

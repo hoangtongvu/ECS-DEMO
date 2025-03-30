@@ -9,12 +9,12 @@ using Core.Unit.MyMoveCommand;
 using Unity.Mathematics;
 using Utilities.Helpers;
 using Unity.Collections;
-using Components.MyEntity;
 using Unity.Transforms;
 using Utilities;
 using Components.Unit.Reaction;
 using Core.Unit.Reaction;
 using Components.Misc.WorldMap.PathFinding;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Unit
 {

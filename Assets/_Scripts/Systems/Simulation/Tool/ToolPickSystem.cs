@@ -2,7 +2,6 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.Tool;
 using Components.Unit;
-using Components.MyEntity.EntitySpawning;
 using Core.Tool;
 using Core.Unit;
 using Components.Harvest;
@@ -11,6 +10,7 @@ using Unity.Physics;
 using Unity.Mathematics;
 using Core.Utilities.Extensions;
 using Components.Misc;
+using Components.GameEntity.EntitySpawning;
 
 namespace Systems.Simulation.Tool
 {

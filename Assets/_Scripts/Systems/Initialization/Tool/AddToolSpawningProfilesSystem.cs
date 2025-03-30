@@ -1,7 +1,7 @@
 using Components;
 using Components.GameEntity;
-using Components.MyEntity.EntitySpawning.SpawningProfiles;
-using Components.MyEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameEntity.EntitySpawning.SpawningProfiles;
+using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.Tool;
 using Core.GameResource;
 using Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles;

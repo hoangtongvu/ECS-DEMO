@@ -1,6 +1,6 @@
-using Components.MyEntity;
+using Components.GameEntity;
 using Components.Unit.MyMoveCommand;
-using Core.MyEntity;
+using Core.GameEntity;
 using Core.Unit;
 using Core.Unit.MyMoveCommand;
 using Unity.Burst;

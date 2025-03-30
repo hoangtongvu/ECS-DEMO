@@ -3,9 +3,9 @@ using Unity.Burst;
 using Components.Unit;
 using Components;
 using Utilities.Extensions;
-using Components.MyEntity;
 using Components.Damage;
 using Components.Unit.Reaction;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Unit.Reaction
 {

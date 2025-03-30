@@ -1,8 +1,8 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components.MyEntity;
-using Systems.Simulation.MyEntity;
+using Systems.Simulation.GameEntity;
 using Components.Tool;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Tool
 {

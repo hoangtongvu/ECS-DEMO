@@ -1,4 +1,4 @@
-using Components.MyEntity.EntitySpawning;
+using Components.GameEntity.EntitySpawning;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Scenes;

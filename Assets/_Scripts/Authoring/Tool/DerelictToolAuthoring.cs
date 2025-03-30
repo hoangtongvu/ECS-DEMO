@@ -1,6 +1,6 @@
-﻿using Components.Misc;
+﻿using Components.GameEntity.EntitySpawning;
+using Components.Misc;
 using Components.Misc.Presenter;
-using Components.MyEntity.EntitySpawning;
 using Components.Tool;
 using Core.Tool;
 using Unity.Entities;

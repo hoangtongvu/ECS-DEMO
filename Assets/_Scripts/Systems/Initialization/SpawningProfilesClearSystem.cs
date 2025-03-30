@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Scenes;
-using Components.MyEntity.EntitySpawning;
 using Unity.Burst;
+using Components.GameEntity.EntitySpawning;
 
 namespace Systems.Initialization
 {

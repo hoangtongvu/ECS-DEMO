@@ -1,4 +1,4 @@
-﻿using Components.MyEntity.EntitySpawning;
+﻿using Components.GameEntity.EntitySpawning;
 using Components.Tool;
 using Core.Tool;
 using Unity.Entities;
