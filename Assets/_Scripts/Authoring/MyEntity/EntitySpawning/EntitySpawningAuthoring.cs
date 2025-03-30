@@ -1,5 +1,4 @@
 ﻿using Components.MyEntity.EntitySpawning;
-using Core.GameResource;
 using Core.MyEntity;
 using System;
 using Unity.Entities;
@@ -17,7 +16,6 @@ namespace Authoring.MyEntity.EntitySpawning
             public override void Bake(EntitySpawningAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
-
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
                 if (authoring.SpawningProfiles == null)
@@ -30,15 +28,12 @@ namespace Authoring.MyEntity.EntitySpawning
                         PrefabToSpawn = GetEntity(profile.Prefab, TransformUsageFlags.Dynamic),
                         UnitSprite = profile.ProfilePicture,
                         CanSpawnState = false,
-
                         CanIncSpawnCount = true,
-
                         SpawnCount = new()
                         {
                             Value = 0,
                             ValueChanged = false,
                         },
-
                         SpawnDuration = new()
                         {
                             SpawnDurationSeconds = profile.SpawnDurationSeconds,
@@ -46,24 +41,7 @@ namespace Authoring.MyEntity.EntitySpawning
                         },
 
                     });
-                }
-                
 
-                var localCostBuffer = AddBuffer<LocalCostMapElement>(entity);
-
-                int enumLength = Enum.GetNames(typeof(ResourceType)).Length;
-                foreach (var profile in authoring.SpawningProfiles.GetProfiles())
-                {
-                    for (int i = 0; i < enumLength; i++)
-                    {
-                        profile.BaseCosts.TryGetValue((ResourceType)i, out var tempCost);
-
-                        localCostBuffer.Add(new()
-                        {
-                            Cost = tempCost,
-                        });
-
-                    }
                 }
 
             }
