@@ -31,7 +31,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
 
         public void OnUpdate(ref SystemState state)
         {
-            var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToCostMapIndexMap>();
+            var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var durationsContainer = SystemAPI.GetSingleton<EntitySpawningDurationsContainer>();
             var spritesContainer = SystemAPI.GetSingleton<EntitySpawningSpritesContainer>();
 
@@ -48,7 +48,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
                     var key = spawningProfileElement.PrefabToSpawn;
 
                     if (!entityToContainerIndexMap.Value.TryGetValue(key, out int containerIndex))
-                        throw new KeyNotFoundException($"{nameof(EntityToCostMapIndexMap)} does not contain key: {key}");
+                        throw new KeyNotFoundException($"{nameof(EntityToContainerIndexMap)} does not contain key: {key}");
 
                     spawningProfileElement.UnitSprite = spritesContainer.Value[containerIndex];
                     spawningProfileElement.SpawnDuration = new()

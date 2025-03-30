@@ -42,7 +42,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             
             var entityQuery3 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    EntityToCostMapIndexMap
+                    EntityToContainerIndexMap
                     , EntitySpawningCostsContainer>()
                     .Build();
 
@@ -59,7 +59,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
             var messageQueue = SystemAPI.GetSingleton<MessageQueue<SpawnUnitMessage>>();
             var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>();
 
-            var entityToCostMapIndexMap = SystemAPI.GetSingleton<EntityToCostMapIndexMap>();
+            var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
 
             DynamicBuffer<ResourceWalletElement> resourceWallet = default;
@@ -84,7 +84,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
                 if (!this.HaveEnoughResources(
                     resourceWallet
-                    , in entityToCostMapIndexMap
+                    , in entityToContainerIndexMap
                     , in entitySpawningCostsContainer
                     , in profile.PrefabToSpawn
                     , resourceCount.Value
@@ -104,7 +104,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
         [BurstCompile]
         private bool HaveEnoughResources(
             DynamicBuffer<ResourceWalletElement> resourceWallet
-            , in EntityToCostMapIndexMap entityToCostMapIndexMap
+            , in EntityToContainerIndexMap entityToContainerIndexMap
             , in EntitySpawningCostsContainer entitySpawningCostsContainer
             , in Entity prefabEntity
             , int resourceCount
@@ -119,7 +119,7 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
                 ResourceType resourceType = (ResourceType)i;
 
                 uint cost = this.GetCost(
-                    in entityToCostMapIndexMap
+                    in entityToContainerIndexMap
                     , in entitySpawningCostsContainer
                     , in prefabEntity
                     , resourceCount
@@ -142,14 +142,14 @@ namespace Systems.Simulation.MyEntity.EntitySpawning
 
         [BurstCompile]
         private uint GetCost(
-            in EntityToCostMapIndexMap entityToCostMapIndexMap
+            in EntityToContainerIndexMap entityToContainerIndexMap
             , in EntitySpawningCostsContainer entitySpawningCostsContainer
             , in Entity prefabEntity
             , int resourceCount
             , ResourceType resourceType)
         {
-            if (!entityToCostMapIndexMap.Value.TryGetValue(prefabEntity, out int costMapIndex))
-                throw new KeyNotFoundException($"{nameof(entityToCostMapIndexMap)} does not contain key: {prefabEntity}");
+            if (!entityToContainerIndexMap.Value.TryGetValue(prefabEntity, out int costMapIndex))
+                throw new KeyNotFoundException($"{nameof(entityToContainerIndexMap)} does not contain key: {prefabEntity}");
 
             int costIndexInContainer = costMapIndex * resourceCount + (int)resourceType;
             return entitySpawningCostsContainer.Value[costIndexInContainer];

@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace Components.MyEntity.EntitySpawning.SpawningProfiles
 {
-    public struct EntityToCostMapIndexMap : IComponentData
+    public struct EntityToContainerIndexMap : IComponentData
     {
         public NativeHashMap<Entity, int> Value;
     }

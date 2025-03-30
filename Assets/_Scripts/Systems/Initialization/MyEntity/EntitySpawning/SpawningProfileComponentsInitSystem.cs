@@ -21,7 +21,7 @@ namespace Systems.Initialization.MyEntity.EntitySpawning
                 Value = -1,
             });
 
-            su.AddOrSetComponentData(new EntityToCostMapIndexMap
+            su.AddOrSetComponentData(new EntityToContainerIndexMap
             {
                 Value = new(20, Allocator.Persistent),
             });

@@ -35,7 +35,7 @@ namespace Systems.Initialization.Tool
 
             int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
             var latestCostMapIndexRef = SystemAPI.GetSingletonRW<LatestCostMapIndex>();
-            var entityToCostMapIndexMap = SystemAPI.GetSingleton<EntityToCostMapIndexMap>();
+            var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
             var durationsContainer = SystemAPI.GetSingleton<EntitySpawningDurationsContainer>();
             var spritesContainer = SystemAPI.GetSingleton<EntitySpawningSpritesContainer>();
@@ -49,7 +49,7 @@ namespace Systems.Initialization.Tool
                 var key = afterBakedPrefabsBuffer[tempIndex].PrimaryEntity;
                 var value = nextMapIndex;
 
-                if (!entityToCostMapIndexMap.Value.TryAdd(key, value)) continue;
+                if (!entityToContainerIndexMap.Value.TryAdd(key, value)) continue;
 
                 durationsContainer.Value.Add(profile.Value.SpawnDurationSeconds);
                 spritesContainer.Value.Add(profile.Value.ProfilePicture);
