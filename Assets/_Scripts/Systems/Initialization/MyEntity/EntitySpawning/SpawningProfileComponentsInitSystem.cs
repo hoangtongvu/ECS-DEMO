@@ -5,11 +5,11 @@ using Unity.Collections;
 using Unity.Entities;
 using Utilities;
 
-namespace Systems.Initialization.MyEntity.EntitySpawning.GlobalCostMap
+namespace Systems.Initialization.MyEntity.EntitySpawning
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]
-    public partial struct SpawningCostMapInitSystem : ISystem
+    public partial struct SpawningProfileComponentsInitSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -30,7 +30,7 @@ namespace Systems.Initialization.MyEntity.EntitySpawning.GlobalCostMap
             {
                 Value = new(60, Allocator.Persistent),
             });
-            
+
             su.AddOrSetComponentData(new EntitySpawningDurationsContainer
             {
                 Value = new(20, Allocator.Persistent),
