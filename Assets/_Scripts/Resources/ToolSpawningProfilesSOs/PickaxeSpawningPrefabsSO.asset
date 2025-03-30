@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa856e3a8f2693e48a7b5bff070d6987, type: 3}
-  m_Name: PickaxeSpawningProfiles
+  m_Script: {fileID: 11500000, guid: 6724975de2399cd418c84e90215821dd, type: 3}
+  m_Name: PickaxeSpawningPrefabsSO
   m_EditorClassIdentifier: 
-  Profiles:
-  - {fileID: 11400000, guid: 0b1746116250d484f8ec2c54c7b5957b, type: 2}
+  Prefabs:
+  - Value: {fileID: 8250307934144521707, guid: eb43ad21f1fb5e24c87ef85ac8137741, type: 3}

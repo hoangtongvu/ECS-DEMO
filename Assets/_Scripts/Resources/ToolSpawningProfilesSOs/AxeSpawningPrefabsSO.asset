@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cec90128a430644999491905d7fa436, type: 3}
-  m_Name: HouseSpawningProfiles
+  m_Script: {fileID: 11500000, guid: 6724975de2399cd418c84e90215821dd, type: 3}
+  m_Name: AxeSpawningPrefabsSO
   m_EditorClassIdentifier: 
-  Profiles:
-  - {fileID: 11400000, guid: f03eefc5b1aab8b4eb21842a209fe7fd, type: 2}
-  - {fileID: 11400000, guid: 836947920bd15f94db9246a8c6afb547, type: 2}
+  Prefabs:
+  - Value: {fileID: 8250307934144521707, guid: e55f6ffc27f263543bffc3ac820995fa, type: 3}

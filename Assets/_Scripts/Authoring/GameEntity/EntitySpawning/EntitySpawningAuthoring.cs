@@ -1,15 +1,15 @@
 ﻿using Components.MyEntity.EntitySpawning;
-using Core.MyEntity;
+using Core.GameEntity;
 using System;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring.MyEntity.EntitySpawning
+namespace Authoring.GameEntity.EntitySpawning
 {
     public class EntitySpawningAuthoring : MonoBehaviour
     {
         public float SpawnRadius = 3f;
-        public EntitySpawningProfilesSO SpawningProfiles;
+        public EntitySpawningPrefabsSO SpawningPrefabs;
 
         private class Baker : Baker<EntitySpawningAuthoring>
         {
@@ -21,14 +21,14 @@ namespace Authoring.MyEntity.EntitySpawning
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
-                if (authoring.SpawningProfiles == null)
-                    throw new NullReferenceException($"{nameof(authoring.SpawningProfiles)} is null");
+                if (authoring.SpawningPrefabs == null)
+                    throw new NullReferenceException($"{nameof(authoring.SpawningPrefabs)} is null");
 
-                foreach (var profile in authoring.SpawningProfiles.GetProfiles())
+                foreach (var prefab in authoring.SpawningPrefabs.Prefabs)
                 {
                     buffer.Add(new()
                     {
-                        PrefabToSpawn = GetEntity(profile.Prefab, TransformUsageFlags.Dynamic),
+                        PrefabToSpawn = GetEntity(prefab.Value, TransformUsageFlags.Dynamic),
                         CanSpawnState = false,
                         CanIncSpawnCount = true,
                         SpawnCount = new()
@@ -36,13 +36,13 @@ namespace Authoring.MyEntity.EntitySpawning
                             Value = 0,
                             ValueChanged = false,
                         },
-                        
+
                     });
 
                 }
 
             }
-            
+
         }
 
         private void OnDrawGizmos()
