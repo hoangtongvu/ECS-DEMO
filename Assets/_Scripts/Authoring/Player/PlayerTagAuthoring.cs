@@ -1,8 +1,9 @@
 ﻿using Components.Misc;
 using Components.Misc.Presenter;
+using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Player;
 using Components.Unit.NearUnitDropItems;
-using Core.Misc.Presenter;
+using Core.Misc.Presenter.PresenterPrefabGO;
 using Unity.Entities;
 using UnityEngine;
 
@@ -22,18 +23,10 @@ namespace Authoring.Player
                 AddBuffer<NearbyUnitDropItemTimerElement>(entity);
 
                 AddComponent<NeedSpawnPresenterTag>(entity);
-
-                AddComponent(entity, new PresenterPrefabIdHolder
+                AddComponent(entity, new PresenterPrefabGOKeyHolder
                 {
-                    Value = new()
-                    {
-                        PresenterType = PresenterType.Player,
-                        LocalIndex = 0,
-                    }
+                    Value = PresenterPrefabGOKey.Null,
                 });
-                AddComponent<PresenterHolder>(entity);
-                AddComponent<AnimatorHolder>(entity);
-                AddComponent<TransformAccessArrayIndex>(entity);
 
             }
 

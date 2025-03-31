@@ -5,6 +5,7 @@ using Components.GameEntity.EntitySpawning;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;
+using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool;
 using Components.Unit;
@@ -12,7 +13,7 @@ using Components.Unit.MyMoveCommand;
 using Components.Unit.Reaction;
 using Components.Unit.UnitSelection;
 using Core.GameEntity;
-using Core.Misc.Presenter;
+using Core.Misc.Presenter.PresenterPrefabGO;
 using Core.Unit.MyMoveCommand;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -23,7 +24,6 @@ namespace Authoring.Unit
 {
     public class JoblessUnitAuthoring : MonoBehaviour
     {
-        [SerializeField] private PresenterPrefabId presenterPrefabId; //Can put this into Unit profile SO;
         [SerializeField] private int maxHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private int currentHp = 100; //Can put this into Unit profile SO;
         [SerializeField] private float speed = 5f; //Can put this into Unit profile SO;
@@ -47,13 +47,10 @@ namespace Authoring.Unit
                 AddComponent<RunStartedTag>(entity);
                 SetComponentEnabled<RunStartedTag>(entity, false);
 
-                AddComponent(entity, new PresenterPrefabIdHolder
+                AddComponent(entity, new PresenterPrefabGOKeyHolder
                 {
-                    Value = authoring.presenterPrefabId,
+                    Value = PresenterPrefabGOKey.Null,
                 });
-                AddComponent<PresenterHolder>(entity);
-                AddComponent<AnimatorHolder>(entity);
-                AddComponent<TransformAccessArrayIndex>(entity);
 
                 AddComponent<SelectableUnitTag>(entity);
                 AddComponent<UnitSelectedTag>(entity);

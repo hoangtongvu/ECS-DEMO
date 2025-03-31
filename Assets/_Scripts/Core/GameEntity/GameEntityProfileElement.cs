@@ -10,7 +10,6 @@ namespace Core.GameEntity
         public string Name;
         public Sprite ProfilePicture;
 
-        public PresenterPrefabId PresenterPrefabId;
         public GameObject PresenterPrefab;
         public bool IsPresenterEntity;
 

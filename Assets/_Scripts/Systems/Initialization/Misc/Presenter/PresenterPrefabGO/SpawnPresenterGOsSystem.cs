@@ -1,4 +1,5 @@
 using Components.Misc.Presenter;
+using Components.Misc.Presenter.PresenterPrefabGO;
 using Core.Animator;
 using Core.Misc.Presenter;
 using Unity.Entities;
@@ -7,10 +8,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utilities;
 
-namespace Systems.Initialization.Misc.Presenter
+namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial class SpawnPresenterSystem : SystemBase
+    public partial class SpawnPresenterGOsSystem : SystemBase
     {
         protected override void OnCreate()
         {
@@ -23,50 +24,57 @@ namespace Systems.Initialization.Misc.Presenter
                 .WithAll<
                     NeedSpawnPresenterTag
                     , LocalTransform
-                    , PresenterPrefabIdHolder
-                    , PresenterHolder
-                    , TransformAccessArrayIndex>()
+                    , PresenterPrefabGOKeyHolder>()
                 .Build();
 
             this.RequireForUpdate(query0);
+            this.RequireForUpdate<PresenterPrefabGOMap>();
 
         }
 
         protected override void OnUpdate()
         {
-            var presenterPrefabMap = SystemAPI.GetSingleton<PresenterPrefabMap>();
+            var presenterPrefabGOMap = SystemAPI.GetSingleton<PresenterPrefabGOMap>();
             var presentersScene = SystemAPI.GetSingleton<PresentersHolderScene>();
             var presentersTransformAccessArrayGOHolder = SystemAPI.GetSingleton<PresentersTransformAccessArrayGOHolder>();
 
-            foreach (var (needSpawnPresenterTag, transformRef, presenterIdRef, presenterRef, transformAccessArrayIndexRef, entity) in
+            var ecb = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>()
+                .CreateCommandBuffer(this.World.Unmanaged);
+
+            foreach (var (needSpawnPresenterTag, transformRef, keyHolderRef, entity) in
                 SystemAPI.Query<
                     EnabledRefRW<NeedSpawnPresenterTag>
                     , RefRO<LocalTransform>
-                    , RefRO<PresenterPrefabIdHolder>
-                    , RefRW<PresenterHolder>
-                    , RefRW<TransformAccessArrayIndex>>()
+                    , RefRO<PresenterPrefabGOKeyHolder>>()
                     .WithEntityAccess())
             {
-                if (!presenterPrefabMap.Value.TryGetValue(presenterIdRef.ValueRO.Value, out var presenterPrefab))
+                if (!presenterPrefabGOMap.Value.TryGetValue(keyHolderRef.ValueRO.Value, out var basePresenterPrefab))
                 {
-                    Debug.LogError($"Can't find any presenter prefab with id {presenterIdRef.ValueRO.Value}");
+                    UnityEngine.Debug.LogWarning($"Can't find any presenter prefab with Key: {keyHolderRef.ValueRO.Value}");
+                    needSpawnPresenterTag.ValueRW = false;
                     continue;
                 }
 
                 var newPresenter = GameObject.Instantiate(
-                    presenterPrefab.Value
+                    basePresenterPrefab.Value
                     , transformRef.ValueRO.Position
                     , transformRef.ValueRO.Rotation);
 
-                presenterRef.ValueRW.Value = newPresenter;
-
-                SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
-
-                this.TryInitAnimatorHolder(in entity, in newPresenter);
+                ecb.AddComponent(entity, new PresenterHolder
+                {
+                    Value = newPresenter,
+                });
 
                 presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray.Add(newPresenter.transform);
-                transformAccessArrayIndexRef.ValueRW.Value = presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray.length - 1; 
 
+                ecb.AddComponent(entity, new TransformAccessArrayIndex
+                {
+                    Value = presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray.length - 1,
+                });
+
+                this.TryInitAnimatorHolder(ecb, in entity, in newPresenter);
+
+                SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
                 needSpawnPresenterTag.ValueRW = false;
 
             }
@@ -87,24 +95,25 @@ namespace Systems.Initialization.Misc.Presenter
         private void CreatePresentersTransformAccessArrayGOHolder(SingletonUtilities su, in Scene presentersHolderScene)
         {
             var newGO = new GameObject("*PresentersTransformAccessArrayGO");
-            
+
             su.AddOrSetComponentData(new PresentersTransformAccessArrayGOHolder
             {
                 Value = newGO.AddComponent<PresentersTransformAccessArrayGO>(),
             });
 
             SceneManager.MoveGameObjectToScene(newGO, presentersHolderScene);
-        
+
         }
 
-        private void TryInitAnimatorHolder(in Entity entity, in BasePresenter newPresenter)
+        private void TryInitAnimatorHolder(EntityCommandBuffer ecb, in Entity entity, in BasePresenter newPresenter)
         {
-            if (!SystemAPI.HasComponent<AnimatorHolder>(entity)) return;
-
             if (!newPresenter.TryGetBaseAnimator(out var animator))
                 throw new System.NullReferenceException($"Presenter with name {newPresenter.gameObject.name} is expected to have {nameof(BaseAnimator)}, but it's is missing.");
 
-            SystemAPI.GetComponentRW<AnimatorHolder>(entity).ValueRW.Value = animator;
+            ecb.AddComponent(entity, new AnimatorHolder
+            {
+                Value = animator,
+            });
 
         }
 
