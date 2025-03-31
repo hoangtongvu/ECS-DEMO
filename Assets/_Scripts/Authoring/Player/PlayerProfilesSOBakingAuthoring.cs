@@ -1,22 +1,22 @@
 ﻿using Components.GameEntity;
-using Components.Tool;
-using Core.Tool;
+using Components.Player;
+using Core.Player;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring.Tool
+namespace Authoring.Player
 {
-    public class ToolProfilesSOBakingAuthoring : MonoBehaviour
+    public class PlayerProfilesSOBakingAuthoring : MonoBehaviour
     {
-        [SerializeField] private ToolProfilesSO profilesSO;
+        [SerializeField] private PlayerProfilesSO profilesSO;
 
-        private class Baker : Baker<ToolProfilesSOBakingAuthoring>
+        private class Baker : Baker<PlayerProfilesSOBakingAuthoring>
         {
-            public override void Bake(ToolProfilesSOBakingAuthoring authoring)
+            public override void Bake(PlayerProfilesSOBakingAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.None);
 
-                AddComponent(entity, new ToolProfilesSOHolder
+                AddComponent(entity, new PlayerProfilesSOHolder
                 {
                     Value = authoring.profilesSO,
                 });

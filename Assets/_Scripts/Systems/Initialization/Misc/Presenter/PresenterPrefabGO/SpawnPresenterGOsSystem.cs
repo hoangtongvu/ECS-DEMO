@@ -38,7 +38,10 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
             var presentersScene = SystemAPI.GetSingleton<PresentersHolderScene>();
             var presentersTransformAccessArrayGOHolder = SystemAPI.GetSingleton<PresentersTransformAccessArrayGOHolder>();
 
-            var ecb = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>()
+            // NOTE: Be careful when using EcbSystem.ecb in this System,
+            // TransformAccessArrayIndex is assigned long after TransformAccessArray adding new element.
+            // Make sure any system that use TransformAccessArray will get final version of TransformAccessArrayIndexes.
+            var ecb = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(this.World.Unmanaged);
 
             foreach (var (needSpawnPresenterTag, transformRef, keyHolderRef, entity) in

@@ -27,6 +27,8 @@ namespace Authoring.Unit
                 {
                     var entityPrefabsElement = new AfterBakedPrefabsElement();
 
+                    entityPrefabsElement.OriginalPresenterGO = profile.Value.PresenterPrefab;
+
                     if (profile.Value.IsPresenterEntity)
                     {
                         entityPrefabsElement.PresenterEntity = GetEntity(profile.Value.PresenterPrefab, TransformUsageFlags.None);
