@@ -8,7 +8,7 @@ namespace Systems.Baking.Unit
 {
     [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
     [UpdateAfter(typeof(InstantiateEntityOnBakeSystem))]
-    public partial class UnitIdHoldersBakingSystem : SystemBase
+    public partial class UnitProfileIdHoldersBakingSystem : SystemBase
     {
         private EntityQuery query;
 
@@ -38,7 +38,7 @@ namespace Systems.Baking.Unit
                 var targetEntity = afterBakedPrefabsArray[tempIndex].PrimaryEntity;
                 if (targetEntity == Entity.Null) continue;
 
-                this.EntityManager.AddComponentData(targetEntity, new UnitIdHolder
+                this.EntityManager.AddComponentData(targetEntity, new UnitProfileIdHolder
                 {
                     Value = profile.Key,
                 });

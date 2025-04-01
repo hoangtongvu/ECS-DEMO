@@ -26,7 +26,7 @@ namespace Utilities.Jobs
 
         [BurstCompile]
         void Execute(
-            in UnitIdHolder unitIdHolder
+            in UnitProfileIdHolder unitProfileIdHolder
             , EnabledRefRO<UnitSelectedTag> unitSelectedTag
             , EnabledRefRW<CanFindPathTag> canFindPathTag
             , ref MoveSpeedLinear moveSpeedLinear
@@ -42,12 +42,12 @@ namespace Utilities.Jobs
             bool canOverrideCommand =
                 MoveCommandHelper.TryOverrideMoveCommand(
                     in this.MoveCommandSourceMap
-                    , unitIdHolder.Value.UnitType
+                    , unitProfileIdHolder.Value.UnitType
                     , ref moveCommandElement
                     , ref interactingEntity
                     , ref interactionTypeICD
                     , this.NewMoveCommandSource
-                    , unitIdHolder.Value.VariantIndex);
+                    , unitProfileIdHolder.Value.VariantIndex);
 
             if (!canOverrideCommand) return;
 

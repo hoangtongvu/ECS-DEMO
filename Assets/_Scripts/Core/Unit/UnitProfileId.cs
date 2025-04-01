@@ -1,34 +1,34 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Core.Tool
+namespace Core.Unit
 {
     [Serializable]
     [StructLayout(LayoutKind.Explicit)]
-    public struct ToolId : IEquatable<ToolId>
+    public struct UnitProfileId : IEquatable<UnitProfileId>
     {
         [FieldOffset(0)] private readonly short _raw; // 2 bytes
-        [FieldOffset(0)] public ToolType ToolType;
+        [FieldOffset(0)] public UnitType UnitType;
         [FieldOffset(4)] public byte VariantIndex;
 
-        public bool Equals(ToolId other)
+        public bool Equals(UnitProfileId other)
             => this._raw == other._raw;
 
         public override bool Equals(object obj)
-            => obj is ToolId other && this._raw == other._raw;
+            => obj is UnitProfileId other && this._raw == other._raw;
 
         public override int GetHashCode()
             => this._raw.GetHashCode();
 
-        public static bool operator ==(ToolId left, ToolId right)
+        public static bool operator ==(UnitProfileId left, UnitProfileId right)
             => left._raw == right._raw;
 
-        public static bool operator !=(ToolId left, ToolId right)
+        public static bool operator !=(UnitProfileId left, UnitProfileId right)
             => left._raw != right._raw;
 
         public override string ToString()
         {
-            return $"{nameof(ToolType)}: {ToolType}, {nameof(VariantIndex)}: {VariantIndex}";
+            return $"{nameof(UnitType)}: {UnitType}, {nameof(VariantIndex)}: {VariantIndex}";
         }
 
     }

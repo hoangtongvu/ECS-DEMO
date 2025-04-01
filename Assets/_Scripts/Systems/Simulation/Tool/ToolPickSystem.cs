@@ -148,7 +148,7 @@ namespace Systems.Simulation.Tool
             var baseWorkSpeedRef = SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity);
             baseWorkSpeedRef.ValueRW.Value = baseWorkSpeed;
 
-            var unitIdHolderRef = SystemAPI.GetComponentRW<UnitIdHolder>(unitEntity);
+            var unitProfileIdHolderRef = SystemAPI.GetComponentRW<UnitProfileIdHolder>(unitEntity);
 
             var byteKey = (byte)toolType;
             if (tool2UnitMap.Value.TryGetValue(byteKey, out byte unitTypeByte))
@@ -172,7 +172,7 @@ namespace Systems.Simulation.Tool
                         break;
                 }
 
-                unitIdHolderRef.ValueRW.Value.UnitType = unitType;
+                unitProfileIdHolderRef.ValueRW.Value.UnitType = unitType;
                 return;
             }
 

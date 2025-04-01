@@ -26,7 +26,7 @@ namespace Systems.Simulation.Unit
 
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitIdHolder
+                    UnitProfileIdHolder
                     , UnitSelectedTag
                     , CanMoveEntityTag
                     , TargetPosition

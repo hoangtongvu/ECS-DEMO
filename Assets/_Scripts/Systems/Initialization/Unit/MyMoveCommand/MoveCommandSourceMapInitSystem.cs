@@ -55,7 +55,7 @@ namespace Systems.Initialization.Unit.MyMoveCommand
         }
 
         private void AddingPriorities(
-            in SerializedDictionary<UnitId, UnitProfileElement> profiles
+            in SerializedDictionary<UnitProfileId, UnitProfileElement> profiles
             , int commandSourceCount
             , in MoveCommandSourceMap commandSourceMap)
         {
@@ -82,7 +82,7 @@ namespace Systems.Initialization.Unit.MyMoveCommand
         }
 
         private void AddExistingPriorities(
-            in KeyValuePair<UnitId, UnitProfileElement> pair
+            in KeyValuePair<UnitProfileId, UnitProfileElement> pair
             , int commandSourceCount
             , ref byte maxPriority
             , in MoveCommandSourceMap commandSourceMap)
@@ -107,7 +107,7 @@ namespace Systems.Initialization.Unit.MyMoveCommand
         }
 
         private void AddRemaningPriorities(
-            in KeyValuePair<UnitId, UnitProfileElement> pair
+            in KeyValuePair<UnitProfileId, UnitProfileElement> pair
             , int commandSourceCount
             , ref byte maxPriority
             , in MoveCommandSourceMap commandSourceMap)
