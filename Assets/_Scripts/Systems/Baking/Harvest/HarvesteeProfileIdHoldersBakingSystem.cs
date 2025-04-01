@@ -1,11 +1,13 @@
 using Components.GameEntity;
 using Components.Harvest;
+using Systems.Baking.Misc;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace Systems.Baking.Harvest
 {
     [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
+    [UpdateAfter(typeof(InstantiateEntityOnBakeSystem))]
     public partial class HarvesteeProfileIdHoldersBakingSystem : SystemBase
     {
         private EntityQuery query;

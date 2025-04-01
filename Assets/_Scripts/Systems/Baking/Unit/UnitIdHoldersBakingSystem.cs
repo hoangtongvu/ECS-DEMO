@@ -1,11 +1,13 @@
 using Components.GameEntity;
 using Components.Unit;
+using Systems.Baking.Misc;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace Systems.Baking.Unit
 {
     [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
+    [UpdateAfter(typeof(InstantiateEntityOnBakeSystem))]
     public partial class UnitIdHoldersBakingSystem : SystemBase
     {
         private EntityQuery query;
