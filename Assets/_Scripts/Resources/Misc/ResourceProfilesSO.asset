@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29bdbbdc62e65534f9b5dc6818ec791e, type: 3}
+  m_Name: ResourceProfilesSO
+  m_EditorClassIdentifier: 
+  Profiles:
+    _serializedList:
+    - Key:
+        ResourceType: 0
+        VariantIndex: 0
+      Value:
+        Name: Coin
+        ProfilePicture: {fileID: 21300000, guid: fdaad7bbeb01738448ea574661388eed,
+          type: 3}
+        PresenterPrefab: {fileID: 2895117952655898208, guid: d5077e996abccbf4abe59b0598e1b310,
+          type: 3}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 0}
+        ResourceType: 0
+        MaxQuantityPerStack: 1
+    - Key:
+        ResourceType: 1
+        VariantIndex: 0
+      Value:
+        Name: Wood
+        ProfilePicture: {fileID: 21300000, guid: ed5474fc2732ba54f99fae691ce9cdf8,
+          type: 3}
+        PresenterPrefab: {fileID: 2415429616877480932, guid: 1beb9a4253c12dc4eafc222dcd764bb5,
+          type: 3}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 0}
+        ResourceType: 1
+        MaxQuantityPerStack: 10
+    - Key:
+        ResourceType: 2
+        VariantIndex: 0
+      Value:
+        Name: Food
+        ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
+          type: 3}
+        PresenterPrefab: {fileID: 3535422202906665777, guid: 7cf595b199dfe534d99e8692648dee9e,
+          type: 3}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 0}
+        ResourceType: 2
+        MaxQuantityPerStack: 10
+    - Key:
+        ResourceType: 3
+        VariantIndex: 0
+      Value:
+        Name: Rock
+        ProfilePicture: {fileID: 21300000, guid: 02c56d58c16f55441af8086bb2c8e236,
+          type: 3}
+        PresenterPrefab: {fileID: 3636283625528029307, guid: c1113fd495db32b4b97bd66c9629b9fc,
+          type: 3}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 0}
+        ResourceType: 3
+        MaxQuantityPerStack: 10

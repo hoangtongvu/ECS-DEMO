@@ -8,14 +8,27 @@ using Core.UI.Identification;
 using Core.UI.TopLeftPanel;
 using System.Collections.Generic;
 using Core.UI.TopLeftPanel.ResourceDisplay;
+using Components.GameEntity;
+using Components.GameResource;
+using Components;
+using AYellowpaper.SerializedCollections;
 
 namespace Systems.Initialization.UI
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class TopLeftPanelInitSystem : SystemBase
     {
+        private EntityQuery query;
+
         protected override void OnCreate()
         {
+            this.query = SystemAPI.QueryBuilder()
+                .WithAll<
+                    ResourceProfilesSOHolder
+                    , AfterBakedPrefabsElement>()
+                .Build();
+
+            this.RequireForUpdate(this.query);
             this.RequireForUpdate<SpawnedUIMap>();
             this.RequireForUpdate<UIPrefabAndPoolMap>();
         }
@@ -24,9 +37,11 @@ namespace Systems.Initialization.UI
         {
             this.Enabled = false;
 
+            var profiles = this.query.GetSingleton<ResourceProfilesSOHolder>().Value.Value.Profiles;
+            int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
+
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-
 
             this.SpawnTopLeftPanel(
                 uiPrefabAndPoolMap
@@ -39,11 +54,10 @@ namespace Systems.Initialization.UI
                 , spawnedUIMap
                 , out var resourceDisplays);
 
-            this.SetDisplayIcons(resourceDisplays);
+            this.SetDisplayIcons(profiles, resourceCount, resourceDisplays);
 
             this.AddDisplaysIntoPanel(resourceDisplays, topLeftPanelManager);
         }
-
 
         private void SpawnTopLeftPanel(
             UIPrefabAndPoolMap uiPrefabAndPoolMap
@@ -79,37 +93,34 @@ namespace Systems.Initialization.UI
             }
         }
 
-        private void SetDisplayIcons(List<ResourceDisplayCtrl> resourceDisplays)
+        private void SetDisplayIcons(
+            SerializedDictionary<ResourceProfileId, ResourceProfileElement> profiles
+            , int resourceCount
+            , List<ResourceDisplayCtrl> resourceDisplays)
         {
-            var profilesManagerSO = Resources.Load<ResourceProfilesManagerSO>("Misc/ResourceProfilesManager");
-
-            if (profilesManagerSO == null)
-            {
-                Debug.LogError("Can't Load ResourceProfilesManagerSO");
-                return;
-            }
-
-            var profileMap = profilesManagerSO.Profiles;
-
-            int length = Enum.GetNames(typeof(ResourceType)).Length;
-
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < resourceCount; i++)
             {
                 var resourceDisplay = resourceDisplays[i];
                 var type = (ResourceType)i;
 
+                var resourceProfileId = new ResourceProfileId
+                {
+                    ResourceType = type,
+                    VariantIndex = 0,
+                };
+
                 resourceDisplay.ResourceType = type;
 
-                if (!profileMap.TryGetValue(type, out var resourceProfile))
+                if (!profiles.TryGetValue(resourceProfileId, out var resourceProfile))
                 {
-                    Debug.LogError($"Can't find profile for resourceType: {type}");
+                    Debug.LogError($"Can't find profile for resourceType: {resourceProfileId}");
                     continue;
                 }
 
-                resourceDisplay.ResourceImage.Image.sprite = resourceProfile.ResourceIcon;
+                resourceDisplay.ResourceImage.Image.sprite = resourceProfile.ProfilePicture;
             }
-        }
 
+        }
 
         private void AddDisplaysIntoPanel(
             List<ResourceDisplayCtrl> resourceDisplays
@@ -117,5 +128,7 @@ namespace Systems.Initialization.UI
         {
             resourceDisplays.ForEach(d => topLeftPanelManager.AddResourceDisplay(d));
         }
+
     }
+
 }
