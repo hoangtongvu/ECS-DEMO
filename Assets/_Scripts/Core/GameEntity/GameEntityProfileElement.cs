@@ -1,4 +1,3 @@
-using Core.Misc.Presenter;
 using UnityEngine;
 
 namespace Core.GameEntity

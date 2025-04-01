@@ -12,6 +12,8 @@ using Components.Misc.GlobalConfigs;
 using Components.Misc.WorldMap;
 using Utilities.Helpers;
 using Components.GameEntity;
+using Core.GameEntity;
+using Unity.Collections;
 
 namespace Systems.Simulation.GameEntity
 {
@@ -40,6 +42,7 @@ namespace Systems.Simulation.GameEntity
 
             state.RequireForUpdate(query);
             state.RequireForUpdate<CellRadius>();
+            state.RequireForUpdate<GameEntitySizeMap>();
 
         }
 
@@ -48,10 +51,18 @@ namespace Systems.Simulation.GameEntity
         {
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
             // Checking Hit Data.
-            bool canGetInteractable = this.TryGetInteractable(ref state, in cellRadius, out Entity entity, out float3 pos, out half worldSquareRadius);
+            bool canGetInteractable = this.TryGetInteractable(
+                ref state
+                , in gameEntitySizeMap
+                , in cellRadius
+                , out Entity entity
+                , out float3 pos
+                , out half worldSquareRadius);
+
             if (!canGetInteractable) return;
 
             state.Dependency = new SetTargetJob()
@@ -69,6 +80,7 @@ namespace Systems.Simulation.GameEntity
         [BurstCompile]
         private bool TryGetInteractable(
             ref SystemState state
+            , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , in half cellRadius
             , out Entity entity
             , out float3 pos
@@ -90,7 +102,10 @@ namespace Systems.Simulation.GameEntity
                 entity = hit.HitEntity;
                 pos = SystemAPI.GetComponent<LocalTransform>(entity).Position;
 
-                int entityGridSquareSize = SystemAPI.GetComponent<EntityGridSquareSize>(entity).Value;
+                var primaryPrefabEntityHolder = SystemAPI.GetComponent<PrimaryPrefabEntityHolder>(entity);
+                gameEntitySizeMap.TryGetValue(primaryPrefabEntityHolder, out var gameEntitySize);
+
+                int entityGridSquareSize = gameEntitySize.GridSquareSize;// TODO: We can look for EntityGridSquareSize in some map.
                 float entityWorldSquareSize =
                     WorldMapHelper.GridLengthToWorldLength(in cellRadius, entityGridSquareSize);
 
