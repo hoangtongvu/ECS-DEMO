@@ -1,22 +1,22 @@
 using Unity.Entities;
 using Unity.Burst;
 using Components.Harvest;
-using Core.Harvest;
 using Components.GameResource;
 using Core.GameResource;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Core.Utilities.Extensions;
+using Components.GameEntity;
+using Components.Harvest.HarvesteeHp;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.Harvest
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(HarvestSystem))]
     [BurstCompile]
     public partial struct ResourceDropSystem : ISystem
     {
-
         private Random rand;
 
         [BurstCompile]
@@ -24,9 +24,8 @@ namespace Systems.Simulation.Harvest
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    HarvesteeProfileIdHolder
-                    , DropResourceHpThreshold
-                    , HarvesteeHealthChangedTag>()
+                    DropResourceHpThreshold
+                    , HarvesteeHpChangedTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -37,33 +36,32 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
-            var harvesteeProfileMap = SystemAPI.GetSingleton<HarvesteeProfileMap>();
+            var currentHpMap = SystemAPI.GetSingleton<HarvesteeCurrentHpMap>();
             var itemSpawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
+            var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourcceDropInfoMap>().Value;
 
-            foreach (var (profileIdRef, dropResourceHpThresholdRef, transformRef, harvesteeEntity) in
+            foreach (var (dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef, harvesteeEntity) in
                 SystemAPI.Query<
-                    RefRO<HarvesteeProfileIdHolder>
-                    , RefRW<DropResourceHpThreshold>
-                    , RefRO<LocalTransform>>()
-                    .WithAll<HarvesteeHealthChangedTag>()
+                    RefRW<DropResourceHpThreshold>
+                    , RefRO<LocalTransform>
+                    , RefRO<PrimaryPrefabEntityHolder>>()
+                    .WithAll<HarvesteeHpChangedTag>()
                     .WithEntityAccess())
             {
+                var resourceDropInfo = resourceDropInfoMap[primaryPrefabEntityHolderRef.ValueRO];
 
-                uint currentHp = this.GetCurrentHp(in harvesteeHealthMap, in harvesteeEntity);
-                var harvesteeProfile = this.GetHarvesteeProfile(in harvesteeProfileMap, in profileIdRef.ValueRO.Value);
-
+                uint currentHp = this.GetCurrentHp(in currentHpMap, in harvesteeEntity);
 
                 uint hpThreshold = dropResourceHpThresholdRef.ValueRO.Value;
-                uint deductAmount = harvesteeProfile.ResourceDropInfo.HpAmountPerDrop;
-                uint quantityPerDrop = harvesteeProfile.ResourceDropInfo.QuantityPerDrop;
+                uint deductAmount = resourceDropInfo.HpAmountPerDrop;
+                uint quantityPerDrop = resourceDropInfo.QuantityPerDrop;
 
                 while (currentHp <= hpThreshold)
                 {
                     this.DropResources(
                         in itemSpawnCommandList
                         , transformRef.ValueRO.Position
-                        , harvesteeProfile.ResourceDropInfo.ResourceType
+                        , resourceDropInfo.ResourceType
                         , quantityPerDrop);
 
 
@@ -79,42 +77,17 @@ namespace Systems.Simulation.Harvest
 
                 dropResourceHpThresholdRef.ValueRW.Value = hpThreshold;
 
-
             }
 
         }
 
         [BurstCompile]
-        private uint GetCurrentHp(in HarvesteeHealthMap harvesteeHealthMap, in Entity harvesteeEntity)
+        private uint GetCurrentHp(in HarvesteeCurrentHpMap currentHpMap, in Entity harvesteeEntity)
         {
-            var healthId = new HealthId
-            {
-                Index = harvesteeEntity.Index,
-                Version = harvesteeEntity.Version,
-            };
-
-            if (!harvesteeHealthMap.Value.TryGetValue(healthId, out var currentHp))
-            {
-                UnityEngine.Debug.LogError($"HarvesteeHealthMap does not contain {healthId}");
-                return 0;
-            }
+            if (!currentHpMap.Value.TryGetValue(harvesteeEntity, out var currentHp))
+                throw new KeyNotFoundException($"{nameof(HarvesteeCurrentHpMap)} does not contain key: {harvesteeEntity}");
 
             return currentHp;
-        }
-
-        [BurstCompile]
-        private HarvesteeProfile GetHarvesteeProfile(
-            in HarvesteeProfileMap harvesteeProfileMap
-            , in HarvesteeProfileId harvesteeProfileId)
-        {
-
-            if (!harvesteeProfileMap.Value.TryGetValue(harvesteeProfileId, out var harvesteeProfile))
-            {
-                UnityEngine.Debug.LogError($"HarvesteeProfileMap does not contain {harvesteeProfileId}");
-                return default;
-            }
-
-            return harvesteeProfile;
         }
 
         [BurstCompile]
@@ -140,4 +113,5 @@ namespace Systems.Simulation.Harvest
         }
 
     }
+
 }

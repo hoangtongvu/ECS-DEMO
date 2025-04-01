@@ -1,14 +1,22 @@
-using AYellowpaper.SerializedCollections;
+using Core.GameEntity;
 using UnityEngine;
 
 namespace Core.Harvest
 {
-    [CreateAssetMenu(fileName = "HarvesteeProfiles", menuName = "SO/Misc/HarvesteeProfilesSO")]
-    public class HarvesteeProfilesSO : ScriptableObject
+    [System.Serializable]
+    public class HarvesteeProfileElement : GameEntityProfileElement
     {
-        public static string DefaultAssetPath = "Misc/HarvesteeProfiles";
+        [Header("Harvestee ProfileElement")]
+        public HarvesteeType HarvesteeType;
+        public uint MaxHp;
+        public ResourceDropInfo ResourceDropInfo;
 
-        [SerializedDictionary("ProfileId", "Profile")]
-        public SerializedDictionary<HarvesteeProfileId, HarvesteeProfile> Profiles;
     }
+
+    [CreateAssetMenu(fileName = "HarvesteeProfilesSO", menuName = "SO/GameEntity/HarvesteeProfilesSO")]
+    public class HarvesteeProfilesSO : GameEntityProfilesSO<HarvesteeProfileId, HarvesteeProfileElement>
+    {
+        public static readonly string DefaultAssetPath = "Misc/HarvesteeProfilesSO";
+    }
+
 }
