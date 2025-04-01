@@ -2,6 +2,7 @@
 using Components.GameEntity.EntitySpawning;
 using Components.Harvest;
 using Components.Harvest.HarvesteeHp;
+using Components.Misc.Presenter;
 using Unity.Entities;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Authoring.Harvest
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<NewlySpawnedTag>(entity);
+                AddComponent<NeedSpawnPresenterTag>(entity);
                 AddComponent<InteractableEntityTag>(entity);
 
                 AddComponent<HarvesteeTag>(entity);

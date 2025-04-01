@@ -21,7 +21,7 @@ MonoBehaviour:
         Name: NormalTree
         ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
           type: 3}
-        PresenterPrefab: {fileID: 919132149155446097, guid: f53695aacc953fb4fbf599ed9b0c328e,
+        PresenterPrefab: {fileID: 919132149155446097, guid: 1c39723c305aa274b97b1e738bed4b55,
           type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
@@ -39,7 +39,7 @@ MonoBehaviour:
         Name: NormalRockPit
         ProfilePicture: {fileID: 21300000, guid: 02c56d58c16f55441af8086bb2c8e236,
           type: 3}
-        PresenterPrefab: {fileID: 919132149155446097, guid: f3cc2effdcf1a134bbe3cf1c75a3e24f,
+        PresenterPrefab: {fileID: 919132149155446097, guid: 3041faaeefdfc974cac308fdb7c1e09a,
           type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 2afcb35a6e7e2884d8781889dbc859f3,

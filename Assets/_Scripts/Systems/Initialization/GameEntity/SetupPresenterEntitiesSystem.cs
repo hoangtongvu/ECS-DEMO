@@ -37,13 +37,6 @@ namespace Systems.Initialization.GameEntity
                     if (!SystemAPI.HasComponent<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity)) continue;
                     if (!SystemAPI.IsComponentEnabled<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity)) continue;
 
-                    var children = entityCommandBuffer.AddBuffer<Child>(prefabsElement.PrimaryEntity);
-
-                    children.Add(new()
-                    {
-                        Value = prefabsElement.PresenterEntity,
-                    });
-
                     SystemAPI.SetComponentEnabled<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity, false);
 
                     entityCommandBuffer.AddComponent(prefabsElement.PresenterEntity, new Parent
@@ -61,6 +54,23 @@ namespace Systems.Initialization.GameEntity
                     {
                         Value = prefabsElement.PresenterEntity,
                     });
+
+                    if (SystemAPI.HasBuffer<LinkedEntityGroup>(prefabsElement.PresenterEntity))
+                    {
+                        var presenterLinkedSystemGroup = SystemAPI.GetBuffer<LinkedEntityGroup>(prefabsElement.PresenterEntity);
+
+                        int length = presenterLinkedSystemGroup.Length;
+                        if (length == 1) continue;
+
+                        var presenterLinkedSystemGroupArray = presenterLinkedSystemGroup.ToNativeArray(Allocator.Temp);
+
+                        for (int j = 1; j < length; j++)
+                        {
+                            linkedEntityGroup.Add(presenterLinkedSystemGroupArray[j]);
+                        }
+                        
+                        presenterLinkedSystemGroupArray.Dispose();
+                    }
 
                 }
 
