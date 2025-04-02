@@ -1,4 +1,4 @@
-﻿using Components.GameEntity;
+﻿using Authoring.Utilities.Helpers.GameEntity;
 using Components.Misc.WorldMap.WorldBuilding;
 using Core.Misc.WorldMap.WorldBuilding;
 using Unity.Entities;
@@ -21,22 +21,8 @@ namespace Authoring.Misc.WorldMap.WorldBuilding
                     Value = authoring.profilesSO,
                 });
 
-                var buffer = AddBuffer<BakedGameEntityProfileElement>(entity);
+                ProfilesSOBakingHelper.BakeGameEntityProfileElementBuffer(this, authoring.profilesSO, entity);
 
-                foreach (var profile in authoring.profilesSO.Profiles)
-                {
-                    buffer.Add(new()
-                    {
-                        OriginalPresenterGO = profile.Value.PresenterPrefab,
-                        PrimaryEntity = GetEntity(profile.Value.PrimaryEntityPrefab, TransformUsageFlags.Dynamic),
-                        PresenterEntity = profile.Value.IsPresenterEntity
-                            ? GetEntity(profile.Value.PresenterPrefab, TransformUsageFlags.None)
-                            : Entity.Null,
-                        GameEntitySize = profile.Value.GameEntitySize,
-                    });
-
-                }
-                
             }
 
         }

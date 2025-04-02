@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc4edcb66d789640aacf2b0508dc3f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitProfilesSO: {fileID: 11400000, guid: 1a64cc7706aff5549a33db4a4d08ccc5, type: 2}
+  profilesSO: {fileID: 11400000, guid: 1a64cc7706aff5549a33db4a4d08ccc5, type: 2}
 --- !u!114 &-1070736940832637066
 MonoBehaviour:
   m_ObjectHideFlags: 0

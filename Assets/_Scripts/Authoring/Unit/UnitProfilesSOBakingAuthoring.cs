@@ -1,4 +1,4 @@
-﻿using Components.GameEntity;
+﻿using Authoring.Utilities.Helpers.GameEntity;
 using Components.Unit;
 using Core.Unit;
 using Unity.Entities;
@@ -8,7 +8,7 @@ namespace Authoring.Unit
 {
     public class UnitProfilesSOBakingAuthoring : MonoBehaviour
     {
-        [SerializeField] private UnitProfilesSO unitProfilesSO;
+        [SerializeField] private UnitProfilesSO profilesSO;
 
         private class Baker : Baker<UnitProfilesSOBakingAuthoring>
         {
@@ -18,25 +18,11 @@ namespace Authoring.Unit
 
                 AddComponent(entity, new UnitProfilesSOHolder
                 {
-                    Value = authoring.unitProfilesSO,
+                    Value = authoring.profilesSO,
                 });
 
-                var buffer = AddBuffer<BakedGameEntityProfileElement>(entity);
+                ProfilesSOBakingHelper.BakeGameEntityProfileElementBuffer(this, authoring.profilesSO, entity);
 
-                foreach (var profile in authoring.unitProfilesSO.Profiles)
-                {
-                    buffer.Add(new()
-                    {
-                        OriginalPresenterGO = profile.Value.PresenterPrefab,
-                        PrimaryEntity = GetEntity(profile.Value.PrimaryEntityPrefab, TransformUsageFlags.Dynamic),
-                        PresenterEntity = profile.Value.IsPresenterEntity
-                            ? GetEntity(profile.Value.PresenterPrefab, TransformUsageFlags.None)
-                            : Entity.Null,
-                        GameEntitySize = profile.Value.GameEntitySize,
-                    });
-
-                }
-                
             }
 
         }
