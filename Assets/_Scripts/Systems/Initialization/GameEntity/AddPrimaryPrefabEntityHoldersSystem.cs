@@ -1,0 +1,46 @@
+using Components.GameEntity;
+using Unity.Collections;
+using Unity.Entities;
+
+namespace Systems.Initialization.GameEntity
+{
+    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
+    public partial class AddPrimaryPrefabEntityHoldersSystem : SystemBase
+    {
+        protected override void OnCreate()
+        {
+            this.RequireForUpdate<BakedGameEntityProfileElement>();
+        }
+
+        protected override void OnUpdate()
+        {
+            this.Enabled = false;
+
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+
+            foreach (var bakedProfiles in
+                SystemAPI.Query<
+                    DynamicBuffer<BakedGameEntityProfileElement>>())
+            {
+                int count = bakedProfiles.Length;
+
+                for (int i = 0; i < count; i++)
+                {
+                    var primaryEntity = bakedProfiles[i].PrimaryEntity;
+
+                    if (primaryEntity == Entity.Null) continue;
+
+                    ecb.AddComponent(primaryEntity, new PrimaryPrefabEntityHolder(primaryEntity));
+
+                }
+
+            }
+
+            ecb.Playback(this.EntityManager);
+            ecb.Dispose();
+
+        }
+
+    }
+
+}

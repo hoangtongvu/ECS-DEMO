@@ -1,9 +1,11 @@
 using Components;
 using Core.GameResource;
+using Core.Unit.MyMoveCommand;
 using System;
 using Unity.Entities;
 
 [assembly: RegisterGenericComponentType(typeof(EnumLength<ResourceType>))]
+[assembly: RegisterGenericComponentType(typeof(EnumLength<MoveCommandSource>))]
 
 namespace Components
 {
@@ -11,4 +13,5 @@ namespace Components
     {
         public int Value;
     }
+
 }

@@ -1,5 +1,6 @@
-﻿using Components.Misc;
-using Components.MyEntity.EntitySpawning;
+﻿using Components.GameEntity.EntitySpawning;
+using Components.Misc;
+using Components.Misc.Presenter;
 using Components.Tool;
 using Core.Tool;
 using Unity.Entities;
@@ -45,9 +46,12 @@ namespace Authoring.Tool
                     Value = authoring.baseWorkSpeed,
                 });
 
+                AddComponent<NeedSpawnPresenterTag>(entity);
 
             }
+
         }
 
     }
+
 }

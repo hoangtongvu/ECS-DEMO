@@ -2,7 +2,6 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.Tool;
 using Components.Unit;
-using Components.MyEntity.EntitySpawning;
 using Core.Tool;
 using Core.Unit;
 using Components.Harvest;
@@ -11,16 +10,15 @@ using Unity.Physics;
 using Unity.Mathematics;
 using Core.Utilities.Extensions;
 using Components.Misc;
+using Components.GameEntity.EntitySpawning;
 
 namespace Systems.Simulation.Tool
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(ToolAssignSystem))]
     [BurstCompile]
     public partial struct ToolPickSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -81,7 +79,6 @@ namespace Systems.Simulation.Tool
                     , toolEntity);
 
             }
-
 
         }
 
@@ -151,7 +148,7 @@ namespace Systems.Simulation.Tool
             var baseWorkSpeedRef = SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity);
             baseWorkSpeedRef.ValueRW.Value = baseWorkSpeed;
 
-            var unitIdRef = SystemAPI.GetComponentRW<UnitId>(unitEntity);
+            var unitProfileIdHolderRef = SystemAPI.GetComponentRW<UnitProfileIdHolder>(unitEntity);
 
             var byteKey = (byte)toolType;
             if (tool2UnitMap.Value.TryGetValue(byteKey, out byte unitTypeByte))
@@ -175,12 +172,14 @@ namespace Systems.Simulation.Tool
                         break;
                 }
 
-                unitIdRef.ValueRW.UnitType = unitType;
+                unitProfileIdHolderRef.ValueRW.Value.UnitType = unitType;
                 return;
             }
 
             UnityEngine.Debug.LogError($"tool2UnitMap does not contain {byteKey}");
+
         }
 
     }
+
 }

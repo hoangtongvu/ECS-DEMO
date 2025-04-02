@@ -1,24 +1,23 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components.Harvest;
 using Core.Harvest;
 using Components;
-using Components.MyEntity;
-using Core.MyEntity;
 using Components.Misc;
 using Components.Tool;
 using Components.Unit;
 using Core.Tool;
 using Unity.Mathematics;
+using Core.GameEntity;
+using Components.GameEntity;
+using Components.Harvest.HarvesteeHp;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.Harvest
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct HarvestSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -48,9 +47,8 @@ namespace Systems.Simulation.Harvest
                 workTimeCounterSecondRef.ValueRW.Value = 0;
             }
 
-            var harvesteeHealthMap = SystemAPI.GetSingleton<HarvesteeHealthMap>();
+            var currentHpMap = SystemAPI.GetSingleton<HarvesteeCurrentHpMap>();
             var dmgBonusMap = SystemAPI.GetSingleton<Tool2HarvesteeDmgBonusMap>();
-
 
             foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, toolTypeRef, harvesteeTypeRef) in
                 SystemAPI.Query<
@@ -63,7 +61,6 @@ namespace Systems.Simulation.Harvest
                     , RefRO<HarvesteeTypeHolder>>()
                     .WithDisabled<CanMoveEntityTag>())
             {
-
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Harvest) continue;
 
                 var harvestEntity = interactingEntityRef.ValueRO.Value;
@@ -76,7 +73,7 @@ namespace Systems.Simulation.Harvest
 
                 this.DealDmgToHarvestee(
                     ref state
-                    , ref harvesteeHealthMap
+                    , ref currentHpMap
                     , in dmgBonusMap
                     , toolTypeRef.ValueRO.Value
                     , harvesteeTypeRef.ValueRO.Value
@@ -90,37 +87,27 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         private void DealDmgToHarvestee(
             ref SystemState state
-            , ref HarvesteeHealthMap harvesteeHealthMap
+            , ref HarvesteeCurrentHpMap currentHpMap
             , in Tool2HarvesteeDmgBonusMap dmgBonusMap
             , ToolType toolType
             , HarvesteeType harvesteeType
-            , in Entity harvestEntity
+            , in Entity harvesteeEntity
             , uint baseDmgValue)
         {
             float bonusValue = this.GetDmgBonusValue(in dmgBonusMap, toolType, harvesteeType);
             uint finalDmg = (uint) math.round(baseDmgValue * bonusValue); // this is round down.
 
-            var healthId = new HealthId
-            {
-                Index = harvestEntity.Index,
-                Version = harvestEntity.Version,
-            };
+            if (!currentHpMap.Value.TryGetValue(harvesteeEntity, out var currentHp))
+                throw new KeyNotFoundException($"{nameof(HarvesteeCurrentHpMap)} does not contain key: {harvesteeEntity}");
 
-
-            if (!harvesteeHealthMap.Value.TryGetValue(healthId, out var healthValue))
-            {
-                UnityEngine.Debug.LogError($"HarvesteeHealthMap does not contain {healthId}");
-                return;
-            }
-
-            bool harvesteeIsDead = healthValue == 0;
+            bool harvesteeIsDead = currentHp == 0;
             if (harvesteeIsDead) return;
 
-            harvesteeHealthMap.Value[healthId] = healthValue <= finalDmg ? 0 : healthValue - finalDmg;
+            currentHpMap.Value[harvesteeEntity] = currentHp <= finalDmg ? 0 : currentHp - finalDmg;
 
-            SystemAPI.SetComponentEnabled<HarvesteeHealthChangedTag>(harvestEntity, true);
+            SystemAPI.SetComponentEnabled<HarvesteeHpChangedTag>(harvesteeEntity, true);
 
-            UnityEngine.Debug.Log($"CurrHp = {harvesteeHealthMap.Value[healthId]}");
+            UnityEngine.Debug.Log($"CurrHp = {currentHpMap.Value[harvesteeEntity]}");
 
         }
 
@@ -146,6 +133,6 @@ namespace Systems.Simulation.Harvest
             return bonusValue;
         }
 
-
     }
+
 }

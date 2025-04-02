@@ -61,11 +61,12 @@ namespace Utilities
         public T GetSingleton<T>() where T : unmanaged, IComponentData => this.entityManager.GetComponentData<T>(this.singletonEntity);
 
 
-        public Entity AddBuffer<T>() where T : unmanaged, IBufferElementData
+        public DynamicBuffer<T> AddBuffer<T>() where T : unmanaged, IBufferElementData
         {
             if (!this.entityManager.HasBuffer<T>(this.singletonEntity))
-                this.entityManager.AddBuffer<T>(this.singletonEntity);
-            return this.singletonEntity;
+                return this.entityManager.AddBuffer<T>(this.singletonEntity);
+
+            throw new System.Exception($"{typeof(T).Name} DynamicBuffer already existed");
         }
 
         public Entity AddOrSetComponentData<T>(T data) where T : unmanaged, IComponentData

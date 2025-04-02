@@ -1,6 +1,6 @@
 //using Unity.Entities;
 //using Unity.Burst;
-//using Components.MyEntity;
+//using Components.GameEntity;
 //using Components;
 //using Unity.Transforms;
 

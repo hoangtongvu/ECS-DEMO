@@ -1,7 +1,8 @@
-﻿using Components.Harvest;
-using Components.MyEntity;
-using Components.MyEntity.EntitySpawning;
-using Core.Harvest;
+﻿using Components.GameEntity;
+using Components.GameEntity.EntitySpawning;
+using Components.Harvest;
+using Components.Harvest.HarvesteeHp;
+using Components.Misc.Presenter;
 using Unity.Entities;
 using UnityEngine;
 
@@ -9,8 +10,6 @@ namespace Authoring.Harvest
 {
     public class HarvesteeAuthoring : MonoBehaviour
     {
-        [SerializeField] private HarvesteeProfileId harvesteeProfileId;
-
         private class Baker : Baker<HarvesteeAuthoring>
         {
             public override void Bake(HarvesteeAuthoring authoring)
@@ -18,19 +17,18 @@ namespace Authoring.Harvest
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<NewlySpawnedTag>(entity);
+                AddComponent<NeedSpawnPresenterTag>(entity);
                 AddComponent<InteractableEntityTag>(entity);
 
                 AddComponent<HarvesteeTag>(entity);
-                AddComponent<HarvesteeHealthId>(entity);
-                AddComponent<HarvesteeHealthChangedTag>(entity);
-
-                AddComponent(entity, new HarvesteeProfileIdHolder
-                {
-                    Value = authoring.harvesteeProfileId,
-                });
+                AddComponent<HarvesteeHpChangedTag>(entity);
 
                 AddComponent<DropResourceHpThreshold>(entity);
+
             }
+
         }
+
     }
+
 }

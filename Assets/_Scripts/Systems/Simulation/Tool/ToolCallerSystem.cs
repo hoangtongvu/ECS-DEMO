@@ -10,17 +10,15 @@ using Utilities.Helpers;
 using Utilities;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
-using Components.MyEntity;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Tool
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateBefore(typeof(SetCurrentDisToTargetSystem))]
     [BurstCompile]
     public partial struct ToolCallerSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -39,7 +37,7 @@ namespace Systems.Simulation.Tool
                     , TargetEntity
                     , TargetPosition
                     , MoveCommandElement
-                    , UnitId>()
+                    , UnitProfileIdHolder>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -65,13 +63,12 @@ namespace Systems.Simulation.Tool
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
-
                 foreach (var (
                     unitTransformRef
                     , targetEntityRef
                     , targetPosRef
                     , moveCommandElementRef
-                    , unitIdRef
+                    , unitProfileIdHolderRef
                     , interactingEntityRef
                     , interactionTypeICDRef
                     , unitEntity) in
@@ -80,7 +77,7 @@ namespace Systems.Simulation.Tool
                         , RefRW<TargetEntity>
                         , RefRW<TargetPosition>
                         , RefRW<MoveCommandElement>
-                        , RefRO<UnitId>
+                        , RefRO<UnitProfileIdHolder>
                         , RefRW<InteractingEntity>
                         , RefRW<InteractionTypeICD>>()
                         .WithAll<JoblessUnitTag>()
@@ -95,12 +92,12 @@ namespace Systems.Simulation.Tool
                     bool canOverrideMoveCommand =
                         MoveCommandHelper.TryOverrideMoveCommand(
                             commandSourceMap.Value
-                            , unitIdRef.ValueRO.UnitType
+                            , unitProfileIdHolderRef.ValueRO.Value.UnitType
                             , ref moveCommandElementRef.ValueRW
                             , ref interactingEntityRef.ValueRW
                             , ref interactionTypeICDRef.ValueRW
                             , MoveCommandSource.ToolCall
-                            , unitIdRef.ValueRO.LocalIndex);
+                            , unitProfileIdHolderRef.ValueRO.Value.VariantIndex);
 
                     if (!canOverrideMoveCommand) continue;
 
@@ -115,14 +112,10 @@ namespace Systems.Simulation.Tool
 
                 }
 
-                
-
             }
-
 
         }
 
-        
-
     }
+
 }

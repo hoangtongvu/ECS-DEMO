@@ -1,4 +1,5 @@
 using Components.GameResource;
+using Components.Misc.Presenter;
 using Unity.Entities;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace Authoring.GameResource
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<ResourceItemICD>(entity);
+                AddComponent<NeedSpawnPresenterTag>(entity);
 
                 AddComponent<UnitCannotPickUpTag>(entity);
                 AddComponent<UnitCannotPickUpTimeCounter>(entity);

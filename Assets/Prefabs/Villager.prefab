@@ -147,11 +147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac528d841496c1249ab98593adaf05cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitType: 1
-  presenterPrefabId:
-    PresenterType: 2
-    LocalIndex: 0
-  localIndex: 0
   maxHp: 100
   currentHp: 100
   speed: 5
@@ -164,6 +159,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9010456808328279163}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb5fc567c7c5e8f439a88815bb33ac5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ce20d8f1a47b8148b20c7640efd845c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

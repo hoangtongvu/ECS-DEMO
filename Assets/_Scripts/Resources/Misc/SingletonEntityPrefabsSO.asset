@@ -13,9 +13,14 @@ MonoBehaviour:
   m_Name: SingletonEntityPrefabsSO
   m_EditorClassIdentifier: 
   Prefabs:
-  - {fileID: 8841375258564314883, guid: fcc28cdea4caa6c418a1e7733fd2afc6, type: 3}
   - {fileID: 5594501744089507189, guid: 4ae554c3ea0a266449f65b500ba5365a, type: 3}
+  - {fileID: 1640785096646030297, guid: 41d27f9f903550b4ba34d1b7212703d5, type: 3}
   - {fileID: 6528450187025802841, guid: b00219f127284714a97bca3abbc560f7, type: 3}
+  - {fileID: 1640785096646030297, guid: b32c9acaa2208bf4f86f46a27f0a43c2, type: 3}
+  - {fileID: 1640785096646030297, guid: cac4b66c724ca4243997f689ba296a74, type: 3}
   - {fileID: 2898093071364489471, guid: c3aa7501bb8466d4b85fc13baeabf7da, type: 3}
+  - {fileID: 1640785096646030297, guid: f99251fb8aef9c241a48d71894d27a85, type: 3}
   - {fileID: 2447117478282307962, guid: cceeeeee2e8a06c4397c4fb86ec252de, type: 3}
+  - {fileID: 1640785096646030297, guid: 02becea1aa04f4544be3c0597cbd764f, type: 3}
+  - {fileID: 1640785096646030297, guid: db48a863efe041c40afc0ed8ca310dff, type: 3}
   - {fileID: 6790264369496058937, guid: e990d48f2136fdf4e81720066c032628, type: 3}

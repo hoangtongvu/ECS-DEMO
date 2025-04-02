@@ -1,4 +1,3 @@
-using Components.MyEntity;
 using Components;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
@@ -10,6 +9,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Utilities.Helpers;
 using Components.Misc.WorldMap.PathFinding;
+using Components.GameEntity;
 
 namespace Utilities.Jobs
 {
@@ -26,7 +26,7 @@ namespace Utilities.Jobs
 
         [BurstCompile]
         void Execute(
-            in UnitId unitId
+            in UnitProfileIdHolder unitProfileIdHolder
             , EnabledRefRO<UnitSelectedTag> unitSelectedTag
             , EnabledRefRW<CanFindPathTag> canFindPathTag
             , ref MoveSpeedLinear moveSpeedLinear
@@ -42,12 +42,12 @@ namespace Utilities.Jobs
             bool canOverrideCommand =
                 MoveCommandHelper.TryOverrideMoveCommand(
                     in this.MoveCommandSourceMap
-                    , unitId.UnitType
+                    , unitProfileIdHolder.Value.UnitType
                     , ref moveCommandElement
                     , ref interactingEntity
                     , ref interactionTypeICD
                     , this.NewMoveCommandSource
-                    , unitId.LocalIndex);
+                    , unitProfileIdHolder.Value.VariantIndex);
 
             if (!canOverrideCommand) return;
 

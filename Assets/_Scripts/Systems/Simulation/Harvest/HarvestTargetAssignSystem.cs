@@ -1,10 +1,10 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components.MyEntity;
-using Systems.Simulation.MyEntity;
+using Systems.Simulation.GameEntity;
 using Components.Harvest;
-using Core.MyEntity;
 using Components.Unit;
+using Core.GameEntity;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Harvest
 {

@@ -1,8 +1,8 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components.MyEntity.EntitySpawning;
 using Components.Tool;
-using Systems.Simulation.MyEntity.EntitySpawning;
+using Systems.Simulation.GameEntity.EntitySpawning;
+using Components.GameEntity.EntitySpawning;
 
 namespace Systems.Simulation.Tool
 {

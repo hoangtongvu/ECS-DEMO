@@ -9,12 +9,12 @@ using Core.Unit.MyMoveCommand;
 using Unity.Mathematics;
 using Utilities.Helpers;
 using Unity.Collections;
-using Components.MyEntity;
 using Unity.Transforms;
 using Utilities;
 using Components.Unit.Reaction;
 using Core.Unit.Reaction;
 using Components.Misc.WorldMap.PathFinding;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Unit
 {
@@ -39,6 +39,8 @@ namespace Systems.Simulation.Unit
                 .Build();
 
             state.RequireForUpdate(query0);
+
+            state.RequireForUpdate<MoveCommandSourceMap>();
 
         }
 
@@ -129,7 +131,7 @@ namespace Systems.Simulation.Unit
             [BurstCompile]
             void Execute(
                 EnabledRefRW<NeedInitWalkTag> needInitWalkTag
-                , in UnitId unitId
+                , in UnitProfileIdHolder unitProfileIdHolder
                 , ref MoveCommandElement moveCommandElement
                 , ref InteractingEntity interactingEntity
                 , ref InteractionTypeICD interactionTypeICD
@@ -144,12 +146,12 @@ namespace Systems.Simulation.Unit
                 bool canOverrideCommand =
                     MoveCommandHelper.TryOverrideMoveCommand(
                         in moveCommandSourceMap
-                        , unitId.UnitType
+                        , unitProfileIdHolder.Value.UnitType
                         , ref moveCommandElement
                         , ref interactingEntity
                         , ref interactionTypeICD
                         , MoveCommandSource.PlayerCommand
-                        , unitId.LocalIndex);
+                        , unitProfileIdHolder.Value.VariantIndex);
 
                 if (!canOverrideCommand) return;
 

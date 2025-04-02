@@ -1,0 +1,56 @@
+﻿using Components.GameEntity.EntitySpawning;
+using Core.GameEntity;
+using System;
+using Unity.Entities;
+using UnityEngine;
+
+namespace Authoring.GameEntity.EntitySpawning
+{
+    public class EntitySpawningAuthoring : MonoBehaviour
+    {
+        public float SpawnRadius = 3f;
+        public EntitySpawningPrefabsSO SpawningPrefabs;
+
+        private class Baker : Baker<EntitySpawningAuthoring>
+        {
+            public override void Bake(EntitySpawningAuthoring authoring)
+            {
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+
+                AddComponent<NewlySpawnedTag>(entity);
+
+                var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
+
+                if (authoring.SpawningPrefabs == null)
+                    throw new NullReferenceException($"{nameof(authoring.SpawningPrefabs)} is null");
+
+                foreach (var prefab in authoring.SpawningPrefabs.Prefabs)
+                {
+                    buffer.Add(new()
+                    {
+                        PrefabToSpawn = GetEntity(prefab.Value, TransformUsageFlags.Dynamic),
+                        CanSpawnState = false,
+                        CanIncSpawnCount = true,
+                        SpawnCount = new()
+                        {
+                            Value = 0,
+                            ValueChanged = false,
+                        },
+                        DurationCounterSeconds = 0f,
+
+                    });
+
+                }
+
+            }
+
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(transform.position, this.SpawnRadius);
+        }
+
+    }
+
+}
