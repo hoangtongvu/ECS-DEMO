@@ -9,7 +9,7 @@ namespace Systems.Initialization.GameEntity
     {
         protected override void OnCreate()
         {
-            this.RequireForUpdate<AfterBakedPrefabsElement>();
+            this.RequireForUpdate<BakedGameEntityProfileElement>();
         }
 
         protected override void OnUpdate()
@@ -18,15 +18,15 @@ namespace Systems.Initialization.GameEntity
 
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var afterBakedPrefabsElements in
+            foreach (var bakedProfiles in
                 SystemAPI.Query<
-                    DynamicBuffer<AfterBakedPrefabsElement>>())
+                    DynamicBuffer<BakedGameEntityProfileElement>>())
             {
-                int count = afterBakedPrefabsElements.Length;
+                int count = bakedProfiles.Length;
 
                 for (int i = 0; i < count; i++)
                 {
-                    var primaryEntity = afterBakedPrefabsElements[i].PrimaryEntity;
+                    var primaryEntity = bakedProfiles[i].PrimaryEntity;
 
                     if (primaryEntity == Entity.Null) continue;
 

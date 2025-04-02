@@ -21,7 +21,7 @@ namespace Authoring.Harvest
                     Value = authoring.profilesSO,
                 });
 
-                var buffer = AddBuffer<AfterBakedPrefabsElement>(entity);
+                var buffer = AddBuffer<BakedGameEntityProfileElement>(entity);
 
                 foreach (var profile in authoring.profilesSO.Profiles)
                 {

@@ -19,7 +19,7 @@ namespace Systems.Initialization.Unit
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -31,7 +31,7 @@ namespace Systems.Initialization.Unit
         {
             this.Enabled = false;
             var profilesSOHolder = this.query.GetSingleton<UnitProfilesSOHolder>();
-            var afterBakedPrefabsBuffer = this.query.GetSingletonBuffer<AfterBakedPrefabsElement>();
+            var bakedProfileElements = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>();
 
             int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
             var latestCostMapIndexRef = SystemAPI.GetSingletonRW<LatestCostMapIndex>();
@@ -46,7 +46,7 @@ namespace Systems.Initialization.Unit
             {
                 int nextMapIndex = latestCostMapIndexRef.ValueRO.Value + 1;
 
-                var key = afterBakedPrefabsBuffer[tempIndex].PrimaryEntity;
+                var key = bakedProfileElements[tempIndex].PrimaryEntity;
                 var value = nextMapIndex;
 
                 if (!entityToContainerIndexMap.Value.TryAdd(key, value)) continue;

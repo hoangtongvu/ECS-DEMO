@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Components.GameEntity
 {
-    public struct AfterBakedPrefabsElement : IBufferElementData
+    public struct BakedGameEntityProfileElement : IBufferElementData
     {
         public UnityObjectRef<GameObject> OriginalPresenterGO;
         public Entity PresenterEntity;

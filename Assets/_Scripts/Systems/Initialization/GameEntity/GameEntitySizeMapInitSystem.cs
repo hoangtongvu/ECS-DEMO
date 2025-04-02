@@ -15,7 +15,7 @@ namespace Systems.Initialization.GameEntity
         {
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    AfterBakedPrefabsElement >()
+                    BakedGameEntityProfileElement >()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -34,7 +34,7 @@ namespace Systems.Initialization.GameEntity
 
             foreach (var (bakedProfiles, bakerEntity) in
                 SystemAPI.Query<
-                    DynamicBuffer<AfterBakedPrefabsElement>>()
+                    DynamicBuffer<BakedGameEntityProfileElement>>()
                     .WithEntityAccess())
             {
                 int count = bakedProfiles.Length;

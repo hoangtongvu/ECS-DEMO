@@ -18,7 +18,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     HarvesteeProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -29,7 +29,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
         {
             this.Enabled = false;
             var profilesSOHolder = this.query.GetSingleton<HarvesteeProfilesSOHolder>();
-            var afterBakedPrefabsArray = this.query.GetSingletonBuffer<AfterBakedPrefabsElement>().ToNativeArray(Allocator.Temp);
+            var bakedProfileElementArray = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>().ToNativeArray(Allocator.Temp);
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 
             var resourceDropInfoMap = new HarvesteeResourcceDropInfoMap
@@ -41,7 +41,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
 
             foreach (var profile in profilesSOHolder.Value.Value.Profiles)
             {
-                var keyEntity = afterBakedPrefabsArray[tempIndex].PrimaryEntity;
+                var keyEntity = bakedProfileElementArray[tempIndex].PrimaryEntity;
                 if (keyEntity == Entity.Null)
                     throw new System.NullReferenceException($"keyEntity for {nameof(HarvesteeMaxHpMap)} equals to Entity.Null");
 
@@ -50,7 +50,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
             }
 
             su.AddOrSetComponentData(resourceDropInfoMap);
-            afterBakedPrefabsArray.Dispose();
+            bakedProfileElementArray.Dispose();
 
         }
 

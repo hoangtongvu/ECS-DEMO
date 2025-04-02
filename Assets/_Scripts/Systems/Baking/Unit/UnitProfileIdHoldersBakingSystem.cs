@@ -17,7 +17,7 @@ namespace Systems.Baking.Unit
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -29,13 +29,13 @@ namespace Systems.Baking.Unit
             this.Enabled = false;
 
             var profilesSOHolder = this.query.GetSingleton<UnitProfilesSOHolder>();
-            var afterBakedPrefabsArray = this.query.GetSingletonBuffer<AfterBakedPrefabsElement>().ToNativeArray(Allocator.Temp);
+            var bakedProfileElementArray = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>().ToNativeArray(Allocator.Temp);
 
             int tempIndex = 0;
 
             foreach (var profile in profilesSOHolder.Value.Value.Profiles)
             {
-                var targetEntity = afterBakedPrefabsArray[tempIndex].PrimaryEntity;
+                var targetEntity = bakedProfileElementArray[tempIndex].PrimaryEntity;
                 if (targetEntity == Entity.Null) continue;
 
                 this.EntityManager.AddComponentData(targetEntity, new UnitProfileIdHolder
@@ -46,7 +46,7 @@ namespace Systems.Baking.Unit
                 tempIndex++;
             }
 
-            afterBakedPrefabsArray.Dispose();
+            bakedProfileElementArray.Dispose();
 
         }
 

@@ -24,7 +24,7 @@ namespace Systems.Initialization.Unit.MyMoveCommand
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);

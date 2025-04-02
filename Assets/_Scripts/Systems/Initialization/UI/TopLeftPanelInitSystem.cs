@@ -25,7 +25,7 @@ namespace Systems.Initialization.UI
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     ResourceProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);

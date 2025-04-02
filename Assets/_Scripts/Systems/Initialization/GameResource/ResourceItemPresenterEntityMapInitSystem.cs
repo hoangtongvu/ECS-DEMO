@@ -18,7 +18,7 @@ namespace Systems.Initialization.GameResource
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     ResourceProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -30,7 +30,7 @@ namespace Systems.Initialization.GameResource
         {
             this.Enabled = false;
             var profilesSOHolder = this.query.GetSingleton<ResourceProfilesSOHolder>();
-            var afterBakedPrefabsArray = this.query.GetSingletonBuffer<AfterBakedPrefabsElement>().ToNativeArray(Allocator.Temp);
+            var bakedProfileElementArray = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>().ToNativeArray(Allocator.Temp);
             int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 
@@ -43,7 +43,7 @@ namespace Systems.Initialization.GameResource
 
             foreach (var profile in profilesSOHolder.Value.Value.Profiles)
             {
-                var presenterEntity = afterBakedPrefabsArray[tempIndex].PresenterEntity;
+                var presenterEntity = bakedProfileElementArray[tempIndex].PresenterEntity;
                 if (presenterEntity == Entity.Null) continue;
 
                 resourceItemPresenterEntityPrefabMap.Value.Add(profile.Key, presenterEntity);
@@ -52,7 +52,7 @@ namespace Systems.Initialization.GameResource
             }
 
             su.AddOrSetComponentData(resourceItemPresenterEntityPrefabMap);
-            afterBakedPrefabsArray.Dispose();
+            bakedProfileElementArray.Dispose();
 
         }
 

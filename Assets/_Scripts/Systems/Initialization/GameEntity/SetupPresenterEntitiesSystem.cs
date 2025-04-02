@@ -12,7 +12,7 @@ namespace Systems.Initialization.GameEntity
 
         protected override void OnCreate()
         {
-            this.RequireForUpdate<AfterBakedPrefabsElement>();
+            this.RequireForUpdate<BakedGameEntityProfileElement>();
             this.RequireForUpdate<NeedSpawnPresenterTag>();
 
         }
@@ -23,15 +23,15 @@ namespace Systems.Initialization.GameEntity
 
             var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var afterBakedPrefabsElements in
+            foreach (var bakedProfiles in
                 SystemAPI.Query<
-                    DynamicBuffer<AfterBakedPrefabsElement>>())
+                    DynamicBuffer<BakedGameEntityProfileElement>>())
             {
-                int count = afterBakedPrefabsElements.Length;
+                int count = bakedProfiles.Length;
 
                 for (int i = 0; i < count; i++)
                 {
-                    var prefabsElement = afterBakedPrefabsElements[i];
+                    var prefabsElement = bakedProfiles[i];
 
                     if (prefabsElement.PresenterEntity == Entity.Null) continue;
                     if (!SystemAPI.HasComponent<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity)) continue;

@@ -10,7 +10,7 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
     {
         protected override void OnCreate()
         {
-            this.RequireForUpdate<AfterBakedPrefabsElement>();
+            this.RequireForUpdate<BakedGameEntityProfileElement>();
             this.RequireForUpdate<LatestPresenterPrefabGOKey>();
             this.RequireForUpdate<PresenterPrefabGOMap>();
 
@@ -25,17 +25,17 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
 
             var em = this.EntityManager;
 
-            foreach (var afterBakedPrefabsBuffer in
+            foreach (var bakedProfiles in
                 SystemAPI.Query<
-                    DynamicBuffer<AfterBakedPrefabsElement>>())
+                    DynamicBuffer<BakedGameEntityProfileElement>>())
             {
-                int count = afterBakedPrefabsBuffer.Length;
+                int count = bakedProfiles.Length;
 
                 for (int i = 0; i < count; i++)
                 {
-                    var targetEntity = afterBakedPrefabsBuffer[i].PrimaryEntity;
-                    var presenterEntity = afterBakedPrefabsBuffer[i].PresenterEntity;
-                    var presenterPrefabGO = afterBakedPrefabsBuffer[i].OriginalPresenterGO.Value;
+                    var targetEntity = bakedProfiles[i].PrimaryEntity;
+                    var presenterEntity = bakedProfiles[i].PresenterEntity;
+                    var presenterPrefabGO = bakedProfiles[i].OriginalPresenterGO.Value;
 
                     if (targetEntity == Entity.Null) continue;
                     if (presenterEntity != Entity.Null) continue;

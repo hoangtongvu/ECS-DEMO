@@ -17,7 +17,7 @@ namespace Systems.Initialization.Player
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             state.RequireForUpdate(this.query);
@@ -30,9 +30,9 @@ namespace Systems.Initialization.Player
             state.Enabled = false;
 
             var profilesSOHolder = this.query.GetSingleton<PlayerProfilesSOHolder>();
-            var afterBakedPrefabsBuffer = this.query.GetSingletonBuffer<AfterBakedPrefabsElement>();
+            var bakedProfileElements = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>();
 
-            state.EntityManager.Instantiate(afterBakedPrefabsBuffer[0].PrimaryEntity);
+            state.EntityManager.Instantiate(bakedProfileElements[0].PrimaryEntity);
 
 
         }

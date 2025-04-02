@@ -21,7 +21,7 @@ namespace Authoring.Unit
                     Value = authoring.unitProfilesSO,
                 });
 
-                var buffer = AddBuffer<AfterBakedPrefabsElement>(entity);
+                var buffer = AddBuffer<BakedGameEntityProfileElement>(entity);
 
                 foreach (var profile in authoring.unitProfilesSO.Profiles)
                 {

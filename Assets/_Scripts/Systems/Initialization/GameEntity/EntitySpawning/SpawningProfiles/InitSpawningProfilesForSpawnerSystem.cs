@@ -21,7 +21,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     ToolProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             state.RequireForUpdate(this.query);

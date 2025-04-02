@@ -16,7 +16,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerBuildingProfilesSOHolder
-                    , AfterBakedPrefabsElement>()
+                    , BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -27,7 +27,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
         {
             this.Enabled = false;
             var profilesSOHolder = this.query.GetSingleton<PlayerBuildingProfilesSOHolder>();
-            var afterBakedPrefabsArray = this.query.GetSingletonBuffer<AfterBakedPrefabsElement>().ToNativeArray(Allocator.Temp);
+            var bakedProfileElementArray = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>().ToNativeArray(Allocator.Temp);
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 
             su.AddOrSetComponentData(new BuildableObjectChoiceIndex
@@ -43,7 +43,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             {
                 playerBuildableObjectElements.Add(new()
                 {
-                    Entity = afterBakedPrefabsArray[tempIndex].PrimaryEntity,
+                    Entity = bakedProfileElementArray[tempIndex].PrimaryEntity,
                     PreviewSprite = profile.Value.ProfilePicture,
                     Name = profile.Value.Name,
                     GridSquareSize = profile.Value.GameEntitySize.GridSquareSize,
@@ -54,7 +54,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 
             }
 
-            afterBakedPrefabsArray.Dispose();
+            bakedProfileElementArray.Dispose();
             ecb.Playback(this.EntityManager);
             ecb.Dispose();
 
