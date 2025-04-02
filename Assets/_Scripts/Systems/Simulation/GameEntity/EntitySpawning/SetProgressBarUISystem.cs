@@ -5,6 +5,9 @@ using ZBase.Foundation.PubSub;
 using Core.MyEvent.PubSub.Messages;
 using Components.Unit.UnitSelection;
 using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameEntity.EntitySpawning.SpawningProfiles;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -21,10 +24,16 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 .Build();
 
             this.RequireForUpdate(query);
+            this.RequireForUpdate<EntityToContainerIndexMap>();
+            this.RequireForUpdate<EntitySpawningDurationsContainer>();
+
         }
 
         protected override void OnUpdate()
         {
+            var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
+            var durationsContainer = SystemAPI.GetSingleton<EntitySpawningDurationsContainer>();
+
             foreach (var (spawningProfiles, uiSpawnedRef, spawnerEntity) in
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
@@ -42,9 +51,14 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 
                     if (profile.SpawnCount.Value <= 0) continue;
 
+                    float spawnDurationSeconds = this.GetDurationSeconds(
+                        in entityToContainerIndexMap
+                        , in durationsContainer
+                        , in profile.PrefabToSpawn);
+
                     // This means when nothing to spawned, UI won't update.
                     float progressValue =
-                        profile.SpawnDuration.DurationCounterSeconds / profile.SpawnDuration.SpawnDurationSeconds;
+                        profile.DurationCounterSeconds / spawnDurationSeconds;
 
                     GameplayMessenger.MessagePublisher.Publish(new SetProgressBarMessage
                     {
@@ -58,7 +72,21 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             }
 
         }
-        
+
+        private float GetDurationSeconds(
+            in EntityToContainerIndexMap entityToContainerIndexMap
+            , in EntitySpawningDurationsContainer durationsContainer
+            , in Entity prefabToSpawnEntity)
+        {
+            if (!entityToContainerIndexMap.Value.TryGetValue(prefabToSpawnEntity, out int containerIndex))
+            {
+                UnityEngine.Debug.Log(entityToContainerIndexMap.Value.Count);
+                throw new KeyNotFoundException($"{nameof(EntityToContainerIndexMap)} does not contain key: {prefabToSpawnEntity}");
+            }
+
+            return durationsContainer.Value[containerIndex];
+        }
+
     }
 
 }

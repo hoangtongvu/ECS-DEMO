@@ -36,6 +36,7 @@ namespace Authoring.GameEntity.EntitySpawning
                             Value = 0,
                             ValueChanged = false,
                         },
+                        DurationCounterSeconds = 0f,
 
                     });
 

@@ -9,6 +9,9 @@ using Components.ComponentMap;
 using Utilities.Helpers;
 using Components.Unit.UnitSelection;
 using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.EntitySpawning.SpawningProfiles;
+using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -28,12 +31,16 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             this.RequireForUpdate(query);
             this.RequireForUpdate<SpawnedUIMap>();
             this.RequireForUpdate<UIPrefabAndPoolMap>();
+            this.RequireForUpdate<EntityToContainerIndexMap>();
+            this.RequireForUpdate<EntitySpawningSpritesContainer>();
         }
 
         protected override void OnUpdate()
         {
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
+            var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
+            var spritesContainer = SystemAPI.GetSingleton<EntitySpawningSpritesContainer>();
 
             foreach (var (spawningProfiles, uiSpawnedRef, transformRef, spawnerEntity) in
                 SystemAPI.Query<
@@ -58,6 +65,8 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 this.SpawnProfileDisplays(
                     uiPrefabAndPoolMap
                     , spawnedUIMap
+                    , in entityToContainerIndexMap
+                    , in spritesContainer
                     , spawningProfiles
                     , spawnPos
                     , entitySpawningPanelCtrl
@@ -91,6 +100,8 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         private void SpawnProfileDisplays(
             UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
+            , in EntityToContainerIndexMap entityToContainerIndexMap
+            , in EntitySpawningSpritesContainer spritesContainer
             , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
             , float3 spawnPos
             , EntitySpawningPanelCtrl entitySpawningPanelCtrl
@@ -99,6 +110,14 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             for (int i = 0; i < spawningProfiles.Length; i++)
             {
                 ref var profile = ref spawningProfiles.ElementAt(i);
+
+                var keyEntity = profile.PrefabToSpawn;
+
+                if (!entityToContainerIndexMap.Value.TryGetValue(keyEntity, out int containerIndex))
+                {
+                    UnityEngine.Debug.Log(entityToContainerIndexMap.Value.Count);
+                    throw new KeyNotFoundException($"{nameof(EntityToContainerIndexMap)} does not contain key: {keyEntity}");
+                }
 
                 // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
                 var profileDisplayCtrl =
@@ -114,7 +133,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 profileDisplayCtrl.SpawnerEntity = spawnerEntity;
                 profileDisplayCtrl.SpawningProfileElementIndex = i;
 
-                profileDisplayCtrl.ProfilePic.sprite = profile.UnitSprite.Value;
+                profileDisplayCtrl.ProfilePic.sprite = spritesContainer.Value[containerIndex];
                 entitySpawningPanelCtrl.SpawningDisplaysHolder.Add(profileDisplayCtrl);
 
                 profileDisplayCtrl.gameObject.SetActive(true);
