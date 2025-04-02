@@ -114,10 +114,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 var keyEntity = profile.PrefabToSpawn;
 
                 if (!entityToContainerIndexMap.Value.TryGetValue(keyEntity, out int containerIndex))
-                {
-                    UnityEngine.Debug.Log(entityToContainerIndexMap.Value.Count);
                     throw new KeyNotFoundException($"{nameof(EntityToContainerIndexMap)} does not contain key: {keyEntity}");
-                }
 
                 // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
                 var profileDisplayCtrl =

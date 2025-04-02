@@ -71,10 +71,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             private float GetDurationSeconds(in Entity prefabToSpawnEntity)
             {
                 if (!this.EntityToContainerIndexMap.Value.TryGetValue(prefabToSpawnEntity, out int containerIndex))
-                {
-                    UnityEngine.Debug.Log(this.EntityToContainerIndexMap.Value.Count);
                     throw new KeyNotFoundException($"{nameof(EntityToContainerIndexMap)} does not contain key: {prefabToSpawnEntity}");
-                }
 
                 return this.DurationsContainer.Value[containerIndex];
             }

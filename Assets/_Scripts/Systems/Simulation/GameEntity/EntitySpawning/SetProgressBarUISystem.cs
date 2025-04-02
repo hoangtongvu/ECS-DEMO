@@ -79,10 +79,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             , in Entity prefabToSpawnEntity)
         {
             if (!entityToContainerIndexMap.Value.TryGetValue(prefabToSpawnEntity, out int containerIndex))
-            {
-                UnityEngine.Debug.Log(entityToContainerIndexMap.Value.Count);
                 throw new KeyNotFoundException($"{nameof(EntityToContainerIndexMap)} does not contain key: {prefabToSpawnEntity}");
-            }
 
             return durationsContainer.Value[containerIndex];
         }
