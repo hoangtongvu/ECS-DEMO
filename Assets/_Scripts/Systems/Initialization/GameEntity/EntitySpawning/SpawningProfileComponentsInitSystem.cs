@@ -19,33 +19,15 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            var su = SingletonUtilities.GetInstance(state.EntityManager);
+            var query0 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    BakedGameEntityProfileElement
+                    , LocalSpawningProfilePictureElement
+                    , LocalSpawningDurationSecondsElement
+                    , LocalSpawningCostElement>()
+                .Build();
 
-            su.AddOrSetComponentData(new LatestCostMapIndex
-            {
-                Value = -1,
-            });
-
-            su.AddOrSetComponentData(new EntityToContainerIndexMap
-            {
-                Value = new(20, Allocator.Persistent),
-            });
-
-            su.AddOrSetComponentData(new EntitySpawningCostsContainer
-            {
-                Value = new(60, Allocator.Persistent),
-            });
-
-            su.AddOrSetComponentData(new EntitySpawningDurationsContainer
-            {
-                Value = new(20, Allocator.Persistent),
-            });
-
-            su.AddOrSetComponentData(new EntitySpawningSpritesContainer
-            {
-                Value = new(20, Allocator.Persistent),
-            });
-
+            state.RequireForUpdate(query0);
             state.RequireForUpdate<EnumLength<ResourceType>>();
 
         }
@@ -55,13 +37,26 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
         {
             state.Enabled = false;
 
-            var latestCostMapIndexRef = SystemAPI.GetSingletonRW<LatestCostMapIndex>();
-            var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
-            var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
-            var durationsContainer = SystemAPI.GetSingleton<EntitySpawningDurationsContainer>();
-            var spritesContainer = SystemAPI.GetSingleton<EntitySpawningSpritesContainer>();
+            int latestMapIndex = -1;
             int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
 
+            var entityToContainerIndexMap = new EntityToContainerIndexMap
+            {
+                Value = new(20, Allocator.Persistent),
+            };
+            var entitySpawningCostsContainer = new EntitySpawningCostsContainer
+            {
+                Value = new(60, Allocator.Persistent),
+            };
+            var durationsContainer = new EntitySpawningDurationsContainer
+            {
+                Value = new(20, Allocator.Persistent),
+            };
+            var spritesContainer = new EntitySpawningSpritesContainer
+            {
+                Value = new(20, Allocator.Persistent),
+            };
+            
             foreach (var (bakedProfiles, localProfilePictures, localSpawningDurations, localSpawningCosts) in
                 SystemAPI.Query<
                     DynamicBuffer<BakedGameEntityProfileElement>
@@ -73,7 +68,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
 
                 for (int i = 0; i < profileCount; i++)
                 {
-                    int nextMapIndex = latestCostMapIndexRef.ValueRO.Value + 1;
+                    int nextMapIndex = latestMapIndex + 1;
 
                     var key = bakedProfiles[i].PrimaryEntity;
                     if (key == Entity.Null) continue;
@@ -90,11 +85,17 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                         entitySpawningCostsContainer.Value.Add(localSpawningCosts[j].Value);
                     }
 
-                    latestCostMapIndexRef.ValueRW.Value++;
+                    latestMapIndex++;
 
                 }
 
             }
+
+            var su = SingletonUtilities.GetInstance(state.EntityManager);
+            su.AddOrSetComponentData(entityToContainerIndexMap);
+            su.AddOrSetComponentData(entitySpawningCostsContainer);
+            su.AddOrSetComponentData(durationsContainer);
+            su.AddOrSetComponentData(spritesContainer);
 
         }
 
