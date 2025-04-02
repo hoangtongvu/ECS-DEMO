@@ -1,15 +1,14 @@
 using Components.GameEntity;
 using Components.Harvest;
 using Components.Harvest.HarvesteeHp;
-using Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles;
 using Unity.Collections;
 using Unity.Entities;
 using Utilities;
 
 namespace Systems.Initialization.Harvest.HarvesteeHp
 {
-    [UpdateInGroup(typeof(AddSpawningProfilesSystemGroup))]
-    public partial class HarvesteeResourcceDropInfoMapInitSystem : SystemBase
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    public partial class HarvesteeResourceDropInfoMapInitSystem : SystemBase
     {
         private EntityQuery query;
 

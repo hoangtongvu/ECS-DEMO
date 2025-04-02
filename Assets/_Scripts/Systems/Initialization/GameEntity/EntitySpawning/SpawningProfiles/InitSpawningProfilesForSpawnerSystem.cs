@@ -10,7 +10,7 @@ using Unity.Entities;
 namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(AddSpawningProfilesSystemGroup))]
+    [UpdateAfter(typeof(SpawningProfileComponentsInitSystem))]
     [UpdateAfter(typeof(MapChangedSystemGroup))] // Make sure update after entity spawned to prevent missing NewlySpawnedTag.
     public partial struct InitSpawningProfilesForSpawnersSystem : ISystem
     {
@@ -24,7 +24,15 @@ namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
                     , BakedGameEntityProfileElement>()
                 .Build();
 
+            var query0 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    EntityToContainerIndexMap
+                    , EntitySpawningDurationsContainer
+                    , EntitySpawningSpritesContainer>()
+                .Build();
+
             state.RequireForUpdate(this.query);
+            state.RequireForUpdate(query0);
             state.RequireForUpdate<NewlySpawnedTag>();
 
         }
@@ -48,7 +56,10 @@ namespace Systems.Initialization.GameEntity.EntitySpawning.SpawningProfiles
                     var key = spawningProfileElement.PrefabToSpawn;
 
                     if (!entityToContainerIndexMap.Value.TryGetValue(key, out int containerIndex))
+                    {
+                        UnityEngine.Debug.Log(entityToContainerIndexMap.Value.Count);
                         throw new KeyNotFoundException($"{nameof(EntityToContainerIndexMap)} does not contain key: {key}");
+                    }
 
                     spawningProfileElement.UnitSprite = spritesContainer.Value[containerIndex];
                     spawningProfileElement.SpawnDuration = new()
