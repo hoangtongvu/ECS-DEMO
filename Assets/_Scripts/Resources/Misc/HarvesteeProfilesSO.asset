@@ -26,6 +26,9 @@ MonoBehaviour:
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
           type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
         HarvesteeType: 1
         MaxHp: 100
         ResourceDropInfo:
@@ -44,6 +47,9 @@ MonoBehaviour:
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 2afcb35a6e7e2884d8781889dbc859f3,
           type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
         HarvesteeType: 2
         MaxHp: 100
         ResourceDropInfo:

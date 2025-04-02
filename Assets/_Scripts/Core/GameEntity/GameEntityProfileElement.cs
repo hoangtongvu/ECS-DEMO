@@ -14,6 +14,8 @@ namespace Core.GameEntity
 
         public GameObject PrimaryEntityPrefab;
 
+        public GameEntitySize GameEntitySize;
+
     }
 
 }

@@ -9,7 +9,6 @@ namespace Core.Misc.WorldMap.WorldBuilding
     public class PlayerBuildingProfileElement : GameEntityProfileElement
     {
         [Header("PlayerBuilding ProfileElement")]
-        public GameEntitySize GameEntitySize;
         public uint MaxHp;
 
         [SerializedDictionary("ResourceType ", "Quantity")]

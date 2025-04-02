@@ -25,18 +25,16 @@ namespace Authoring.Tool
 
                 foreach (var profile in authoring.profilesSO.Profiles)
                 {
-                    var entityPrefabsElement = new AfterBakedPrefabsElement();
-
-                    entityPrefabsElement.OriginalPresenterGO = profile.Value.PresenterPrefab;
-
-                    if (profile.Value.IsPresenterEntity)
+                    buffer.Add(new()
                     {
-                        entityPrefabsElement.PresenterEntity = GetEntity(profile.Value.PresenterPrefab, TransformUsageFlags.None);
-                    }
+                        OriginalPresenterGO = profile.Value.PresenterPrefab,
+                        PrimaryEntity = GetEntity(profile.Value.PrimaryEntityPrefab, TransformUsageFlags.Dynamic),
+                        PresenterEntity = profile.Value.IsPresenterEntity
+                            ? GetEntity(profile.Value.PresenterPrefab, TransformUsageFlags.None)
+                            : Entity.Null,
+                        GameEntitySize = profile.Value.GameEntitySize,
+                    });
 
-                    entityPrefabsElement.PrimaryEntity = GetEntity(profile.Value.PrimaryEntityPrefab, TransformUsageFlags.Dynamic);
-
-                    buffer.Add(entityPrefabsElement);
                 }
                 
             }

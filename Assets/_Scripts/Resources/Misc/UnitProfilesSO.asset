@@ -21,14 +21,14 @@ MonoBehaviour:
         Name: NormalVillager
         ProfilePicture: {fileID: 21300000, guid: 40110438554b1d341bcfe47fad6030e4,
           type: 3}
-        PresenterPrefabId:
-          PresenterType: 2
-          LocalIndex: 0
         PresenterPrefab: {fileID: 7219495313904597495, guid: 299ce685e252d8f49816faced9676e9b,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: 0c1e1657d2ad0794488880ebc03ed100,
           type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
         UnitType: 1
         SpawnDurationSeconds: 5
         BaseSpawningCosts:
@@ -50,13 +50,13 @@ MonoBehaviour:
         Name: NormalKnight
         ProfilePicture: {fileID: 21300000, guid: 6f34760afcacfa946a441a9f5bda8873,
           type: 3}
-        PresenterPrefabId:
-          PresenterType: 2
-          LocalIndex: 1
         PresenterPrefab: {fileID: 0}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 3552774824711469151, guid: abf102b7e42e9874183ffb8ec9d78bfb,
           type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
         UnitType: 2
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
@@ -79,12 +79,12 @@ MonoBehaviour:
       Value:
         Name: NormalHarvester
         ProfilePicture: {fileID: 0}
-        PresenterPrefabId:
-          PresenterType: 2
-          LocalIndex: 2
         PresenterPrefab: {fileID: 0}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 0}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
         UnitType: 3
         SpawnDurationSeconds: 5
         BaseSpawningCosts:

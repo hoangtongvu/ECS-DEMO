@@ -23,3 +23,6 @@ MonoBehaviour:
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 1335492856152722597, guid: 16fcba7f92a037145a3b9c5e53f2e7ef,
           type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
