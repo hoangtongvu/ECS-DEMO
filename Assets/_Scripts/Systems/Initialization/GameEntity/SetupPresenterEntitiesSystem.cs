@@ -6,10 +6,9 @@ using Unity.Transforms;
 
 namespace Systems.Initialization.GameEntity
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
     public partial class SetupPresenterEntitiesSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             this.RequireForUpdate<BakedGameEntityProfileElement>();
