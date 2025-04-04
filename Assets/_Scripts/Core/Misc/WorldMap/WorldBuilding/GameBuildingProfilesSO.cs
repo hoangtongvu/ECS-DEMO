@@ -8,7 +8,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
     [System.Serializable]
     public class GameBuildingProfileElement : GameEntityProfileElement
     {
-        [Header("PlayerBuilding ProfileElement")]
+        [Header("GameBuilding ProfileElement")]
         public uint MaxHp;
 
         [SerializedDictionary("ResourceType ", "Quantity")]
