@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f80802a9b7f16b42a36812265d7d064, type: 3}
-  m_Name: PlayerBuildingProfilesSO
+  m_Script: {fileID: 11500000, guid: f5ab5060fecac1f49aa9299816930a67, type: 3}
+  m_Name: GameBuildingProfilesSO
   m_EditorClassIdentifier: 
   Profiles:
     _serializedList:
