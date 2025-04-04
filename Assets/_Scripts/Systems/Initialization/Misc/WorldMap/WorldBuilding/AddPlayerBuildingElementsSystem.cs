@@ -15,7 +15,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
         {
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    PlayerBuildingProfilesSOHolder
+                    GameBuildingProfilesSOHolder
                     , BakedGameEntityProfileElement>()
                 .Build();
 
@@ -26,7 +26,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
         protected override void OnUpdate()
         {
             this.Enabled = false;
-            var profilesSOHolder = this.query.GetSingleton<PlayerBuildingProfilesSOHolder>();
+            var profilesSOHolder = this.query.GetSingleton<GameBuildingProfilesSOHolder>();
             var bakedProfileElementArray = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>().ToNativeArray(Allocator.Temp);
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 

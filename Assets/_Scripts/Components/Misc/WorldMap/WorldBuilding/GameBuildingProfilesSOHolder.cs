@@ -3,9 +3,9 @@ using Unity.Entities;
 
 namespace Components.Misc.WorldMap.WorldBuilding
 {
-    public struct PlayerBuildingProfilesSOHolder : IComponentData
+    public struct GameBuildingProfilesSOHolder : IComponentData
     {
-        public UnityObjectRef<PlayerBuildingProfilesSO> Value;
+        public UnityObjectRef<GameBuildingProfilesSO> Value;
     }
 
 }

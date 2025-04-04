@@ -5,24 +5,24 @@ namespace Core.Misc.WorldMap.WorldBuilding
 {
     [Serializable]
     [StructLayout(LayoutKind.Explicit)]
-    public struct PlayerBuildingProfileId : IEquatable<PlayerBuildingProfileId>
+    public struct GameBuildingProfileId : IEquatable<GameBuildingProfileId>
     {
         [FieldOffset(0)] private readonly byte _raw;
         [FieldOffset(0)] public byte VariantIndex;
 
-        public bool Equals(PlayerBuildingProfileId other)
+        public bool Equals(GameBuildingProfileId other)
             => this._raw == other._raw;
 
         public override bool Equals(object obj)
-            => obj is PlayerBuildingProfileId other && this._raw == other._raw;
+            => obj is GameBuildingProfileId other && this._raw == other._raw;
 
         public override int GetHashCode()
             => this._raw.GetHashCode();
 
-        public static bool operator ==(PlayerBuildingProfileId left, PlayerBuildingProfileId right)
+        public static bool operator ==(GameBuildingProfileId left, GameBuildingProfileId right)
             => left._raw == right._raw;
 
-        public static bool operator !=(PlayerBuildingProfileId left, PlayerBuildingProfileId right)
+        public static bool operator !=(GameBuildingProfileId left, GameBuildingProfileId right)
             => left._raw != right._raw;
 
         public override string ToString()

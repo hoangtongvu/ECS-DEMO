@@ -6,17 +6,17 @@ using UnityEngine;
 
 namespace Authoring.Misc.WorldMap.WorldBuilding
 {
-    public class PlayerBuildingProfilesSOBakingAuthoring : MonoBehaviour
+    public class GameBuildingProfilesSOBakingAuthoring : MonoBehaviour
     {
-        [SerializeField] private PlayerBuildingProfilesSO profilesSO;
+        [SerializeField] private GameBuildingProfilesSO profilesSO;
 
-        private class Baker : Baker<PlayerBuildingProfilesSOBakingAuthoring>
+        private class Baker : Baker<GameBuildingProfilesSOBakingAuthoring>
         {
-            public override void Bake(PlayerBuildingProfilesSOBakingAuthoring authoring)
+            public override void Bake(GameBuildingProfilesSOBakingAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.None);
 
-                AddComponent(entity, new PlayerBuildingProfilesSOHolder
+                AddComponent(entity, new GameBuildingProfilesSOHolder
                 {
                     Value = authoring.profilesSO,
                 });

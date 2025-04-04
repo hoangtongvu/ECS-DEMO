@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Core.Misc.WorldMap.WorldBuilding
 {
     [System.Serializable]
-    public class PlayerBuildingProfileElement : GameEntityProfileElement
+    public class GameBuildingProfileElement : GameEntityProfileElement
     {
         [Header("PlayerBuilding ProfileElement")]
         public uint MaxHp;
@@ -15,10 +15,10 @@ namespace Core.Misc.WorldMap.WorldBuilding
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;
     }
 
-    [CreateAssetMenu(fileName = "PlayerBuildingProfilesSO", menuName = "SO/GameEntity/PlayerBuildingProfilesSO")]
-    public class PlayerBuildingProfilesSO : GameEntityProfilesSO<PlayerBuildingProfileId, PlayerBuildingProfileElement>
+    [CreateAssetMenu(fileName = "GameBuildingProfilesSO", menuName = "SO/GameEntity/GameBuildingProfilesSO")]
+    public class GameBuildingProfilesSO : GameEntityProfilesSO<GameBuildingProfileId, GameBuildingProfileElement>
     {
-        public static readonly string DefaultAssetPath = "Misc/PlayerBuildingProfilesSO";
+        public static readonly string DefaultAssetPath = "Misc/GameBuildingProfilesSO";
     }
 
 }

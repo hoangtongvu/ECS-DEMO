@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -1070736940832637066}
   - component: {fileID: -1181553954447279153}
   m_Layer: 0
-  m_Name: PlayerBuildingProfilesSOBaker
+  m_Name: GameBuildingProfilesSOBaker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1640785096646030297}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3411344f38b007446bb6600e776f6e57, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ff99e0f33d82c44dabf6c7346eaf9d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   profilesSO: {fileID: 11400000, guid: 1c795bedc3cef004eb0abc41f7072480, type: 2}
