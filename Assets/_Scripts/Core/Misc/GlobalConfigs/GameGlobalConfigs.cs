@@ -4,7 +4,6 @@ namespace Core.Misc.GlobalConfigs
     public struct GameGlobalConfigs
     {
         public float EntityMoveSpeedScale = 1f;
-        public float UnitInteractRadius = 1.5f;
 
         public float UnitWalkSpeed = 3f;
         public float UnitRunSpeed = 7f;

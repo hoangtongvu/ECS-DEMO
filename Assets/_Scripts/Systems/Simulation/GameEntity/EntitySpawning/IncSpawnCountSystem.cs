@@ -6,12 +6,12 @@ using Core.GameResource;
 using Components;
 using Core.MyEvent.PubSub.Messages;
 using Utilities.Extensions;
-using Components.Unit.UnitSelection;
 using Components.Player;
 using System.Collections.Generic;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.Misc;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -36,7 +36,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 
             var entityQuery2 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelectedTag
+                    WithinPlayerAutoInteractRadiusTag
                     , EntitySpawningProfileElement>()
                     .Build();
             

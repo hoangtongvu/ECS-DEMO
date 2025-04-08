@@ -7,16 +7,14 @@ using Unity.Physics;
 using Core;
 using Components.Misc;
 using Utilities.Helpers;
-using Components.Misc.GlobalConfigs;
+using Unity.Mathematics;
 
 namespace Systems.Simulation.GameResource
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct ResourceItemPickupSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -36,6 +34,7 @@ namespace Systems.Simulation.GameResource
 
             state.RequireForUpdate(query0);
             state.RequireForUpdate(query1);
+            state.RequireForUpdate<AutoInteractRadius>();
         }
 
 
@@ -46,8 +45,7 @@ namespace Systems.Simulation.GameResource
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
-            float interactRadius = gameGlobalConfigs.Value.UnitInteractRadius;
+            half autoInteractRadius = SystemAPI.GetSingleton<AutoInteractRadius>().Value;
 
             foreach (var (resourceItemICDRef, transformRef, unitCannotPickupTag, itemEntity) in
                 SystemAPI.Query<
@@ -62,7 +60,7 @@ namespace Systems.Simulation.GameResource
                 bool hasHit =
                     physicsWorld.OverlapSphere(
                         transformRef.ValueRO.Position
-                        , interactRadius
+                        , autoInteractRadius
                         , ref hitList
                         , new CollisionFilter
                         {
@@ -99,9 +97,10 @@ namespace Systems.Simulation.GameResource
                     break;
 
                 }
-            }
-        }
 
+            }
+
+        }
 
         [BurstCompile]
         private uint GetCollidesWith(bool unitCannotPickupItem)
@@ -111,7 +110,6 @@ namespace Systems.Simulation.GameResource
 
             return collidesWith;
         }
-
 
     }
 

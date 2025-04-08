@@ -3,11 +3,11 @@ using Components;
 using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
 using Core.MyEvent.PubSub.Messages;
-using Components.Unit.UnitSelection;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using System.Collections.Generic;
+using Components.Misc;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -18,7 +18,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelectedTag
+                    WithinPlayerAutoInteractRadiusTag
                     , EntitySpawningProfileElement
                     , UISpawned>()
                 .Build();
@@ -38,7 +38,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
                     , RefRO<UISpawned>>()
-                    .WithAll<UnitSelectedTag>()
+                    .WithAll<WithinPlayerAutoInteractRadiusTag>()
                     .WithEntityAccess())
             {
                 if (!uiSpawnedRef.ValueRO.IsSpawned) continue;

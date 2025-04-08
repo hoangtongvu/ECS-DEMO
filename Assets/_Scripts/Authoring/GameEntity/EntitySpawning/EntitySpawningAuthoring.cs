@@ -1,4 +1,5 @@
 ﻿using Components.GameEntity.EntitySpawning;
+using Components.Misc;
 using Core.GameEntity;
 using System;
 using Unity.Entities;
@@ -18,6 +19,8 @@ namespace Authoring.GameEntity.EntitySpawning
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<NewlySpawnedTag>(entity);
+                AddComponent<WithinPlayerAutoInteractRadiusTag>(entity);
+                SetComponentEnabled<WithinPlayerAutoInteractRadiusTag>(entity, false);
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 

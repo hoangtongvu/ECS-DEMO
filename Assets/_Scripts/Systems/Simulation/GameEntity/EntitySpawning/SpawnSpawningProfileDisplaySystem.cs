@@ -7,11 +7,11 @@ using Core.UI.EntitySpawningPanel;
 using Core.UI.EntitySpawningPanel.SpawningProfileDisplay;
 using Components.ComponentMap;
 using Utilities.Helpers;
-using Components.Unit.UnitSelection;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using System.Collections.Generic;
+using Components.Misc;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -22,7 +22,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelectedTag
+                    WithinPlayerAutoInteractRadiusTag
                     , EntitySpawningProfileElement
                     , UISpawned
                     , LocalTransform>()
@@ -47,7 +47,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                     DynamicBuffer<EntitySpawningProfileElement>
                     , RefRW<UISpawned>
                     , RefRO<LocalTransform>>()
-                    .WithAll<UnitSelectedTag>()
+                    .WithAll<WithinPlayerAutoInteractRadiusTag>()
                     .WithEntityAccess())
             {
                 bool canSpawn = !uiSpawnedRef.ValueRO.IsSpawned;

@@ -3,9 +3,9 @@ using Components;
 using Unity.Transforms;
 using Components.ComponentMap;
 using Utilities.Helpers;
-using Components.Unit.UnitSelection;
 using Core.UI.EntitySpawningPanel;
 using Components.GameEntity.EntitySpawning;
+using Components.Misc;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -16,7 +16,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelectedTag
+                    WithinPlayerAutoInteractRadiusTag
                     , EntitySpawningProfileElement
                     , UISpawned
                     , LocalTransform>()
@@ -36,7 +36,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
                     , RefRW<UISpawned>>()
-                    .WithDisabled<UnitSelectedTag>())
+                    .WithDisabled<WithinPlayerAutoInteractRadiusTag>())
             {
                 bool canDespawn = uiSpawnedRef.ValueRO.IsSpawned;
                 if (!canDespawn) continue;
