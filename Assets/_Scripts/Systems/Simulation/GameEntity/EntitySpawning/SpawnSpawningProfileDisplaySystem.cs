@@ -12,6 +12,7 @@ using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using System.Collections.Generic;
 using Components.Misc;
+using LitMotion;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -53,6 +54,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 bool canSpawn = !uiSpawnedRef.ValueRO.IsSpawned;
                 if (!canSpawn) continue;
 
+                float3 fromPos = transformRef.ValueRO.Position;
                 float3 spawnPos = transformRef.ValueRO.Position + uiSpawnedRef.ValueRO.SpawnPosOffset;
 
                 this.SpawnEntitySpawningPanel(
@@ -70,7 +72,10 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                     , spawningProfiles
                     , spawnPos
                     , entitySpawningPanelCtrl
-                    , in spawnerEntity);
+                    , in spawnerEntity
+                    , out var spawningProfileDisplayCtrls);
+
+                this.SetTween(entitySpawningPanelCtrl, spawningProfileDisplayCtrls, fromPos, spawnPos);
 
                 uiSpawnedRef.ValueRW.IsSpawned = true;
 
@@ -93,8 +98,6 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                     , spawnPos);
 
             uiSpawned.UIID = entitySpawningPanelCtrl.RuntimeUIID;
-
-            entitySpawningPanelCtrl.gameObject.SetActive(true);
         }
 
         private void SpawnProfileDisplays(
@@ -105,9 +108,13 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             , DynamicBuffer<EntitySpawningProfileElement> spawningProfiles
             , float3 spawnPos
             , EntitySpawningPanelCtrl entitySpawningPanelCtrl
-            , in Entity spawnerEntity)
+            , in Entity spawnerEntity
+            , out List<SpawningProfileDisplayCtrl> spawningProfileDisplayCtrls)
         {
-            for (int i = 0; i < spawningProfiles.Length; i++)
+            int count = spawningProfiles.Length;
+            spawningProfileDisplayCtrls = new(count);
+
+            for (int i = 0; i < count; i++)
             {
                 ref var profile = ref spawningProfiles.ElementAt(i);
 
@@ -133,7 +140,36 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 profileDisplayCtrl.ProfilePic.sprite = spritesContainer.Value[containerIndex];
                 entitySpawningPanelCtrl.SpawningDisplaysHolder.Add(profileDisplayCtrl);
 
+                spawningProfileDisplayCtrls.Add(profileDisplayCtrl);
+            }
+
+        }
+
+        private void SetTween(
+            EntitySpawningPanelCtrl entitySpawningPanelCtrl
+            , List<SpawningProfileDisplayCtrl> spawningProfileDisplayCtrls
+            , float3 fromPos
+            , float3 toPos)
+        {
+            int profileCount = spawningProfileDisplayCtrls.Count;
+
+            entitySpawningPanelCtrl.gameObject.SetActive(true);
+            LMotion.Create(float3.zero, new float3(1, 1, 1), 1f)
+                .WithEase(Ease.OutExpo)
+                .Bind(tempScale => entitySpawningPanelCtrl.transform.localScale = tempScale);
+
+            LMotion.Create(fromPos, toPos, 1f)
+                .WithEase(Ease.OutExpo)
+                .Bind(tempPos => entitySpawningPanelCtrl.transform.position = tempPos);
+
+            for (int i = 0; i < profileCount; i++)
+            {
+                var profileDisplayCtrl = spawningProfileDisplayCtrls[i];
                 profileDisplayCtrl.gameObject.SetActive(true);
+
+                LMotion.Create(float3.zero, new float3(1, 1, 1), 1f)
+                    .WithEase(Ease.OutExpo)
+                    .Bind(tempScale => profileDisplayCtrl.transform.localScale = tempScale);
 
             }
 

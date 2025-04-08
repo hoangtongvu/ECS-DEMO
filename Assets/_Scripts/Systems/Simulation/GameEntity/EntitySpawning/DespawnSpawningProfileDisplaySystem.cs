@@ -6,6 +6,8 @@ using Utilities.Helpers;
 using Core.UI.EntitySpawningPanel;
 using Components.GameEntity.EntitySpawning;
 using Components.Misc;
+using LitMotion;
+using Unity.Mathematics;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -32,20 +34,21 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
 
-            foreach (var (spawningProfiles, uiSpawnedRef) in
+            foreach (var (spawningProfiles, uiSpawnedRef, transformRef) in
                 SystemAPI.Query<
                     DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRW<UISpawned>>()
+                    , RefRW<UISpawned>
+                    , RefRO<LocalTransform>>()
                     .WithDisabled<WithinPlayerAutoInteractRadiusTag>())
             {
                 bool canDespawn = uiSpawnedRef.ValueRO.IsSpawned;
                 if (!canDespawn) continue;
 
-                spawnedUIMap.Value.TryGetValue(uiSpawnedRef.ValueRO.UIID.Value, out var spawningPanel);
+                spawnedUIMap.Value.TryGetValue(uiSpawnedRef.ValueRO.UIID.Value, out var baseUICtrl);
+                var spawningPanel = (EntitySpawningPanelCtrl)baseUICtrl;
 
-                this.DespawnProfileDisplays(uiPrefabAndPoolMap, spawnedUIMap, ((EntitySpawningPanelCtrl)spawningPanel).SpawningDisplaysHolder);
-
-                this.DespawnEntitySpawningPanel(uiPrefabAndPoolMap, spawnedUIMap, ref uiSpawnedRef.ValueRW);
+                this.DespawnEntitySpawningPanel(ref uiSpawnedRef.ValueRW);
+                this.SetTween(uiPrefabAndPoolMap, spawnedUIMap, spawningPanel, transformRef.ValueRO.Position);
 
                 uiSpawnedRef.ValueRW.IsSpawned = false;
 
@@ -53,30 +56,45 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 
         }
 
-        private void DespawnProfileDisplays(
+        private void DespawnEntitySpawningPanel(ref UISpawned uiSpawned) => uiSpawned.UIID = null;
+
+        private void SetTween(
             UIPrefabAndPoolMap uiPrefabAndPoolMap
             , SpawnedUIMap spawnedUIMap
-            , SpawningDisplaysHolder spawningDisplaysHolder)
+            , EntitySpawningPanelCtrl entitySpawningPanelCtrl
+            , float3 toPos)
         {
-            int length = spawningDisplaysHolder.SpawningProfileDisplayCtrls.Count;
+            var spawningProfileDisplayCtrls = entitySpawningPanelCtrl.SpawningDisplaysHolder.SpawningProfileDisplayCtrls;
+            int profileCount = spawningProfileDisplayCtrls.Count;
 
-            for (int i = 0; i < length; i++)
+            LMotion.Create(new float3(1, 1, 1), float3.zero, 1f)
+                .WithEase(Ease.OutExpo)
+                .WithOnComplete(() =>
+                {
+                    UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, entitySpawningPanelCtrl.RuntimeUIID);
+                })
+                .Bind(tempScale => entitySpawningPanelCtrl.transform.localScale = tempScale);
+
+            LMotion.Create(entitySpawningPanelCtrl.transform.position, toPos, 1f)
+                .WithEase(Ease.OutExpo)
+                .Bind(tempPos => entitySpawningPanelCtrl.transform.position = tempPos);
+
+            for (int i = 0; i < profileCount; i++)
             {
-                var runtimeUIID = spawningDisplaysHolder.SpawningProfileDisplayCtrls[i].RuntimeUIID;
-                UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, runtimeUIID);
+                var profileDisplayCtrl = spawningProfileDisplayCtrls[i];
+
+                LMotion.Create(new float3(1, 1, 1), float3.zero, 1f)
+                    .WithEase(Ease.OutExpo)
+                    .WithOnComplete(() =>
+                    {
+                        UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, profileDisplayCtrl.RuntimeUIID);
+                    })
+                    .Bind(tempScale => profileDisplayCtrl.transform.localScale = tempScale);
+
             }
-            
-            spawningDisplaysHolder.SpawningProfileDisplayCtrls.Clear();
 
-        }
+            spawningProfileDisplayCtrls.Clear();
 
-        private void DespawnEntitySpawningPanel(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
-            , ref UISpawned uiSpawned)
-        {
-            UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, uiSpawned.UIID.Value);
-            uiSpawned.UIID = null;
         }
 
     }

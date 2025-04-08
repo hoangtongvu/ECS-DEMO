@@ -7,6 +7,17 @@
       "dependencies": {},
       "hash": "f3ddbf09e20fc0c55b4468b86ccf05f0f5b04d25"
     },
+    "com.annulusgames.lit-motion": {
+      "version": "https://github.com/annulusgames/LitMotion.git?path=src/LitMotion/Assets/LitMotion",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.burst": "1.6.0",
+        "com.unity.collections": "1.5.1",
+        "com.unity.mathematics": "1.0.1"
+      },
+      "hash": "b946c3a10848a426a09baa395df5151792d7625e"
+    },
     "com.cysharp.unitask": {
       "version": "2.5.4",
       "depth": 0,
