@@ -18,6 +18,7 @@ using Components.Misc.WorldMap.PathFinding;
 using Components;
 using Components.Unit.MyMoveCommand;
 using Unity.Transforms;
+using Utilities.Helpers.Misc;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {
@@ -77,11 +78,10 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 distanceToTargetRef.ValueRW.CurrentDistance = 0;
 
                 var absoluteDistanceXZToTargetRef = SystemAPI.GetComponentRW<AbsoluteDistanceXZToTarget>(entity);
-                absoluteDistanceXZToTargetRef.ValueRW = new()
-                {
-                    X = 0,
-                    Z = 0,
-                };
+                AbsoluteDistanceXZToTargetHelper.SetDistance(
+                    ref absoluteDistanceXZToTargetRef.ValueRW
+                    , in transformRef.ValueRO.Position
+                    , in moveCommandElementRef.ValueRO.Float3);
 
                 WorldMapHelper.WorldPosToGridPos(in cellRadius, in transformRef.ValueRO.Position, out int2 startPos);
                 WorldMapHelper.WorldPosToGridPos(in cellRadius, in moveCommandElementRef.ValueRO.Float3, out int2 endPos);

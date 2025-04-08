@@ -2,8 +2,8 @@ using Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
-using Unity.Mathematics;
 using Components.Unit.MyMoveCommand;
+using Utilities.Helpers.Misc;
 
 namespace Systems.Simulation.Unit
 {
@@ -43,9 +43,10 @@ namespace Systems.Simulation.Unit
                 , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
                 , in MoveCommandElement moveCommandElement)
             {
-                var tempDelta = moveCommandElement.Float3 - transform.Position;
-                absoluteDistanceXZToTarget.X = math.abs(tempDelta.x);
-                absoluteDistanceXZToTarget.Z = math.abs(tempDelta.z);
+                AbsoluteDistanceXZToTargetHelper.SetDistance(
+                    ref absoluteDistanceXZToTarget
+                    , in transform.Position
+                    , in moveCommandElement.Float3);
 
             }
 

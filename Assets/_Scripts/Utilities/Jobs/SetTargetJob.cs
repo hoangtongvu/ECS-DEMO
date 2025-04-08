@@ -10,6 +10,8 @@ using Unity.Mathematics;
 using Utilities.Helpers;
 using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
+using Unity.Transforms;
+using Utilities.Helpers.Misc;
 
 namespace Utilities.Jobs
 {
@@ -27,6 +29,8 @@ namespace Utilities.Jobs
         [BurstCompile]
         void Execute(
             in UnitProfileIdHolder unitProfileIdHolder
+            , in LocalTransform transform
+            , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
             , EnabledRefRO<UnitSelectedTag> unitSelectedTag
             , EnabledRefRW<CanFindPathTag> canFindPathTag
             , ref MoveSpeedLinear moveSpeedLinear
@@ -59,6 +63,11 @@ namespace Utilities.Jobs
 
             moveSpeedLinear.Value = this.UnitMoveSpeed;
             canFindPathTag.ValueRW = true;
+
+            AbsoluteDistanceXZToTargetHelper.SetDistance(
+                ref absoluteDistanceXZToTarget
+                , in transform.Position
+                , this.TargetPosition);
 
         }
 
