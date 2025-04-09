@@ -11,6 +11,9 @@ using Utilities;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
 using Components.GameEntity;
+using Components.Misc.WorldMap.PathFinding;
+using Components.Misc.GlobalConfigs;
+using Utilities.Helpers.Misc;
 
 namespace Systems.Simulation.Tool
 {
@@ -56,6 +59,8 @@ namespace Systems.Simulation.Tool
         {
             var commandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
+            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            const float targetEntityWorldSquareRadius = 0.5f; // TODO: Find another way to get this value.
 
             foreach (var (toolTransformRef, toolEntity) in
                 SystemAPI.Query<
@@ -66,7 +71,7 @@ namespace Systems.Simulation.Tool
                 foreach (var (
                     unitTransformRef
                     , targetEntityRef
-                    , targetPosRef
+                    , worldSquareRadiusRef
                     , moveCommandElementRef
                     , unitProfileIdHolderRef
                     , interactingEntityRef
@@ -75,7 +80,7 @@ namespace Systems.Simulation.Tool
                     SystemAPI.Query<
                         RefRO<LocalTransform>
                         , RefRW<TargetEntity>
-                        , RefRW<TargetPosition>
+                        , RefRW<TargetEntityWorldSquareRadius>
                         , RefRW<MoveCommandElement>
                         , RefRO<UnitProfileIdHolder>
                         , RefRW<InteractingEntity>
@@ -101,14 +106,24 @@ namespace Systems.Simulation.Tool
 
                     if (!canOverrideMoveCommand) continue;
 
-                    //UnityEngine.Debug.Log($"{toolEntity.ToFixedString()} calling {unitEntity.ToFixedString()}");
-
-                    targetEntityRef.ValueRW.Value = toolEntity;
-                    targetPosRef.ValueRW.Value = toolTransformRef.ValueRO.Position;
-                    SystemAPI.SetComponentEnabled<TargetPosChangedTag>(unitEntity, true);
                     moveCommandElementRef.ValueRW.Float3 = toolTransformRef.ValueRO.Position;
                     moveCommandElementRef.ValueRW.TargetEntity = toolEntity;
-                    SystemAPI.SetComponentEnabled<CanMoveEntityTag>(unitEntity, true);
+
+                    targetEntityRef.ValueRW.Value = toolEntity;
+                    worldSquareRadiusRef.ValueRW.Value = new(targetEntityWorldSquareRadius);
+
+                    SystemAPI.SetComponent(unitEntity, new MoveSpeedLinear
+                    {
+                        Value = gameGlobalConfigs.Value.UnitRunSpeed,
+                    });
+                    SystemAPI.SetComponentEnabled<CanFindPathTag>(unitEntity, true);
+
+                    var absoluteDistanceXZToTargetRef = SystemAPI.GetComponentRW<AbsoluteDistanceXZToTarget>(unitEntity);
+
+                    AbsoluteDistanceXZToTargetHelper.SetDistance(
+                        ref absoluteDistanceXZToTargetRef.ValueRW
+                        , in unitTransformRef.ValueRO.Position
+                        , in toolTransformRef.ValueRO.Position);
 
                 }
 

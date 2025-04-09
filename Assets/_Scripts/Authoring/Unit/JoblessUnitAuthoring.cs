@@ -68,7 +68,7 @@ namespace Authoring.Unit
                 AddComponent<IsAliveTag>(entity);
 
 
-                AddComponent<MoveDirectionFloat2>(entity);
+                AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
                 {
                     Value = authoring.speed,
@@ -82,7 +82,7 @@ namespace Authoring.Unit
                 AddComponent<TargetPosChangedTag>(entity);
                 SetComponentEnabled<TargetPosChangedTag>(entity, false);
                 AddComponent<DistanceToTarget>(entity);
-                AddComponent<AbsoluteDistanceXZToTarget>(entity);
+                AddComponent(entity, AbsoluteDistanceXZToTarget.MaxDistance);
                 AddComponent(entity, new MoveCommandElement
                 {
                     CommandSource = MoveCommandSource.None,

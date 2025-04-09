@@ -19,6 +19,7 @@ using Components;
 using Components.Unit.MyMoveCommand;
 using Unity.Transforms;
 using Utilities.Helpers.Misc;
+using Components.Misc;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {
@@ -28,7 +29,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
     {
         const int startNodeIndex = -1;
         const int nullNodeIndex = -2;
-
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -54,6 +54,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             var exitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
             half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
+            half defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
 
             foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag, entity) in
                 SystemAPI.Query<
@@ -73,9 +74,9 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
 
                 waypoints.Clear();
 
-                // Init targetPos && distanceToTarget
-                targetPosRef.ValueRW.Value = transformRef.ValueRO.Position;
-                distanceToTargetRef.ValueRW.CurrentDistance = 0;
+                // Note: Init targetPos && distanceToTarget, make sure targetPos != transform.pos to prevent NaN at MoveDirectionFloat2 due to unsafe normalization.
+                targetPosRef.ValueRW.Value = transformRef.ValueRO.Position.Add(x: defaultStopMoveWorldRadius);
+                distanceToTargetRef.ValueRW.CurrentDistance = defaultStopMoveWorldRadius;
 
                 var absoluteDistanceXZToTargetRef = SystemAPI.GetComponentRW<AbsoluteDistanceXZToTarget>(entity);
                 AbsoluteDistanceXZToTargetHelper.SetDistance(

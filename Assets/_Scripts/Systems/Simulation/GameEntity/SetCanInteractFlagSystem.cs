@@ -19,7 +19,8 @@ namespace Systems.Simulation.GameEntity
                     TargetEntity
                     , DistanceToTarget
                     , AbsoluteDistanceXZToTarget
-                    , CanInteractEntityTag>()
+                    , CanInteractEntityTag
+                    , CanMoveEntityTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -44,6 +45,7 @@ namespace Systems.Simulation.GameEntity
                     , RefRO<TargetEntity>
                     , RefRO<TargetEntityWorldSquareRadius>> ()
                     .WithDisabled<CanInteractEntityTag>()
+                    .WithDisabled<CanMoveEntityTag>()
                     .WithEntityAccess())
             {
                 if (targetEntityRef.ValueRO.Value == Entity.Null) continue;
