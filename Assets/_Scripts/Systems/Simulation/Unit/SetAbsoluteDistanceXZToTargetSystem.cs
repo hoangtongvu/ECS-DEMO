@@ -8,7 +8,6 @@ using Utilities.Helpers.Misc;
 namespace Systems.Simulation.Unit
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateAfter(typeof(ChangeTargetPosWaypointSystem))]
     [BurstCompile]
     public partial struct SetAbsoluteDistanceXZToTargetSystem : ISystem
     {

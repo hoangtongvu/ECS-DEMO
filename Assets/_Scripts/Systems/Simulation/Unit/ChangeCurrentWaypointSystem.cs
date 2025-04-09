@@ -15,7 +15,7 @@ namespace Systems.Simulation.Unit
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
-    public partial struct ChangeTargetPosWaypointSystem : ISystem
+    public partial struct ChangeCurrentWaypointSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -24,12 +24,11 @@ namespace Systems.Simulation.Unit
                 .WithAll<
                     CanMoveEntityTag
                     , LocalTransform
-                    , DistanceToTarget
-                    , TargetPosition>()
+                    , DistanceToCurrentWaypoint
+                    , CurrentWorldWaypoint>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
-            
             state.RequireForUpdate<CellRadius>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
 
@@ -58,17 +57,17 @@ namespace Systems.Simulation.Unit
 
             private void Execute(
                 EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
-                , in DistanceToTarget distanceToTarget
-                , ref TargetPosition targetPosition
+                , in DistanceToCurrentWaypoint distanceToCurrentWaypoint
+                , ref CurrentWorldWaypoint currentWorldWaypoint
                 , EnabledRefRW<TargetPosChangedTag> targetPosChangedTag
                 , DynamicBuffer<WaypointElement> waypoints)
             {
                 if (!canMoveEntityTag.ValueRO) return;
-                if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveRadius)) return;
+                if (Hint.Likely(distanceToCurrentWaypoint.Value >= this.StopMoveRadius)) return;
                 if (!waypoints.TryPop(out var waypoint)) return;
 
                 WorldMapHelper.GridPosToWorldPos(in this.CellRadius, in waypoint.Value, out float3 worldPos);
-                targetPosition.Value = worldPos;
+                currentWorldWaypoint.Value = worldPos;
                 targetPosChangedTag.ValueRW = true;
 
             }

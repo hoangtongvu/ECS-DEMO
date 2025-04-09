@@ -29,7 +29,7 @@ namespace Systems.Simulation.Unit
                     UnitProfileIdHolder
                     , UnitSelectedTag
                     , CanMoveEntityTag
-                    , TargetPosition
+                    , CurrentWorldWaypoint
                     , MoveCommandElement
                     , MoveSpeedLinear>()
                 .Build();

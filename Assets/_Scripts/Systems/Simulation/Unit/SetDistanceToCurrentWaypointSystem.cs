@@ -7,9 +7,9 @@ using Utilities.Helpers;
 namespace Systems.Simulation.Unit
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateAfter(typeof(ChangeTargetPosWaypointSystem))]
+    [UpdateAfter(typeof(ChangeCurrentWaypointSystem))]
     [BurstCompile]
-    public partial struct SetCurrentDisToTargetSystem : ISystem
+    public partial struct SetDistanceToCurrentWaypointSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -18,8 +18,8 @@ namespace Systems.Simulation.Unit
                 .WithAll<
                     CanMoveEntityTag
                     , LocalTransform
-                    , DistanceToTarget
-                    , TargetPosition>()
+                    , DistanceToCurrentWaypoint
+                    , CurrentWorldWaypoint>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
@@ -29,20 +29,20 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new SetCurrDis().ScheduleParallel();
+            new SetDistanceJob().ScheduleParallel();
         }
 
         [WithAll(typeof(CanMoveEntityTag))]
         [BurstCompile]
-        private partial struct SetCurrDis : IJobEntity
+        private partial struct SetDistanceJob : IJobEntity
         {
             [BurstCompile]
             private void Execute(
                 in LocalTransform transform
-                , ref DistanceToTarget distanceToTarget
-                , in TargetPosition targetPosition)
+                , ref DistanceToCurrentWaypoint distanceToCurrentWaypoint
+                , in CurrentWorldWaypoint currentWorldWaypoint)
             {
-                distanceToTarget.CurrentDistance = MathHelper.GetDistance2(in transform.Position, in targetPosition.Value);
+                distanceToCurrentWaypoint.Value = MathHelper.GetDistance2(in transform.Position, in currentWorldWaypoint.Value);
             }
 
         }

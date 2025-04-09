@@ -56,12 +56,12 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             half defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
 
-            foreach (var (transformRef, moveCommandElementRef, targetPosRef, distanceToTargetRef, waypoints, canMoveEntityTag, canFindPathTag, entity) in
+            foreach (var (transformRef, moveCommandElementRef, currentWaypointRef, distanceToCurrentWaypointRef, waypoints, canMoveEntityTag, canFindPathTag, entity) in
                 SystemAPI.Query<
                     RefRO<LocalTransform>
                     , RefRO<MoveCommandElement>
-                    , RefRW<TargetPosition>
-                    , RefRW<DistanceToTarget>
+                    , RefRW<CurrentWorldWaypoint>
+                    , RefRW<DistanceToCurrentWaypoint>
                     , DynamicBuffer<WaypointElement>
                     , EnabledRefRW<CanMoveEntityTag>
                     , EnabledRefRW<CanFindPathTag>>()
@@ -75,8 +75,8 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 waypoints.Clear();
 
                 // Note: Init targetPos && distanceToTarget, make sure targetPos != transform.pos to prevent NaN at MoveDirectionFloat2 due to unsafe normalization.
-                targetPosRef.ValueRW.Value = transformRef.ValueRO.Position.Add(x: defaultStopMoveWorldRadius);
-                distanceToTargetRef.ValueRW.CurrentDistance = defaultStopMoveWorldRadius;
+                currentWaypointRef.ValueRW.Value = transformRef.ValueRO.Position.Add(x: defaultStopMoveWorldRadius);
+                distanceToCurrentWaypointRef.ValueRW.Value = defaultStopMoveWorldRadius;
 
                 var absoluteDistanceXZToTargetRef = SystemAPI.GetComponentRW<AbsoluteDistanceXZToTarget>(entity);
                 AbsoluteDistanceXZToTargetHelper.SetDistance(

@@ -17,7 +17,6 @@ namespace Systems.Simulation.GameEntity
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     TargetEntity
-                    , DistanceToTarget
                     , AbsoluteDistanceXZToTarget
                     , CanInteractEntityTag
                     , CanMoveEntityTag>()

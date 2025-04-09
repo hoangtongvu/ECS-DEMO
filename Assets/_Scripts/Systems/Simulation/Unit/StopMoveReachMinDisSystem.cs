@@ -13,7 +13,7 @@ using Unity.Physics;
 namespace Systems.Simulation.Unit
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateAfter(typeof(SetCurrentDisToTargetSystem))]
+    [UpdateAfter(typeof(SetDistanceToCurrentWaypointSystem))]
     [BurstCompile]
     public partial struct StopMoveReachMinDisSystem : ISystem
     {
@@ -23,7 +23,7 @@ namespace Systems.Simulation.Unit
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     CanMoveEntityTag
-                    , DistanceToTarget
+                    , DistanceToCurrentWaypoint
                     , MoveCommandElement
                     , PhysicsVelocity>()
                 .Build();
@@ -54,12 +54,12 @@ namespace Systems.Simulation.Unit
             void Execute(
                 EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
                 , ref MoveCommandElement moveCommandElement
-                , in DistanceToTarget distanceToTarget
+                , in DistanceToCurrentWaypoint distanceToCurrentWaypoint
                 , ref PhysicsVelocity physicsVelocity
                 , DynamicBuffer<WaypointElement> waypoints)
             {
                 if (!waypoints.IsEmpty) return;
-                if (Hint.Likely(distanceToTarget.CurrentDistance >= this.StopMoveWorldRadius)) return;
+                if (Hint.Likely(distanceToCurrentWaypoint.Value >= this.StopMoveWorldRadius)) return;
                 // velocityRef.ValueRW.Linear = 0;
                 canMoveEntityTag.ValueRW = false;
                 moveCommandElement.CommandSource = MoveCommandSource.None;

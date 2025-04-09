@@ -78,10 +78,10 @@ namespace Authoring.Unit
                 SetComponentEnabled<CanMoveEntityTag>(entity, false);
                 
 
-                AddComponent<TargetPosition>(entity);
+                AddComponent<CurrentWorldWaypoint>(entity);
                 AddComponent<TargetPosChangedTag>(entity);
                 SetComponentEnabled<TargetPosChangedTag>(entity, false);
-                AddComponent<DistanceToTarget>(entity);
+                AddComponent<DistanceToCurrentWaypoint>(entity);
                 AddComponent(entity, AbsoluteDistanceXZToTarget.MaxDistance);
                 AddComponent(entity, new MoveCommandElement
                 {

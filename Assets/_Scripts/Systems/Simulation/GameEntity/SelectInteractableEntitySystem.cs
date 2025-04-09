@@ -34,9 +34,7 @@ namespace Systems.Simulation.GameEntity
                     UnitSelectedTag
                     , CanMoveEntityTag
                     , LocalTransform
-                    , DistanceToTarget
                     , TargetEntity
-                    , TargetPosition
                     , MoveCommandElement>()
                 .Build();
 

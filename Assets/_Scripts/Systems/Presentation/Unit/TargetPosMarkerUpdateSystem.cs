@@ -12,19 +12,17 @@ using Unity.Collections;
 
 namespace Systems.Presentation.Unit
 {
-
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateAfter(typeof(TargetPosMarkerSpawnSystem))]
     [BurstCompile]
     public partial struct TargetPosMarkerUpdateSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    TargetPosition
+                    CurrentWorldWaypoint
                     , TargetPosChangedTag
                     , UnitSelectedTag>()
                 .Build();
@@ -46,8 +44,6 @@ namespace Systems.Presentation.Unit
 
         }
 
-
-
         [WithAll(typeof(UnitSelectedTag))]
         [WithAll(typeof(TargetPosChangedTag))]
         [BurstCompile]
@@ -61,13 +57,13 @@ namespace Systems.Presentation.Unit
 
             [BurstCompile]
             void Execute(
-                TargetPosition targetPos
+                CurrentWorldWaypoint currentWaypoint
                 , TargetPosMarkerHolder targetPosMarkerHolder)
             {
                 bool canGetTargetMarkerPos =
                     this.TryGetTargetMarkerPos(
                         in PhysicsWorld
-                        , targetPos.Value
+                        , currentWaypoint.Value
                         , out float3 targetMarkerPos);
 
                 if (!canGetTargetMarkerPos) return;
@@ -123,4 +119,5 @@ namespace Systems.Presentation.Unit
         }
 
     }
+
 }

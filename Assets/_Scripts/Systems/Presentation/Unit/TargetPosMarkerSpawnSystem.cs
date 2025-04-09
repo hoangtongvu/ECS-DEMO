@@ -11,18 +11,16 @@ using Unity.Burst;
 
 namespace Systems.Presentation.Unit
 {
-
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [BurstCompile]
     public partial struct TargetPosMarkerSpawnSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    TargetPosition
+                    CurrentWorldWaypoint
                     , TargetPosMarkerHolder
                     , NewlySelectedUnitTag
                     , NewlyDeselectedUnitTag>()
@@ -42,19 +40,18 @@ namespace Systems.Presentation.Unit
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
 
-            foreach (var (targetPosRef, targetPosMarkerHolderRef) in
+            foreach (var (currentWaypointRef, targetPosMarkerHolderRef) in
                 SystemAPI.Query<
-                    RefRO<TargetPosition>
+                    RefRO<CurrentWorldWaypoint>
                     , RefRW<TargetPosMarkerHolder>>()
                     .WithAll<NewlySelectedUnitTag>())
             {
                 //UnityEngine.Debug.Log("Unit just selected");
-
                 this.SpawnMarker(
                     ref state
                     , in physicsWorld
                     , in targetPosMarkerPrefab.Value
-                    , targetPosRef.ValueRO.Value
+                    , currentWaypointRef.ValueRO.Value
                     , ref targetPosMarkerHolderRef.ValueRW);
 
             }
@@ -65,7 +62,6 @@ namespace Systems.Presentation.Unit
                     .WithAll<NewlyDeselectedUnitTag>())
             {
                 //UnityEngine.Debug.Log("Unit just deselected");
-
                 this.DestroyMarker(
                     in ecb
                     , ref targetPosMarkerHolderRef.ValueRW);
@@ -135,4 +131,5 @@ namespace Systems.Presentation.Unit
         }
 
     }
+
 }

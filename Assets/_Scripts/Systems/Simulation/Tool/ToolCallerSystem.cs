@@ -5,7 +5,6 @@ using Components;
 using Components.Unit;
 using Unity.Transforms;
 using Unity.Mathematics;
-using Systems.Simulation.Unit;
 using Utilities.Helpers;
 using Utilities;
 using Components.Unit.MyMoveCommand;
@@ -18,7 +17,6 @@ using Utilities.Helpers.Misc;
 namespace Systems.Simulation.Tool
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateBefore(typeof(SetCurrentDisToTargetSystem))]
     [BurstCompile]
     public partial struct ToolCallerSystem : ISystem
     {
@@ -38,7 +36,6 @@ namespace Systems.Simulation.Tool
                     JoblessUnitTag
                     , LocalTransform
                     , TargetEntity
-                    , TargetPosition
                     , MoveCommandElement
                     , UnitProfileIdHolder>()
                 .Build();
