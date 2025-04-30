@@ -3,8 +3,6 @@ namespace Core.Misc.GlobalConfigs
     [System.Serializable]
     public struct GameGlobalConfigs
     {
-        public float EntityMoveSpeedScale = 1f;
-
         public float UnitWalkSpeed = 3f;
         public float UnitRunSpeed = 7f;
 
