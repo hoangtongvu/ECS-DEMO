@@ -15,6 +15,8 @@ using Components.Unit.Reaction;
 using Core.Unit.Reaction;
 using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
+using Core.Unit;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.Unit
 {
@@ -23,12 +25,26 @@ namespace Systems.Simulation.Unit
     public partial struct UnitPatrolSystem : ISystem
     {
         private Random rand;
+        private EntityQuery entityQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             this.rand = new(1);
             this.CreatePatrolRandomValuesMap(ref state);
+
+            this.entityQuery = SystemAPI.QueryBuilder()
+                .WithAll<NeedInitWalkTag>()
+                .WithAll<
+                    UnitProfileIdHolder
+                    , MoveCommandElement
+                    , InteractingEntity
+                    , InteractionTypeICD
+                    , LocalTransform
+                    , MoveSpeedLinear
+                    , CanFindPathTag>()
+                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
+                .Build();
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -50,6 +66,7 @@ namespace Systems.Simulation.Unit
             var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var randomValuesMap = SystemAPI.GetSingleton<PatrolRandomValuesMap>();
+            var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
             randomValuesMap.Value.Clear();
 
@@ -76,14 +93,20 @@ namespace Systems.Simulation.Unit
 
             }
 
+            var speedArray = new NativeArray<float>(this.entityQuery.CalculateEntityCount(), Allocator.TempJob);
+
+            var getSpeedsJobHandle = new GetWalkSpeedsJob()
+            {
+                UnitReactionConfigsMap = unitReactionConfigsMap,
+                OutputArray = speedArray,
+            }.ScheduleParallel(state.Dependency);
+
             state.Dependency = new SetPatrolJob
             {
                 moveCommandSourceMap = moveCommandSourceMap.Value,
                 RandomizedValueMap = randomValuesMap.Value,
-                UnitWalkMinDistance = gameGlobalConfigs.Value.UnitWalkMinDistance,
-                UnitWalkMaxDistance = gameGlobalConfigs.Value.UnitWalkMaxDistance,
-                UnitWalkSpeed = gameGlobalConfigs.Value.UnitWalkSpeed,
-            }.ScheduleParallel(state.Dependency);
+                SpeedArray = speedArray,
+            }.ScheduleParallel(getSpeedsJobHandle);
 
         }
 
@@ -120,13 +143,13 @@ namespace Systems.Simulation.Unit
 
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
-        private partial struct SetPatrolJob : IJobEntity
+        private partial struct GetWalkSpeedsJob : IJobEntity
         {
-            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
-            [ReadOnly] public NativeHashMap<Entity, PatrolRandomValues> RandomizedValueMap;
-            [ReadOnly] public float UnitWalkMinDistance; // Need to del
-            [ReadOnly] public float UnitWalkMaxDistance; // Need to del
-            [ReadOnly] public float UnitWalkSpeed;
+            [ReadOnly]
+            public NativeHashMap<UnitProfileId, UnitReactionConfigs> UnitReactionConfigsMap;
+
+            [NativeDisableParallelForRestriction]
+            public NativeArray<float> OutputArray;
 
             [BurstCompile]
             void Execute(
@@ -138,7 +161,42 @@ namespace Systems.Simulation.Unit
                 , in LocalTransform transform
                 , ref MoveSpeedLinear moveSpeed
                 , EnabledRefRW<CanFindPathTag> canFindPathTag
-                , Entity entity)
+                , [EntityIndexInQuery] int entityIndex)
+            {
+                if (!needInitWalkTag.ValueRO) return;
+
+                if (!this.UnitReactionConfigsMap.TryGetValue(unitProfileIdHolder.Value, out var unitReactionConfigs))
+                    throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolder.Value}");
+
+                this.OutputArray[entityIndex] = unitReactionConfigs.UnitWalkSpeed;
+
+            }
+
+        }
+
+        [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
+        [BurstCompile]
+        private partial struct SetPatrolJob : IJobEntity
+        {
+            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
+            [ReadOnly] public NativeHashMap<Entity, PatrolRandomValues> RandomizedValueMap;
+
+            [DeallocateOnJobCompletion]
+            [ReadOnly]
+            public NativeArray<float> SpeedArray;
+
+            [BurstCompile]
+            void Execute(
+                EnabledRefRW<NeedInitWalkTag> needInitWalkTag
+                , in UnitProfileIdHolder unitProfileIdHolder
+                , ref MoveCommandElement moveCommandElement
+                , ref InteractingEntity interactingEntity
+                , ref InteractionTypeICD interactionTypeICD
+                , in LocalTransform transform
+                , ref MoveSpeedLinear moveSpeed
+                , EnabledRefRW<CanFindPathTag> canFindPathTag
+                , Entity entity
+                , [EntityIndexInQuery] int entityIndex)
             {
                 if (!needInitWalkTag.ValueRO) return;
                 needInitWalkTag.ValueRW = false;
@@ -166,7 +224,7 @@ namespace Systems.Simulation.Unit
                 moveCommandElement.Float3 = randomPoint;
 
                 // Set move speed
-                moveSpeed.Value = this.UnitWalkSpeed;
+                moveSpeed.Value = this.SpeedArray[entityIndex];
 
                 canFindPathTag.ValueRW = true;
 
