@@ -69,8 +69,8 @@ MonoBehaviour:
           UnitWalkSpeed: 6
           UnitRunSpeed: 10
           UnitIdleMaxDuration: 3
-          UnitWalkMinDistance: 2
-          UnitWalkMaxDistance: 5
+          UnitWalkMinDistance: 7
+          UnitWalkMaxDistance: 10
         BaseSpawningCosts:
           _serializedList:
           - Key: 0

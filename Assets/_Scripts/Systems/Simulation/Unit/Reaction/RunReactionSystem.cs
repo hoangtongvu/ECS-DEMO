@@ -3,7 +3,6 @@ using Unity.Burst;
 using Components;
 using Components.Damage;
 using Components.Unit;
-using Components.Misc.GlobalConfigs;
 using Components.Unit.Reaction;
 using Utilities.Extensions;
 using System.Collections.Generic;
@@ -17,8 +16,6 @@ namespace Systems.Simulation.Unit.Reaction
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<GameGlobalConfigsICD>();
-
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
                     RunStartedTag

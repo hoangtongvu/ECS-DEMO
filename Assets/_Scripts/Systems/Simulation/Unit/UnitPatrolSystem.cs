@@ -3,7 +3,6 @@ using Unity.Burst;
 using Components;
 using Components.Damage;
 using Components.Unit;
-using Components.Misc.GlobalConfigs;
 using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
 using Unity.Mathematics;
@@ -55,7 +54,6 @@ namespace Systems.Simulation.Unit
                 .Build();
 
             state.RequireForUpdate(query0);
-
             state.RequireForUpdate<MoveCommandSourceMap>();
 
         }
@@ -63,23 +61,26 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var randomValuesMap = SystemAPI.GetSingleton<PatrolRandomValuesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
             randomValuesMap.Value.Clear();
 
-            foreach (var (idleTimeCounterRef, needInitWalkTag, entity) in
+            foreach (var (unitProfileIdHolderRef, idleTimeCounterRef, needInitWalkTag, entity) in
                 SystemAPI.Query<
-                    RefRW<UnitIdleTimeCounter>
+                    RefRO<UnitProfileIdHolder>
+                    , RefRW<UnitIdleTimeCounter>
                     , EnabledRefRW<NeedInitWalkTag>>()
                     .WithAll<IsAliveTag>()
                     .WithDisabled<IsUnitWorkingTag>()
                     .WithEntityAccess()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                bool idleTimeExceeded = idleTimeCounterRef.ValueRO.Value >= gameGlobalConfigs.Value.UnitIdleMaxDuration;
+                if (!unitReactionConfigsMap.TryGetValue(unitProfileIdHolderRef.ValueRO.Value, out var unitReactionConfigs))
+                    throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolderRef.ValueRO.Value}");
+
+                bool idleTimeExceeded = idleTimeCounterRef.ValueRO.Value >= unitReactionConfigs.UnitIdleMaxDuration;
                 if (!idleTimeExceeded) continue;
 
                 idleTimeCounterRef.ValueRW.Value = 0;
@@ -88,8 +89,8 @@ namespace Systems.Simulation.Unit
                 this.AddRandomValuesIntoMap(
                     in randomValuesMap
                     , in entity
-                    , gameGlobalConfigs.Value.UnitWalkMinDistance
-                    , gameGlobalConfigs.Value.UnitWalkMaxDistance);
+                    , unitReactionConfigs.UnitWalkMinDistance
+                    , unitReactionConfigs.UnitWalkMaxDistance);
 
             }
 
