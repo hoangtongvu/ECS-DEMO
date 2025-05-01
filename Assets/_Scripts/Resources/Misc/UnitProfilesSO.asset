@@ -31,6 +31,12 @@ MonoBehaviour:
           ObjectHeight: 0
         UnitType: 1
         SpawnDurationSeconds: 5
+        UnitReactionConfigs:
+          UnitWalkSpeed: 3
+          UnitRunSpeed: 7
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
         BaseSpawningCosts:
           _serializedList:
           - Key: 2
@@ -59,6 +65,12 @@ MonoBehaviour:
           ObjectHeight: 0
         UnitType: 2
         SpawnDurationSeconds: 3
+        UnitReactionConfigs:
+          UnitWalkSpeed: 6
+          UnitRunSpeed: 10
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 7
+          UnitWalkMaxDistance: 10
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -87,6 +99,12 @@ MonoBehaviour:
           ObjectHeight: 0
         UnitType: 3
         SpawnDurationSeconds: 5
+        UnitReactionConfigs:
+          UnitWalkSpeed: 3
+          UnitRunSpeed: 7
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
         BaseSpawningCosts:
           _serializedList:
           - Key: 2
@@ -99,3 +117,5 @@ MonoBehaviour:
             Value: 1
           - Key: 3
             Value: 2
+  UnitGlobalConfigs:
+    MoveSpeedScale: 1

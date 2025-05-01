@@ -1,10 +1,9 @@
-namespace Core.Misc.GlobalConfigs
+
+namespace Core.Unit.Reaction
 {
     [System.Serializable]
-    public struct GameGlobalConfigs
+    public struct UnitReactionConfigs
     {
-        public float EntityMoveSpeedScale = 1f;
-
         public float UnitWalkSpeed = 3f;
         public float UnitRunSpeed = 7f;
 
@@ -12,7 +11,7 @@ namespace Core.Misc.GlobalConfigs
         public float UnitWalkMinDistance = 2f;
         public float UnitWalkMaxDistance = 5f;
 
-        public GameGlobalConfigs() { }
+        public UnitReactionConfigs() { }
     }
 
 }

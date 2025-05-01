@@ -3,23 +3,19 @@ using Unity.Burst;
 using Components;
 using Components.Damage;
 using Components.Unit;
-using Components.Misc.GlobalConfigs;
 using Components.Unit.Reaction;
 using Utilities.Extensions;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.Unit.Reaction
 {
-
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [BurstCompile]
     public partial struct RunReactionSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<GameGlobalConfigsICD>();
-
             EntityQuery query = SystemAPI.QueryBuilder()
                 .WithAll<
                     RunStartedTag
@@ -37,11 +33,12 @@ namespace Systems.Simulation.Unit.Reaction
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
-            foreach (var (reactionStartedTag, isAliveTag, isUnitWorkingTag, canMoveEntityTag, moveSpeedLinearRef, animatorDataRef) in
+            foreach (var (unitProfileIdHolderRef, reactionStartedTag, isAliveTag, isUnitWorkingTag, canMoveEntityTag, moveSpeedLinearRef, animatorDataRef) in
                 SystemAPI.Query<
-                    EnabledRefRW <RunStartedTag>
+                    RefRO<UnitProfileIdHolder>
+                    , EnabledRefRW <RunStartedTag>
                     , EnabledRefRO<IsAliveTag>
                     , EnabledRefRO<IsUnitWorkingTag>
                     , EnabledRefRO<CanMoveEntityTag>
@@ -49,8 +46,11 @@ namespace Systems.Simulation.Unit.Reaction
                     , RefRW<AnimatorData>>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                bool currentSpeedIsWalkSpeed = moveSpeedLinearRef.ValueRO.Value == gameGlobalConfigs.Value.UnitRunSpeed;
-                bool canUpdate = isAliveTag.ValueRO && !isUnitWorkingTag.ValueRO && canMoveEntityTag.ValueRO && currentSpeedIsWalkSpeed;
+                if (!unitReactionConfigsMap.TryGetValue(unitProfileIdHolderRef.ValueRO.Value, out var unitReactionConfigs))
+                    throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolderRef.ValueRO.Value}");
+
+                bool currentSpeedIsRunSpeed = moveSpeedLinearRef.ValueRO.Value == unitReactionConfigs.UnitRunSpeed;
+                bool canUpdate = isAliveTag.ValueRO && !isUnitWorkingTag.ValueRO && canMoveEntityTag.ValueRO && currentSpeedIsRunSpeed;
                 bool reactionStarted = reactionStartedTag.ValueRO;
 
                 if (canUpdate)
@@ -76,8 +76,6 @@ namespace Systems.Simulation.Unit.Reaction
 
         }
 
-
-
-
     }
+
 }

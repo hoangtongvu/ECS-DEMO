@@ -11,8 +11,9 @@ using Components.Unit.MyMoveCommand;
 using Core.Unit.MyMoveCommand;
 using Components.GameEntity;
 using Components.Misc.WorldMap.PathFinding;
-using Components.Misc.GlobalConfigs;
 using Utilities.Helpers.Misc;
+using Components.Unit.Reaction;
+using System.Collections.Generic;
 
 namespace Systems.Simulation.Tool
 {
@@ -56,7 +57,7 @@ namespace Systems.Simulation.Tool
         {
             var commandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
+            var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
             const float targetEntityWorldSquareRadius = 0.5f; // TODO: Find another way to get this value.
 
             foreach (var (toolTransformRef, toolEntity) in
@@ -109,9 +110,12 @@ namespace Systems.Simulation.Tool
                     targetEntityRef.ValueRW.Value = toolEntity;
                     worldSquareRadiusRef.ValueRW.Value = new(targetEntityWorldSquareRadius);
 
+                    if (!unitReactionConfigsMap.TryGetValue(unitProfileIdHolderRef.ValueRO.Value, out var unitReactionConfigs))
+                        throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolderRef.ValueRO.Value}");
+
                     SystemAPI.SetComponent(unitEntity, new MoveSpeedLinear
                     {
-                        Value = gameGlobalConfigs.Value.UnitRunSpeed,
+                        Value = unitReactionConfigs.UnitRunSpeed,
                     });
                     SystemAPI.SetComponentEnabled<CanFindPathTag>(unitEntity, true);
 

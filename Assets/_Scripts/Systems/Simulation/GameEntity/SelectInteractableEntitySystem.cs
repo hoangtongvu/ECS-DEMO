@@ -8,12 +8,14 @@ using Components.Unit.UnitSelection;
 using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
 using Utilities.Jobs;
-using Components.Misc.GlobalConfigs;
 using Components.Misc.WorldMap;
 using Utilities.Helpers;
 using Components.GameEntity;
 using Core.GameEntity;
 using Unity.Collections;
+using Components.Unit.Reaction;
+using Components.Misc.WorldMap.PathFinding;
+using Components.Unit;
 
 namespace Systems.Simulation.GameEntity
 {
@@ -22,6 +24,8 @@ namespace Systems.Simulation.GameEntity
     [BurstCompile]
     public partial struct SelectInteractableEntitySystem : ISystem
     {
+        private EntityQuery entityQuery;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -29,16 +33,24 @@ namespace Systems.Simulation.GameEntity
             state.RequireForUpdate<SelectionHitElement>();
             state.RequireForUpdate<MoveCommandSourceMap>();
 
-            EntityQuery query = SystemAPI.QueryBuilder()
+            this.entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitSelectedTag
-                    , CanMoveEntityTag
+                    UnitProfileIdHolder
                     , LocalTransform
-                    , TargetEntity
-                    , MoveCommandElement>()
+                    , AbsoluteDistanceXZToTarget
+                    , UnitSelectedTag
+                    , CanFindPathTag
+                    , MoveSpeedLinear
+                    , TargetEntity>()
+                .WithAll<
+                    TargetEntityWorldSquareRadius
+                    , MoveCommandElement
+                    , InteractingEntity
+                    , InteractionTypeICD>()
+                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                 .Build();
 
-            state.RequireForUpdate(query);
+            state.RequireForUpdate(this.entityQuery);
             state.RequireForUpdate<CellRadius>();
             state.RequireForUpdate<GameEntitySizeMap>();
 
@@ -48,9 +60,9 @@ namespace Systems.Simulation.GameEntity
         public void OnUpdate(ref SystemState state)
         {
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
+            var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
             // Checking Hit Data.
             bool canGetInteractable = this.TryGetInteractable(
@@ -63,15 +75,25 @@ namespace Systems.Simulation.GameEntity
 
             if (!canGetInteractable) return;
 
-            state.Dependency = new SetTargetJob()
+            var speedArray = new NativeArray<float>(this.entityQuery.CalculateEntityCount(), Allocator.TempJob);
+
+            var getSpeedsJobHandle = new GetRunSpeedsJob()
+            {
+                UnitReactionConfigsMap = unitReactionConfigsMap,
+                OutputArray = speedArray,
+            }.ScheduleParallel(state.Dependency);
+
+            var setTargetJobHandle = new SetSingleTargetJobMultipleSpeeds()
             {
                 TargetEntity = entity,
                 TargetEntityWorldSquareRadius = worldSquareRadius,
                 TargetPosition = pos,
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
-                UnitMoveSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
                 MoveCommandSourceMap = moveCommandSourceMap.Value,
-            }.ScheduleParallel(state.Dependency);
+                SpeedArray = speedArray,
+            }.ScheduleParallel(getSpeedsJobHandle);
+
+            state.Dependency = speedArray.Dispose(setTargetJobHandle);
 
         }
 
