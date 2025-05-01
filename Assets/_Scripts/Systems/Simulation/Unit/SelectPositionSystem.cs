@@ -7,9 +7,13 @@ using Unity.Burst;
 using Components.Unit.UnitSelection;
 using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
-using Components.Misc.GlobalConfigs;
 using Utilities.Jobs;
 using Components.Misc;
+using Components.Unit.Reaction;
+using Unity.Collections;
+using Unity.Transforms;
+using Components.Misc.WorldMap.PathFinding;
+using Components.GameEntity;
 
 namespace Systems.Simulation.Unit
 {
@@ -18,23 +22,32 @@ namespace Systems.Simulation.Unit
     [BurstCompile]
     public partial struct SelectPositionSystem : ISystem
     {
+        private EntityQuery entityQuery;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SelectionHitElement>();
             state.RequireForUpdate<MoveCommandSourceMap>();
 
-            EntityQuery query = SystemAPI.QueryBuilder()
+            this.entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitProfileIdHolder
+                    , LocalTransform
+                    , AbsoluteDistanceXZToTarget
                     , UnitSelectedTag
-                    , CanMoveEntityTag
-                    , CurrentWorldWaypoint
+                    , CanFindPathTag
+                    , MoveSpeedLinear
+                    , TargetEntity>()
+                .WithAll<
+                    TargetEntityWorldSquareRadius
                     , MoveCommandElement
-                    , MoveSpeedLinear>()
+                    , InteractingEntity
+                    , InteractionTypeICD>()
+                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                 .Build();
 
-            state.RequireForUpdate(query);
+            state.RequireForUpdate(this.entityQuery);
         }
 
         [BurstCompile]
@@ -44,18 +57,28 @@ namespace Systems.Simulation.Unit
             if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
             var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
-            var gameGlobalConfigs = SystemAPI.GetSingleton<GameGlobalConfigsICD>();
             var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
+            var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
-            state.Dependency = new SetTargetJob()
+            var speedArray = new NativeArray<float>(this.entityQuery.CalculateEntityCount(), Allocator.TempJob);
+
+            var getSpeedsJobHandle = new GetRunSpeedsJob()
+            {
+                UnitReactionConfigsMap = unitReactionConfigsMap,
+                OutputArray = speedArray,
+            }.ScheduleParallel(state.Dependency);
+
+            var setTargetJobHandle = new SetSingleTargetJobMultipleSpeeds()
             {
                 TargetEntity = Entity.Null,
                 TargetEntityWorldSquareRadius = defaultStopMoveWorldRadius,
                 TargetPosition = selectedPos,
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
-                UnitMoveSpeed = gameGlobalConfigs.Value.UnitRunSpeed,
                 MoveCommandSourceMap = moveCommandSourceMap.Value,
-            }.ScheduleParallel(state.Dependency);
+                SpeedArray = speedArray,
+            }.ScheduleParallel(getSpeedsJobHandle);
+
+            state.Dependency = speedArray.Dispose(setTargetJobHandle);
 
         }
 
