@@ -1,5 +1,4 @@
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Components.GameResource;
 using Core.GameResource;
@@ -7,11 +6,11 @@ using Components;
 using Core.MyEvent.PubSub.Messages;
 using Utilities.Extensions;
 using Components.Player;
-using System.Collections.Generic;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.Misc;
+using Utilities.Helpers;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -57,13 +56,43 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         public void OnUpdate(ref SystemState state)
         {
             var messageQueue = SystemAPI.GetSingleton<MessageQueue<SpawnUnitMessage>>();
-            var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>();
+            var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
 
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
 
-            DynamicBuffer<ResourceWalletElement> resourceWallet = default;
-            EnabledRefRW<WalletChangedTag> walletChangedTag = default;
+            this.GetWallet(ref state, out var resourceWallet, out var walletChangedTag);
+
+            while (messageQueue.Value.TryDequeue(out var message))
+            {
+                var profiles = SystemAPI.GetBuffer<EntitySpawningProfileElement>(message.SpawnerEntity);
+
+                ref var profile = ref profiles.ElementAt(message.SpawningProfileElementIndex);
+
+                bool canSpendResources = ResourceWalletHelper.TrySpendResources(
+                    ref resourceWallet
+                    , ref walletChangedTag
+                    , in entityToContainerIndexMap
+                    , in entitySpawningCostsContainer
+                    , in profile.PrefabToSpawn
+                    , in resourceCount);
+
+                if (!canSpendResources) continue;
+
+                profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
+
+            }
+
+        }
+
+        [BurstCompile]
+        private void GetWallet(
+            ref SystemState state
+            , out DynamicBuffer<ResourceWalletElement> resourceWallet
+            , out EnabledRefRW<WalletChangedTag> walletChangedTag)
+        {
+            resourceWallet = default;
+            walletChangedTag = default;
 
             foreach (var item in
                 SystemAPI.Query<
@@ -75,84 +104,6 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 resourceWallet = item.Item1;
                 walletChangedTag = item.Item2;
             }
-
-            while (messageQueue.Value.TryDequeue(out var message))
-            {
-                var profiles = SystemAPI.GetBuffer<EntitySpawningProfileElement>(message.SpawnerEntity);
-
-                ref var profile = ref profiles.ElementAt(message.SpawningProfileElementIndex);
-
-                if (!this.HaveEnoughResources(
-                    resourceWallet
-                    , in entityToContainerIndexMap
-                    , in entitySpawningCostsContainer
-                    , in profile.PrefabToSpawn
-                    , resourceCount.Value
-                    , out var walletArr)) continue;
-
-                resourceWallet.CopyFrom(walletArr);
-                walletChangedTag.ValueRW = true;
-
-                walletArr.Dispose();
-
-                profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
-
-            }
-
-        }
-
-        [BurstCompile]
-        private bool HaveEnoughResources(
-            DynamicBuffer<ResourceWalletElement> resourceWallet
-            , in EntityToContainerIndexMap entityToContainerIndexMap
-            , in EntitySpawningCostsContainer entitySpawningCostsContainer
-            , in Entity prefabEntity
-            , int resourceCount
-            , out NativeArray<ResourceWalletElement> walletArr)
-        {
-            walletArr = resourceWallet.ToNativeArray(Allocator.Temp);
-
-            int length = walletArr.Length;
-
-            for (int i = 0; i < length; i++)
-            {
-                ResourceType resourceType = (ResourceType)i;
-
-                uint cost = this.GetCost(
-                    in entityToContainerIndexMap
-                    , in entitySpawningCostsContainer
-                    , in prefabEntity
-                    , resourceCount
-                    , resourceType);
-
-                long tempValue = (long) walletArr[i].Quantity - cost;
-                // UnityEngine.Debug.Log($"{resourceType} {tempValue} = {walletArr[i].Quantity} - {cost}");
-
-                if (tempValue < 0) return false;
-                walletArr[i] = new ResourceWalletElement
-                {
-                    Type = resourceType,
-                    Quantity = (uint)tempValue,
-                };
-
-            }
-
-            return true;
-        }
-
-        [BurstCompile]
-        private uint GetCost(
-            in EntityToContainerIndexMap entityToContainerIndexMap
-            , in EntitySpawningCostsContainer entitySpawningCostsContainer
-            , in Entity prefabEntity
-            , int resourceCount
-            , ResourceType resourceType)
-        {
-            if (!entityToContainerIndexMap.Value.TryGetValue(prefabEntity, out int costMapIndex))
-                throw new KeyNotFoundException($"{nameof(entityToContainerIndexMap)} does not contain key: {prefabEntity}");
-
-            int costIndexInContainer = costMapIndex * resourceCount + (int)resourceType;
-            return entitySpawningCostsContainer.Value[costIndexInContainer];
 
         }
 
