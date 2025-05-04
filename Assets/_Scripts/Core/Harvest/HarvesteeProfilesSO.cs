@@ -1,4 +1,5 @@
 using Core.GameEntity;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Harvest
@@ -10,7 +11,7 @@ namespace Core.Harvest
         public HarvesteeType HarvesteeType;
         public uint MaxHp;
         public ResourceDropInfo ResourceDropInfo;
-
+        public List<GameObject> PresenterVariances;
     }
 
     [CreateAssetMenu(fileName = "HarvesteeProfilesSO", menuName = "SO/GameEntity/HarvesteeProfilesSO")]
