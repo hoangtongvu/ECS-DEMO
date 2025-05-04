@@ -21,9 +21,8 @@ MonoBehaviour:
         Name: NormalTree
         ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
           type: 3}
-        PresenterPrefab: {fileID: 919132149155446097, guid: 1c39723c305aa274b97b1e738bed4b55,
-          type: 3}
-        IsPresenterEntity: 1
+        PresenterPrefab: {fileID: 0}
+        IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
           type: 3}
         GameEntitySize:
@@ -35,6 +34,12 @@ MonoBehaviour:
           ResourceType: 1
           QuantityPerDrop: 5
           HpAmountPerDrop: 25
+        PresenterVariances:
+        - {fileID: 919132149155446097, guid: 1bc86c6577f22d545a388e43100ed5cf, type: 3}
+        - {fileID: 919132149155446097, guid: 40c25546c81d745428c788e6610dc2c0, type: 3}
+        - {fileID: 919132149155446097, guid: 1c39723c305aa274b97b1e738bed4b55, type: 3}
+        - {fileID: 919132149155446097, guid: f0263a3b21c0f434fb2bb5efcf332b87, type: 3}
+        - {fileID: 919132149155446097, guid: 898844255babc064e945ea17d098e211, type: 3}
     - Key:
         HarvesteeType: 2
         VariantIndex: 0
@@ -42,9 +47,8 @@ MonoBehaviour:
         Name: NormalRockPit
         ProfilePicture: {fileID: 21300000, guid: 02c56d58c16f55441af8086bb2c8e236,
           type: 3}
-        PresenterPrefab: {fileID: 919132149155446097, guid: 3041faaeefdfc974cac308fdb7c1e09a,
-          type: 3}
-        IsPresenterEntity: 1
+        PresenterPrefab: {fileID: 0}
+        IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 2afcb35a6e7e2884d8781889dbc859f3,
           type: 3}
         GameEntitySize:
@@ -56,3 +60,11 @@ MonoBehaviour:
           ResourceType: 3
           QuantityPerDrop: 5
           HpAmountPerDrop: 25
+        PresenterVariances:
+        - {fileID: 919132149155446097, guid: 138fe9a636efaf544a60f671074abf16, type: 3}
+        - {fileID: 919132149155446097, guid: 91b386f7b0b53b844a5be761e76d30d1, type: 3}
+        - {fileID: 919132149155446097, guid: 3041faaeefdfc974cac308fdb7c1e09a, type: 3}
+        - {fileID: 919132149155446097, guid: 53d09d9282d121846bb68870100cb241, type: 3}
+        - {fileID: 919132149155446097, guid: 7678b5958dae76549bf4e174493a3f39, type: 3}
+        - {fileID: 919132149155446097, guid: a64e58fe276609b4ca02ee6e57ae47ff, type: 3}
+        - {fileID: 919132149155446097, guid: 5e3f979748cb5fe45b3632d2373a6dd1, type: 3}

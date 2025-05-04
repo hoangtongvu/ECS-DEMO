@@ -22,6 +22,24 @@ namespace Authoring.Harvest
                 });
 
                 ProfilesSOBakingHelper.BakeGameEntityProfileElementBuffer(this, authoring.profilesSO, entity);
+                this.BakePresenterVariancesToTempBuffer(entity, authoring.profilesSO);
+
+            }
+
+            private void BakePresenterVariancesToTempBuffer(Entity entity, HarvesteeProfilesSO profilesSO)
+            {
+                var buffer = AddBuffer<HarvesteePresenterVarianceTempBufferElement>(entity);
+
+                foreach (var pair in profilesSO.Profiles)
+                {
+                    foreach (var presenterGO in pair.Value.PresenterVariances)
+                    {
+                        buffer.Add(new()
+                        {
+                            Value = GetEntity(presenterGO, TransformUsageFlags.None),
+                        });
+                    }
+                }
 
             }
 
