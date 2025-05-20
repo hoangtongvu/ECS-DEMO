@@ -6,8 +6,6 @@ using Core.Utilities.Extensions;
 using Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview;
 using Unity.Entities;
 using UnityEngine;
-using Components;
-using Core.GameResource;
 using Components.GameResource;
 using Unity.Burst;
 using Components.Player;
@@ -26,7 +24,6 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
             this.RequireForUpdate<PlayerBuildableObjectElement>();
             this.RequireForUpdate<EntityToContainerIndexMap>();
             this.RequireForUpdate<EntitySpawningCostsContainer>();
-            this.RequireForUpdate<EnumLength<ResourceType>>();
         }
 
         protected override void OnUpdate()
@@ -44,7 +41,6 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
             var buildableObjectElement = SystemAPI.GetSingletonBuffer<PlayerBuildableObjectElement>()[choiceIndex];
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
-            var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
 
             var prefabEntity = buildableObjectElement.Entity;
 
@@ -54,8 +50,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
                 , ref walletChangedTag
                 , in entityToContainerIndexMap
                 , in entitySpawningCostsContainer
-                , in prefabEntity
-                , in resourceCount);
+                , in prefabEntity);
 
             if (!canSpendResources) return;
 

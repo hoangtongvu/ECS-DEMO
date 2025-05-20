@@ -1,4 +1,3 @@
-using Components;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
@@ -28,7 +27,6 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 .Build();
 
             state.RequireForUpdate(query0);
-            state.RequireForUpdate<EnumLength<ResourceType>>();
 
         }
 
@@ -38,7 +36,6 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             state.Enabled = false;
 
             int latestMapIndex = -1;
-            int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
 
             var entityToContainerIndexMap = new EntityToContainerIndexMap
             {
@@ -80,7 +77,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                     spritesContainer.Value.Add(localProfilePictures[i].Value);
                     durationsContainer.Value.Add(localSpawningDurations[i].Value);
 
-                    for (int j = i * resourceCount; j < (i + 1) * resourceCount; j++)
+                    for (int j = i * ResourceType_Length.Value; j < (i + 1) * ResourceType_Length.Value; j++)
                     {
                         entitySpawningCostsContainer.Value.Add(localSpawningCosts[j].Value);
                     }

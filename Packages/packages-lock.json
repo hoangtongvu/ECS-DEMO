@@ -34,6 +34,13 @@
       },
       "hash": "24938d88e1535a5bfbd2d08dc84f7427ccd4c751"
     },
+    "com.darksun.enum-length-generator": {
+      "version": "https://github.com/hoangtongvu/com.darksun.enum-length-generator.git?path=/Assets",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "5d4378942d82840189a0922dd85d3e154594be0e"
+    },
     "com.darksun.tweenlib": {
       "version": "https://github.com/hoangtongvu/com.darksun.tweenlib.git",
       "depth": 0,

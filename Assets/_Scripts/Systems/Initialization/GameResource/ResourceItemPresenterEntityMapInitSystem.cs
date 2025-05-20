@@ -1,4 +1,3 @@
-using Components;
 using Components.GameEntity;
 using Components.GameResource;
 using Core.GameResource;
@@ -22,7 +21,6 @@ namespace Systems.Initialization.GameResource
                 .Build();
 
             this.RequireForUpdate(this.query);
-            this.RequireForUpdate<EnumLength<ResourceType>>();
 
         }
 
@@ -31,12 +29,11 @@ namespace Systems.Initialization.GameResource
             this.Enabled = false;
             var profilesSOHolder = this.query.GetSingleton<ResourceProfilesSOHolder>();
             var bakedProfileElementArray = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>().ToNativeArray(Allocator.Temp);
-            int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 
             var resourceItemPresenterEntityPrefabMap = new ResourceItemPresenterEntityPrefabMap
             {
-                Value = new(resourceCount, Allocator.Persistent),
+                Value = new(ResourceType_Length.Value, Allocator.Persistent),
             };
 
             int tempIndex = 0;

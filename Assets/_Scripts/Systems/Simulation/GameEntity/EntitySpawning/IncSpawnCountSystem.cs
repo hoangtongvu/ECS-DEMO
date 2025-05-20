@@ -1,7 +1,6 @@
 using Unity.Burst;
 using Unity.Entities;
 using Components.GameResource;
-using Core.GameResource;
 using Components;
 using Core.MyEvent.PubSub.Messages;
 using Utilities.Extensions;
@@ -29,8 +28,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 
             var entityQuery1 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    MessageQueue<SpawnUnitMessage>
-                    , EnumLength<ResourceType>>()
+                    MessageQueue<SpawnUnitMessage>>()
                     .Build();
 
             var entityQuery2 = SystemAPI.QueryBuilder()
@@ -56,7 +54,6 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         public void OnUpdate(ref SystemState state)
         {
             var messageQueue = SystemAPI.GetSingleton<MessageQueue<SpawnUnitMessage>>();
-            var resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
 
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
@@ -74,8 +71,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                     , ref walletChangedTag
                     , in entityToContainerIndexMap
                     , in entitySpawningCostsContainer
-                    , in profile.PrefabToSpawn
-                    , in resourceCount);
+                    , in profile.PrefabToSpawn);
 
                 if (!canSpendResources) continue;
 

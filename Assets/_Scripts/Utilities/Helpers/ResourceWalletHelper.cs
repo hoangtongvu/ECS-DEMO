@@ -65,8 +65,7 @@ namespace Utilities.Helpers
             , ref EnabledRefRW<WalletChangedTag> walletChangedTag
             , in EntityToContainerIndexMap entityToContainerIndexMap
             , in EntitySpawningCostsContainer entitySpawningCostsContainer
-            , in Entity prefabEntity
-            , in int resourceCount)
+            , in Entity prefabEntity)
         {
             var walletArr = resourceWallet.ToNativeArray(Allocator.Temp);
             int length = walletArr.Length;
@@ -79,7 +78,6 @@ namespace Utilities.Helpers
                     in entityToContainerIndexMap
                     , in entitySpawningCostsContainer
                     , in prefabEntity
-                    , in resourceCount
                     , resourceType);
 
                 long tempQuantity = (long)walletArr[i].Quantity - cost;
@@ -112,13 +110,12 @@ namespace Utilities.Helpers
             in EntityToContainerIndexMap entityToContainerIndexMap
             , in EntitySpawningCostsContainer entitySpawningCostsContainer
             , in Entity prefabEntity
-            , in int resourceCount
             , ResourceType resourceType)
         {
             if (!entityToContainerIndexMap.Value.TryGetValue(prefabEntity, out int costMapIndex))
                 throw new KeyNotFoundException($"{nameof(entityToContainerIndexMap)} does not contain key: {prefabEntity}");
 
-            int costIndexInContainer = costMapIndex * resourceCount + (int)resourceType;
+            int costIndexInContainer = costMapIndex * ResourceType_Length.Value + (int)resourceType;
             return entitySpawningCostsContainer.Value[costIndexInContainer];
 
         }

@@ -1,5 +1,6 @@
 namespace Core.Unit.MyMoveCommand
 {
+    [GenerateEnumLength]
     public enum MoveCommandSource : byte
     {
         None = 0,
@@ -7,4 +8,5 @@ namespace Core.Unit.MyMoveCommand
         Danger = 2,
         ToolCall = 3,
     }
+
 }

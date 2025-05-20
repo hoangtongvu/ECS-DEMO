@@ -1,6 +1,7 @@
 
 namespace Core.GameResource
 {
+    [GenerateEnumLength]
     public enum ResourceType : byte
     {
         Coin = 0,

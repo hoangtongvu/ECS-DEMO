@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using Core.UI.TopLeftPanel.ResourceDisplay;
 using Components.GameEntity;
 using Components.GameResource;
-using Components;
 using AYellowpaper.SerializedCollections;
 
 namespace Systems.Initialization.UI
@@ -38,7 +37,6 @@ namespace Systems.Initialization.UI
             this.Enabled = false;
 
             var profiles = this.query.GetSingleton<ResourceProfilesSOHolder>().Value.Value.Profiles;
-            int resourceCount = SystemAPI.GetSingleton<EnumLength<ResourceType>>().Value;
 
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
@@ -54,7 +52,7 @@ namespace Systems.Initialization.UI
                 , spawnedUIMap
                 , out var resourceDisplays);
 
-            this.SetDisplayIcons(profiles, resourceCount, resourceDisplays);
+            this.SetDisplayIcons(profiles, resourceDisplays);
 
             this.AddDisplaysIntoPanel(resourceDisplays, topLeftPanelManager);
         }
@@ -95,10 +93,9 @@ namespace Systems.Initialization.UI
 
         private void SetDisplayIcons(
             SerializedDictionary<ResourceProfileId, ResourceProfileElement> profiles
-            , int resourceCount
             , List<ResourceDisplayCtrl> resourceDisplays)
         {
-            for (int i = 0; i < resourceCount; i++)
+            for (int i = 0; i < ResourceType_Length.Value; i++)
             {
                 var resourceDisplay = resourceDisplays[i];
                 var type = (ResourceType)i;

@@ -1,11 +1,9 @@
 using AYellowpaper.SerializedCollections;
-using Components;
 using Components.GameEntity;
 using Components.Unit;
 using Components.Unit.MyMoveCommand;
 using Core.Unit;
 using Core.Unit.MyMoveCommand;
-using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
@@ -28,7 +26,6 @@ namespace Systems.Initialization.Unit.MyMoveCommand
                 .Build();
 
             this.RequireForUpdate(this.query);
-            this.RequireForUpdate<EnumLength<MoveCommandSource>>();
 
         }
 
@@ -40,15 +37,14 @@ namespace Systems.Initialization.Unit.MyMoveCommand
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 
             int profileCount = profiles.Count;
-            int commandSourceCount = Enum.GetNames(typeof(MoveCommandSource)).Length;
-            int initialCap = profileCount * commandSourceCount;
+            int initialCap = profileCount * MoveCommandSource_Length.Value;
 
             var commandSourceMap = new MoveCommandSourceMap
             {
                 Value = new(initialCap, Allocator.Persistent),
             };
 
-            this.AddingPriorities(in profiles, commandSourceCount, in commandSourceMap);
+            this.AddingPriorities(in profiles, in commandSourceMap);
 
             su.AddOrSetComponentData(commandSourceMap);
 
@@ -56,7 +52,6 @@ namespace Systems.Initialization.Unit.MyMoveCommand
 
         private void AddingPriorities(
             in SerializedDictionary<UnitProfileId, UnitProfileElement> profiles
-            , int commandSourceCount
             , in MoveCommandSourceMap commandSourceMap)
         {
             foreach (var pair in profiles)
@@ -65,7 +60,6 @@ namespace Systems.Initialization.Unit.MyMoveCommand
 
                 this.AddExistingPriorities(
                     in pair
-                    , commandSourceCount
                     , ref maxPriority
                     , in commandSourceMap);
 
@@ -73,7 +67,6 @@ namespace Systems.Initialization.Unit.MyMoveCommand
 
                 this.AddRemaningPriorities(
                     in pair
-                    , commandSourceCount
                     , ref maxPriority
                     , in commandSourceMap);
 
@@ -83,11 +76,10 @@ namespace Systems.Initialization.Unit.MyMoveCommand
 
         private void AddExistingPriorities(
             in KeyValuePair<UnitProfileId, UnitProfileElement> pair
-            , int commandSourceCount
             , ref byte maxPriority
             , in MoveCommandSourceMap commandSourceMap)
         {
-            for (int j = 0; j < commandSourceCount; j++)
+            for (int j = 0; j < MoveCommandSource_Length.Value; j++)
             {
                 var commandSource = (MoveCommandSource)j;
                 if (!pair.Value.MoveCommandSourcePriorities.TryGetValue(commandSource, out byte priority)) continue;
@@ -108,11 +100,10 @@ namespace Systems.Initialization.Unit.MyMoveCommand
 
         private void AddRemaningPriorities(
             in KeyValuePair<UnitProfileId, UnitProfileElement> pair
-            , int commandSourceCount
             , ref byte maxPriority
             , in MoveCommandSourceMap commandSourceMap)
         {
-            for (int j = 0; j < commandSourceCount; j++)
+            for (int j = 0; j < MoveCommandSource_Length.Value; j++)
             {
                 var commandSource = (MoveCommandSource)j;
                 if (pair.Value.MoveCommandSourcePriorities.ContainsKey(commandSource)) continue;
