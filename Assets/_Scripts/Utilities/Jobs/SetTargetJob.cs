@@ -7,7 +7,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Utilities.Helpers;
 using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
 using Unity.Transforms;
@@ -15,67 +14,10 @@ using Utilities.Helpers.Misc;
 using Core.Unit.Reaction;
 using Core.Unit;
 using System.Collections.Generic;
+using Components.Unit.Misc;
 
 namespace Utilities.Jobs
 {
-    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
-    [BurstCompile]
-    public partial struct SetSingleTargetJobSingleSpeed : IJobEntity
-    {
-        [ReadOnly] public Entity TargetEntity;
-        [ReadOnly] public half TargetEntityWorldSquareRadius;
-        [ReadOnly] public float UnitMoveSpeed;
-        [ReadOnly] public float3 TargetPosition;
-        [ReadOnly] public MoveCommandSource NewMoveCommandSource;
-        [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> MoveCommandSourceMap;
-
-        [BurstCompile]
-        void Execute(
-            in UnitProfileIdHolder unitProfileIdHolder
-            , in LocalTransform transform
-            , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
-            , EnabledRefRO<UnitSelectedTag> unitSelectedTag
-            , EnabledRefRW<CanFindPathTag> canFindPathTag
-            , ref MoveSpeedLinear moveSpeedLinear
-            , ref TargetEntity targetEntity
-            , ref TargetEntityWorldSquareRadius worldSquareRadius
-            , ref MoveCommandElement moveCommandElement
-            , ref InteractingEntity interactingEntity
-            , ref InteractionTypeICD interactionTypeICD)
-        {
-            bool unitSelected = unitSelectedTag.ValueRO;
-            if (!unitSelected) return;
-
-            bool canOverrideCommand =
-                MoveCommandHelper.TryOverrideMoveCommand(
-                    in this.MoveCommandSourceMap
-                    , unitProfileIdHolder.Value.UnitType
-                    , ref moveCommandElement
-                    , ref interactingEntity
-                    , ref interactionTypeICD
-                    , this.NewMoveCommandSource
-                    , unitProfileIdHolder.Value.VariantIndex);
-
-            if (!canOverrideCommand) return;
-
-            moveCommandElement.TargetEntity = this.TargetEntity;
-            moveCommandElement.Float3 = this.TargetPosition;
-
-            targetEntity.Value = this.TargetEntity;
-            worldSquareRadius.Value = this.TargetEntityWorldSquareRadius;
-
-            moveSpeedLinear.Value = this.UnitMoveSpeed;
-            canFindPathTag.ValueRW = true;
-
-            AbsoluteDistanceXZToTargetHelper.SetDistance(
-                ref absoluteDistanceXZToTarget
-                , in transform.Position
-                , this.TargetPosition);
-
-        }
-
-    }
-
     [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     [BurstCompile]
     public partial struct GetRunSpeedsJob : IJobEntity
@@ -121,14 +63,14 @@ namespace Utilities.Jobs
         [ReadOnly] public half TargetEntityWorldSquareRadius;
         [ReadOnly] public float3 TargetPosition;
         [ReadOnly] public MoveCommandSource NewMoveCommandSource;
-        [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> MoveCommandSourceMap;
+        [ReadOnly] public MoveCommandPrioritiesMap MoveCommandPrioritiesMap;
 
         [ReadOnly]
         public NativeArray<float> SpeedArray;
 
         [BurstCompile]
         void Execute(
-            in UnitProfileIdHolder unitProfileIdHolder
+            in ArmedStateHolder armedStateHolder
             , in LocalTransform transform
             , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
             , EnabledRefRO<UnitSelectedTag> unitSelectedTag
@@ -145,14 +87,13 @@ namespace Utilities.Jobs
             if (!unitSelected) return;
 
             bool canOverrideCommand =
-                MoveCommandHelper.TryOverrideMoveCommand(
-                    in this.MoveCommandSourceMap
-                    , unitProfileIdHolder.Value.UnitType
+                MoveCommandPrioritiesHelper.TryOverrideMoveCommand(
+                    in this.MoveCommandPrioritiesMap
                     , ref moveCommandElement
                     , ref interactingEntity
                     , ref interactionTypeICD
-                    , this.NewMoveCommandSource
-                    , unitProfileIdHolder.Value.VariantIndex);
+                    , armedStateHolder.Value
+                    , this.NewMoveCommandSource);
 
             if (!canOverrideCommand) return;
 

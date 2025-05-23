@@ -1,6 +1,5 @@
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
-using Core.Unit.MyMoveCommand;
 using Core.GameEntity;
 using Core.GameResource;
 using Core.Unit.Reaction;
@@ -18,9 +17,6 @@ namespace Core.Unit
 
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;
-
-        [SerializedDictionary("MoveCommandSource", "Priority")]
-        public SerializedDictionary<MoveCommandSource, byte> MoveCommandSourcePriorities;
 
     }
 

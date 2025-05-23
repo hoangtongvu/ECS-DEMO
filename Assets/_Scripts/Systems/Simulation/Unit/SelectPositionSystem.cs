@@ -14,6 +14,7 @@ using Unity.Collections;
 using Unity.Transforms;
 using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
+using Components.Unit.Misc;
 
 namespace Systems.Simulation.Unit
 {
@@ -28,7 +29,7 @@ namespace Systems.Simulation.Unit
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<MoveCommandSourceMap>();
+            state.RequireForUpdate<MoveCommandPrioritiesMap>();
 
             this.entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -56,7 +57,7 @@ namespace Systems.Simulation.Unit
             // Checking Hit Data.
             if (!this.TryGetSelectedPosition(out float3 selectedPos)) return;
 
-            var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
@@ -74,7 +75,7 @@ namespace Systems.Simulation.Unit
                 TargetEntityWorldSquareRadius = defaultStopMoveWorldRadius,
                 TargetPosition = selectedPos,
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
-                MoveCommandSourceMap = moveCommandSourceMap.Value,
+                MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
                 SpeedArray = speedArray,
             }.ScheduleParallel(getSpeedsJobHandle);
 

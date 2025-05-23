@@ -148,6 +148,7 @@ namespace Systems.Simulation.Tool
             baseWorkSpeedRef.ValueRW.Value = baseWorkSpeed;
 
             ecb.AddComponent<NeedInitRoleComponentsTag>(unitEntity);
+            ecb.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);
 
         }
 

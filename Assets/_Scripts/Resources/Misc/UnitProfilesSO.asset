@@ -41,14 +41,6 @@ MonoBehaviour:
           _serializedList:
           - Key: 2
             Value: 5
-        MoveCommandSourcePriorities:
-          _serializedList:
-          - Key: 2
-            Value: 0
-          - Key: 1
-            Value: 1
-          - Key: 3
-            Value: 2
     - Key:
         UnitType: 2
         VariantIndex: 0
@@ -77,14 +69,6 @@ MonoBehaviour:
             Value: 3
           - Key: 1
             Value: 5
-        MoveCommandSourcePriorities:
-          _serializedList:
-          - Key: 1
-            Value: 0
-          - Key: 2
-            Value: 1
-          - Key: 3
-            Value: 2
     - Key:
         UnitType: 3
         VariantIndex: 0
@@ -109,13 +93,5 @@ MonoBehaviour:
           _serializedList:
           - Key: 2
             Value: 5
-        MoveCommandSourcePriorities:
-          _serializedList:
-          - Key: 2
-            Value: 0
-          - Key: 1
-            Value: 1
-          - Key: 3
-            Value: 2
   UnitGlobalConfigs:
     MoveSpeedScale: 1

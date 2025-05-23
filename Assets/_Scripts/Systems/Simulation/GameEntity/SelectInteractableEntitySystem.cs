@@ -1,21 +1,22 @@
-using Unity.Entities;
-using Core;
 using Components;
-using Unity.Mathematics;
-using Unity.Burst;
-using Unity.Transforms;
-using Components.Unit.UnitSelection;
-using Core.Unit.MyMoveCommand;
-using Components.Unit.MyMoveCommand;
-using Utilities.Jobs;
-using Components.Misc.WorldMap;
-using Utilities.Helpers;
 using Components.GameEntity;
-using Core.GameEntity;
-using Unity.Collections;
-using Components.Unit.Reaction;
+using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Unit;
+using Components.Unit.Misc;
+using Components.Unit.MyMoveCommand;
+using Components.Unit.Reaction;
+using Components.Unit.UnitSelection;
+using Core;
+using Core.GameEntity;
+using Core.Unit.MyMoveCommand;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using Utilities.Helpers;
+using Utilities.Jobs;
 
 namespace Systems.Simulation.GameEntity
 {
@@ -31,7 +32,7 @@ namespace Systems.Simulation.GameEntity
         {
             state.RequireForUpdate<InteractableEntityTag>();
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<MoveCommandSourceMap>();
+            state.RequireForUpdate<MoveCommandPrioritiesMap>();
 
             this.entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -59,7 +60,7 @@ namespace Systems.Simulation.GameEntity
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
@@ -89,7 +90,7 @@ namespace Systems.Simulation.GameEntity
                 TargetEntityWorldSquareRadius = worldSquareRadius,
                 TargetPosition = pos,
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
-                MoveCommandSourceMap = moveCommandSourceMap.Value,
+                MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
                 SpeedArray = speedArray,
             }.ScheduleParallel(getSpeedsJobHandle);
 

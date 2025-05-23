@@ -10,6 +10,7 @@ namespace Core.Tool
     {
         [Header("Tool ProfileElement")]
         public ToolType ToolType;
+        public bool IsWeapon;
 
         public float SpawnDurationSeconds;
 

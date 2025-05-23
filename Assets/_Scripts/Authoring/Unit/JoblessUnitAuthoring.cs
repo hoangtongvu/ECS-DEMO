@@ -9,6 +9,7 @@ using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool;
 using Components.Unit;
+using Components.Unit.Misc;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.Reaction;
 using Components.Unit.UnitSelection;
@@ -175,6 +176,11 @@ namespace Authoring.Unit
                 AddBuffer<WaypointElement>(entity);
                 AddComponent<CanFindPathTag>(entity);
                 SetComponentEnabled<CanFindPathTag>(entity, false);
+
+                AddComponent(entity, new ArmedStateHolder
+                {
+                    Value = Core.Unit.Misc.ArmedState.False,
+                });
 
             }
 
