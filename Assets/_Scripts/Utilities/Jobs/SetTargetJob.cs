@@ -20,6 +20,20 @@ namespace Utilities.Jobs
 {
     [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     [BurstCompile]
+    public partial struct Set_CanSetTargetJobScheduleTag_OnUnitSelected : IJobEntity
+    {
+        [BurstCompile]
+        void Execute(
+            EnabledRefRO<UnitSelectedTag> unitSelectedTag
+            , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag)
+        {
+            canSetTargetJobScheduleTag.ValueRW = unitSelectedTag.ValueRO;
+        }
+
+    }
+
+    [WithAll(typeof(CanSetTargetJobScheduleTag))]
+    [BurstCompile]
     public partial struct GetRunSpeedsJob : IJobEntity
     {
         [ReadOnly]
@@ -31,21 +45,8 @@ namespace Utilities.Jobs
         [BurstCompile]
         void Execute(
             in UnitProfileIdHolder unitProfileIdHolder
-            , in LocalTransform transform
-            , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
-            , EnabledRefRO<UnitSelectedTag> unitSelectedTag
-            , EnabledRefRW<CanFindPathTag> canFindPathTag
-            , ref MoveSpeedLinear moveSpeedLinear
-            , ref TargetEntity targetEntity
-            , ref TargetEntityWorldSquareRadius worldSquareRadius
-            , ref MoveCommandElement moveCommandElement
-            , ref InteractingEntity interactingEntity
-            , ref InteractionTypeICD interactionTypeICD
             , [EntityIndexInQuery] int entityIndex)
         {
-            bool unitSelected = unitSelectedTag.ValueRO;
-            if (!unitSelected) return;
-
             if (!this.UnitReactionConfigsMap.TryGetValue(unitProfileIdHolder.Value, out var unitReactionConfigs))
                 throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolder.Value}");
 
@@ -73,7 +74,7 @@ namespace Utilities.Jobs
             in ArmedStateHolder armedStateHolder
             , in LocalTransform transform
             , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
-            , EnabledRefRO<UnitSelectedTag> unitSelectedTag
+            , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
             , EnabledRefRW<CanFindPathTag> canFindPathTag
             , ref MoveSpeedLinear moveSpeedLinear
             , ref TargetEntity targetEntity
@@ -83,8 +84,7 @@ namespace Utilities.Jobs
             , ref InteractionTypeICD interactionTypeICD
             , [EntityIndexInQuery] int entityIndex)
         {
-            bool unitSelected = unitSelectedTag.ValueRO;
-            if (!unitSelected) return;
+            if (!canSetTargetJobScheduleTag.ValueRO) return;
 
             bool canOverrideCommand =
                 MoveCommandPrioritiesHelper.TryOverrideMoveCommand(
@@ -110,6 +110,69 @@ namespace Utilities.Jobs
                 ref absoluteDistanceXZToTarget
                 , in transform.Position
                 , this.TargetPosition);
+
+            canSetTargetJobScheduleTag.ValueRW = false;
+
+        }
+
+    }
+
+    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
+    [BurstCompile]
+    public partial struct SetMultipleTargetsJobMultipleSpeeds : IJobEntity
+    {
+        [ReadOnly] public NativeArray<Entity> TargetEntities;
+        [ReadOnly] public NativeArray<float3> TargetPositions;
+        [ReadOnly] public half TargetEntityWorldSquareRadius;
+        [ReadOnly] public MoveCommandSource NewMoveCommandSource;
+        [ReadOnly] public MoveCommandPrioritiesMap MoveCommandPrioritiesMap;
+
+        [ReadOnly]
+        public NativeArray<float> SpeedArray;
+
+        [BurstCompile]
+        void Execute(
+            in ArmedStateHolder armedStateHolder
+            , in LocalTransform transform
+            , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
+            , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
+            , EnabledRefRW<CanFindPathTag> canFindPathTag
+            , ref MoveSpeedLinear moveSpeedLinear
+            , ref TargetEntity targetEntity
+            , ref TargetEntityWorldSquareRadius worldSquareRadius
+            , ref MoveCommandElement moveCommandElement
+            , ref InteractingEntity interactingEntity
+            , ref InteractionTypeICD interactionTypeICD
+            , [EntityIndexInQuery] int entityIndex)
+        {
+            if (!canSetTargetJobScheduleTag.ValueRO) return;
+
+            bool canOverrideCommand =
+                MoveCommandPrioritiesHelper.TryOverrideMoveCommand(
+                    in this.MoveCommandPrioritiesMap
+                    , ref moveCommandElement
+                    , ref interactingEntity
+                    , ref interactionTypeICD
+                    , armedStateHolder.Value
+                    , this.NewMoveCommandSource);
+
+            if (!canOverrideCommand) return;
+
+            moveCommandElement.TargetEntity = this.TargetEntities[entityIndex];
+            moveCommandElement.Float3 = this.TargetPositions[entityIndex];
+
+            targetEntity.Value = moveCommandElement.TargetEntity;
+            worldSquareRadius.Value = this.TargetEntityWorldSquareRadius;
+
+            moveSpeedLinear.Value = this.SpeedArray[entityIndex];
+            canFindPathTag.ValueRW = true;
+
+            AbsoluteDistanceXZToTargetHelper.SetDistance(
+                ref absoluteDistanceXZToTarget
+                , in transform.Position
+                , moveCommandElement.Float3);
+
+            canSetTargetJobScheduleTag.ValueRW = false;
 
         }
 

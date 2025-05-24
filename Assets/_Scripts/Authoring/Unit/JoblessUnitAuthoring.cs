@@ -182,6 +182,8 @@ namespace Authoring.Unit
                     Value = Core.Unit.Misc.ArmedState.False,
                 });
 
+                AddComponent<CanSetTargetJobScheduleTag>(entity);
+                SetComponentEnabled<CanSetTargetJobScheduleTag>(entity, false);
             }
 
         }
