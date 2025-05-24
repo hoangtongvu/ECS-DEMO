@@ -47,7 +47,9 @@ namespace Systems.Simulation.GameEntity
                     TargetEntityWorldSquareRadius
                     , MoveCommandElement
                     , InteractingEntity
-                    , InteractionTypeICD>()
+                    , InteractionTypeICD
+                    , ArmedStateHolder
+                    , CanSetTargetJobScheduleTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                 .Build();
 
@@ -78,13 +80,16 @@ namespace Systems.Simulation.GameEntity
 
             var speedArray = new NativeArray<float>(this.entityQuery.CalculateEntityCount(), Allocator.TempJob);
 
-            var getSpeedsJobHandle = new GetRunSpeedsJob()
+            state.Dependency = new Set_CanSetTargetJobScheduleTag_OnUnitSelected()
+                .ScheduleParallel(this.entityQuery, state.Dependency);
+
+            state.Dependency = new GetRunSpeedsJob()
             {
                 UnitReactionConfigsMap = unitReactionConfigsMap,
                 OutputArray = speedArray,
-            }.ScheduleParallel(state.Dependency);
+            }.ScheduleParallel(this.entityQuery, state.Dependency);
 
-            var setTargetJobHandle = new SetSingleTargetJobMultipleSpeeds()
+            state.Dependency = new SetSingleTargetJobMultipleSpeeds()
             {
                 TargetEntity = entity,
                 TargetEntityWorldSquareRadius = worldSquareRadius,
@@ -92,9 +97,9 @@ namespace Systems.Simulation.GameEntity
                 NewMoveCommandSource = MoveCommandSource.PlayerCommand,
                 MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
                 SpeedArray = speedArray,
-            }.ScheduleParallel(getSpeedsJobHandle);
+            }.ScheduleParallel(this.entityQuery, state.Dependency);
 
-            state.Dependency = speedArray.Dispose(setTargetJobHandle);
+            state.Dependency = speedArray.Dispose(state.Dependency);
 
         }
 
