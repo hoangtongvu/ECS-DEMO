@@ -6,19 +6,18 @@ using Unity.Mathematics;
 
 namespace Systems.Simulation.Misc
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct RotateEntityToMoveDirSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     MoveDirectionFloat2
-                    , LocalTransform>()
+                    , LocalTransform
+                    , CanMoveEntityTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -35,6 +34,7 @@ namespace Systems.Simulation.Misc
 
         }
 
+        [WithAll(typeof(CanMoveEntityTag))]
         [BurstCompile]
         private partial struct RotateJob : IJobEntity
         {
@@ -63,4 +63,5 @@ namespace Systems.Simulation.Misc
         }
 
     }
+
 }

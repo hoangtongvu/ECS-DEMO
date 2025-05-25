@@ -63,6 +63,7 @@ namespace Systems.Simulation.Unit
                 // velocityRef.ValueRW.Linear = 0;
                 canMoveEntityTag.ValueRW = false;
                 moveCommandElement.CommandSource = MoveCommandSource.None;
+                moveCommandElement.TargetEntity = Entity.Null;
 
             }
 
