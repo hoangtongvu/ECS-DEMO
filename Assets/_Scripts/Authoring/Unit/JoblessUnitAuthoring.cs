@@ -184,6 +184,25 @@ namespace Authoring.Unit
 
                 AddComponent<CanSetTargetJobScheduleTag>(entity);
                 SetComponentEnabled<CanSetTargetJobScheduleTag>(entity, false);
+
+                AddComponent<IsUnarmedUnitTag>(entity);
+
+                // TODO: Find another way to get this value.
+                AddComponent(entity, new MaxFollowDistance
+                {
+                    Value = new(12f),
+                });
+
+                // TODO: Find another way to get this value.
+                AddComponent(entity, new InteractableDistanceRange
+                {
+                    MinValue = new(0f),
+                    MaxValue = new(5f),
+                });
+
+                AddComponent<CanCheckInteractionRepeatTag>(entity);
+                SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, false);
+
             }
 
         }
