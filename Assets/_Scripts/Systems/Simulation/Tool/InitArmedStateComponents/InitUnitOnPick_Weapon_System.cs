@@ -71,22 +71,6 @@ namespace Systems.Simulation.Tool.InitArmedStateComponents
                     Value = ArmedState.True,
                 });
 
-                // Note: Keep this one, this won't conflict with current MaxFollowDistance.
-                // This one is usually smaller than the MaxFollowDistance.
-                // AutoAttackDetectionRadius is bigger on ranged units than melee ones.
-                // TODO: Find another way to get the value.
-                this.ECB.AddComponent(entityIndexInQuery, entity, new AutoAttackDetectionRadius
-                {
-                    Value = new(12f),
-                });
-
-                // TODO: Find another way to get the value.
-                this.ECB.AddComponent(entityIndexInQuery, entity, new AttackDistanceRange
-                {
-                    MinValue = new(3f),
-                    MaxValue = new(6f),
-                });
-
                 this.ECB.RemoveComponent<IsUnarmedUnitTag>(entityIndexInQuery, entity);
                 this.ECB.AddComponent<IsArmedUnitTag>(entityIndexInQuery, entity);
 

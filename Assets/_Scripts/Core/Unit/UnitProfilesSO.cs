@@ -3,6 +3,7 @@ using AYellowpaper.SerializedCollections;
 using Core.GameEntity;
 using Core.GameResource;
 using Core.Unit.Reaction;
+using Core.Unit.Misc;
 
 namespace Core.Unit
 {
@@ -14,6 +15,9 @@ namespace Core.Unit
 
         public float SpawnDurationSeconds;
         public UnitReactionConfigs UnitReactionConfigs = new();
+
+        public float MaxFollowDistance;
+        public AttackConfigsFloat AttackConfigs = new();
 
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;

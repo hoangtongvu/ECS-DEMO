@@ -187,11 +187,6 @@ namespace Authoring.Unit
 
                 AddComponent<IsUnarmedUnitTag>(entity);
 
-                // TODO: Find another way to get this value.
-                AddComponent(entity, new MaxFollowDistance
-                {
-                    Value = new(12f),
-                });
 
                 // TODO: Find another way to get this value.
                 AddComponent(entity, new InteractableDistanceRange

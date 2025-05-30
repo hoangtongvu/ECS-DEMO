@@ -37,6 +37,11 @@ MonoBehaviour:
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        AttackConfigs:
+          AutoAttackDetectionRadius: 12
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
         BaseSpawningCosts:
           _serializedList:
           - Key: 2
@@ -63,6 +68,11 @@ MonoBehaviour:
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 7
           UnitWalkMaxDistance: 10
+        MaxFollowDistance: 14
+        AttackConfigs:
+          AutoAttackDetectionRadius: 12
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -89,6 +99,11 @@ MonoBehaviour:
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        AttackConfigs:
+          AutoAttackDetectionRadius: 12
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
         BaseSpawningCosts:
           _serializedList:
           - Key: 2

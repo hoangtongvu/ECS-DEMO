@@ -43,7 +43,6 @@ namespace Systems.Simulation.Unit.Misc
                     , InteractingEntity
                     , InteractionTypeICD
                     , ArmedStateHolder
-                    , AutoAttackDetectionRadius
                     , CanSetTargetJobScheduleTag>()
                 .WithAll<
                     IsArmedUnitTag>()
@@ -55,12 +54,14 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate<UnitReactionConfigsMap>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
             state.RequireForUpdate<IsUnarmedUnitTag>();
+            state.RequireForUpdate<AttackConfigsMap>();
 
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var attackConfigsMap = SystemAPI.GetSingleton<AttackConfigsMap>();
             var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
             var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
@@ -74,6 +75,7 @@ namespace Systems.Simulation.Unit.Misc
             state.Dependency = new GetTargetEntitiesAndPositionsJob
             {
                 PhysicsWorld = physicsWorld,
+                AttackConfigsMap = attackConfigsMap,
                 TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
                 TargetEntityArray = attackTargetArray,
                 TargetPosArray = targetPosArray,
@@ -110,6 +112,9 @@ namespace Systems.Simulation.Unit.Misc
             public PhysicsWorldSingleton PhysicsWorld;
 
             [ReadOnly]
+            public AttackConfigsMap AttackConfigsMap;
+
+            [ReadOnly]
             public ComponentLookup<LocalTransform> TransformLookup;
 
             public NativeArray<Entity> TargetEntityArray;
@@ -117,9 +122,9 @@ namespace Systems.Simulation.Unit.Misc
 
             [BurstCompile]
             void Execute(
-                in MoveCommandElement moveCommandElement
+                in UnitProfileIdHolder unitProfileIdHolder
+                , in MoveCommandElement moveCommandElement
                 , in InteractingEntity interactingEntity
-                , in AutoAttackDetectionRadius autoAttackDetectionRadius
                 , in LocalTransform transform
                 , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
                 , Entity unitEntity
@@ -127,10 +132,11 @@ namespace Systems.Simulation.Unit.Misc
             {
                 if (interactingEntity.Value != Entity.Null) return;
                 if (moveCommandElement.TargetEntity != Entity.Null) return;
-                UnityEngine.Debug.Log("Finding Target");
 
                 var hitList = new NativeList<DistanceHit>(Allocator.Temp);
-                half detectionRadius = autoAttackDetectionRadius.Value;
+
+                this.AttackConfigsMap.Value.TryGetValue(unitProfileIdHolder.Value, out var attackConfigs);
+                half detectionRadius = attackConfigs.AutoAttackDetectionRadius;
 
                 bool hasHit = this.PhysicsWorld.OverlapSphere(
                     transform.Position
