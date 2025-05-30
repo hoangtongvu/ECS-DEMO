@@ -187,13 +187,7 @@ namespace Authoring.Unit
 
                 AddComponent<IsUnarmedUnitTag>(entity);
 
-
-                // TODO: Find another way to get this value.
-                AddComponent(entity, new InteractableDistanceRange
-                {
-                    MinValue = new(0f),
-                    MaxValue = new(5f),
-                });
+                AddComponent(entity, InteractableDistanceRange.Default);
 
                 AddComponent<CanCheckInteractionRepeatTag>(entity);
                 SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, false);

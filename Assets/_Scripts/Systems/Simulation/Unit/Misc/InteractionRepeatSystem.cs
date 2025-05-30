@@ -19,11 +19,12 @@ namespace Systems.Simulation.Unit.Misc
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    LocalTransform
+                    UnitProfileIdHolder
+                    , LocalTransform
                     , InteractingEntity
                     , InteractionTypeICD
-                    , MaxFollowDistance
                     , InteractableDistanceRange
+                    , TargetEntityWorldSquareRadius
                     , CanCheckInteractionRepeatTag>()
                 .WithAll<
                     IsAliveTag
@@ -37,12 +38,14 @@ namespace Systems.Simulation.Unit.Misc
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (transformRef, interactingEntityRef, interactionTypeICDRef, maxFollowDistanceRef, interactableRangeRef, targetEntityWorldSquareRadiusRef, canCheckInteractionRepeatTag) in
+            var maxFollowDistanceMap = SystemAPI.GetSingleton<MaxFollowDistanceMap>().Value;
+
+            foreach (var (unitProfileIdRef, transformRef, interactingEntityRef, interactionTypeICDRef, interactableRangeRef, targetEntityWorldSquareRadiusRef, canCheckInteractionRepeatTag) in
                 SystemAPI.Query<
-                    RefRO<LocalTransform>
+                    RefRO<UnitProfileIdHolder>
+                    , RefRO<LocalTransform>
                     , RefRW<InteractingEntity>
                     , RefRW<InteractionTypeICD>
-                    , RefRO<MaxFollowDistance>
                     , RefRO<InteractableDistanceRange>
                     , RefRO<TargetEntityWorldSquareRadius>
                     , EnabledRefRW<CanCheckInteractionRepeatTag>>()
@@ -58,20 +61,27 @@ namespace Systems.Simulation.Unit.Misc
                     continue;
                 }
 
-                float currentDistance = -targetEntityWorldSquareRadiusRef.ValueRO.Value + this.GetCurrentDistance2(
+                float currentDistance = -targetEntityWorldSquareRadiusRef.ValueRO.Value + this.GetEuclideanDistance2(
                     ref state
                     , in transformRef.ValueRO.Position
                     , in interactingEntityRef.ValueRO.Value);
 
-                if (currentDistance > maxFollowDistanceRef.ValueRO.Value)
+                float2 currentAbsDistanceXZ = this.GetAbsoluteDistanceXZ(
+                    ref state
+                    , in transformRef.ValueRO.Position
+                    , in interactingEntityRef.ValueRO.Value);
+
+                currentAbsDistanceXZ -= new float2(targetEntityWorldSquareRadiusRef.ValueRO.Value);
+
+                if (currentDistance > maxFollowDistanceMap[unitProfileIdRef.ValueRO.Value])
                 {
                     this.StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
                     continue;
                 }
 
-                bool isCurrentDistanceInInteractableRange =
-                    currentDistance >= interactableRangeRef.ValueRO.MinValue &&
-                    currentDistance <= interactableRangeRef.ValueRO.MaxValue;
+                bool isCurrentDistanceInInteractableRange = this.IsAbsDistanceXZInInteractableRange(
+                    in currentAbsDistanceXZ
+                    , in interactableRangeRef.ValueRO);
 
                 if (!isCurrentDistanceInInteractableRange)
                 {
@@ -84,13 +94,34 @@ namespace Systems.Simulation.Unit.Misc
         }
 
         [BurstCompile]
-        private float GetCurrentDistance2(
+        private float GetEuclideanDistance2(
             ref SystemState state
             , in float3 unitPos
             , in Entity interactingEntity)
         {
             float3 interactingEntityPos = SystemAPI.GetComponent<LocalTransform>(interactingEntity).Position;
             return math.sqrt(math.square(unitPos.x - interactingEntityPos.x) + math.square(unitPos.z - interactingEntityPos.z));
+        }
+
+        [BurstCompile]
+        private float2 GetAbsoluteDistanceXZ(
+            ref SystemState state
+            , in float3 unitPos
+            , in Entity interactingEntity)
+        {
+            float3 interactingEntityPos = SystemAPI.GetComponent<LocalTransform>(interactingEntity).Position;
+            return math.abs(new float2(interactingEntityPos.x - unitPos.x, interactingEntityPos.z - unitPos.z));
+        }
+
+        [BurstCompile]
+        private bool IsAbsDistanceXZInInteractableRange(
+            in float2 absDistanceXZ
+            , in InteractableDistanceRange interactableDistanceRange)
+        {
+            return absDistanceXZ.x <= interactableDistanceRange.MaxValue
+                && absDistanceXZ.x >= interactableDistanceRange.MinValue
+                && absDistanceXZ.y <= interactableDistanceRange.MaxValue
+                && absDistanceXZ.y >= interactableDistanceRange.MinValue;
         }
 
         [BurstCompile]

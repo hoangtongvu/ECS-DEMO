@@ -17,10 +17,13 @@ namespace Systems.Simulation.GameEntity
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    TargetEntity
-                    , AbsoluteDistanceXZToTarget
-                    , CanInteractEntityTag
-                    , CanMoveEntityTag>()
+                    AbsoluteDistanceXZToTarget
+                    , TargetEntity
+                    , TargetEntityWorldSquareRadius
+                    , InteractableDistanceRange
+                    , CanMoveEntityTag
+                    , MoveCommandElement
+                    , CanInteractEntityTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -49,8 +52,7 @@ namespace Systems.Simulation.GameEntity
             {
                 if (targetEntityRef.ValueRO.Value == Entity.Null) continue;
 
-                float avgDistance = (interactableDistanceRangeRef.ValueRO.MaxValue - interactableDistanceRangeRef.ValueRO.MinValue) / 2;
-                float interactRadius = targetEntityWorldSquareRadiusRef.ValueRO.Value + avgDistance;
+                float interactRadius = targetEntityWorldSquareRadiusRef.ValueRO.Value + interactableDistanceRangeRef.ValueRO.MaxValue;
 
                 if (absoluteDistanceXZToTargetRef.ValueRO.X > interactRadius) continue;
                 if (absoluteDistanceXZToTargetRef.ValueRO.Z > interactRadius) continue;
