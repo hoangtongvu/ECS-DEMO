@@ -185,6 +185,9 @@ namespace Authoring.Unit
                 AddComponent<CanSetTargetJobScheduleTag>(entity);
                 SetComponentEnabled<CanSetTargetJobScheduleTag>(entity, false);
 
+                AddComponent<CanOverrideMoveCommandTag>(entity);
+                SetComponentEnabled<CanOverrideMoveCommandTag>(entity, false);
+
                 AddComponent<IsUnarmedUnitTag>(entity);
 
                 AddComponent(entity, InteractableDistanceRange.Default);

@@ -26,6 +26,8 @@ namespace Systems.Simulation.GameEntity
     public partial struct SelectInteractableEntitySystem : ISystem
     {
         private EntityQuery entityQuery;
+        private EntityQuery setCanOverrideMoveCommandTagJobQuery;
+        private EntityQuery setTargetJobQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -51,7 +53,41 @@ namespace Systems.Simulation.GameEntity
                     , InteractableDistanceRange
                     , ArmedStateHolder
                     , CanSetTargetJobScheduleTag>()
+                .WithAll<
+                    CanOverrideMoveCommandTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
+                .Build();
+
+            this.setCanOverrideMoveCommandTagJobQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitProfileIdHolder>()
+                .WithAll<
+                    MoveCommandElement
+                    , InteractingEntity
+                    , InteractionTypeICD
+                    , ArmedStateHolder>()
+                .WithAll<
+                    CanSetTargetJobScheduleTag>()
+                .WithPresent<
+                    CanOverrideMoveCommandTag>()
+                .Build();
+
+            this.setTargetJobQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitProfileIdHolder>()
+                .WithAll<
+                    LocalTransform
+                    , AbsoluteDistanceXZToTarget
+                    , MoveSpeedLinear
+                    , TargetEntity
+                    , TargetEntityWorldSquareRadius
+                    , MoveCommandElement
+                    , InteractableDistanceRange>()
+                .WithAll<
+                    CanSetTargetJobScheduleTag
+                    , CanOverrideMoveCommandTag>()
+                .WithPresent<
+                    CanFindPathTag>()
                 .Build();
 
             state.RequireForUpdate(this.entityQuery);
@@ -79,30 +115,28 @@ namespace Systems.Simulation.GameEntity
 
             if (!canGetInteractable) return;
 
-            var speedArray = new NativeArray<float>(this.entityQuery.CalculateEntityCount(), Allocator.TempJob);
-
             state.Dependency = new Set_CanSetTargetJobScheduleTag_OnUnitSelected()
                 .ScheduleParallel(this.entityQuery, state.Dependency);
 
-            state.Dependency = new GetRunSpeedsJob()
+            state.Dependency = new SetCanOverrideMoveCommandTagJob
+            {
+                MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
+                NewMoveCommandSource = MoveCommandSource.PlayerCommand,
+            }.ScheduleParallel(this.setCanOverrideMoveCommandTagJobQuery, state.Dependency);
+
+            state.Dependency = new SetSpeedsAsRunSpeedsJob()
             {
                 UnitReactionConfigsMap = unitReactionConfigsMap,
-                OutputArray = speedArray,
-            }.ScheduleParallel(this.entityQuery, state.Dependency);
+            }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
             state.Dependency = new SetSingleTargetJobMultipleSpeeds()
             {
                 TargetEntity = entity,
                 TargetEntityWorldSquareRadius = worldSquareRadius,
                 TargetPosition = pos,
-                NewMoveCommandSource = MoveCommandSource.PlayerCommand,
-                MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
-                SpeedArray = speedArray,
-            }.ScheduleParallel(this.entityQuery, state.Dependency);
+            }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new CleanUpCanSetTargetJobScheduleTagJob().ScheduleParallel(this.entityQuery, state.Dependency);
-
-            state.Dependency = speedArray.Dispose(state.Dependency);
+            state.Dependency = new CleanTagsJob().ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
         }
 
