@@ -124,8 +124,7 @@ namespace Utilities.Jobs
     [BurstCompile]
     public partial struct SetMultipleTargetsJobMultipleSpeeds : IJobEntity
     {
-        [ReadOnly] public NativeArray<Entity> TargetEntities;
-        [ReadOnly] public NativeArray<float3> TargetPositions;
+        [ReadOnly] public NativeHashMap<Entity, TargetEntityInfo> MainEntityAndTargetInfoMap;
         [ReadOnly] public half TargetEntityWorldSquareRadius;// TODO: This must be a NArray
 
         [BurstCompile]
@@ -137,10 +136,13 @@ namespace Utilities.Jobs
             , ref TargetEntityWorldSquareRadius worldSquareRadius
             , ref MoveCommandElement moveCommandElement
             , ref InteractableDistanceRange interactableDistanceRange
-            , [EntityIndexInQuery] int entityIndex)
+            , Entity entity)
         {
-            moveCommandElement.TargetEntity = this.TargetEntities[entityIndex];
-            moveCommandElement.Float3 = this.TargetPositions[entityIndex];
+            if (!this.MainEntityAndTargetInfoMap.TryGetValue(entity, out var targetEntityInfo))
+                throw new KeyNotFoundException($"{nameof(MainEntityAndTargetInfoMap)} does not contain key: {entity}");
+
+            moveCommandElement.TargetEntity = targetEntityInfo.TargetEntity;
+            moveCommandElement.Float3 = targetEntityInfo.Position;
 
             targetEntity.Value = moveCommandElement.TargetEntity;
             worldSquareRadius.Value = this.TargetEntityWorldSquareRadius;
@@ -156,6 +158,13 @@ namespace Utilities.Jobs
 
         }
 
+    }
+
+    [System.Serializable]
+    public struct TargetEntityInfo
+    {
+        public Entity TargetEntity;
+        public float3 Position;
     }
 
     [BurstCompile]

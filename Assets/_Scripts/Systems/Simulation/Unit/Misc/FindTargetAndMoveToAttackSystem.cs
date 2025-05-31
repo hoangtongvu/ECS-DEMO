@@ -11,6 +11,7 @@ using Core.Unit.MyMoveCommand;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
@@ -79,7 +80,6 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate<MoveCommandPrioritiesMap>();
             state.RequireForUpdate<UnitReactionConfigsMap>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
-            state.RequireForUpdate<IsUnarmedUnitTag>();
             state.RequireForUpdate<AttackConfigsMap>();
 
         }
@@ -94,7 +94,10 @@ namespace Systems.Simulation.Unit.Misc
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
             int entityCount = this.entityQuery.CalculateEntityCount();
-            var attackTargetArray = new NativeArray<Entity>(entityCount, Allocator.TempJob);
+            var targetInfoMap = new NativeHashMap<Entity, TargetEntityInfo>(entityCount, Allocator.TempJob);
+
+            var mainEntityArray = this.entityQuery.ToEntityArray(Allocator.TempJob);
+            var targetEntityArray = new NativeArray<Entity>(entityCount, Allocator.TempJob);
             var targetPosArray = new NativeArray<float3>(entityCount, Allocator.TempJob);
 
             state.Dependency = new GetTargetEntitiesAndPositionsJob
@@ -102,9 +105,17 @@ namespace Systems.Simulation.Unit.Misc
                 PhysicsWorld = physicsWorld,
                 AttackConfigsMap = attackConfigsMap,
                 TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
-                TargetEntityArray = attackTargetArray,
+                TargetEntityArray = targetEntityArray,
                 TargetPosArray = targetPosArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
+
+            state.Dependency = new InitTargetInfoMapJob
+            {
+                TargetInfoMap = targetInfoMap,
+                MainEntityArray = mainEntityArray,
+                TargetEntityArray = targetEntityArray,
+                TargetPosArray = targetPosArray,
+            }.Schedule(state.Dependency);
 
             state.Dependency = new SetCanOverrideMoveCommandTagJob
             {
@@ -119,8 +130,7 @@ namespace Systems.Simulation.Unit.Misc
 
             state.Dependency = new SetMultipleTargetsJobMultipleSpeeds
             {
-                TargetEntities = attackTargetArray,
-                TargetPositions = targetPosArray,
+                MainEntityAndTargetInfoMap = targetInfoMap,
                 TargetEntityWorldSquareRadius = defaultStopMoveWorldRadius,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
@@ -131,7 +141,9 @@ namespace Systems.Simulation.Unit.Misc
 
             state.Dependency = new CleanTagsJob().ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = attackTargetArray.Dispose(state.Dependency);
+            state.Dependency = targetInfoMap.Dispose(state.Dependency);
+            state.Dependency = mainEntityArray.Dispose(state.Dependency);
+            state.Dependency = targetEntityArray.Dispose(state.Dependency);
             state.Dependency = targetPosArray.Dispose(state.Dependency);
 
         }
@@ -207,6 +219,36 @@ namespace Systems.Simulation.Unit.Misc
                     canSetTargetJobScheduleTag.ValueRW = true;
 
                 hitList.Dispose();
+            }
+
+        }
+
+        [BurstCompile]
+        private partial struct InitTargetInfoMapJob : IJob
+        {
+            [ReadOnly] public NativeArray<Entity> MainEntityArray;
+            [ReadOnly] public NativeArray<Entity> TargetEntityArray;
+            [ReadOnly] public NativeArray<float3> TargetPosArray;
+
+            public NativeHashMap<Entity, TargetEntityInfo> TargetInfoMap;
+
+            [BurstCompile]
+            public void Execute()
+            {
+                int length = MainEntityArray.Length;
+
+                for (int i = 0; i < length; i++)
+                {
+                    var targetEntity = this.TargetEntityArray[i];
+                    if (targetEntity == Entity.Null) continue;
+
+                    this.TargetInfoMap.Add(this.MainEntityArray[i], new()
+                    {
+                        TargetEntity = targetEntity,
+                        Position = this.TargetPosArray[i],
+                    });
+                }
+
             }
 
         }

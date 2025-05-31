@@ -4,13 +4,11 @@ using Core;
 using Components;
 using Unity.Mathematics;
 using Unity.Burst;
-using Components.Unit.UnitSelection;
 using Core.Unit.MyMoveCommand;
 using Components.Unit.MyMoveCommand;
 using Utilities.Jobs;
 using Components.Misc;
 using Components.Unit.Reaction;
-using Unity.Collections;
 using Unity.Transforms;
 using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
@@ -23,7 +21,6 @@ namespace Systems.Simulation.Unit
     [BurstCompile]
     public partial struct SelectPositionSystem : ISystem
     {
-        private EntityQuery entityQuery;
         private EntityQuery setCanOverrideMoveCommandTagJobQuery;
         private EntityQuery setTargetJobQuery;
 
@@ -32,28 +29,6 @@ namespace Systems.Simulation.Unit
         {
             state.RequireForUpdate<SelectionHitElement>();
             state.RequireForUpdate<MoveCommandPrioritiesMap>();
-
-            this.entityQuery = SystemAPI.QueryBuilder()
-                .WithAll<
-                    UnitProfileIdHolder
-                    , LocalTransform
-                    , AbsoluteDistanceXZToTarget
-                    , UnitSelectedTag
-                    , CanFindPathTag
-                    , MoveSpeedLinear
-                    , TargetEntity>()
-                .WithAll<
-                    TargetEntityWorldSquareRadius
-                    , MoveCommandElement
-                    , InteractingEntity
-                    , InteractionTypeICD
-                    , InteractableDistanceRange
-                    , ArmedStateHolder
-                    , CanSetTargetJobScheduleTag>()
-                .WithAll<
-                    CanOverrideMoveCommandTag>()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
-                .Build();
 
             this.setCanOverrideMoveCommandTagJobQuery = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -87,7 +62,8 @@ namespace Systems.Simulation.Unit
                     CanFindPathTag>()
                 .Build();
 
-            state.RequireForUpdate(this.entityQuery);
+            state.RequireForUpdate(this.setCanOverrideMoveCommandTagJobQuery);
+            state.RequireForUpdate(this.setTargetJobQuery);
         }
 
         [BurstCompile]
@@ -101,7 +77,7 @@ namespace Systems.Simulation.Unit
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
             state.Dependency = new Set_CanSetTargetJobScheduleTag_OnUnitSelected()
-                .ScheduleParallel(this.entityQuery, state.Dependency);
+                .ScheduleParallel(state.Dependency);
 
             state.Dependency = new SetCanOverrideMoveCommandTagJob
             {
