@@ -42,6 +42,7 @@ namespace Systems.Simulation.Unit.Misc
                     , MoveCommandElement
                     , InteractingEntity
                     , InteractionTypeICD
+                    , InteractableDistanceRange
                     , ArmedStateHolder
                     , CanSetTargetJobScheduleTag>()
                 .WithAll<
@@ -81,7 +82,7 @@ namespace Systems.Simulation.Unit.Misc
                 TargetPosArray = targetPosArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
 
-            state.Dependency = new GetRunSpeedsJob()
+            state.Dependency = new GetRunSpeedsJob
             {
                 UnitReactionConfigsMap = unitReactionConfigsMap,
                 OutputArray = speedArray,
@@ -96,6 +97,13 @@ namespace Systems.Simulation.Unit.Misc
                 MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
                 SpeedArray = speedArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
+
+            state.Dependency = new GetAndSetInteractableDistanceRangesJob
+            {
+                AttackConfigsMap = attackConfigsMap,
+            }.ScheduleParallel(state.Dependency);
+
+            state.Dependency = new CleanUpCanSetTargetJobScheduleTagJob().ScheduleParallel(this.entityQuery, state.Dependency);
 
             state.Dependency = speedArray.Dispose(state.Dependency);
             state.Dependency = attackTargetArray.Dispose(state.Dependency);
@@ -174,6 +182,25 @@ namespace Systems.Simulation.Unit.Misc
                     canSetTargetJobScheduleTag.ValueRW = true;
 
                 hitList.Dispose();
+            }
+
+        }
+
+        [WithAll(typeof(IsArmedUnitTag))]
+        [WithAll(typeof(CanSetTargetJobScheduleTag))]
+        [BurstCompile]
+        private partial struct GetAndSetInteractableDistanceRangesJob : IJobEntity
+        {
+            [ReadOnly] public AttackConfigsMap AttackConfigsMap;
+
+            [BurstCompile]
+            void Execute(
+                in UnitProfileIdHolder unitProfileIdHolder
+                , ref InteractableDistanceRange interactableDistanceRange)
+            {
+                interactableDistanceRange.MinValue = this.AttackConfigsMap.Value[unitProfileIdHolder.Value].MinAttackDistance;
+                interactableDistanceRange.MaxValue = this.AttackConfigsMap.Value[unitProfileIdHolder.Value].MaxAttackDistance;
+
             }
 
         }

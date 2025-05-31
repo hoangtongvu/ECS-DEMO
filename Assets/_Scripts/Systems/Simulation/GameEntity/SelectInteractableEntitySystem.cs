@@ -48,6 +48,7 @@ namespace Systems.Simulation.GameEntity
                     , MoveCommandElement
                     , InteractingEntity
                     , InteractionTypeICD
+                    , InteractableDistanceRange
                     , ArmedStateHolder
                     , CanSetTargetJobScheduleTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
@@ -98,6 +99,8 @@ namespace Systems.Simulation.GameEntity
                 MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
                 SpeedArray = speedArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
+
+            state.Dependency = new CleanUpCanSetTargetJobScheduleTagJob().ScheduleParallel(this.entityQuery, state.Dependency);
 
             state.Dependency = speedArray.Dispose(state.Dependency);
 

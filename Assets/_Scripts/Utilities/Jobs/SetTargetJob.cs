@@ -74,7 +74,7 @@ namespace Utilities.Jobs
             in ArmedStateHolder armedStateHolder
             , in LocalTransform transform
             , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
-            , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
+            , EnabledRefRO<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
             , EnabledRefRW<CanFindPathTag> canFindPathTag
             , ref MoveSpeedLinear moveSpeedLinear
             , ref TargetEntity targetEntity
@@ -82,6 +82,7 @@ namespace Utilities.Jobs
             , ref MoveCommandElement moveCommandElement
             , ref InteractingEntity interactingEntity
             , ref InteractionTypeICD interactionTypeICD
+            , ref InteractableDistanceRange interactableDistanceRange
             , [EntityIndexInQuery] int entityIndex)
         {
             if (!canSetTargetJobScheduleTag.ValueRO) return;
@@ -111,7 +112,7 @@ namespace Utilities.Jobs
                 , in transform.Position
                 , this.TargetPosition);
 
-            canSetTargetJobScheduleTag.ValueRW = false;
+            interactableDistanceRange = InteractableDistanceRange.Default;
 
         }
 
@@ -123,7 +124,7 @@ namespace Utilities.Jobs
     {
         [ReadOnly] public NativeArray<Entity> TargetEntities;
         [ReadOnly] public NativeArray<float3> TargetPositions;
-        [ReadOnly] public half TargetEntityWorldSquareRadius;
+        [ReadOnly] public half TargetEntityWorldSquareRadius;// TODO: This must be a NArray
         [ReadOnly] public MoveCommandSource NewMoveCommandSource;
         [ReadOnly] public MoveCommandPrioritiesMap MoveCommandPrioritiesMap;
 
@@ -135,7 +136,7 @@ namespace Utilities.Jobs
             in ArmedStateHolder armedStateHolder
             , in LocalTransform transform
             , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
-            , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
+            , EnabledRefRO<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
             , EnabledRefRW<CanFindPathTag> canFindPathTag
             , ref MoveSpeedLinear moveSpeedLinear
             , ref TargetEntity targetEntity
@@ -143,6 +144,7 @@ namespace Utilities.Jobs
             , ref MoveCommandElement moveCommandElement
             , ref InteractingEntity interactingEntity
             , ref InteractionTypeICD interactionTypeICD
+            , ref InteractableDistanceRange interactableDistanceRange
             , [EntityIndexInQuery] int entityIndex)
         {
             if (!canSetTargetJobScheduleTag.ValueRO) return;
@@ -172,8 +174,20 @@ namespace Utilities.Jobs
                 , in transform.Position
                 , moveCommandElement.Float3);
 
-            canSetTargetJobScheduleTag.ValueRW = false;
+            interactableDistanceRange = InteractableDistanceRange.Default;
 
+        }
+
+    }
+
+    [BurstCompile]
+    public partial struct CleanUpCanSetTargetJobScheduleTagJob : IJobEntity
+    {
+        [BurstCompile]
+        void Execute(
+            EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag)
+        {
+            canSetTargetJobScheduleTag.ValueRW = false;
         }
 
     }
