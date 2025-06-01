@@ -120,7 +120,7 @@ namespace Systems.Simulation.Unit.Misc
             state.Dependency = new SetCanOverrideMoveCommandTagJob
             {
                 MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
-                NewMoveCommandSource = MoveCommandSource.ToolCall,
+                NewMoveCommandSource = MoveCommandSource.AutoAttack,
             }.ScheduleParallel(this.setCanOverrideMoveCommandTagJobQuery, state.Dependency);
 
             state.Dependency = new SetSpeedsAsRunSpeedsJob()

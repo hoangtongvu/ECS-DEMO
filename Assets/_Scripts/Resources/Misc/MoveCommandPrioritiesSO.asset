@@ -35,8 +35,11 @@ MonoBehaviour:
               MoveCommandSource: 1
               Priority: 0
           - Key:
-              MoveCommandSource: 2
+              MoveCommandSource: 4
               Priority: 1
           - Key:
-              MoveCommandSource: 3
+              MoveCommandSource: 2
               Priority: 2
+          - Key:
+              MoveCommandSource: 3
+              Priority: 3

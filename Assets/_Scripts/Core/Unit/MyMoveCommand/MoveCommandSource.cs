@@ -7,6 +7,7 @@ namespace Core.Unit.MyMoveCommand
         PlayerCommand = 1,
         Danger = 2,
         ToolCall = 3,
+        AutoAttack = 4,
     }
 
 }
