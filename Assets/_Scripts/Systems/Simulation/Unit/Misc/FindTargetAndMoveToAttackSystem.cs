@@ -104,7 +104,6 @@ namespace Systems.Simulation.Unit.Misc
             {
                 PhysicsWorld = physicsWorld,
                 AttackConfigsMap = attackConfigsMap,
-                TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
                 TargetEntityArray = targetEntityArray,
                 TargetPosArray = targetPosArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
@@ -159,9 +158,6 @@ namespace Systems.Simulation.Unit.Misc
             [ReadOnly]
             public AttackConfigsMap AttackConfigsMap;
 
-            [ReadOnly]
-            public ComponentLookup<LocalTransform> TransformLookup;
-
             public NativeArray<Entity> TargetEntityArray;
             public NativeArray<float3> TargetPosArray;
 
@@ -201,19 +197,23 @@ namespace Systems.Simulation.Unit.Misc
 
                 int length = hitList.Length;
                 var targetEntity = Entity.Null;
+                float3 targetPosition = float3.zero;
+                float smallestDistanceXZ = float.MaxValue;
 
                 for (int i = 0; i < length; i++)
                 {
-                    var hitEntity = hitList[i].Entity;
-                    if (hitEntity == unitEntity) continue;
+                    var hit = hitList[i];
 
-                    targetEntity = hitEntity;
-                    break;
+                    if (hit.Entity == unitEntity) continue;
+                    if (smallestDistanceXZ <= hit.Distance) continue;
+
+                    smallestDistanceXZ = hit.Distance;
+                    targetEntity = hit.Entity;
+                    targetPosition = hit.Position;
                 }
 
-                this.TransformLookup.TryGetComponent(targetEntity, out var targetTransform);
                 this.TargetEntityArray[entityIndex] = targetEntity;
-                this.TargetPosArray[entityIndex] = targetTransform.Position;
+                this.TargetPosArray[entityIndex] = targetPosition;
 
                 if (targetEntity != Entity.Null)
                     canSetTargetJobScheduleTag.ValueRW = true;
