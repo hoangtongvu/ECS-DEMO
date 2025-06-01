@@ -1,9 +1,12 @@
-﻿using Components.Misc;
+﻿using Components.GameEntity;
+using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Player;
+using Components.Unit.Misc;
 using Components.Unit.NearUnitDropItems;
 using Core.Misc.Presenter.PresenterPrefabGO;
+using Core.Unit.Misc;
 using Unity.Entities;
 using UnityEngine;
 
@@ -26,6 +29,12 @@ namespace Authoring.Player
                 AddComponent(entity, new PresenterPrefabGOKeyHolder
                 {
                     Value = PresenterPrefabGOKey.Null,
+                });
+
+                AddComponent<InteractableEntityTag>(entity);
+                AddComponent(entity, new ArmedStateHolder
+                {
+                    Value = ArmedState.True,
                 });
 
             }

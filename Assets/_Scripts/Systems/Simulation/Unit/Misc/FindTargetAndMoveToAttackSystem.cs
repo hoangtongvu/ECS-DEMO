@@ -190,7 +190,7 @@ namespace Systems.Simulation.Unit.Misc
                     , new CollisionFilter
                     {
                         BelongsTo = (uint)CollisionLayer.Unit,
-                        CollidesWith = (uint)CollisionLayer.Unit,
+                        CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Player),
                     });
 
                 if (!hasHit)
