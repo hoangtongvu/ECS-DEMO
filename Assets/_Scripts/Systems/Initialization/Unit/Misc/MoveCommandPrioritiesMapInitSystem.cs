@@ -68,6 +68,7 @@ namespace Systems.Initialization.Unit.Misc
             int tempIndex = 0;
             var addedCommandSources = new NativeHashSet<byte>(pair.Value.Value.Count, Allocator.Temp);
 
+            // Add Dev-defined sources
             foreach (var item in pair.Value.Value)
             {
                 byte priority = item.Key.Priority;
@@ -81,11 +82,20 @@ namespace Systems.Initialization.Unit.Misc
                 tempIndex++;
             }
 
+            // Add remaining sources except the "None"
             for (byte i = 0; i < MoveCommandSource_Length.Value; i++)
             {
                 if (addedCommandSources.Contains(i)) continue;
+                var source = (MoveCommandSource)i;
+
+                if (source == MoveCommandSource.None) continue;
+
                 commandPrioritiesMap.Value[startIndex + tempIndex] = (MoveCommandSource)i;
+                tempIndex++;
             }
+
+            // Explicitly Add "None" at the end
+            commandPrioritiesMap.Value[startIndex + tempIndex] = MoveCommandSource.None;
 
             addedCommandSources.Dispose();
 
