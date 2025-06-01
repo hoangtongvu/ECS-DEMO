@@ -1,4 +1,5 @@
-﻿using Components.GameEntity;
+﻿using Components.Damage;
+using Components.GameEntity;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
@@ -36,6 +37,16 @@ namespace Authoring.Player
                 {
                     Value = ArmedState.True,
                 });
+
+                AddComponent(entity, new HpComponent
+                {
+                    CurrentHp = 100,
+                    MaxHp = 100,
+                });
+                AddComponent<HpChangedTag>(entity);
+                SetComponentEnabled<HpChangedTag>(entity, false);
+                AddComponent<HpChangedValue>(entity);
+                AddComponent<IsAliveTag>(entity);
 
             }
 

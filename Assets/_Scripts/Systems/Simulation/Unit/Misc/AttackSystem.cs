@@ -1,10 +1,11 @@
-using Unity.Entities;
-using Unity.Burst;
 using Components;
-using Components.Misc;
-using Core.GameEntity;
+using Components.Damage;
 using Components.GameEntity;
+using Components.Misc;
 using Components.Unit.Misc;
+using Core.GameEntity;
+using Unity.Burst;
+using Unity.Entities;
 
 namespace Systems.Simulation.Unit.Misc
 {
@@ -55,12 +56,24 @@ namespace Systems.Simulation.Unit.Misc
                 if (workTimeCounterSecondRef.ValueRO.Value < 1f) continue;
                 workTimeCounterSecondRef.ValueRW.Value = 0;
 
-                // Deal dmg to interacting entity.
+                this.DealDmg(ref state, interactingEntityRef.ValueRO.Value, (int)baseDmgRef.ValueRO.Value);
 
                 SystemAPI.SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, true);
 
             }
 
+        }
+
+        [BurstCompile]
+        private void DealDmg(
+            ref SystemState state
+            , in Entity interactingEntity
+            , int dmgValue)
+        {
+            var hpChangedValueRef = SystemAPI.GetComponentRW<HpChangedValue>(interactingEntity);
+
+            SystemAPI.SetComponentEnabled<HpChangedTag>(interactingEntity, true);
+            hpChangedValueRef.ValueRW.Value = -dmgValue;
         }
 
     }
