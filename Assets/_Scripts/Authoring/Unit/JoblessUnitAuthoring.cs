@@ -195,6 +195,8 @@ namespace Authoring.Unit
                 AddComponent<CanCheckInteractionRepeatTag>(entity);
                 SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, false);
 
+                AddComponent(entity, new FactionIndex { Value = 1 });
+
             }
 
         }

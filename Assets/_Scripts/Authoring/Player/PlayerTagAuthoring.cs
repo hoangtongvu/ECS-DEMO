@@ -48,6 +48,8 @@ namespace Authoring.Player
                 AddComponent<HpChangedValue>(entity);
                 AddComponent<IsAliveTag>(entity);
 
+                AddComponent(entity, new FactionIndex { Value = 1 });
+
             }
 
         }
