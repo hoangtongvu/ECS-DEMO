@@ -139,7 +139,14 @@ namespace Utilities.Jobs
             , Entity entity)
         {
             if (!this.MainEntityAndTargetInfoMap.TryGetValue(entity, out var targetEntityInfo))
+            {
+                UnityEngine.Debug.Log($"count: {this.MainEntityAndTargetInfoMap.Count}");
+                foreach (var item in this.MainEntityAndTargetInfoMap)
+                {
+                    UnityEngine.Debug.Log($"key: {item.Key}");
+                }
                 throw new KeyNotFoundException($"{nameof(MainEntityAndTargetInfoMap)} does not contain key: {entity}");
+            }
 
             moveCommandElement.TargetEntity = targetEntityInfo.TargetEntity;
             moveCommandElement.Float3 = targetEntityInfo.Position;
