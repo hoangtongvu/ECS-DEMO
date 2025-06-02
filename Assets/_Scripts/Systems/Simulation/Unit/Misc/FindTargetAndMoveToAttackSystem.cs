@@ -210,9 +210,10 @@ namespace Systems.Simulation.Unit.Misc
                 {
                     var hit = hitList[i];
 
-                    this.FactionIndexLookup.TryGetComponent(hit.Entity, out var targetFactionIndex);
-                    if (targetFactionIndex == FactionIndex.Neutral) continue;
-                    if (factionIndex.Value == targetFactionIndex.Value) continue;
+                    // Note: The following logic works fine, just commented this out for testing purpose
+                    //this.FactionIndexLookup.TryGetComponent(hit.Entity, out var targetFactionIndex);
+                    //if (targetFactionIndex == FactionIndex.Neutral) continue;
+                    //if (factionIndex.Value == targetFactionIndex.Value) continue;
 
                     if (hit.Entity == unitEntity) continue;
                     if (smallestDistanceXZ <= hit.Distance) continue;
