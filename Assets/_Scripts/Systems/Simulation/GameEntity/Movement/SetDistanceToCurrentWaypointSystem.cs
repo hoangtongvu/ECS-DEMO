@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using Utilities.Helpers;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Simulation.GameEntity.Movement
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(ChangeCurrentWaypointSystem))]
@@ -14,7 +14,7 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+            var entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     CanMoveEntityTag
                     , LocalTransform

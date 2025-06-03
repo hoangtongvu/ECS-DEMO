@@ -17,6 +17,7 @@ using Components.Unit.Misc;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Interaction;
+using Utilities.Helpers.GameEntity.Movement;
 
 namespace Utilities.Jobs
 {

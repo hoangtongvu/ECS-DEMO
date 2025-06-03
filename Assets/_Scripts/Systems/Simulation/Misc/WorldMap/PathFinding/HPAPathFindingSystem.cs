@@ -17,9 +17,9 @@ using Core.Utilities.Extensions;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Unit.MyMoveCommand;
 using Unity.Transforms;
-using Utilities.Helpers.Misc;
 using Components.Misc;
 using Components.GameEntity.Movement;
+using Utilities.Helpers.GameEntity.Movement;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {

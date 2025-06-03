@@ -15,6 +15,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Utilities;
+using Utilities.Helpers.GameEntity.Movement;
 using Utilities.Helpers.Misc;
 
 namespace Systems.Simulation.Tool
