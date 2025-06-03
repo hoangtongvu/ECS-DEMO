@@ -190,7 +190,7 @@ namespace Authoring.Unit
                 AddComponent<CanOverrideMoveCommandTag>(entity);
                 SetComponentEnabled<CanOverrideMoveCommandTag>(entity, false);
 
-                AddComponent<IsUnarmedUnitTag>(entity);
+                AddComponent<IsUnarmedEntityTag>(entity);
 
                 AddComponent(entity, InteractableDistanceRange.Default);
 

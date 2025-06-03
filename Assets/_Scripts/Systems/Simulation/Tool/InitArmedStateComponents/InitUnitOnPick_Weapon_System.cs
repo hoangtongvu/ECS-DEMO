@@ -72,8 +72,8 @@ namespace Systems.Simulation.Tool.InitArmedStateComponents
                     Value = ArmedState.True,
                 });
 
-                this.ECB.RemoveComponent<IsUnarmedUnitTag>(entityIndexInQuery, entity);
-                this.ECB.AddComponent<IsArmedUnitTag>(entityIndexInQuery, entity);
+                this.ECB.RemoveComponent<IsUnarmedEntityTag>(entityIndexInQuery, entity);
+                this.ECB.AddComponent<IsArmedEntityTag>(entityIndexInQuery, entity);
 
             }
 

@@ -42,7 +42,7 @@ namespace Systems.Simulation.Unit.Misc
                     , FactionIndex
                     , CanSetTargetJobScheduleTag>()
                 .WithAll<
-                    IsArmedUnitTag>()
+                    IsArmedEntityTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                 .Build();
 
@@ -55,7 +55,7 @@ namespace Systems.Simulation.Unit.Misc
                     , InteractionTypeICD
                     , ArmedStateHolder>()
                 .WithAll<
-                    IsArmedUnitTag>()
+                    IsArmedEntityTag>()
                 .WithAll<
                     CanSetTargetJobScheduleTag>()
                 .WithPresent<
@@ -74,7 +74,7 @@ namespace Systems.Simulation.Unit.Misc
                     , MoveCommandElement
                     , InteractableDistanceRange>()
                 .WithAll<
-                    IsArmedUnitTag>()
+                    IsArmedEntityTag>()
                 .WithAll<
                     CanSetTargetJobScheduleTag
                     , CanOverrideMoveCommandTag>()
@@ -157,7 +157,7 @@ namespace Systems.Simulation.Unit.Misc
         }
 
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
-        [WithAll(typeof(IsArmedUnitTag))]
+        [WithAll(typeof(IsArmedEntityTag))]
         [BurstCompile]
         private partial struct GetTargetEntitiesAndPositionsJob : IJobEntity
         {
@@ -270,7 +270,7 @@ namespace Systems.Simulation.Unit.Misc
 
         }
 
-        [WithAll(typeof(IsArmedUnitTag))]
+        [WithAll(typeof(IsArmedEntityTag))]
         [WithAll(typeof(CanSetTargetJobScheduleTag))]
         [BurstCompile]
         private partial struct Set_InteractableDistanceRanges_From_AttackConfigsMap_Job : IJobEntity
