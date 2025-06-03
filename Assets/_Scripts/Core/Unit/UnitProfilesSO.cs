@@ -16,7 +16,8 @@ namespace Core.Unit
         public float SpawnDurationSeconds;
         public UnitReactionConfigs UnitReactionConfigs = new();
 
-        public float MaxFollowDistance;
+        public float MaxFollowDistance = 14f;
+        public float DetectionRadius = 10f;
         public AttackConfigsFloat AttackConfigs = new();
 
         [SerializedDictionary("ResourceType ", "Quantity")]

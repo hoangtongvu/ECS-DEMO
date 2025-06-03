@@ -89,7 +89,7 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate<MoveCommandPrioritiesMap>();
             state.RequireForUpdate<UnitReactionConfigsMap>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
-            state.RequireForUpdate<AttackConfigsMap>();
+            state.RequireForUpdate<DetectionRadiusMap>();
 
         }
 
@@ -102,10 +102,9 @@ namespace Systems.Simulation.Unit.Misc
             if (timerRef.ValueRO.TimeCounterSeconds < timerRef.ValueRO.TimeLimitSeconds) return;
             timerRef.ValueRW.TimeCounterSeconds = half.zero;
 
-            var attackConfigsMap = SystemAPI.GetSingleton<AttackConfigsMap>();
+            var detectionRadiusMap = SystemAPI.GetSingleton<DetectionRadiusMap>();
             var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
-            var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
             int entityCount = this.entityQuery.CalculateEntityCount();
@@ -119,7 +118,7 @@ namespace Systems.Simulation.Unit.Misc
             state.Dependency = new GetTargetEntitiesAndPositionsJob
             {
                 PhysicsWorld = physicsWorld,
-                AttackConfigsMap = attackConfigsMap,
+                DetectionRadiusMap = detectionRadiusMap,
                 FactionIndexLookup = SystemAPI.GetComponentLookup<FactionIndex>(),
                 IsArmedUnitLookup = SystemAPI.GetComponentLookup<IsArmedUnitTag>(),
                 DangerousEntityArray = dangerousEntityArray,
@@ -185,7 +184,7 @@ namespace Systems.Simulation.Unit.Misc
         private partial struct GetTargetEntitiesAndPositionsJob : IJobEntity
         {
             [ReadOnly] public PhysicsWorldSingleton PhysicsWorld;
-            [ReadOnly] public AttackConfigsMap AttackConfigsMap;
+            [ReadOnly] public DetectionRadiusMap DetectionRadiusMap;
             [ReadOnly] public ComponentLookup<FactionIndex> FactionIndexLookup;
             [ReadOnly] public ComponentLookup<IsArmedUnitTag> IsArmedUnitLookup;
 
@@ -203,8 +202,7 @@ namespace Systems.Simulation.Unit.Misc
             {
                 var hitList = new NativeList<DistanceHit>(Allocator.Temp);
 
-                this.AttackConfigsMap.Value.TryGetValue(unitProfileIdHolder.Value, out var attackConfigs);
-                half detectionRadius = attackConfigs.AutoAttackDetectionRadius;
+                half detectionRadius = this.DetectionRadiusMap.Value[unitProfileIdHolder.Value];
 
                 bool hasHit = this.PhysicsWorld.OverlapSphere(
                     transform.Position

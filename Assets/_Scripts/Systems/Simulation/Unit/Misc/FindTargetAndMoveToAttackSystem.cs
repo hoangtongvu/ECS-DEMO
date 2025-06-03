@@ -86,6 +86,7 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate<UnitReactionConfigsMap>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
             state.RequireForUpdate<AttackConfigsMap>();
+            state.RequireForUpdate<DetectionRadiusMap>();
 
         }
 
@@ -93,6 +94,7 @@ namespace Systems.Simulation.Unit.Misc
         public void OnUpdate(ref SystemState state)
         {
             var attackConfigsMap = SystemAPI.GetSingleton<AttackConfigsMap>();
+            var detectionRadiusMap = SystemAPI.GetSingleton<DetectionRadiusMap>();
             var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
             var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
@@ -108,7 +110,7 @@ namespace Systems.Simulation.Unit.Misc
             state.Dependency = new GetTargetEntitiesAndPositionsJob
             {
                 PhysicsWorld = physicsWorld,
-                AttackConfigsMap = attackConfigsMap,
+                DetectionRadiusMap = detectionRadiusMap,
                 FactionIndexLookup = SystemAPI.GetComponentLookup<FactionIndex>(),
                 TargetEntityArray = targetEntityArray,
                 TargetPosArray = targetPosArray,
@@ -162,7 +164,7 @@ namespace Systems.Simulation.Unit.Misc
             public PhysicsWorldSingleton PhysicsWorld;
 
             [ReadOnly]
-            public AttackConfigsMap AttackConfigsMap;
+            public DetectionRadiusMap DetectionRadiusMap;
 
             [ReadOnly]
             public ComponentLookup<FactionIndex> FactionIndexLookup;
@@ -186,8 +188,7 @@ namespace Systems.Simulation.Unit.Misc
 
                 var hitList = new NativeList<DistanceHit>(Allocator.Temp);
 
-                this.AttackConfigsMap.Value.TryGetValue(unitProfileIdHolder.Value, out var attackConfigs);
-                half detectionRadius = attackConfigs.AutoAttackDetectionRadius;
+                half detectionRadius = this.DetectionRadiusMap.Value[unitProfileIdHolder.Value];
 
                 bool hasHit = this.PhysicsWorld.OverlapSphere(
                     transform.Position
