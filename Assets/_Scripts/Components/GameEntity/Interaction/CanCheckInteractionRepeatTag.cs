@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Components.Unit.Misc
+namespace Components.GameEntity.Interaction
 {
     public struct CanCheckInteractionRepeatTag : IComponentData, IEnableableComponent
     {

@@ -1,4 +1,5 @@
 using Components.GameEntity;
+using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.Misc;

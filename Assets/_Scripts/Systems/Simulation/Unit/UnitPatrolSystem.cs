@@ -11,13 +11,13 @@ using Utilities;
 using Components.Unit.Reaction;
 using Core.Unit.Reaction;
 using Components.Misc.WorldMap.PathFinding;
-using Components.GameEntity;
 using Core.Unit;
 using System.Collections.Generic;
 using Utilities.Helpers.Misc;
 using Components.Unit.Misc;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
+using Components.GameEntity.Interaction;
 
 namespace Systems.Simulation.Unit
 {

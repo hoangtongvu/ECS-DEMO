@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components.Unit.Misc
+namespace Components.GameEntity.Interaction
 {
     public struct InteractableDistanceRange : IComponentData
     {

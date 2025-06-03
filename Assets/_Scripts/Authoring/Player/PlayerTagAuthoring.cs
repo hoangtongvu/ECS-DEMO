@@ -1,5 +1,6 @@
 ﻿using Components.Damage;
 using Components.GameEntity;
+using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.Misc;
 using Components.Misc.Presenter;

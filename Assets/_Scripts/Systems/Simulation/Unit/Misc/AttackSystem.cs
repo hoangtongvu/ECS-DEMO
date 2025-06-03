@@ -1,8 +1,7 @@
 using Components.Damage;
-using Components.GameEntity;
+using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
 using Components.Misc;
-using Components.Unit.Misc;
 using Core.GameEntity;
 using Unity.Burst;
 using Unity.Entities;

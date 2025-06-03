@@ -7,11 +7,10 @@ using Components.Unit;
 using Core.Tool;
 using Unity.Mathematics;
 using Core.GameEntity;
-using Components.GameEntity;
 using Components.Harvest.HarvesteeHp;
 using System.Collections.Generic;
-using Components.Unit.Misc;
 using Components.GameEntity.Movement;
+using Components.GameEntity.Interaction;
 
 namespace Systems.Simulation.Harvest
 {

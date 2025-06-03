@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Components.Unit.Misc;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
+using Components.GameEntity.Interaction;
 
 namespace Utilities.Jobs
 {

@@ -1,4 +1,4 @@
-using Components.GameEntity;
+using Components.GameEntity.Interaction;
 using Components.Unit.Misc;
 using Components.Unit.MyMoveCommand;
 using Core.GameEntity;
