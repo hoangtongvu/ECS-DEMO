@@ -54,6 +54,8 @@ namespace Systems.Simulation.Unit.Misc
                     , InteractionTypeICD
                     , ArmedStateHolder>()
                 .WithAll<
+                    IsArmedUnitTag>()
+                .WithAll<
                     CanSetTargetJobScheduleTag>()
                 .WithPresent<
                     CanOverrideMoveCommandTag>()
@@ -70,6 +72,8 @@ namespace Systems.Simulation.Unit.Misc
                     , TargetEntityWorldSquareRadius
                     , MoveCommandElement
                     , InteractableDistanceRange>()
+                .WithAll<
+                    IsArmedUnitTag>()
                 .WithAll<
                     CanSetTargetJobScheduleTag
                     , CanOverrideMoveCommandTag>()
@@ -140,7 +144,7 @@ namespace Systems.Simulation.Unit.Misc
                 AttackConfigsMap = attackConfigsMap,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new CleanTagsJob().ScheduleParallel(this.setTargetJobQuery, state.Dependency);
+            state.Dependency = new CleanTagsJob().ScheduleParallel(state.Dependency);
 
             state.Dependency = targetInfoMap.Dispose(state.Dependency);
             state.Dependency = mainEntityArray.Dispose(state.Dependency);

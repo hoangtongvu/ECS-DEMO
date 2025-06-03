@@ -93,11 +93,11 @@ namespace Systems.Simulation.Unit
             state.Dependency = new SetSingleTargetJobMultipleSpeeds()
             {
                 TargetEntity = Entity.Null,
-                TargetEntityWorldSquareRadius = defaultStopMoveWorldRadius,
+                TargetEntityWorldSquareRadius = half.zero,
                 TargetPosition = selectedPos,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new CleanTagsJob().ScheduleParallel(this.setTargetJobQuery, state.Dependency);
+            state.Dependency = new CleanTagsJob().ScheduleParallel(state.Dependency);
 
         }
 

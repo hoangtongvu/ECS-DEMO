@@ -113,7 +113,7 @@ namespace Systems.Simulation.GameEntity
                 TargetPosition = pos,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new CleanTagsJob().ScheduleParallel(this.setTargetJobQuery, state.Dependency);
+            state.Dependency = new CleanTagsJob().ScheduleParallel(state.Dependency);
 
         }
 
