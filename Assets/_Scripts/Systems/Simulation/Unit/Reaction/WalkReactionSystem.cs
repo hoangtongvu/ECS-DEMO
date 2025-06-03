@@ -6,6 +6,7 @@ using Components.Unit;
 using Components.Unit.Reaction;
 using Utilities.Extensions;
 using System.Collections.Generic;
+using Components.GameEntity.Movement;
 
 namespace Systems.Simulation.Unit.Reaction
 {

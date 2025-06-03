@@ -1,5 +1,7 @@
-using Components;
 using Components.GameEntity;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
 using Components.Misc;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Unit;
@@ -45,7 +47,7 @@ namespace Systems.Simulation.Unit.Misc
                     , FactionIndex
                     , CanSetTargetJobScheduleTag>()
                 .WithAll<
-                    IsUnarmedUnitTag>()
+                    IsUnarmedEntityTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                 .Build();
 
@@ -58,7 +60,7 @@ namespace Systems.Simulation.Unit.Misc
                     , InteractionTypeICD
                     , ArmedStateHolder>()
                 .WithAll<
-                    IsUnarmedUnitTag>()
+                    IsUnarmedEntityTag>()
                 .WithAll<
                     CanSetTargetJobScheduleTag>()
                 .WithPresent<
@@ -77,7 +79,7 @@ namespace Systems.Simulation.Unit.Misc
                     , MoveCommandElement
                     , InteractableDistanceRange>()
                 .WithAll<
-                    IsUnarmedUnitTag>()
+                    IsUnarmedEntityTag>()
                 .WithAll<
                     CanSetTargetJobScheduleTag
                     , CanOverrideMoveCommandTag>()
@@ -122,7 +124,7 @@ namespace Systems.Simulation.Unit.Misc
                 PhysicsWorld = physicsWorld,
                 DetectionRadiusMap = detectionRadiusMap,
                 FactionIndexLookup = SystemAPI.GetComponentLookup<FactionIndex>(),
-                IsArmedUnitLookup = SystemAPI.GetComponentLookup<IsArmedUnitTag>(),
+                IsArmedEntityTagLookup = SystemAPI.GetComponentLookup<IsArmedEntityTag>(),
                 DangerousEntityArray = dangerousEntityArray,
                 DangerousEntityPosArray = dangerousEntityPosArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
@@ -182,14 +184,14 @@ namespace Systems.Simulation.Unit.Misc
         }
 
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
-        [WithAll(typeof(IsArmedUnitTag))]
+        [WithAll(typeof(IsArmedEntityTag))]
         [BurstCompile]
         private partial struct GetTargetEntitiesAndPositionsJob : IJobEntity
         {
             [ReadOnly] public PhysicsWorldSingleton PhysicsWorld;
             [ReadOnly] public DetectionRadiusMap DetectionRadiusMap;
             [ReadOnly] public ComponentLookup<FactionIndex> FactionIndexLookup;
-            [ReadOnly] public ComponentLookup<IsArmedUnitTag> IsArmedUnitLookup;
+            [ReadOnly] public ComponentLookup<IsArmedEntityTag> IsArmedEntityTagLookup;
 
             public NativeArray<Entity> DangerousEntityArray;
             public NativeArray<float3> DangerousEntityPosArray;
@@ -237,7 +239,7 @@ namespace Systems.Simulation.Unit.Misc
                     //if (targetFactionIndex == FactionIndex.Neutral) continue;
                     //if (factionIndex.Value == targetFactionIndex.Value) continue;
 
-                    bool isDangerousEntity = this.IsArmedUnitLookup.HasComponent(hit.Entity);
+                    bool isDangerousEntity = this.IsArmedEntityTagLookup.HasComponent(hit.Entity);
                     if (!isDangerousEntity) continue;
 
                     if (hit.Entity == unitEntity) continue;

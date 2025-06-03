@@ -1,5 +1,7 @@
-using Components;
 using Components.GameEntity;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool;
 using Components.Unit;
@@ -13,6 +15,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Utilities;
+using Utilities.Helpers.GameEntity.Movement;
 using Utilities.Helpers.Misc;
 
 namespace Systems.Simulation.Tool

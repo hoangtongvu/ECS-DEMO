@@ -1,9 +1,9 @@
-using Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 using Components.Unit.MyMoveCommand;
-using Utilities.Helpers.Misc;
+using Components.GameEntity.Movement;
+using Utilities.Helpers.GameEntity.Movement;
 
 namespace Systems.Simulation.Unit
 {

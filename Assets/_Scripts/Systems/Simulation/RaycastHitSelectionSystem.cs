@@ -7,17 +7,14 @@ using Components;
 using Components.Unit;
 using Core;
 using Components.Camera;
-using Components.Harvest;
-using Components.GameEntity;
+using Components.GameEntity.Interaction;
 
 namespace Systems.Simulation
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class RaycastHitSelectionSystem : SystemBase
     {
         private UnityEngine.Camera mainCamera;
-
 
         protected override void OnCreate()
         {
@@ -64,7 +61,6 @@ namespace Systems.Simulation
             selectionHits.Clear();
         }
 
-
         private void CreateSelectionHitsHolder()
         {
             SingletonUtilities.GetInstance(EntityManager)
@@ -105,4 +101,5 @@ namespace Systems.Simulation
         }
 
     }
+
 }

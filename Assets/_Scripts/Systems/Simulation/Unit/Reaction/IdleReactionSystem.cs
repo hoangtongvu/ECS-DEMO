@@ -5,15 +5,14 @@ using Components.Unit;
 using Components.Damage;
 using Utilities.Extensions;
 using Components.Unit.Reaction;
+using Components.GameEntity.Movement;
 
 namespace Systems.Simulation.Unit.Reaction
 {
-
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [BurstCompile]
     public partial struct IdleReactionSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -69,14 +68,10 @@ namespace Systems.Simulation.Unit.Reaction
                     idleStartedTag.ValueRW = false;
                 }
 
-
             }
-
 
         }
 
-
-
-
     }
+
 }

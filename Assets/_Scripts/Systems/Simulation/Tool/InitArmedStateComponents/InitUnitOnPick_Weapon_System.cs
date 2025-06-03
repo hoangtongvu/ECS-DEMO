@@ -1,7 +1,8 @@
+using Components.GameEntity.Misc;
 using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
-using Core.Unit.Misc;
+using Core.GameEntity.Misc;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -71,8 +72,8 @@ namespace Systems.Simulation.Tool.InitArmedStateComponents
                     Value = ArmedState.True,
                 });
 
-                this.ECB.RemoveComponent<IsUnarmedUnitTag>(entityIndexInQuery, entity);
-                this.ECB.AddComponent<IsArmedUnitTag>(entityIndexInQuery, entity);
+                this.ECB.RemoveComponent<IsUnarmedEntityTag>(entityIndexInQuery, entity);
+                this.ECB.AddComponent<IsArmedEntityTag>(entityIndexInQuery, entity);
 
             }
 

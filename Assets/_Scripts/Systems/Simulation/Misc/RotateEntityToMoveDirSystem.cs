@@ -1,8 +1,8 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Components.GameEntity.Movement;
 
 namespace Systems.Simulation.Misc
 {

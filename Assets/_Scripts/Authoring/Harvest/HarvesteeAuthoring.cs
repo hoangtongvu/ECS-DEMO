@@ -1,5 +1,5 @@
-﻿using Components.GameEntity;
-using Components.GameEntity.EntitySpawning;
+﻿using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.Interaction;
 using Components.Harvest;
 using Components.Harvest.HarvesteeHp;
 using Components.Misc.Presenter;

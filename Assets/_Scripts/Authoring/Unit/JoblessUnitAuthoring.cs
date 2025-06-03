@@ -2,6 +2,9 @@
 using Components.Damage;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;
@@ -14,6 +17,7 @@ using Components.Unit.MyMoveCommand;
 using Components.Unit.Reaction;
 using Components.Unit.UnitSelection;
 using Core.GameEntity;
+using Core.GameEntity.Misc;
 using Core.Misc.Presenter.PresenterPrefabGO;
 using Core.Unit.MyMoveCommand;
 using Unity.Entities;
@@ -179,7 +183,7 @@ namespace Authoring.Unit
 
                 AddComponent(entity, new ArmedStateHolder
                 {
-                    Value = Core.Unit.Misc.ArmedState.False,
+                    Value = ArmedState.False,
                 });
 
                 AddComponent<CanSetTargetJobScheduleTag>(entity);
@@ -188,7 +192,7 @@ namespace Authoring.Unit
                 AddComponent<CanOverrideMoveCommandTag>(entity);
                 SetComponentEnabled<CanOverrideMoveCommandTag>(entity, false);
 
-                AddComponent<IsUnarmedUnitTag>(entity);
+                AddComponent<IsUnarmedEntityTag>(entity);
 
                 AddComponent(entity, InteractableDistanceRange.Default);
 

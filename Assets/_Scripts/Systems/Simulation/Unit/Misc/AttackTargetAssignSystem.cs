@@ -2,8 +2,8 @@ using Unity.Entities;
 using Unity.Burst;
 using Systems.Simulation.GameEntity;
 using Core.GameEntity;
-using Components.GameEntity;
-using Components.Unit.Misc;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Interaction;
 
 namespace Systems.Simulation.Unit.Misc
 {
