@@ -1,7 +1,7 @@
 using System;
 using Unity.Entities;
 
-namespace Components.GameEntity
+namespace Components.GameEntity.Misc
 {
     public struct FactionIndex : IComponentData, IEquatable<FactionIndex>
     {
@@ -27,7 +27,7 @@ namespace Components.GameEntity
 
         public bool Equals(FactionIndex other) => Value.Equals(other.Value);
 
-        public override int GetHashCode() => this.Value.GetHashCode();
+        public override int GetHashCode() => Value.GetHashCode();
 
     }
 
