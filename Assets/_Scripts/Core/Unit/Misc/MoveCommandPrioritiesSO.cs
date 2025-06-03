@@ -2,6 +2,7 @@ using UnityEngine;
 using AYellowpaper.SerializedCollections;
 using Core.Unit.MyMoveCommand;
 using System;
+using Core.GameEntity.Misc;
 
 namespace Core.Unit.Misc
 {

@@ -1,13 +1,13 @@
 ﻿using Components.Damage;
 using Components.GameEntity;
+using Components.GameEntity.Misc;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Player;
-using Components.Unit.Misc;
 using Components.Unit.NearUnitDropItems;
+using Core.GameEntity.Misc;
 using Core.Misc.Presenter.PresenterPrefabGO;
-using Core.Unit.Misc;
 using Unity.Entities;
 using UnityEngine;
 

@@ -1,5 +1,5 @@
 
-namespace Core.Unit.Misc
+namespace Core.GameEntity.Misc
 {
     // Note: Make sure this enum elements' underlying values are continuous.
     [GenerateEnumLength]

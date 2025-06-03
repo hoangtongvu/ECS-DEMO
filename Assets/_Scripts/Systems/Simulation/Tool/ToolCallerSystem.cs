@@ -1,5 +1,6 @@
 using Components;
 using Components.GameEntity;
+using Components.GameEntity.Misc;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool;
 using Components.Unit;

@@ -1,7 +1,8 @@
+using Components.GameEntity.Misc;
 using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
-using Core.Unit.Misc;
+using Core.GameEntity.Misc;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;

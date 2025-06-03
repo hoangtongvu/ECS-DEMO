@@ -15,6 +15,7 @@ using Core.Unit.Reaction;
 using Core.Unit;
 using System.Collections.Generic;
 using Components.Unit.Misc;
+using Components.GameEntity.Misc;
 
 namespace Utilities.Jobs
 {

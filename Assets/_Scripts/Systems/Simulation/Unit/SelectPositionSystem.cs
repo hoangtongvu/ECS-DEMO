@@ -13,6 +13,7 @@ using Unity.Transforms;
 using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
 using Components.Unit.Misc;
+using Components.GameEntity.Misc;
 
 namespace Systems.Simulation.Unit
 {

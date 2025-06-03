@@ -1,5 +1,6 @@
 using AYellowpaper.SerializedCollections;
 using Components.Unit.Misc;
+using Core.GameEntity.Misc;
 using Core.Unit.Misc;
 using Core.Unit.MyMoveCommand;
 using System.Collections.Generic;

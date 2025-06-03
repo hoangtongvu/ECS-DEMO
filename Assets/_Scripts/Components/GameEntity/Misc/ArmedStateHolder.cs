@@ -1,7 +1,7 @@
-using Core.Unit.Misc;
+using Core.GameEntity.Misc;
 using Unity.Entities;
 
-namespace Components.Unit.Misc
+namespace Components.GameEntity.Misc
 {
     public struct ArmedStateHolder : IComponentData
     {

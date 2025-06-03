@@ -17,6 +17,7 @@ using Core.Unit;
 using System.Collections.Generic;
 using Utilities.Helpers.Misc;
 using Components.Unit.Misc;
+using Components.GameEntity.Misc;
 
 namespace Systems.Simulation.Unit
 {
