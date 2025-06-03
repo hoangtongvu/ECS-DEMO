@@ -8,6 +8,7 @@ using Components.Unit.MyMoveCommand;
 using Components.Unit.Reaction;
 using Core;
 using Core.Unit.MyMoveCommand;
+using Core.Utilities.Extensions;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -15,13 +16,14 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
+using Utilities;
 using Utilities.Jobs;
 
 namespace Systems.Simulation.Unit.Misc
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
-    public partial struct FindTargetAndMoveToAttackSystem : ISystem
+    public partial struct DetectDangerAndRunAwaySystem : ISystem
     {
         private EntityQuery entityQuery;
         private EntityQuery setCanOverrideMoveCommandTagJobQuery;
@@ -30,6 +32,8 @@ namespace Systems.Simulation.Unit.Misc
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            this.CreateSystemTimer(ref state);
+
             this.entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitProfileIdHolder
@@ -41,7 +45,7 @@ namespace Systems.Simulation.Unit.Misc
                     , FactionIndex
                     , CanSetTargetJobScheduleTag>()
                 .WithAll<
-                    IsArmedUnitTag>()
+                    IsUnarmedUnitTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                 .Build();
 
@@ -54,7 +58,7 @@ namespace Systems.Simulation.Unit.Misc
                     , InteractionTypeICD
                     , ArmedStateHolder>()
                 .WithAll<
-                    IsArmedUnitTag>()
+                    IsUnarmedUnitTag>()
                 .WithAll<
                     CanSetTargetJobScheduleTag>()
                 .WithPresent<
@@ -73,7 +77,7 @@ namespace Systems.Simulation.Unit.Misc
                     , MoveCommandElement
                     , InteractableDistanceRange>()
                 .WithAll<
-                    IsArmedUnitTag>()
+                    IsUnarmedUnitTag>()
                 .WithAll<
                     CanSetTargetJobScheduleTag
                     , CanOverrideMoveCommandTag>()
@@ -85,73 +89,95 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate<MoveCommandPrioritiesMap>();
             state.RequireForUpdate<UnitReactionConfigsMap>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
-            state.RequireForUpdate<AttackConfigsMap>();
             state.RequireForUpdate<DetectionRadiusMap>();
+            state.RequireForUpdate<UnarmedUnitFleeTotalSeconds>();
 
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var attackConfigsMap = SystemAPI.GetSingleton<AttackConfigsMap>();
+            var timerRef = SystemAPI.GetSingletonRW<DetectDangerAndRunAwaySystemTimer>();
+            timerRef.ValueRW.TimeCounterSeconds += new half(SystemAPI.Time.DeltaTime);
+
+            if (timerRef.ValueRO.TimeCounterSeconds < timerRef.ValueRO.TimeLimitSeconds) return;
+            timerRef.ValueRW.TimeCounterSeconds = half.zero;
+
             var detectionRadiusMap = SystemAPI.GetSingleton<DetectionRadiusMap>();
             var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
-            var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+            var fleeTotalSeconds = SystemAPI.GetSingleton<UnarmedUnitFleeTotalSeconds>().Value;
 
             int entityCount = this.entityQuery.CalculateEntityCount();
             var targetInfoMap = new NativeHashMap<Entity, TargetEntityInfo>(entityCount, Allocator.TempJob);
 
             var mainEntityArray = this.entityQuery.ToEntityArray(Allocator.TempJob);
-            var targetEntityArray = new NativeArray<Entity>(entityCount, Allocator.TempJob);
-            var targetPosArray = new NativeArray<float3>(entityCount, Allocator.TempJob);
+            var dangerousEntityArray = new NativeArray<Entity>(entityCount, Allocator.TempJob);
+            var dangerousEntityPosArray = new NativeArray<float3>(entityCount, Allocator.TempJob);
+            var runawayDestinationArray = new NativeArray<float3>(entityCount, Allocator.TempJob);
 
             state.Dependency = new GetTargetEntitiesAndPositionsJob
             {
                 PhysicsWorld = physicsWorld,
                 DetectionRadiusMap = detectionRadiusMap,
                 FactionIndexLookup = SystemAPI.GetComponentLookup<FactionIndex>(),
-                TargetEntityArray = targetEntityArray,
-                TargetPosArray = targetPosArray,
+                IsArmedUnitLookup = SystemAPI.GetComponentLookup<IsArmedUnitTag>(),
+                DangerousEntityArray = dangerousEntityArray,
+                DangerousEntityPosArray = dangerousEntityPosArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
 
             state.Dependency = new InitTargetInfoMapJob
             {
-                TargetInfoMap = targetInfoMap,
                 MainEntityArray = mainEntityArray,
-                TargetEntityArray = targetEntityArray,
-                TargetPosArray = targetPosArray,
+                TargetEntityArray = dangerousEntityArray,
+                TargetPosArray = dangerousEntityPosArray,
+                TargetInfoMap = targetInfoMap,
             }.Schedule(state.Dependency);
 
             state.Dependency = new SetCanOverrideMoveCommandTagJob
             {
                 MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
-                NewMoveCommandSource = MoveCommandSource.AutoAttack,
+                NewMoveCommandSource = MoveCommandSource.Danger,
             }.ScheduleParallel(this.setCanOverrideMoveCommandTagJobQuery, state.Dependency);
 
-            state.Dependency = new SetSpeedsAsRunSpeedsJob()
+            state.Dependency = new SetSpeedsAsRunSpeedsJob
             {
                 UnitReactionConfigsMap = unitReactionConfigsMap,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new SetMultipleTargetsJobMultipleSpeeds
+            state.Dependency = new GetRunawayDestinationsJob
             {
-                MainEntityAndTargetInfoMap = targetInfoMap,
-                TargetEntityWorldSquareRadius = defaultStopMoveWorldRadius,
+                FleeTotalSeconds = fleeTotalSeconds,
+                TargetInfoMap = targetInfoMap,
+                RunawayDestinationArray = runawayDestinationArray,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new Set_InteractableDistanceRanges_From_AttackConfigsMap_Job
+            state.Dependency = new SetTargetPositionsJob
             {
-                AttackConfigsMap = attackConfigsMap,
+                TargetPositions = runawayDestinationArray,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
             state.Dependency = new CleanTagsJob().ScheduleParallel(state.Dependency);
 
             state.Dependency = targetInfoMap.Dispose(state.Dependency);
             state.Dependency = mainEntityArray.Dispose(state.Dependency);
-            state.Dependency = targetEntityArray.Dispose(state.Dependency);
-            state.Dependency = targetPosArray.Dispose(state.Dependency);
+            state.Dependency = dangerousEntityArray.Dispose(state.Dependency);
+            state.Dependency = dangerousEntityPosArray.Dispose(state.Dependency);
+            state.Dependency = runawayDestinationArray.Dispose(state.Dependency);
+
+        }
+
+        [BurstCompile]
+        private void CreateSystemTimer(ref SystemState state)
+        {
+            var su = SingletonUtilities.GetInstance(state.EntityManager);
+
+            su.AddOrSetComponentData(new DetectDangerAndRunAwaySystemTimer
+            {
+                TimeCounterSeconds = half.zero,
+                TimeLimitSeconds = new(2f),
+            });
 
         }
 
@@ -160,32 +186,23 @@ namespace Systems.Simulation.Unit.Misc
         [BurstCompile]
         private partial struct GetTargetEntitiesAndPositionsJob : IJobEntity
         {
-            [ReadOnly]
-            public PhysicsWorldSingleton PhysicsWorld;
+            [ReadOnly] public PhysicsWorldSingleton PhysicsWorld;
+            [ReadOnly] public DetectionRadiusMap DetectionRadiusMap;
+            [ReadOnly] public ComponentLookup<FactionIndex> FactionIndexLookup;
+            [ReadOnly] public ComponentLookup<IsArmedUnitTag> IsArmedUnitLookup;
 
-            [ReadOnly]
-            public DetectionRadiusMap DetectionRadiusMap;
-
-            [ReadOnly]
-            public ComponentLookup<FactionIndex> FactionIndexLookup;
-
-            public NativeArray<Entity> TargetEntityArray;
-            public NativeArray<float3> TargetPosArray;
+            public NativeArray<Entity> DangerousEntityArray;
+            public NativeArray<float3> DangerousEntityPosArray;
 
             [BurstCompile]
             void Execute(
                 in UnitProfileIdHolder unitProfileIdHolder
-                , in MoveCommandElement moveCommandElement
-                , in InteractingEntity interactingEntity
                 , in LocalTransform transform
                 , in FactionIndex factionIndex
                 , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
                 , Entity unitEntity
                 , [EntityIndexInQuery] int entityIndex)
             {
-                if (interactingEntity.Value != Entity.Null) return;
-                if (moveCommandElement.TargetEntity != Entity.Null) return;
-
                 var hitList = new NativeList<DistanceHit>(Allocator.Temp);
 
                 half detectionRadius = this.DetectionRadiusMap.Value[unitProfileIdHolder.Value];
@@ -207,8 +224,8 @@ namespace Systems.Simulation.Unit.Misc
                 }
 
                 int length = hitList.Length;
-                var targetEntity = Entity.Null;
-                float3 targetPosition = float3.zero;
+                var dangerousEntity = Entity.Null;
+                float3 dangerousEntityPosition = float3.zero;
                 float smallestDistanceXZ = float.MaxValue;
 
                 for (int i = 0; i < length; i++)
@@ -220,18 +237,21 @@ namespace Systems.Simulation.Unit.Misc
                     //if (targetFactionIndex == FactionIndex.Neutral) continue;
                     //if (factionIndex.Value == targetFactionIndex.Value) continue;
 
+                    bool isDangerousEntity = this.IsArmedUnitLookup.HasComponent(hit.Entity);
+                    if (!isDangerousEntity) continue;
+
                     if (hit.Entity == unitEntity) continue;
                     if (smallestDistanceXZ <= hit.Distance) continue;
 
                     smallestDistanceXZ = hit.Distance;
-                    targetEntity = hit.Entity;
-                    targetPosition = hit.Position;
+                    dangerousEntity = hit.Entity;
+                    dangerousEntityPosition = hit.Position;
                 }
 
-                this.TargetEntityArray[entityIndex] = targetEntity;
-                this.TargetPosArray[entityIndex] = targetPosition;
+                this.DangerousEntityArray[entityIndex] = dangerousEntity;
+                this.DangerousEntityPosArray[entityIndex] = dangerousEntityPosition;
 
-                if (targetEntity != Entity.Null)
+                if (dangerousEntity != Entity.Null)
                     canSetTargetJobScheduleTag.ValueRW = true;
 
                 hitList.Dispose();
@@ -269,21 +289,40 @@ namespace Systems.Simulation.Unit.Misc
 
         }
 
-        [WithAll(typeof(IsArmedUnitTag))]
         [WithAll(typeof(CanSetTargetJobScheduleTag))]
+        [WithAll(typeof(CanOverrideMoveCommandTag))]
         [BurstCompile]
-        private partial struct Set_InteractableDistanceRanges_From_AttackConfigsMap_Job : IJobEntity
+        private partial struct GetRunawayDestinationsJob : IJobEntity
         {
-            [ReadOnly] public AttackConfigsMap AttackConfigsMap;
+            [ReadOnly] public half FleeTotalSeconds;
+            [ReadOnly] public NativeHashMap<Entity, TargetEntityInfo> TargetInfoMap;
+            [WriteOnly] public NativeArray<float3> RunawayDestinationArray;
 
             [BurstCompile]
             void Execute(
-                in UnitProfileIdHolder unitProfileIdHolder
-                , ref InteractableDistanceRange interactableDistanceRange)
+                in LocalTransform transform
+                , in MoveSpeedLinear moveSpeedLinear
+                , Entity entity
+                , [EntityIndexInQuery] int entityIndex)
             {
-                interactableDistanceRange.MinValue = this.AttackConfigsMap.Value[unitProfileIdHolder.Value].MinAttackDistance;
-                interactableDistanceRange.MaxValue = this.AttackConfigsMap.Value[unitProfileIdHolder.Value].MaxAttackDistance;
+                this.RunawayDestinationArray[entityIndex] = this.GetRunAwayDestination(
+                    in transform.Position
+                    , this.TargetInfoMap[entity].Position
+                    , in moveSpeedLinear.Value
+                    , in this.FleeTotalSeconds);
 
+            }
+
+            [BurstCompile]
+            private float3 GetRunAwayDestination(
+                in float3 unitPos
+                , in float3 dangerousPos
+                , in float unitSpeed
+                , in half totalRunAwaySeconds)
+            {
+                float3 runDir = math.normalize(unitPos - dangerousPos).With(y: 0f);
+                float3 distanceVector = totalRunAwaySeconds * unitSpeed * runDir;
+                return distanceVector + unitPos;
             }
 
         }

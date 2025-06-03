@@ -174,6 +174,44 @@ namespace Utilities.Jobs
         public float3 Position;
     }
 
+    [WithAll(typeof(CanSetTargetJobScheduleTag))]
+    [WithAll(typeof(CanOverrideMoveCommandTag))]
+    [BurstCompile]
+    public partial struct SetTargetPositionsJob : IJobEntity
+    {
+        [ReadOnly] public NativeArray<float3> TargetPositions;
+
+        [BurstCompile]
+        void Execute(
+            in LocalTransform transform
+            , ref AbsoluteDistanceXZToTarget absoluteDistanceXZToTarget
+            , EnabledRefRW<CanFindPathTag> canFindPathTag
+            , ref TargetEntity targetEntity
+            , ref TargetEntityWorldSquareRadius worldSquareRadius
+            , ref MoveCommandElement moveCommandElement
+            , ref InteractableDistanceRange interactableDistanceRange
+            , [EntityIndexInQuery] int entityIndex)
+        {
+            moveCommandElement.TargetEntity = Entity.Null;
+            moveCommandElement.Float3 = this.TargetPositions[entityIndex];
+
+            targetEntity.Value = Entity.Null;
+            worldSquareRadius.Value = half.zero;
+
+            canFindPathTag.ValueRW = true;
+
+            AbsoluteDistanceXZToTargetHelper.SetDistance(
+                ref absoluteDistanceXZToTarget
+                , in transform.Position
+                , moveCommandElement.Float3);
+
+            interactableDistanceRange = InteractableDistanceRange.Default;
+
+        }
+
+    }
+
+    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     [BurstCompile]
     public partial struct CleanTagsJob : IJobEntity
     {

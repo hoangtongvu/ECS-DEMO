@@ -38,8 +38,8 @@ MonoBehaviour:
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
         MaxFollowDistance: 12
+        DetectionRadius: 10
         AttackConfigs:
-          AutoAttackDetectionRadius: 12
           MinAttackDistance: 0
           MaxAttackDistance: 2
         BaseSpawningCosts:
@@ -69,8 +69,8 @@ MonoBehaviour:
           UnitWalkMinDistance: 7
           UnitWalkMaxDistance: 10
         MaxFollowDistance: 14
+        DetectionRadius: 10
         AttackConfigs:
-          AutoAttackDetectionRadius: 12
           MinAttackDistance: 0
           MaxAttackDistance: 2
         BaseSpawningCosts:
@@ -100,8 +100,8 @@ MonoBehaviour:
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
         MaxFollowDistance: 12
+        DetectionRadius: 10
         AttackConfigs:
-          AutoAttackDetectionRadius: 12
           MinAttackDistance: 0
           MaxAttackDistance: 2
         BaseSpawningCosts:
