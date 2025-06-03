@@ -1,6 +1,5 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components;
 using Components.Damage;
 using Components.Unit;
 using Components.Unit.MyMoveCommand;
@@ -18,6 +17,7 @@ using System.Collections.Generic;
 using Utilities.Helpers.Misc;
 using Components.Unit.Misc;
 using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
 
 namespace Systems.Simulation.Unit
 {

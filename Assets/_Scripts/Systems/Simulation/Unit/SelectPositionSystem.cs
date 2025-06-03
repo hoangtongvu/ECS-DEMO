@@ -14,6 +14,7 @@ using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
 using Components.Unit.Misc;
 using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
 
 namespace Systems.Simulation.Unit
 {

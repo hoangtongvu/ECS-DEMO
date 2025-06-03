@@ -1,11 +1,7 @@
 using Unity.Entities;
 
-namespace Components
+namespace Components.GameEntity.Movement
 {
-    public struct TargetPosChangedTag : IComponentData, IEnableableComponent
-    {
-    }
-
     public struct AbsoluteDistanceXZToTarget : IComponentData
     {
         public float X;

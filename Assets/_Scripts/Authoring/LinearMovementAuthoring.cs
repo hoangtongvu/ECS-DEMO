@@ -1,4 +1,4 @@
-﻿using Components;
+﻿using Components.GameEntity.Movement;
 using Unity.Entities;
 using UnityEngine;
 

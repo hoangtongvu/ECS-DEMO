@@ -1,6 +1,6 @@
-using Components;
 using Unity.Mathematics;
 using Unity.Burst;
+using Components.GameEntity.Movement;
 
 namespace Utilities.Helpers.Misc
 {

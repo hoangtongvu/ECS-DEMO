@@ -1,4 +1,3 @@
-using Components;
 using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
 using Components.Unit;
@@ -16,6 +15,7 @@ using Core.Unit;
 using System.Collections.Generic;
 using Components.Unit.Misc;
 using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
 
 namespace Utilities.Jobs
 {

@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components
+namespace Components.GameEntity.Movement
 {
     public struct CurrentWorldWaypoint : IComponentData
     {

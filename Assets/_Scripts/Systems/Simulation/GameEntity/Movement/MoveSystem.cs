@@ -1,11 +1,11 @@
-using Components;
+using Components.GameEntity.Movement;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.GameEntity.Movement
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
@@ -14,7 +14,6 @@ namespace Systems.Simulation
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-
             EntityQuery entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     CanMoveEntityTag

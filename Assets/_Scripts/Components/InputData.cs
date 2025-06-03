@@ -1,8 +1,8 @@
+using Components.GameEntity.Movement;
 using Unity.Entities;
 
 namespace Components
 {
-
     public struct InputData : IComponentData
     {
 

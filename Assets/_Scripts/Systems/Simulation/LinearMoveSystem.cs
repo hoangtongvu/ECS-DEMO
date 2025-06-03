@@ -1,4 +1,4 @@
-using Components;
+using Components.GameEntity.Movement;
 using Components.Tag;
 using Unity.Burst;
 using Unity.Entities;

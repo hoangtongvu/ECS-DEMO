@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Unity.Burst;
 using Core.Harvest;
-using Components;
 using Components.Misc;
 using Components.Tool;
 using Components.Unit;
@@ -12,6 +11,7 @@ using Components.GameEntity;
 using Components.Harvest.HarvesteeHp;
 using System.Collections.Generic;
 using Components.Unit.Misc;
+using Components.GameEntity.Movement;
 
 namespace Systems.Simulation.Harvest
 {

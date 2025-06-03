@@ -1,6 +1,6 @@
-using Components;
 using Components.Damage;
 using Components.GameEntity;
+using Components.GameEntity.Movement;
 using Components.Misc;
 using Components.Unit.Misc;
 using Core.GameEntity;

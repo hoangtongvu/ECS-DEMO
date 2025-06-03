@@ -3,6 +3,7 @@ using Unity.Entities;
 using Components;
 using Components.Player;
 using Unity.Mathematics;
+using Components.GameEntity.Movement;
 
 namespace Systems.Simulation.Player
 {
@@ -10,7 +11,6 @@ namespace Systems.Simulation.Player
     [BurstCompile]
     public partial struct SetMoveDirSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -52,5 +52,5 @@ namespace Systems.Simulation.Player
         }
 
     }
-}
 
+}

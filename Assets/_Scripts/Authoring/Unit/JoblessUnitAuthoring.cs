@@ -3,6 +3,7 @@ using Components.Damage;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;

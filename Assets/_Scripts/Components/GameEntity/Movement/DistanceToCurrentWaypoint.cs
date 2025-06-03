@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Components
+namespace Components.GameEntity.Movement
 {
     public struct DistanceToCurrentWaypoint : IComponentData
     {

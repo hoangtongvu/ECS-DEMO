@@ -1,4 +1,4 @@
-using Components;
+using Components.GameEntity.Movement;
 using Components.Misc;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Unit.MyMoveCommand;
