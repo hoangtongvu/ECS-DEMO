@@ -90,6 +90,7 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate<UnitReactionConfigsMap>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
             state.RequireForUpdate<DetectionRadiusMap>();
+            state.RequireForUpdate<UnarmedUnitFleeTotalSeconds>();
 
         }
 
@@ -106,6 +107,7 @@ namespace Systems.Simulation.Unit.Misc
             var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+            var fleeTotalSeconds = SystemAPI.GetSingleton<UnarmedUnitFleeTotalSeconds>().Value;
 
             int entityCount = this.entityQuery.CalculateEntityCount();
             var targetInfoMap = new NativeHashMap<Entity, TargetEntityInfo>(entityCount, Allocator.TempJob);
@@ -146,6 +148,7 @@ namespace Systems.Simulation.Unit.Misc
 
             state.Dependency = new GetRunawayDestinationsJob
             {
+                FleeTotalSeconds = fleeTotalSeconds,
                 TargetInfoMap = targetInfoMap,
                 RunawayDestinationArray = runawayDestinationArray,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
@@ -291,6 +294,7 @@ namespace Systems.Simulation.Unit.Misc
         [BurstCompile]
         private partial struct GetRunawayDestinationsJob : IJobEntity
         {
+            [ReadOnly] public half FleeTotalSeconds;
             [ReadOnly] public NativeHashMap<Entity, TargetEntityInfo> TargetInfoMap;
             [WriteOnly] public NativeArray<float3> RunawayDestinationArray;
 
@@ -301,13 +305,11 @@ namespace Systems.Simulation.Unit.Misc
                 , Entity entity
                 , [EntityIndexInQuery] int entityIndex)
             {
-                half totalRunSeconds = new(3f);
-
                 this.RunawayDestinationArray[entityIndex] = this.GetRunAwayDestination(
                     in transform.Position
                     , this.TargetInfoMap[entity].Position
                     , in moveSpeedLinear.Value
-                    , in totalRunSeconds);
+                    , in this.FleeTotalSeconds);
 
             }
 
