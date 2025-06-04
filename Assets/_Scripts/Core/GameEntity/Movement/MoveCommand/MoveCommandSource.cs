@@ -1,4 +1,5 @@
-namespace Core.Unit.MyMoveCommand
+
+namespace Core.GameEntity.Movement.MoveCommand
 {
     [GenerateEnumLength]
     public enum MoveCommandSource : byte

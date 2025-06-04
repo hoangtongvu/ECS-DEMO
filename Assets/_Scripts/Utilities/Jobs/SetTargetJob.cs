@@ -1,7 +1,5 @@
-using Components.Unit.MyMoveCommand;
 using Components.Unit.UnitSelection;
 using Components.Unit;
-using Core.Unit.MyMoveCommand;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,7 +7,6 @@ using Unity.Mathematics;
 using Components.Misc.WorldMap.PathFinding;
 using Components.GameEntity;
 using Unity.Transforms;
-using Utilities.Helpers.Misc;
 using Core.Unit.Reaction;
 using Core.Unit;
 using System.Collections.Generic;
@@ -18,6 +15,9 @@ using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Interaction;
 using Utilities.Helpers.GameEntity.Movement;
+using Components.GameEntity.Movement.MoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
+using Utilities.Helpers.GameEntity.Movement.MoveCommand;
 
 namespace Utilities.Jobs
 {

@@ -1,8 +1,8 @@
-using Core.Unit.MyMoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components.Unit.MyMoveCommand
+namespace Components.GameEntity.Movement.MoveCommand
 {
     public struct MoveCommandElement : IComponentData
     {

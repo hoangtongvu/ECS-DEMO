@@ -54,7 +54,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1640785096646030297}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ec99e84aa22cea44bc00e7909f971f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 86f741fdd66eced458db471667ffaddf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MoveCommandPrioritiesSO: {fileID: 11400000, guid: b4e32425650295d42971c2a9fb0595e4,

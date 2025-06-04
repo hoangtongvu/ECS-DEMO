@@ -2,13 +2,12 @@ using Components.GameEntity;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
+using Components.GameEntity.Movement.MoveCommand;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool;
 using Components.Unit;
-using Components.Unit.Misc;
-using Components.Unit.MyMoveCommand;
 using Components.Unit.Reaction;
-using Core.Unit.MyMoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Entities;
@@ -16,7 +15,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Utilities;
 using Utilities.Helpers.GameEntity.Movement;
-using Utilities.Helpers.Misc;
+using Utilities.Helpers.GameEntity.Movement.MoveCommand;
 
 namespace Systems.Simulation.Tool
 {

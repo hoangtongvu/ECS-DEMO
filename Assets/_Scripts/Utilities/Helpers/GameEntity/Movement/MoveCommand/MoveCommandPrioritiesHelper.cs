@@ -1,13 +1,12 @@
 using Components.GameEntity.Interaction;
-using Components.Unit.Misc;
-using Components.Unit.MyMoveCommand;
+using Components.GameEntity.Movement.MoveCommand;
 using Core.GameEntity;
 using Core.GameEntity.Misc;
-using Core.Unit.MyMoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Utilities.Helpers.Misc
+namespace Utilities.Helpers.GameEntity.Movement.MoveCommand
 {
     [BurstCompile]
     public static class MoveCommandPrioritiesHelper

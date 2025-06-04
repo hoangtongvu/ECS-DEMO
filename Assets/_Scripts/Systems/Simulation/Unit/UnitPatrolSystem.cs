@@ -2,8 +2,6 @@ using Unity.Entities;
 using Unity.Burst;
 using Components.Damage;
 using Components.Unit;
-using Components.Unit.MyMoveCommand;
-using Core.Unit.MyMoveCommand;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Transforms;
@@ -13,11 +11,12 @@ using Core.Unit.Reaction;
 using Components.Misc.WorldMap.PathFinding;
 using Core.Unit;
 using System.Collections.Generic;
-using Utilities.Helpers.Misc;
-using Components.Unit.Misc;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Interaction;
+using Components.GameEntity.Movement.MoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
+using Utilities.Helpers.GameEntity.Movement.MoveCommand;
 
 namespace Systems.Simulation.Unit
 {

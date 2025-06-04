@@ -1,8 +1,8 @@
 using Components.GameEntity.Movement;
+using Components.GameEntity.Movement.MoveCommand;
 using Components.Misc;
 using Components.Misc.WorldMap.PathFinding;
-using Components.Unit.MyMoveCommand;
-using Core.Unit.MyMoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using Systems.Simulation.GameEntity.Movement;
 using Unity.Burst;
 using Unity.Burst.CompilerServices;

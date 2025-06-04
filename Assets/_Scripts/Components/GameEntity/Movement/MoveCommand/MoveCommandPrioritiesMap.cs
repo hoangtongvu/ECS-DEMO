@@ -1,8 +1,8 @@
-using Core.Unit.MyMoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Components.Unit.Misc
+namespace Components.GameEntity.Movement.MoveCommand
 {
     public struct MoveCommandPrioritiesMap : IComponentData
     {

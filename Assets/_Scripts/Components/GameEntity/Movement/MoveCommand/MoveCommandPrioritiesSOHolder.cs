@@ -1,7 +1,7 @@
-using Core.Unit.Misc;
+using Core.GameEntity.Movement.MoveCommand;
 using Unity.Entities;
 
-namespace Components.Unit.Misc
+namespace Components.GameEntity.Movement.MoveCommand
 {
     public struct MoveCommandPrioritiesSOHolder : IComponentData
     {

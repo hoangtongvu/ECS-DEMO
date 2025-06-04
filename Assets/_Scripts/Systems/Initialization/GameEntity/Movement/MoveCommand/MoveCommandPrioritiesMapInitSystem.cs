@@ -1,15 +1,14 @@
 using AYellowpaper.SerializedCollections;
-using Components.Unit.Misc;
+using Components.GameEntity.Movement.MoveCommand;
 using Core.GameEntity.Misc;
-using Core.Unit.Misc;
-using Core.Unit.MyMoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Utilities;
-using Utilities.Helpers.Misc;
+using Utilities.Helpers.GameEntity.Movement.MoveCommand;
 
-namespace Systems.Initialization.Unit.Misc
+namespace Systems.Initialization.GameEntity.Movement.MoveCommand
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class MoveCommandPrioritiesMapInitSystem : SystemBase

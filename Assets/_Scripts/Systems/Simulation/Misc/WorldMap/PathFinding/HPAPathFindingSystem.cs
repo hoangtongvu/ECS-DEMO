@@ -15,11 +15,11 @@ using Utilities.Helpers.Misc.WorldMap;
 using System.Collections.Generic;
 using Core.Utilities.Extensions;
 using Components.Misc.WorldMap.PathFinding;
-using Components.Unit.MyMoveCommand;
 using Unity.Transforms;
 using Components.Misc;
 using Components.GameEntity.Movement;
 using Utilities.Helpers.GameEntity.Movement;
+using Components.GameEntity.Movement.MoveCommand;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {

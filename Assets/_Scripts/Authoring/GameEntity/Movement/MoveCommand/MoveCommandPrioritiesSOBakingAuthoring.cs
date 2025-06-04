@@ -1,9 +1,9 @@
-﻿using Components.Unit.Misc;
-using Core.Unit.Misc;
+﻿using Components.GameEntity.Movement.MoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring.Unit.Misc
+namespace Authoring.GameEntity.Movement.MoveCommand
 {
     public class MoveCommandPrioritiesSOBakingAuthoring : MonoBehaviour
     {

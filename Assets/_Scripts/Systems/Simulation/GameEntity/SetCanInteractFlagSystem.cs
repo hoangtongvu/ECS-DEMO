@@ -1,8 +1,8 @@
 using Components.GameEntity;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
-using Components.Unit.MyMoveCommand;
-using Core.Unit.MyMoveCommand;
+using Components.GameEntity.Movement.MoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
 using Unity.Burst;
 using Unity.Entities;
 
