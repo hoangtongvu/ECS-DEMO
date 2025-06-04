@@ -11,7 +11,17 @@ using Unity.Transforms;
 
 namespace Systems.Simulation.Unit.Misc
 {
-    [UpdateInGroup(typeof(LateSimulationSystemGroup))] // TODO: Change this later on, we don't need checking repeatable this frequently. Might create a new system group that update every 1 second.
+    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    public partial class InteractionRepeatSystemGroup : ComponentSystemGroup
+    {
+        public InteractionRepeatSystemGroup()
+        {
+            this.RateManager = new RateUtils.VariableRateManager(1000);
+        }
+
+    }
+
+    [UpdateInGroup(typeof(InteractionRepeatSystemGroup))]
     [BurstCompile]
     public partial struct InteractionRepeatSystem : ISystem
     {
