@@ -1,10 +1,11 @@
-using Components.Damage;
+using Components.GameEntity.Damage;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
 using Components.Misc;
 using Core.GameEntity;
 using Unity.Burst;
 using Unity.Entities;
+using Utilities.Extensions.GameEntity.Damage;
 
 namespace Systems.Simulation.Unit.Misc
 {
@@ -69,10 +70,8 @@ namespace Systems.Simulation.Unit.Misc
             , in Entity interactingEntity
             , int dmgValue)
         {
-            var hpChangedValueRef = SystemAPI.GetComponentRW<HpChangedValue>(interactingEntity);
-
-            SystemAPI.SetComponentEnabled<HpChangedTag>(interactingEntity, true);
-            hpChangedValueRef.ValueRW.Value = -dmgValue;
+            var hpChangeRecords = SystemAPI.GetBuffer<HpChangeRecordElement>(interactingEntity);
+            hpChangeRecords.AddDeductRecord(dmgValue);
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using Components.Damage;
-using Components.GameEntity;
+﻿using Components.GameEntity.Damage;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.Misc;
@@ -39,14 +38,15 @@ namespace Authoring.Player
                     Value = ArmedState.True,
                 });
 
-                AddComponent(entity, new HpComponent
+                AddComponent(entity, new CurrentHp
                 {
-                    CurrentHp = 100,
-                    MaxHp = 100,
+                    Value = 100,
                 });
-                AddComponent<HpChangedTag>(entity);
-                SetComponentEnabled<HpChangedTag>(entity, false);
-                AddComponent<HpChangedValue>(entity);
+                AddComponent(entity, new MaxHp
+                {
+                    Value = 100,
+                });
+                AddBuffer<HpChangeRecordElement>(entity);
                 AddComponent<IsAliveTag>(entity);
 
                 AddComponent(entity, new FactionIndex { Value = 1 });
