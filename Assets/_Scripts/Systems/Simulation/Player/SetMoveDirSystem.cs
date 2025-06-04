@@ -1,9 +1,9 @@
 using Unity.Burst;
 using Unity.Entities;
-using Components;
 using Components.Player;
 using Unity.Mathematics;
 using Components.GameEntity.Movement;
+using Components.Misc;
 
 namespace Systems.Simulation.Player
 {
@@ -14,8 +14,7 @@ namespace Systems.Simulation.Player
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-
-            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+            var entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerTag
                     , MoveDirectionFloat2>()

@@ -1,7 +1,5 @@
 using Unity.Entities;
 using Components.Unit;
-using Core;
-using Components;
 using Unity.Mathematics;
 using Unity.Burst;
 using Utilities.Jobs;
@@ -16,6 +14,8 @@ using Components.GameEntity.Movement;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement.MoveCommand;
 using Core.GameEntity.Movement.MoveCommand;
+using Systems.Simulation.Misc;
+using Core.Misc;
 
 namespace Systems.Simulation.Unit
 {

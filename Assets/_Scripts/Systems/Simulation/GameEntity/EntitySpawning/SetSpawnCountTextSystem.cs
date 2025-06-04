@@ -1,9 +1,9 @@
 using Unity.Entities;
-using Components;
 using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
 using Core.MyEvent.PubSub.Messages;
 using Components.GameEntity.EntitySpawning;
+using Components.Misc;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {

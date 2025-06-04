@@ -1,8 +1,7 @@
 using Unity.Entities;
 using Components.Player;
-using Components;
 using Unity.Burst;
-
+using Components.Misc;
 
 namespace Systems.Simulation.Player
 {
@@ -10,7 +9,6 @@ namespace Systems.Simulation.Player
     [BurstCompile]
     public partial struct AttackInputHandleSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -22,7 +20,6 @@ namespace Systems.Simulation.Player
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-
             bool hardwareInputState = SystemAPI.GetSingleton<InputData>().LeftMouseData.Down;
 
             foreach (var (attackDataRef, attackInputRef) in
@@ -33,11 +30,8 @@ namespace Systems.Simulation.Player
                 attackInputRef.ValueRW.IsAttackable = hardwareInputState && !attackDataRef.ValueRO.isAttacking;
             }
 
-
         }
 
-
-
     }
-}
 
+}

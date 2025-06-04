@@ -8,18 +8,15 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Physics;
-using Core;
+using Core.Misc;
 
 namespace Systems.Presentation.Unit
 {
-
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [BurstCompile]
     public partial struct SelectedUnitMarkerSpawnSystem : ISystem
     {
-
         private EntityQuery unitQuery;
-
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -81,7 +78,6 @@ namespace Systems.Presentation.Unit
                     , ref selectedUnitMarkerHolderRef.ValueRW);
 
             }
-
 
         }
 
@@ -211,4 +207,5 @@ namespace Systems.Presentation.Unit
         }
 
     }
+
 }

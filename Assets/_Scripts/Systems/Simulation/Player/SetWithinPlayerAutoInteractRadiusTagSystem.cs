@@ -3,10 +3,10 @@ using Unity.Entities;
 using Components.Player;
 using Unity.Mathematics;
 using Components.Misc;
-using Core;
 using Unity.Physics;
 using Unity.Collections;
 using Unity.Transforms;
+using Core.Misc;
 
 namespace Systems.Simulation.Player
 {

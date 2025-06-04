@@ -1,4 +1,4 @@
-using Core;
+using Core.Misc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +9,6 @@ public abstract class BaseButton : SaiMonoBehaviour
 
     protected virtual void Start() => this.AddOnClickEvent();
 
-
     protected override void LoadComponents()
     {
         base.LoadComponents();
@@ -18,12 +17,8 @@ public abstract class BaseButton : SaiMonoBehaviour
 
     protected virtual void LoadButton() => this.button = GetComponent<Button>();
 
-
     protected virtual void AddOnClickEvent() => this.button.onClick.AddListener(this.OnClick);
 
-
     protected abstract void OnClick();
-
-
 
 }

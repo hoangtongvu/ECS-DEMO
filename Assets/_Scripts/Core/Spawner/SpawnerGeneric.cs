@@ -1,17 +1,16 @@
+using Core.Misc;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Spawner
 {
-
-    // Store prefabs in Dictionary instead, use int/enum as key.
+    // TODO: Store prefabs in Dictionary instead, use int/enum as key.
     public abstract class SpawnerGeneric<T> : SaiMonoBehaviour where T : MonoBehaviour
     {
         [SerializeField] protected Transform holder;
         [SerializeField] protected int spawnedCount = 0;
         [SerializeField] protected List<T> prefabs;
         [SerializeField] protected List<T> poolObjs;
-
 
         protected override void LoadComponents()
         {
@@ -34,7 +33,6 @@ namespace Core.Spawner
 
         protected virtual void HidePrefabs() => this.prefabs.ForEach(p => p.gameObject.SetActive(false));
 
-
         public virtual T Spawn(string prefabName, Vector3 spawnPos, Quaternion rotation)
         {
             T prefab = this.GetPrefabByName(prefabName);
@@ -46,7 +44,6 @@ namespace Core.Spawner
 
             return this.Spawn(prefab.transform, spawnPos, rotation);
         }
-
 
         public virtual T Spawn(Transform prefab, Vector3 spawnPos, Quaternion rotation)
         {
@@ -60,7 +57,6 @@ namespace Core.Spawner
         }
 
         protected virtual T GetPrefabByName(string prefabName) => this.prefabs.Find(p => p.transform.name == prefabName);
-
 
         protected virtual T GetObjectFromPool(Transform prefab)
         {
@@ -104,6 +100,6 @@ namespace Core.Spawner
             return this.prefabs[randIndex];
         }
 
-
     }
+
 }

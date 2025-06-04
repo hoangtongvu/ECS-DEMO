@@ -4,10 +4,10 @@ using Components.GameResource;
 using Unity.Collections;
 using Unity.Transforms;
 using Unity.Physics;
-using Core;
 using Components.Misc;
 using Utilities.Helpers;
 using Unity.Mathematics;
+using Core.Misc;
 
 namespace Systems.Simulation.GameResource
 {

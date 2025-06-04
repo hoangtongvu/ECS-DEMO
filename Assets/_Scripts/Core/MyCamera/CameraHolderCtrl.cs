@@ -1,3 +1,4 @@
+using Core.Misc;
 using UnityEngine;
 
 namespace Core.MyCamera
@@ -18,7 +19,6 @@ namespace Core.MyCamera
             }
         }
 
-
         protected override void LoadComponents()
         {
             base.LoadComponents();
@@ -29,5 +29,7 @@ namespace Core.MyCamera
         {
             mainCam = transform.Find("Main Camera").GetComponent<Camera>();
         }
+
     }
+
 }

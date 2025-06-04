@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Core.Misc;
 
 namespace Core.Animator
 {
@@ -8,7 +9,6 @@ namespace Core.Animator
         [SerializeField] protected UnityEngine.Animator animator;
         [SerializeField] protected AnimationClip[] clipArray;
         [SerializeField] protected string currentStateName;
-
 
         #region LoadComponents
 
@@ -33,7 +33,6 @@ namespace Core.Animator
             animator.Play(newStateName);
             currentStateName = newStateName;
         }
-
 
         public virtual float GetAnimationLength<TEnum>(TEnum @newState) where TEnum : Enum
         {
@@ -99,4 +98,5 @@ namespace Core.Animator
         }
 
     }
+
 }
