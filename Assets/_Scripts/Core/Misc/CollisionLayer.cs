@@ -1,6 +1,6 @@
 using System;
 
-namespace Core
+namespace Core.Misc
 {
     [Flags]
     public enum CollisionLayer // TODO: Auto gen CollisionLayer based on TagManager.asset

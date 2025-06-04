@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Components.GameEntity.Damage;
 using Components.Player;
-using Core;
 using Unity.Physics;
 using Unity.Mathematics;
 using Unity.Collections;
@@ -9,6 +8,7 @@ using Unity.Transforms;
 using Utilities.Extensions;
 using Utilities.Extensions.GameEntity.Damage;
 using Components.Misc;
+using Core.Misc;
 
 namespace Systems.Simulation.Player
 {

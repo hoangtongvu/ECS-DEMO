@@ -1,3 +1,4 @@
+using Core.Misc;
 using UnityEngine;
 
 namespace Core.UI.MyCanvas
@@ -21,7 +22,6 @@ namespace Core.UI.MyCanvas
             }
         }
 
-
         protected override void LoadComponents()
         {
             base.LoadComponents();
@@ -30,4 +30,5 @@ namespace Core.UI.MyCanvas
         }
 
     }
+
 }

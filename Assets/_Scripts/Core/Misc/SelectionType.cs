@@ -1,6 +1,4 @@
-
-
-namespace Core
+namespace Core.Misc
 {
     public enum SelectionType
     {

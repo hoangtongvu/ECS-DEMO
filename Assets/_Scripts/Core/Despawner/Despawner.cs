@@ -1,10 +1,9 @@
-using UnityEngine;
+using Core.Misc;
 
 namespace Core.Despawner
 {
     public abstract class Despawner : SaiMonoBehaviour
     {
-
         public virtual void DespawnObject()
         {
             transform.parent.gameObject.SetActive(false);
@@ -12,6 +11,6 @@ namespace Core.Despawner
 
         protected abstract bool CanDespawn();
 
-
     }
+
 }
