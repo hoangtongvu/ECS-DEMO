@@ -3,7 +3,6 @@ using Components.GameEntity.Movement.MoveCommand;
 using Components.Misc;
 using Components.Misc.WorldMap.PathFinding;
 using Core.GameEntity.Movement.MoveCommand;
-using Systems.Simulation.GameEntity.Movement;
 using Unity.Burst;
 using Unity.Burst.CompilerServices;
 using Unity.Collections;
@@ -11,7 +10,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Simulation.GameEntity.Movement
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetDistanceToCurrentWaypointSystem))]
@@ -21,7 +20,7 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+            var entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     CanMoveEntityTag
                     , DistanceToCurrentWaypoint
