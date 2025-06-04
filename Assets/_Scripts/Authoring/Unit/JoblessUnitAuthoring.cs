@@ -10,7 +10,7 @@ using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Misc.WorldMap.PathFinding;
-using Components.Tool;
+using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
 using Components.Unit.Reaction;
@@ -106,7 +106,7 @@ namespace Authoring.Unit
                 {
                     Value = Entity.Null,
                 });
-                AddComponent<ToolTypeICD>(entity);
+                AddComponent<ToolProfileIdHolder>(entity);
 
 
                 AddComponent<RotationFreezer>(entity);

@@ -1,9 +1,9 @@
 using Components.GameEntity.EntitySpawning;
 using Components.Misc;
 using Components.Tool;
+using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
-using Core.Tool;
 using Core.Utilities.Extensions;
 using Unity.Burst;
 using Unity.Collections;
@@ -40,28 +40,26 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var toolStatsMap = SystemAPI.GetSingleton<ToolStatsMap>();
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (transformRef, spawnerEntityRef, toolTypeICDRef, canBePickedTagRef, toolPickerEntityRef, dmgRef, speedRef, toolEntity) in
+            foreach (var (transformRef, spawnerEntityRef, toolProfileIdHolder, canBePickedTagRef, toolPickerEntityRef, toolEntity) in
                 SystemAPI.Query<
                     RefRW<LocalTransform>
                     , RefRW<SpawnerEntityRef>
-                    , RefRO<ToolTypeICD>
+                    , RefRO<ToolProfileIdHolder>
                     , EnabledRefRW<CanBePickedTag>
-                    , RefRW<ToolPickerEntity>
-                    , RefRO<BaseDmg>
-                    , RefRO<BaseWorkSpeed>>()
+                    , RefRW<ToolPickerEntity>>()
                     .WithEntityAccess()
                     .WithAll<DerelictToolTag>())
             {
                 this.HandleUnit(
                     ref state
+                    , in toolStatsMap
                     , ecb
                     , toolPickerEntityRef.ValueRO.Value
                     , toolEntity
-                    , toolTypeICDRef.ValueRO.Value
-                    , dmgRef.ValueRO.Value
-                    , speedRef.ValueRO.Value);
+                    , in toolProfileIdHolder.ValueRO);
 
                 this.HandleToolSpawner(
                     ref state
@@ -128,24 +126,23 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         private void HandleUnit(
             ref SystemState state
+            , in ToolStatsMap toolStatsMap
             , EntityCommandBuffer ecb
             , in Entity unitEntity
             , in Entity toolEntity
-            , in ToolType toolType
-            , uint baseDmg
-            , float baseWorkSpeed)
+            , in ToolProfileIdHolder toolProfileIdHolder)
         {
             var unitToolHolderRef = SystemAPI.GetComponentRW<UnitToolHolder>(unitEntity);
             unitToolHolderRef.ValueRW.Value = toolEntity;
 
             SystemAPI.SetComponentEnabled<JoblessUnitTag>(unitEntity, false);
 
-            var toolTypeRef = SystemAPI.GetComponentRW<ToolTypeICD>(unitEntity);
-            toolTypeRef.ValueRW.Value = toolType;
-            var baseDmgRef = SystemAPI.GetComponentRW<BaseDmg>(unitEntity);
-            baseDmgRef.ValueRW.Value = baseDmg;
-            var baseWorkSpeedRef = SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity);
-            baseWorkSpeedRef.ValueRW.Value = baseWorkSpeed;
+            SystemAPI.GetComponentRW<ToolProfileIdHolder>(unitEntity).ValueRW = toolProfileIdHolder;
+
+            var toolStats = toolStatsMap.Value[toolProfileIdHolder.Value];
+
+            SystemAPI.GetComponentRW<BaseDmg>(unitEntity).ValueRW.Value = toolStats.BaseDmg;
+            SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity).ValueRW.Value = toolStats.BaseWorkSpeed;
 
             ecb.AddComponent<NeedInitRoleComponentsTag>(unitEntity);
             ecb.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);

@@ -1,16 +1,17 @@
-using Unity.Entities;
-using Unity.Burst;
-using Core.Harvest;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Movement;
+using Components.Harvest.HarvesteeHp;
 using Components.Misc;
 using Components.Tool;
+using Components.Tool.Misc;
 using Components.Unit;
-using Core.Tool;
-using Unity.Mathematics;
 using Core.GameEntity;
-using Components.Harvest.HarvesteeHp;
+using Core.Harvest;
+using Core.Tool;
 using System.Collections.Generic;
-using Components.GameEntity.Movement;
-using Components.GameEntity.Interaction;
+using Unity.Burst;
+using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Systems.Simulation.Harvest
 {
@@ -28,7 +29,7 @@ namespace Systems.Simulation.Harvest
                     , BaseDmg
                     , BaseWorkSpeed
                     , WorkTimeCounterSecond
-                    , ToolTypeICD
+                    , ToolProfileIdHolder
                     , HarvesteeTypeHolder>()
                 .Build();
 
@@ -50,14 +51,14 @@ namespace Systems.Simulation.Harvest
             var currentHpMap = SystemAPI.GetSingleton<HarvesteeCurrentHpMap>();
             var dmgBonusMap = SystemAPI.GetSingleton<Tool2HarvesteeDmgBonusMap>();
 
-            foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, toolTypeRef, harvesteeTypeRef, entity) in
+            foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, toolProfileIdHolderRef, harvesteeTypeRef, entity) in
                 SystemAPI.Query<
                     RefRO<InteractionTypeICD>
                     , RefRO<InteractingEntity>
                     , RefRO<BaseDmg>
                     , RefRO<BaseWorkSpeed>
                     , RefRW<WorkTimeCounterSecond>
-                    , RefRO<ToolTypeICD>
+                    , RefRO<ToolProfileIdHolder>
                     , RefRO<HarvesteeTypeHolder>>()
                     .WithDisabled<CanMoveEntityTag>()
                     .WithEntityAccess())
@@ -76,7 +77,7 @@ namespace Systems.Simulation.Harvest
                     ref state
                     , ref currentHpMap
                     , in dmgBonusMap
-                    , toolTypeRef.ValueRO.Value
+                    , toolProfileIdHolderRef.ValueRO.Value.ToolType
                     , harvesteeTypeRef.ValueRO.Value
                     , in harvestEntity
                     , baseDmgRef.ValueRO.Value);

@@ -94,6 +94,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e383b99433d7d17439fc9f1baf372793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolType: 1
-  baseDmg: 5
-  baseWorkSpeed: 0.5

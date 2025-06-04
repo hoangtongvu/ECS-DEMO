@@ -31,6 +31,9 @@ MonoBehaviour:
           ObjectHeight: 0
         ToolType: 1
         IsWeapon: 0
+        ToolStatsInSO:
+          BaseDmg: 3
+          BaseWorkSpeed: 1.5
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
@@ -52,6 +55,9 @@ MonoBehaviour:
           ObjectHeight: 0
         ToolType: 2
         IsWeapon: 0
+        ToolStatsInSO:
+          BaseDmg: 3
+          BaseWorkSpeed: 1.5
         SpawnDurationSeconds: 4
         BaseSpawningCosts:
           _serializedList:

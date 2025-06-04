@@ -1,6 +1,7 @@
 using AYellowpaper.SerializedCollections;
 using Core.GameEntity;
 using Core.GameResource;
+using Core.Tool.Misc;
 using UnityEngine;
 
 namespace Core.Tool
@@ -11,6 +12,7 @@ namespace Core.Tool
         [Header("Tool ProfileElement")]
         public ToolType ToolType;
         public bool IsWeapon;
+        public ToolStatsInSO ToolStatsInSO = new();
 
         public float SpawnDurationSeconds;
 

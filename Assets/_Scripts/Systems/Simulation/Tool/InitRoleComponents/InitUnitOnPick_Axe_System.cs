@@ -1,5 +1,5 @@
 using Components.Harvest;
-using Components.Tool;
+using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
 using Core.Tool;
@@ -18,7 +18,7 @@ namespace Systems.Simulation.Tool.InitRoleComponents
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    ToolTypeICD
+                    ToolProfileIdHolder
                     , UnitProfileIdHolder
                     , NeedInitRoleComponentsTag>()
                 .Build();
@@ -47,12 +47,12 @@ namespace Systems.Simulation.Tool.InitRoleComponents
 
             [BurstCompile]
             void Execute(
-                in ToolTypeICD toolTypeHolder
+                in ToolProfileIdHolder toolProfileIdHolder
                 , ref UnitProfileIdHolder unitProfileIdHolder
                 , Entity unitEntity
                 , [EntityIndexInQuery] int entityIndexInQuery)
             {
-                if (toolTypeHolder.Value != ToolType.Axe) return;
+                if (toolProfileIdHolder.Value.ToolType != ToolType.Axe) return;
 
                 unitProfileIdHolder.Value.UnitType = UnitType.Harvester;
 
