@@ -64,7 +64,6 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
 
         }
 
-        [BurstCompile]
         private void GetWallet(
             out DynamicBuffer<ResourceWalletElement> resourceWallet
             , out EnabledRefRW<WalletChangedTag> walletChangedTag)
