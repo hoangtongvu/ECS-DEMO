@@ -18,6 +18,7 @@ using Utilities.Helpers.GameEntity.Movement;
 using Components.GameEntity.Movement.MoveCommand;
 using Core.GameEntity.Movement.MoveCommand;
 using Utilities.Helpers.GameEntity.Movement.MoveCommand;
+using Utilities.Helpers;
 
 namespace Utilities.Jobs
 {
@@ -128,7 +129,9 @@ namespace Utilities.Jobs
     public partial struct SetMultipleTargetsJobMultipleSpeeds : IJobEntity
     {
         [ReadOnly] public NativeHashMap<Entity, TargetEntityInfo> MainEntityAndTargetInfoMap;
-        [ReadOnly] public half TargetEntityWorldSquareRadius;// TODO: This must be a NArray
+        [ReadOnly] public ComponentLookup<PrimaryPrefabEntityHolder> PrimaryPrefabEntityHolderLookup;
+        [ReadOnly] public GameEntitySizeMap GameEntitySizeMap;
+        [ReadOnly] public half CellRadius;
 
         [BurstCompile]
         void Execute(
@@ -155,7 +158,7 @@ namespace Utilities.Jobs
             moveCommandElement.Float3 = targetEntityInfo.Position;
 
             targetEntity.Value = moveCommandElement.TargetEntity;
-            worldSquareRadius.Value = this.TargetEntityWorldSquareRadius;
+            worldSquareRadius.Value = this.GetWorldSquareRadiusFromMap(in targetEntityInfo.TargetEntity);
 
             canFindPathTag.ValueRW = true;
 
@@ -166,6 +169,18 @@ namespace Utilities.Jobs
 
             interactableDistanceRange = InteractableDistanceRange.Default;
 
+        }
+
+        [BurstCompile]
+        private half GetWorldSquareRadiusFromMap(in Entity entity)
+        {
+            var primaryPrefabEntityRef = this.PrimaryPrefabEntityHolderLookup.GetRefRO(entity);
+
+            float worldSquareSize = WorldMapHelper.GridLengthToWorldLength(
+                in this.CellRadius
+                , this.GameEntitySizeMap.Value[primaryPrefabEntityRef.ValueRO].GridSquareSize);
+
+            return new half(worldSquareSize / 2);
         }
 
     }

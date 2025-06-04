@@ -3,7 +3,7 @@ using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Movement.MoveCommand;
-using Components.Misc;
+using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Unit;
 using Components.Unit.Misc;
@@ -86,7 +86,6 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate(this.entityQuery);
             state.RequireForUpdate<MoveCommandPrioritiesMap>();
             state.RequireForUpdate<UnitReactionConfigsMap>();
-            state.RequireForUpdate<DefaultStopMoveWorldRadius>();
             state.RequireForUpdate<AttackConfigsMap>();
             state.RequireForUpdate<DetectionRadiusMap>();
 
@@ -95,11 +94,12 @@ namespace Systems.Simulation.Unit.Misc
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>();
+            var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             var attackConfigsMap = SystemAPI.GetSingleton<AttackConfigsMap>();
             var detectionRadiusMap = SystemAPI.GetSingleton<DetectionRadiusMap>();
             var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
-            var defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
             int entityCount = this.entityQuery.CalculateEntityCount();
@@ -140,7 +140,9 @@ namespace Systems.Simulation.Unit.Misc
             state.Dependency = new SetMultipleTargetsJobMultipleSpeeds
             {
                 MainEntityAndTargetInfoMap = targetInfoMap,
-                TargetEntityWorldSquareRadius = defaultStopMoveWorldRadius,
+                PrimaryPrefabEntityHolderLookup = SystemAPI.GetComponentLookup<PrimaryPrefabEntityHolder>(),
+                GameEntitySizeMap = gameEntitySizeMap,
+                CellRadius = cellRadius,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
             state.Dependency = new Set_InteractableDistanceRanges_From_AttackConfigsMap_Job
