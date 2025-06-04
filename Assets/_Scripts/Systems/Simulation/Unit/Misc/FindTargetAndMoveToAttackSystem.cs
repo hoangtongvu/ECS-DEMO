@@ -137,7 +137,7 @@ namespace Systems.Simulation.Unit.Misc
                 UnitReactionConfigsMap = unitReactionConfigsMap,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new SetMultipleTargetsJobMultipleSpeeds
+            state.Dependency = new SetMultipleTargetsJob
             {
                 MainEntityAndTargetInfoMap = targetInfoMap,
                 PrimaryPrefabEntityHolderLookup = SystemAPI.GetComponentLookup<PrimaryPrefabEntityHolder>(),

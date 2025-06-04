@@ -88,7 +88,7 @@ namespace Utilities.Jobs
     [WithAll(typeof(CanSetTargetJobScheduleTag))]
     [WithAll(typeof(CanOverrideMoveCommandTag))]
     [BurstCompile]
-    public partial struct SetSingleTargetJobMultipleSpeeds : IJobEntity
+    public partial struct SetSingleTargetJob : IJobEntity
     {
         [ReadOnly] public Entity TargetEntity;
         [ReadOnly] public half TargetEntityWorldSquareRadius;
@@ -126,7 +126,7 @@ namespace Utilities.Jobs
     [WithAll(typeof(CanSetTargetJobScheduleTag))]
     [WithAll(typeof(CanOverrideMoveCommandTag))]
     [BurstCompile]
-    public partial struct SetMultipleTargetsJobMultipleSpeeds : IJobEntity
+    public partial struct SetMultipleTargetsJob : IJobEntity
     {
         [ReadOnly] public NativeHashMap<Entity, TargetEntityInfo> MainEntityAndTargetInfoMap;
         [ReadOnly] public ComponentLookup<PrimaryPrefabEntityHolder> PrimaryPrefabEntityHolderLookup;

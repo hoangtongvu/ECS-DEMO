@@ -109,7 +109,7 @@ namespace Systems.Simulation.GameEntity
                 UnitReactionConfigsMap = unitReactionConfigsMap,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = new SetSingleTargetJobMultipleSpeeds()
+            state.Dependency = new SetSingleTargetJob()
             {
                 TargetEntity = entity,
                 TargetEntityWorldSquareRadius = worldSquareRadius,
