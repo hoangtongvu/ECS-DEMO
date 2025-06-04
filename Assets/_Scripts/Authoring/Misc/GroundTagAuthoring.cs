@@ -2,11 +2,10 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring
+namespace Authoring.Misc
 {
     public class GroundTagAuthoring : MonoBehaviour
     {
-
         private class Baker : Baker<GroundTagAuthoring>
         {
             public override void Bake(GroundTagAuthoring authoring)
@@ -16,6 +15,9 @@ namespace Authoring
                 AddComponent<GroundTag>(entity);
 
             }
+
         }
+
     }
+
 }

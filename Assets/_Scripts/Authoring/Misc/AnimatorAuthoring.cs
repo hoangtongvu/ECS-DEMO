@@ -2,12 +2,11 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring
+namespace Authoring.Misc
 {
     public class AnimatorAuthoring : MonoBehaviour
     {
         public string CurrentStateName = "Idle";
-        
 
         private class Baker : Baker<AnimatorAuthoring>
         {
@@ -25,8 +24,10 @@ namespace Authoring
                 });
                 AddComponent<AnimatorTransitionDuration>(entity);
 
-
             }
+
         }
+
     }
+
 }

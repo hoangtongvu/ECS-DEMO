@@ -2,7 +2,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring
+namespace Authoring.Misc
 {
     public class LinearMovementAuthoring : MonoBehaviour
     {

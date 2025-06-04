@@ -3,24 +3,22 @@ using Core.Misc;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring
+namespace Authoring.Misc
 {
     public class SingletonEntityPrefabsCreator : SaiMonoBehaviour
     {
         [SerializeField] private SingletonEntityPrefabsSO singletonEntityPrefabsSO;
 
-
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadPrefabsSO(out this.singletonEntityPrefabsSO);
+            LoadPrefabsSO(out singletonEntityPrefabsSO);
         }
 
         private void LoadPrefabsSO(out SingletonEntityPrefabsSO singletonEntityPrefabsSO)
         {
             singletonEntityPrefabsSO = Resources.Load<SingletonEntityPrefabsSO>(SingletonEntityPrefabsSO.SOFilePath);
         }
-
 
         private class Baker : Baker<SingletonEntityPrefabsCreator>
         {
@@ -33,5 +31,7 @@ namespace Authoring
 
             }
         }
+
     }
+
 }

@@ -2,7 +2,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring
+namespace Authoring.Misc
 {
     public class RotationFreezerAuthoring : MonoBehaviour
     {
@@ -22,6 +22,9 @@ namespace Authoring
                 });
 
             }
+
         }
+
     }
+
 }

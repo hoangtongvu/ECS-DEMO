@@ -3,7 +3,7 @@ using Core.CustomIdentification;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring
+namespace Authoring.Misc
 {
     public class UniqueIdAuthoring : MonoBehaviour
     {
