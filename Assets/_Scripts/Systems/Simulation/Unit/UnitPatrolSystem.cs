@@ -1,21 +1,22 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components;
-using Components.Damage;
 using Components.Unit;
-using Components.Unit.MyMoveCommand;
-using Core.Unit.MyMoveCommand;
 using Unity.Mathematics;
-using Utilities.Helpers;
 using Unity.Collections;
 using Unity.Transforms;
 using Utilities;
 using Components.Unit.Reaction;
 using Core.Unit.Reaction;
 using Components.Misc.WorldMap.PathFinding;
-using Components.GameEntity;
 using Core.Unit;
 using System.Collections.Generic;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Movement.MoveCommand;
+using Core.GameEntity.Movement.MoveCommand;
+using Utilities.Helpers.GameEntity.Movement.MoveCommand;
+using Components.GameEntity.Damage;
 
 namespace Systems.Simulation.Unit
 {
@@ -54,14 +55,14 @@ namespace Systems.Simulation.Unit
                 .Build();
 
             state.RequireForUpdate(query0);
-            state.RequireForUpdate<MoveCommandSourceMap>();
+            state.RequireForUpdate<MoveCommandPrioritiesMap>();
 
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var randomValuesMap = SystemAPI.GetSingleton<PatrolRandomValuesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
 
@@ -104,7 +105,7 @@ namespace Systems.Simulation.Unit
 
             state.Dependency = new SetPatrolJob
             {
-                moveCommandSourceMap = moveCommandSourceMap.Value,
+                MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
                 RandomizedValueMap = randomValuesMap.Value,
                 SpeedArray = speedArray,
             }.ScheduleParallel(getSpeedsJobHandle);
@@ -179,7 +180,7 @@ namespace Systems.Simulation.Unit
         [BurstCompile]
         private partial struct SetPatrolJob : IJobEntity
         {
-            [ReadOnly] public NativeHashMap<MoveCommandSourceId, byte> moveCommandSourceMap;
+            [ReadOnly] public MoveCommandPrioritiesMap MoveCommandPrioritiesMap;
             [ReadOnly] public NativeHashMap<Entity, PatrolRandomValues> RandomizedValueMap;
 
             [DeallocateOnJobCompletion]
@@ -189,7 +190,7 @@ namespace Systems.Simulation.Unit
             [BurstCompile]
             void Execute(
                 EnabledRefRW<NeedInitWalkTag> needInitWalkTag
-                , in UnitProfileIdHolder unitProfileIdHolder
+                , in ArmedStateHolder armedStateHolder
                 , ref MoveCommandElement moveCommandElement
                 , ref InteractingEntity interactingEntity
                 , ref InteractionTypeICD interactionTypeICD
@@ -203,14 +204,13 @@ namespace Systems.Simulation.Unit
                 needInitWalkTag.ValueRW = false;
 
                 bool canOverrideCommand =
-                    MoveCommandHelper.TryOverrideMoveCommand(
-                        in moveCommandSourceMap
-                        , unitProfileIdHolder.Value.UnitType
+                    MoveCommandPrioritiesHelper.TryOverrideMoveCommand(
+                        in this.MoveCommandPrioritiesMap
                         , ref moveCommandElement
                         , ref interactingEntity
                         , ref interactionTypeICD
-                        , MoveCommandSource.PlayerCommand
-                        , unitProfileIdHolder.Value.VariantIndex);
+                        , armedStateHolder.Value
+                        , MoveCommandSource.PlayerCommand);
 
                 if (!canOverrideCommand) return;
 

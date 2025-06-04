@@ -1,9 +1,9 @@
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
-using Core.Unit.MyMoveCommand;
 using Core.GameEntity;
 using Core.GameResource;
 using Core.Unit.Reaction;
+using Core.Unit.Misc;
 
 namespace Core.Unit
 {
@@ -16,11 +16,12 @@ namespace Core.Unit
         public float SpawnDurationSeconds;
         public UnitReactionConfigs UnitReactionConfigs = new();
 
+        public float MaxFollowDistance = 14f;
+        public float DetectionRadius = 10f;
+        public AttackConfigsFloat AttackConfigs = new();
+
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;
-
-        [SerializedDictionary("MoveCommandSource", "Priority")]
-        public SerializedDictionary<MoveCommandSource, byte> MoveCommandSourcePriorities;
 
     }
 

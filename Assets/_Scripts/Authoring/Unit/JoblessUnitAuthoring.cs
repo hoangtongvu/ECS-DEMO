@@ -1,7 +1,11 @@
 ﻿using Components;
-using Components.Damage;
 using Components.GameEntity;
+using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
+using Components.GameEntity.Movement.MoveCommand;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;
@@ -9,12 +13,13 @@ using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool;
 using Components.Unit;
-using Components.Unit.MyMoveCommand;
+using Components.Unit.Misc;
 using Components.Unit.Reaction;
 using Components.Unit.UnitSelection;
 using Core.GameEntity;
+using Core.GameEntity.Misc;
+using Core.GameEntity.Movement.MoveCommand;
 using Core.Misc.Presenter.PresenterPrefabGO;
-using Core.Unit.MyMoveCommand;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -56,17 +61,16 @@ namespace Authoring.Unit
                 AddComponent<UnitSelectedTag>(entity);
                 SetComponentEnabled<UnitSelectedTag>(entity, false);
 
-
-                AddComponent(entity, new HpComponent
+                AddComponent(entity, new CurrentHp
                 {
-                    CurrentHp = authoring.currentHp,
-                    MaxHp = authoring.maxHp,
+                    Value = authoring.currentHp,
                 });
-                AddComponent<HpChangedTag>(entity);
-                SetComponentEnabled<HpChangedTag>(entity, false);
-                AddComponent<HpChangedValue>(entity);
+                AddComponent(entity, new MaxHp
+                {
+                    Value = authoring.maxHp,
+                });
+                AddBuffer<HpChangeRecordElement>(entity);
                 AddComponent<IsAliveTag>(entity);
-
 
                 AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
@@ -175,6 +179,26 @@ namespace Authoring.Unit
                 AddBuffer<WaypointElement>(entity);
                 AddComponent<CanFindPathTag>(entity);
                 SetComponentEnabled<CanFindPathTag>(entity, false);
+
+                AddComponent(entity, new ArmedStateHolder
+                {
+                    Value = ArmedState.False,
+                });
+
+                AddComponent<CanSetTargetJobScheduleTag>(entity);
+                SetComponentEnabled<CanSetTargetJobScheduleTag>(entity, false);
+
+                AddComponent<CanOverrideMoveCommandTag>(entity);
+                SetComponentEnabled<CanOverrideMoveCommandTag>(entity, false);
+
+                AddComponent<IsUnarmedEntityTag>(entity);
+
+                AddComponent(entity, InteractableDistanceRange.Default);
+
+                AddComponent<CanCheckInteractionRepeatTag>(entity);
+                SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, false);
+
+                AddComponent(entity, new FactionIndex { Value = 1 });
 
             }
 

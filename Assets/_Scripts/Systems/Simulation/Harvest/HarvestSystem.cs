@@ -1,16 +1,16 @@
 using Unity.Entities;
 using Unity.Burst;
 using Core.Harvest;
-using Components;
 using Components.Misc;
 using Components.Tool;
 using Components.Unit;
 using Core.Tool;
 using Unity.Mathematics;
 using Core.GameEntity;
-using Components.GameEntity;
 using Components.Harvest.HarvesteeHp;
 using System.Collections.Generic;
+using Components.GameEntity.Movement;
+using Components.GameEntity.Interaction;
 
 namespace Systems.Simulation.Harvest
 {
@@ -50,7 +50,7 @@ namespace Systems.Simulation.Harvest
             var currentHpMap = SystemAPI.GetSingleton<HarvesteeCurrentHpMap>();
             var dmgBonusMap = SystemAPI.GetSingleton<Tool2HarvesteeDmgBonusMap>();
 
-            foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, toolTypeRef, harvesteeTypeRef) in
+            foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, toolTypeRef, harvesteeTypeRef, entity) in
                 SystemAPI.Query<
                     RefRO<InteractionTypeICD>
                     , RefRO<InteractingEntity>
@@ -59,7 +59,8 @@ namespace Systems.Simulation.Harvest
                     , RefRW<WorkTimeCounterSecond>
                     , RefRO<ToolTypeICD>
                     , RefRO<HarvesteeTypeHolder>>()
-                    .WithDisabled<CanMoveEntityTag>())
+                    .WithDisabled<CanMoveEntityTag>()
+                    .WithEntityAccess())
             {
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Harvest) continue;
 
@@ -79,6 +80,8 @@ namespace Systems.Simulation.Harvest
                     , harvesteeTypeRef.ValueRO.Value
                     , in harvestEntity
                     , baseDmgRef.ValueRO.Value);
+
+                SystemAPI.SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, true);
 
             }
 

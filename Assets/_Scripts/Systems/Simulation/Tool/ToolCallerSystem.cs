@@ -1,19 +1,21 @@
-using Unity.Entities;
-using Unity.Burst;
-using Components.Tool;
-using Components;
-using Components.Unit;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Utilities.Helpers;
-using Utilities;
-using Components.Unit.MyMoveCommand;
-using Core.Unit.MyMoveCommand;
 using Components.GameEntity;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
+using Components.GameEntity.Movement.MoveCommand;
 using Components.Misc.WorldMap.PathFinding;
-using Utilities.Helpers.Misc;
+using Components.Tool;
+using Components.Unit;
 using Components.Unit.Reaction;
+using Core.GameEntity.Movement.MoveCommand;
 using System.Collections.Generic;
+using Unity.Burst;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using Utilities;
+using Utilities.Helpers.GameEntity.Movement;
+using Utilities.Helpers.GameEntity.Movement.MoveCommand;
 
 namespace Systems.Simulation.Tool
 {
@@ -55,7 +57,7 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var commandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var toolCallRadius = SystemAPI.GetSingleton<ToolCallRadius>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
             const float targetEntityWorldSquareRadius = 0.5f; // TODO: Find another way to get this value.
@@ -92,15 +94,16 @@ namespace Systems.Simulation.Tool
                     float distance = math.distance(toolTransformRef.ValueRO.Position, unitTransformRef.ValueRO.Position);
                     if (distance > toolCallRadius.Value) continue;
 
+                    var armedStateHolderRef = SystemAPI.GetComponentRO<ArmedStateHolder>(unitEntity);
+
                     bool canOverrideMoveCommand =
-                        MoveCommandHelper.TryOverrideMoveCommand(
-                            commandSourceMap.Value
-                            , unitProfileIdHolderRef.ValueRO.Value.UnitType
+                        MoveCommandPrioritiesHelper.TryOverrideMoveCommand(
+                            moveCommandPrioritiesMap
                             , ref moveCommandElementRef.ValueRW
                             , ref interactingEntityRef.ValueRW
                             , ref interactionTypeICDRef.ValueRW
-                            , MoveCommandSource.ToolCall
-                            , unitProfileIdHolderRef.ValueRO.Value.VariantIndex);
+                            , armedStateHolderRef.ValueRO.Value
+                            , MoveCommandSource.ToolCall);
 
                     if (!canOverrideMoveCommand) continue;
 

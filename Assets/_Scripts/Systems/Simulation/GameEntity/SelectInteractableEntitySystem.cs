@@ -1,21 +1,24 @@
-using Unity.Entities;
-using Core;
 using Components;
-using Unity.Mathematics;
-using Unity.Burst;
-using Unity.Transforms;
-using Components.Unit.UnitSelection;
-using Core.Unit.MyMoveCommand;
-using Components.Unit.MyMoveCommand;
-using Utilities.Jobs;
-using Components.Misc.WorldMap;
-using Utilities.Helpers;
 using Components.GameEntity;
-using Core.GameEntity;
-using Unity.Collections;
-using Components.Unit.Reaction;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
+using Components.GameEntity.Movement.MoveCommand;
+using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Unit;
+using Components.Unit.Misc;
+using Components.Unit.Reaction;
+using Core;
+using Core.GameEntity;
+using Core.GameEntity.Movement.MoveCommand;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using Utilities.Helpers;
+using Utilities.Jobs;
 
 namespace Systems.Simulation.GameEntity
 {
@@ -24,33 +27,50 @@ namespace Systems.Simulation.GameEntity
     [BurstCompile]
     public partial struct SelectInteractableEntitySystem : ISystem
     {
-        private EntityQuery entityQuery;
+        private EntityQuery setCanOverrideMoveCommandTagJobQuery;
+        private EntityQuery setTargetJobQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<InteractableEntityTag>();
             state.RequireForUpdate<SelectionHitElement>();
-            state.RequireForUpdate<MoveCommandSourceMap>();
+            state.RequireForUpdate<MoveCommandPrioritiesMap>();
 
-            this.entityQuery = SystemAPI.QueryBuilder()
+            this.setCanOverrideMoveCommandTagJobQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitProfileIdHolder
-                    , LocalTransform
-                    , AbsoluteDistanceXZToTarget
-                    , UnitSelectedTag
-                    , CanFindPathTag
-                    , MoveSpeedLinear
-                    , TargetEntity>()
+                    UnitProfileIdHolder>()
                 .WithAll<
-                    TargetEntityWorldSquareRadius
-                    , MoveCommandElement
+                    MoveCommandElement
                     , InteractingEntity
-                    , InteractionTypeICD>()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
+                    , InteractionTypeICD
+                    , ArmedStateHolder>()
+                .WithAll<
+                    CanSetTargetJobScheduleTag>()
+                .WithPresent<
+                    CanOverrideMoveCommandTag>()
                 .Build();
 
-            state.RequireForUpdate(this.entityQuery);
+            this.setTargetJobQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    UnitProfileIdHolder>()
+                .WithAll<
+                    LocalTransform
+                    , AbsoluteDistanceXZToTarget
+                    , MoveSpeedLinear
+                    , TargetEntity
+                    , TargetEntityWorldSquareRadius
+                    , MoveCommandElement
+                    , InteractableDistanceRange>()
+                .WithAll<
+                    CanSetTargetJobScheduleTag
+                    , CanOverrideMoveCommandTag>()
+                .WithPresent<
+                    CanFindPathTag>()
+                .Build();
+
+            state.RequireForUpdate(this.setCanOverrideMoveCommandTagJobQuery);
+            state.RequireForUpdate(this.setTargetJobQuery);
             state.RequireForUpdate<CellRadius>();
             state.RequireForUpdate<GameEntitySizeMap>();
 
@@ -59,7 +79,7 @@ namespace Systems.Simulation.GameEntity
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var moveCommandSourceMap = SystemAPI.GetSingleton<MoveCommandSourceMap>();
+            var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
@@ -75,25 +95,28 @@ namespace Systems.Simulation.GameEntity
 
             if (!canGetInteractable) return;
 
-            var speedArray = new NativeArray<float>(this.entityQuery.CalculateEntityCount(), Allocator.TempJob);
+            state.Dependency = new Set_CanSetTargetJobScheduleTag_OnUnitSelected()
+                .ScheduleParallel(state.Dependency);
 
-            var getSpeedsJobHandle = new GetRunSpeedsJob()
+            state.Dependency = new SetCanOverrideMoveCommandTagJob
+            {
+                MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
+                NewMoveCommandSource = MoveCommandSource.PlayerCommand,
+            }.ScheduleParallel(this.setCanOverrideMoveCommandTagJobQuery, state.Dependency);
+
+            state.Dependency = new SetSpeedsAsRunSpeedsJob()
             {
                 UnitReactionConfigsMap = unitReactionConfigsMap,
-                OutputArray = speedArray,
-            }.ScheduleParallel(state.Dependency);
+            }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            var setTargetJobHandle = new SetSingleTargetJobMultipleSpeeds()
+            state.Dependency = new SetSingleTargetJob()
             {
                 TargetEntity = entity,
                 TargetEntityWorldSquareRadius = worldSquareRadius,
                 TargetPosition = pos,
-                NewMoveCommandSource = MoveCommandSource.PlayerCommand,
-                MoveCommandSourceMap = moveCommandSourceMap.Value,
-                SpeedArray = speedArray,
-            }.ScheduleParallel(getSpeedsJobHandle);
+            }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
-            state.Dependency = speedArray.Dispose(setTargetJobHandle);
+            state.Dependency = new CleanTagsJob().ScheduleParallel(state.Dependency);
 
         }
 

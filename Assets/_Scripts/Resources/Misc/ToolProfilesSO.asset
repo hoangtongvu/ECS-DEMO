@@ -21,15 +21,16 @@ MonoBehaviour:
         Name: NormalAxe
         ProfilePicture: {fileID: 21300000, guid: 223a61bc9202046408dd1a38e0051eeb,
           type: 3}
-        PresenterPrefabId:
-          PresenterType: 0
-          LocalIndex: 0
         PresenterPrefab: {fileID: 919132149155446097, guid: f7fbad71d14ba844d931db04fc11b55d,
           type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: e55f6ffc27f263543bffc3ac820995fa,
           type: 3}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
         ToolType: 1
+        IsWeapon: 0
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
@@ -42,14 +43,15 @@ MonoBehaviour:
         Name: NormalPickaxe
         ProfilePicture: {fileID: 21300000, guid: d0462d85729ce134887063bb9cfe9c33,
           type: 3}
-        PresenterPrefabId:
-          PresenterType: 0
-          LocalIndex: 0
         PresenterPrefab: {fileID: 0}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: eb43ad21f1fb5e24c87ef85ac8137741,
           type: 3}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
         ToolType: 2
+        IsWeapon: 0
         SpawnDurationSeconds: 4
         BaseSpawningCosts:
           _serializedList:

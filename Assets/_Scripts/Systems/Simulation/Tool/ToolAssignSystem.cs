@@ -2,17 +2,15 @@ using Unity.Entities;
 using Unity.Burst;
 using Systems.Simulation.GameEntity;
 using Components.Tool;
-using Components.GameEntity;
+using Components.GameEntity.Interaction;
 
 namespace Systems.Simulation.Tool
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetCanInteractFlagSystem))]
     [BurstCompile]
     public partial struct ToolAssignSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -58,4 +56,5 @@ namespace Systems.Simulation.Tool
         }
 
     }
+
 }

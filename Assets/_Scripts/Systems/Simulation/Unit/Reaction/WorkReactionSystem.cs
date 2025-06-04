@@ -1,20 +1,20 @@
-using Unity.Entities;
-using Unity.Burst;
-using Components.Unit;
 using Components;
-using Utilities.Extensions;
-using Components.Damage;
+using Components.GameEntity.Damage;
+using Components.GameEntity.Interaction;
+using Components.Unit;
 using Components.Unit.Reaction;
-using Components.GameEntity;
+using Unity.Burst;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using Utilities.Extensions;
 
 namespace Systems.Simulation.Unit.Reaction
 {
-
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [BurstCompile]
     public partial struct WorkReactionSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -34,14 +34,14 @@ namespace Systems.Simulation.Unit.Reaction
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-
-            foreach (var (workStartedTag, interactingEntityRef, isUnitWorkingTag, isAliveTag, animatorDataRef) in
+            foreach (var (workStartedTag, interactingEntityRef, isUnitWorkingTag, isAliveTag, animatorDataRef, transformRef) in
                 SystemAPI.Query<
                     EnabledRefRW<WorkStartedTag>
-                    , RefRO <InteractingEntity>
+                    , RefRO<InteractingEntity>
                     , EnabledRefRW<IsUnitWorkingTag>
                     , EnabledRefRO<IsAliveTag>
-                    , RefRW<AnimatorData>>()
+                    , RefRW<AnimatorData>
+                    , RefRW<LocalTransform>>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 bool workTargetValid = interactingEntityRef.ValueRO.Value != Entity.Null;
@@ -56,6 +56,7 @@ namespace Systems.Simulation.Unit.Reaction
                         isUnitWorkingTag.ValueRW = true;
                         animatorDataRef.ValueRW.Value.ChangeValue("1H_Melee_Attack_Chop");
                         workStartedTag.ValueRW = true;
+                        this.RotateTowardInteractingEntity(ref state, ref transformRef.ValueRW, in interactingEntityRef.ValueRO.Value);
                     }
 
                     //UnityEngine.Debug.Log("Update");
@@ -69,12 +70,26 @@ namespace Systems.Simulation.Unit.Reaction
                     workStartedTag.ValueRW = false;
                 }
 
-
             }
-
 
         }
 
+        [BurstCompile]
+        private void RotateTowardInteractingEntity(
+            ref SystemState state
+            , ref LocalTransform transform
+            , in Entity interactingEntity)
+        {
+            float3 targetPosition = SystemAPI.GetComponent<LocalTransform>(interactingEntity).Position;
+            float3 direction = math.normalize(targetPosition - transform.Position);
+
+            // Convert direction into rotation facing that direction
+            quaternion targetRotation = quaternion.LookRotationSafe(direction, math.up());
+
+            // Apply to entity
+            transform.Rotation = targetRotation;
+        }
 
     }
+
 }

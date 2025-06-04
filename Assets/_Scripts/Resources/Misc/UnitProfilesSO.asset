@@ -37,18 +37,15 @@ MonoBehaviour:
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
         BaseSpawningCosts:
           _serializedList:
           - Key: 2
             Value: 5
-        MoveCommandSourcePriorities:
-          _serializedList:
-          - Key: 2
-            Value: 0
-          - Key: 1
-            Value: 1
-          - Key: 3
-            Value: 2
     - Key:
         UnitType: 2
         VariantIndex: 0
@@ -71,20 +68,17 @@ MonoBehaviour:
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 7
           UnitWalkMaxDistance: 10
+        MaxFollowDistance: 14
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
             Value: 3
           - Key: 1
             Value: 5
-        MoveCommandSourcePriorities:
-          _serializedList:
-          - Key: 1
-            Value: 0
-          - Key: 2
-            Value: 1
-          - Key: 3
-            Value: 2
     - Key:
         UnitType: 3
         VariantIndex: 0
@@ -105,17 +99,14 @@ MonoBehaviour:
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
         BaseSpawningCosts:
           _serializedList:
           - Key: 2
             Value: 5
-        MoveCommandSourcePriorities:
-          _serializedList:
-          - Key: 2
-            Value: 0
-          - Key: 1
-            Value: 1
-          - Key: 3
-            Value: 2
   UnitGlobalConfigs:
     MoveSpeedScale: 1

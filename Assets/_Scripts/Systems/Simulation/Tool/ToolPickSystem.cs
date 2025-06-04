@@ -1,16 +1,16 @@
-using Unity.Entities;
-using Unity.Burst;
+using Components.GameEntity.EntitySpawning;
+using Components.Misc;
 using Components.Tool;
 using Components.Unit;
+using Components.Unit.Misc;
 using Core.Tool;
-using Core.Unit;
-using Components.Harvest;
-using Unity.Transforms;
-using Unity.Physics;
-using Unity.Mathematics;
 using Core.Utilities.Extensions;
-using Components.Misc;
-using Components.GameEntity.EntitySpawning;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Physics;
+using Unity.Transforms;
 
 namespace Systems.Simulation.Tool
 {
@@ -40,9 +40,7 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var tool2UnitMap = SystemAPI.GetSingleton<Tool2UnitMap>();
-            var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (transformRef, spawnerEntityRef, toolTypeICDRef, canBePickedTagRef, toolPickerEntityRef, dmgRef, speedRef, toolEntity) in
                 SystemAPI.Query<
@@ -61,7 +59,6 @@ namespace Systems.Simulation.Tool
                     , ecb
                     , toolPickerEntityRef.ValueRO.Value
                     , toolEntity
-                    , tool2UnitMap
                     , toolTypeICDRef.ValueRO.Value
                     , dmgRef.ValueRO.Value
                     , speedRef.ValueRO.Value);
@@ -79,6 +76,9 @@ namespace Systems.Simulation.Tool
                     , toolEntity);
 
             }
+
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
 
         }
 
@@ -131,7 +131,6 @@ namespace Systems.Simulation.Tool
             , EntityCommandBuffer ecb
             , in Entity unitEntity
             , in Entity toolEntity
-            , in Tool2UnitMap tool2UnitMap
             , in ToolType toolType
             , uint baseDmg
             , float baseWorkSpeed)
@@ -148,35 +147,8 @@ namespace Systems.Simulation.Tool
             var baseWorkSpeedRef = SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity);
             baseWorkSpeedRef.ValueRW.Value = baseWorkSpeed;
 
-            var unitProfileIdHolderRef = SystemAPI.GetComponentRW<UnitProfileIdHolder>(unitEntity);
-
-            var byteKey = (byte)toolType;
-            if (tool2UnitMap.Value.TryGetValue(byteKey, out byte unitTypeByte))
-            {
-                var unitType = (UnitType)unitTypeByte;
-
-                switch (unitType)
-                {
-                    case UnitType.None:
-                        
-                        break;
-                    case UnitType.Villager:
-                        
-                        break;
-                    case UnitType.Knight:
-                        
-                        break;
-                    case UnitType.Harvester:
-                        ecb.AddComponent<HarvesterICD>(unitEntity);
-                        ecb.AddComponent<HarvesteeTypeHolder>(unitEntity);
-                        break;
-                }
-
-                unitProfileIdHolderRef.ValueRW.Value.UnitType = unitType;
-                return;
-            }
-
-            UnityEngine.Debug.LogError($"tool2UnitMap does not contain {byteKey}");
+            ecb.AddComponent<NeedInitRoleComponentsTag>(unitEntity);
+            ecb.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);
 
         }
 

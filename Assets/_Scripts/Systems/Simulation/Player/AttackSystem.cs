@@ -1,5 +1,5 @@
 using Unity.Entities;
-using Components.Damage;
+using Components.GameEntity.Damage;
 using Components;
 using Components.Player;
 using Core;
@@ -8,16 +8,15 @@ using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Transforms;
 using Utilities.Extensions;
+using Utilities.Extensions.GameEntity.Damage;
 
 namespace Systems.Simulation.Player
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class AttackSystem : SystemBase //TODO: This can be changed into ISystem + burst.
     {
-
         private const string ATTACK_ANIM_NAME = "Punching";
         private const string IDLE_ANIM_NAME = "Idle";
-
 
         protected override void OnCreate()
         {
@@ -32,9 +31,7 @@ namespace Systems.Simulation.Player
 
         protected override void OnUpdate()
         {
-
             PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-
 
             foreach (var (transformRef, hitboxRef, dmgValueRef, attackDataRef, attackInputRef) in
                 SystemAPI.Query<
@@ -45,8 +42,6 @@ namespace Systems.Simulation.Player
                     , RefRO<AttackInput>>()
                     .WithAll<PlayerTag>())
             {
-
-
                 if (attackDataRef.ValueRO.isAttacking)
                 {
                     this.UpdateAttackTimeCounter(ref attackDataRef.ValueRW.attackTimeCounter);
@@ -58,14 +53,13 @@ namespace Systems.Simulation.Player
                     }
                 }
 
-
                 if (!attackInputRef.ValueRO.IsAttackable) return;
                 this.Attack(attackDataRef);
                 this.TryCatchColliderInHitbox(physicsWorld, hitboxRef, transformRef, dmgValueRef);
+
             }
 
         }
-
 
         private void Attack(RefRW<AttackData> attackDataRef)
         {
@@ -85,7 +79,6 @@ namespace Systems.Simulation.Player
             , RefRO<LocalTransform> transformRef
             , RefRO<DmgValue> dmgValueRef)
         {
-            
             NativeList<DistanceHit> hits = new(Allocator.Temp);
 
             physicsWorld.OverlapBox(
@@ -103,12 +96,11 @@ namespace Systems.Simulation.Player
             {
                 Entity entity = hit.Entity;
 
-                if (!SystemAPI.HasComponent<HpComponent>(entity)) continue;
+                if (!SystemAPI.HasComponent<CurrentHp>(entity)) continue;
 
-                var hpChangedValueRef = SystemAPI.GetComponentRW<HpChangedValue>(entity);
 
-                SystemAPI.SetComponentEnabled<HpChangedTag>(entity, true);
-                hpChangedValueRef.ValueRW.Value = -dmgValueRef.ValueRO.Value;
+                var hpChangeRecords = SystemAPI.GetBuffer<HpChangeRecordElement>(entity);
+                hpChangeRecords.AddDeductRecord(dmgValueRef.ValueRO.Value);
 
                 //UnityEngine.Debug.Log($"{entity} received {dmgValueRef.ValueRO.Value} Dmg.");
             }
@@ -117,17 +109,14 @@ namespace Systems.Simulation.Player
             
         }
 
-
         private void UpdateAttackTimeCounter(ref float attackTimeCounter) =>
             attackTimeCounter += SystemAPI.Time.DeltaTime;
-
 
         private bool AttackDurationEnded(RefRW<AttackData> attackDataRef) =>
             attackDataRef.ValueRO.attackTimeCounter >= attackDataRef.ValueRO.attackDurationSecond;
 
         private void BackToIdleState() // Temporary code.
         {
-
             foreach (var animatorDataRef in SystemAPI.Query<RefRW<AnimatorData>>().WithAll<PlayerTag>())
             {
                 animatorDataRef.ValueRW.Value.ChangeValue(IDLE_ANIM_NAME);
@@ -136,4 +125,5 @@ namespace Systems.Simulation.Player
         }
 
     }
+
 }

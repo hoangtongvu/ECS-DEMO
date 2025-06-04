@@ -4,17 +4,15 @@ using Systems.Simulation.GameEntity;
 using Components.Harvest;
 using Components.Unit;
 using Core.GameEntity;
-using Components.GameEntity;
+using Components.GameEntity.Interaction;
 
 namespace Systems.Simulation.Harvest
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetCanInteractFlagSystem))]
     [BurstCompile]
     public partial struct HarvestTargetAssignSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -58,4 +56,5 @@ namespace Systems.Simulation.Harvest
         }
 
     }
+
 }

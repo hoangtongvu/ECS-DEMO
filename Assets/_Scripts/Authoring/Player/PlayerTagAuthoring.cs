@@ -1,8 +1,12 @@
-﻿using Components.Misc;
+﻿using Components.GameEntity.Damage;
+using Components.GameEntity.Interaction;
+using Components.GameEntity.Misc;
+using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Player;
 using Components.Unit.NearUnitDropItems;
+using Core.GameEntity.Misc;
 using Core.Misc.Presenter.PresenterPrefabGO;
 using Unity.Entities;
 using UnityEngine;
@@ -26,6 +30,30 @@ namespace Authoring.Player
                 AddComponent(entity, new PresenterPrefabGOKeyHolder
                 {
                     Value = PresenterPrefabGOKey.Null,
+                });
+
+                AddComponent<InteractableEntityTag>(entity);
+                AddComponent(entity, new ArmedStateHolder
+                {
+                    Value = ArmedState.True,
+                });
+
+                AddComponent(entity, new CurrentHp
+                {
+                    Value = 100,
+                });
+                AddComponent(entity, new MaxHp
+                {
+                    Value = 100,
+                });
+                AddBuffer<HpChangeRecordElement>(entity);
+                AddComponent<IsAliveTag>(entity);
+
+                AddComponent(entity, new FactionIndex { Value = 1 });
+
+                AddComponent(entity, new DmgValue
+                {
+                    Value = 10,
                 });
 
             }
