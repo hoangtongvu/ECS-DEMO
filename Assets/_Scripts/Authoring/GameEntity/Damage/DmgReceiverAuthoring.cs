@@ -1,8 +1,8 @@
-﻿using Components.Damage;
+﻿using Components.GameEntity.Damage;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Authoring.Damage
+namespace Authoring.GameEntity.Damage
 {
     public class DmgReceiverAuthoring : MonoBehaviour
     {
@@ -15,19 +15,23 @@ namespace Authoring.Damage
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new HpComponent
+                AddComponent(entity, new CurrentHp
                 {
-                    CurrentHp = authoring.CurrentHp,
-                    MaxHp = authoring.MaxHp,
+                    Value = authoring.CurrentHp,
                 });
 
-                AddComponent<HpChangedTag>(entity);
-                SetComponentEnabled<HpChangedTag>(entity, false);
-                AddComponent<HpChangedValue>(entity);
+                AddComponent(entity, new MaxHp
+                {
+                    Value = authoring.MaxHp,
+                });
 
+                AddBuffer<HpChangeRecordElement>(entity);
                 AddComponent<IsAliveTag>(entity);
 
             }
+
         }
+
     }
+
 }

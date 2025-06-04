@@ -51,6 +51,11 @@ namespace Authoring.Player
 
                 AddComponent(entity, new FactionIndex { Value = 1 });
 
+                AddComponent(entity, new DmgValue
+                {
+                    Value = 10,
+                });
+
             }
 
         }

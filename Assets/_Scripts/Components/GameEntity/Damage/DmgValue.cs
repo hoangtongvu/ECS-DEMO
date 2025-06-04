@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Components.Damage
+namespace Components.GameEntity.Damage
 {
     public struct DmgValue : IComponentData, IEnableableComponent
     {
