@@ -5,7 +5,7 @@ using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
     [UpdateInGroup(typeof(BeforePhysicsSystemGroup))]
     [BurstCompile]
@@ -24,7 +24,6 @@ namespace Systems.Simulation
         [BurstCompile]
         private partial struct FreezeRotationJob : IJobEntity
         {
-
             [BurstCompile]
             void Execute(
                 ref PhysicsVelocity physicsVelocity
@@ -36,10 +35,9 @@ namespace Systems.Simulation
                 localTransform.Rotation.value.x = rotationFreezer.X;
                 localTransform.Rotation.value.z = rotationFreezer.Z;
             }
+
         }
 
     }
-    
 
 }
-

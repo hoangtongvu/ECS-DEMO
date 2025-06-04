@@ -3,16 +3,15 @@ using Core;
 using Components;
 using Unity.Burst;
 using Components.Unit.UnitSelection;
+using Systems.Simulation.Misc;
 
 namespace Systems.Simulation.Unit
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(DragSelectionSystem))]
     [BurstCompile]
     public partial struct SelectUnitSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -31,7 +30,6 @@ namespace Systems.Simulation.Unit
                 this.DisableUnitSelectedTag(ref state);
                 return;
             }
-
 
             var selectionHits = SystemAPI.GetSingletonBuffer<SelectionHitElement>();
             if (selectionHits.IsEmpty) return;
@@ -53,7 +51,6 @@ namespace Systems.Simulation.Unit
 
             }
 
-
         }
 
         [BurstCompile]
@@ -74,6 +71,7 @@ namespace Systems.Simulation.Unit
                 unitSelectedTag.ValueRW = false;
                 SystemAPI.SetComponentEnabled<NewlyDeselectedUnitTag>(entity, true);
             }
+
         }
 
         [BurstCompile]
@@ -90,8 +88,9 @@ namespace Systems.Simulation.Unit
                 tag.ValueRW = false;
                 //UnityEngine.Debug.Log("DeselectedTag cleared");
             }
+
         }
 
-
     }
+
 }

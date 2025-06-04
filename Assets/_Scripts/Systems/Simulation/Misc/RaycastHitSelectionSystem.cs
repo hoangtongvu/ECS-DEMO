@@ -9,7 +9,7 @@ using Core;
 using Components.Camera;
 using Components.GameEntity.Interaction;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class RaycastHitSelectionSystem : SystemBase

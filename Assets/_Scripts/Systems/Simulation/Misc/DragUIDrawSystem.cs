@@ -5,7 +5,7 @@ using Core.Utilities.Extensions;
 using Unity.Transforms;
 using Unity.Burst;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial struct DragUIDrawSystem : ISystem

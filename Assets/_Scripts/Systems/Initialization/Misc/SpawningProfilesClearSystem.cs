@@ -3,15 +3,13 @@ using Unity.Scenes;
 using Unity.Burst;
 using Components.GameEntity.EntitySpawning;
 
-namespace Systems.Initialization
+namespace Systems.Initialization.Misc
 {
-
     [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
     [UpdateBefore(typeof(SceneSystemGroup))]
     [BurstCompile]
     public partial struct SpawningProfilesClearSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -45,5 +43,7 @@ namespace Systems.Initialization
         {
             profile.SpawnCount.ValueChanged = false;
         }
+
     }
+
 }

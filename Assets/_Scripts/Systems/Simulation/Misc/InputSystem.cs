@@ -1,16 +1,14 @@
 using Components;
-using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Utilities;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
     [UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
     public partial class InputSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             this.CreateInputDataSingleton();
@@ -57,5 +55,7 @@ namespace Systems.Simulation
             mouseData.Hold = Input.GetMouseButton(mouseValue);
             mouseData.Up = Input.GetMouseButtonUp(mouseValue);
         }
+
     }
+
 }

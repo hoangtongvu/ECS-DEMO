@@ -6,10 +6,9 @@ using Unity.Entities;
 using Utilities;
 using ZBase.Foundation.PubSub;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
     public partial class SpawnUnitMessageSystem : MessageQueuingSystem<SpawnUnitMessage> { }
-
 
 
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
@@ -51,8 +50,6 @@ namespace Systems.Simulation
 
         private void SpawnUnitMessageHandle(TMessage message) => this.messages.Enqueue(message);
 
-
     }
-
 
 }

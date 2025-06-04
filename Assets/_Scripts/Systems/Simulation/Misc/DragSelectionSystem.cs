@@ -9,9 +9,8 @@ using Unity.Collections;
 using Components.Unit;
 using Components.Camera;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(RaycastHitSelectionSystem))]
     public partial class DragSelectionSystem : SystemBase
@@ -65,7 +64,6 @@ namespace Systems.Simulation
 
             return physicsWorld.CastRay(raycastInput, out raycastHit);
         }
-
 
         private void CreateDragSelectionData()
         {
@@ -142,12 +140,11 @@ namespace Systems.Simulation
 
         }
 
-
         private bool MetDragDistance(
             float3 startPos
             , float3 currentPos
             , float distanceToConsiderDrag) => math.distance(startPos, currentPos) > distanceToConsiderDrag;
 
-
     }
+
 }

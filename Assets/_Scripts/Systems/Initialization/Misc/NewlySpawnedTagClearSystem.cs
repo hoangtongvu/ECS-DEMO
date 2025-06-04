@@ -3,15 +3,13 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Scenes;
 
-namespace Systems.Initialization
+namespace Systems.Initialization.Misc
 {
-
     [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
     [UpdateBefore(typeof(SceneSystemGroup))]
     [BurstCompile]
     public partial struct NewlySpawnedTagClearSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -21,14 +19,13 @@ namespace Systems.Initialization
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            //new DisableTagJob()
-            //    .ScheduleParallel();
-
             foreach (var tagRef in SystemAPI.Query<EnabledRefRW<NewlySpawnedTag>>())
             {
                 tagRef.ValueRW = false;
             }
+
         }
 
     }
+
 }

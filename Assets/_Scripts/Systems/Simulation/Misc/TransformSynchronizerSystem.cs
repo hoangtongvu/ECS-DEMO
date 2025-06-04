@@ -5,14 +5,13 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class TransformSynchronizerSystem : SystemBase
     {
         protected override void OnCreate()
         {
-
             this.RequireForUpdate<UniqueIdICD>();
             this.RequireForUpdate<LocalTransform>();
             this.RequireForUpdate<UnityTransformMap>();

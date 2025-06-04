@@ -2,7 +2,7 @@ using Core.MyEvent;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.Misc
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class SampleButtonEventListenerSystem : SystemBase
@@ -23,7 +23,6 @@ namespace Systems.Simulation
                 UnityEngine.Debug.Log("Button clicked.");
             }
 
-
         }
 
         private void HandleEvent(ButtonEventData data)
@@ -32,4 +31,5 @@ namespace Systems.Simulation
         }
 
     }
+
 }
