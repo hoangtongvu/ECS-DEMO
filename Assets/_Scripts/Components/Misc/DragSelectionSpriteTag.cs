@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Components
+namespace Components.Misc
 {
     public struct DragSelectionSpriteTag : IComponentData
     {

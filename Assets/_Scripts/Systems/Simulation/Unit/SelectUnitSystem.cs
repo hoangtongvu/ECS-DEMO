@@ -1,9 +1,9 @@
 using Unity.Entities;
 using Core;
-using Components;
 using Unity.Burst;
 using Components.Unit.UnitSelection;
 using Systems.Simulation.Misc;
+using Components.Misc;
 
 namespace Systems.Simulation.Unit
 {

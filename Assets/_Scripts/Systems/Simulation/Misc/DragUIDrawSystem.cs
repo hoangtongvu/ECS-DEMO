@@ -1,9 +1,9 @@
 using Unity.Entities;
 using Unity.Mathematics;
-using Components;
 using Core.Utilities.Extensions;
 using Unity.Transforms;
 using Unity.Burst;
+using Components.Misc;
 
 namespace Systems.Simulation.Misc
 {

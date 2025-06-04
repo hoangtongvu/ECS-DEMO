@@ -1,4 +1,4 @@
-using Components;
+using Components.Misc;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Physics;

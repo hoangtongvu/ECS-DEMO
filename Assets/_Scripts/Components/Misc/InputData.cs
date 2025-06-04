@@ -1,11 +1,10 @@
 using Components.GameEntity.Movement;
 using Unity.Entities;
 
-namespace Components
+namespace Components.Misc
 {
     public struct InputData : IComponentData
     {
-
         public MoveDirectionFloat2 MoveDirection;
         public bool BackspaceButtonDown;
 

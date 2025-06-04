@@ -1,4 +1,4 @@
-﻿using Components;
+﻿using Components.Misc;
 using Unity.Entities;
 using UnityEngine;
 

@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Components.Unit;
 using Core;
-using Components;
 using Unity.Mathematics;
 using Unity.Burst;
 using Utilities.Jobs;

@@ -2,9 +2,8 @@ using Core;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components
+namespace Components.Misc
 {
-
     public struct SelectionHitElement : IBufferElementData
     {
         public SelectionType SelectionType;

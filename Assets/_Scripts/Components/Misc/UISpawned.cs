@@ -2,9 +2,8 @@ using Core.UI.Identification;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components
+namespace Components.Misc
 {
-
     public struct UISpawned : IComponentData
     {
         public UIID? UIID;

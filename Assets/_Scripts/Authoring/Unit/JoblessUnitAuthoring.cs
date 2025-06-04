@@ -1,5 +1,4 @@
-﻿using Components;
-using Components.GameEntity;
+﻿using Components.GameEntity;
 using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;

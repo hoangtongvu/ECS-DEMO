@@ -1,7 +1,6 @@
 using Unity.Burst;
 using Unity.Entities;
 using Components.GameResource;
-using Components;
 using Core.MyEvent.PubSub.Messages;
 using Utilities.Extensions;
 using Components.Player;

@@ -1,9 +1,8 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components
+namespace Components.Misc
 {
-
     public struct DragSelectionData : IComponentData
     {
         public float3 StartWorldPos;

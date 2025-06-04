@@ -1,5 +1,4 @@
 using Unity.Entities;
-using Components;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Core.UI.Identification;
