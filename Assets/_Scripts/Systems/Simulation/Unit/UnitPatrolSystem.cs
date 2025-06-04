@@ -1,6 +1,5 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components.Damage;
 using Components.Unit;
 using Unity.Mathematics;
 using Unity.Collections;
@@ -17,6 +16,7 @@ using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement.MoveCommand;
 using Core.GameEntity.Movement.MoveCommand;
 using Utilities.Helpers.GameEntity.Movement.MoveCommand;
+using Components.GameEntity.Damage;
 
 namespace Systems.Simulation.Unit
 {

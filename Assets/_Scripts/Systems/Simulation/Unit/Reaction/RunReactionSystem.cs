@@ -1,12 +1,12 @@
 using Unity.Entities;
 using Unity.Burst;
 using Components;
-using Components.Damage;
 using Components.Unit;
 using Components.Unit.Reaction;
 using Utilities.Extensions;
 using System.Collections.Generic;
 using Components.GameEntity.Movement;
+using Components.GameEntity.Damage;
 
 namespace Systems.Simulation.Unit.Reaction
 {

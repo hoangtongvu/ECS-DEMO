@@ -1,6 +1,6 @@
 ﻿using Components;
-using Components.Damage;
 using Components.GameEntity;
+using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
@@ -61,17 +61,16 @@ namespace Authoring.Unit
                 AddComponent<UnitSelectedTag>(entity);
                 SetComponentEnabled<UnitSelectedTag>(entity, false);
 
-
-                AddComponent(entity, new HpComponent
+                AddComponent(entity, new CurrentHp
                 {
-                    CurrentHp = authoring.currentHp,
-                    MaxHp = authoring.maxHp,
+                    Value = authoring.currentHp,
                 });
-                AddComponent<HpChangedTag>(entity);
-                SetComponentEnabled<HpChangedTag>(entity, false);
-                AddComponent<HpChangedValue>(entity);
+                AddComponent(entity, new MaxHp
+                {
+                    Value = authoring.maxHp,
+                });
+                AddBuffer<HpChangeRecordElement>(entity);
                 AddComponent<IsAliveTag>(entity);
-
 
                 AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
