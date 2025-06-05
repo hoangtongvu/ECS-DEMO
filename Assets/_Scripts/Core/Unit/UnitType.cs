@@ -7,5 +7,7 @@ namespace Core.Unit
         Villager = 1,
         Knight = 2,
         Harvester = 3,
+        Builder = 4,
+        Archer = 5,
     }
 }
