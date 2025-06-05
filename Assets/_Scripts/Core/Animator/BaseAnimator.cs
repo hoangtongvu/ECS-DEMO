@@ -4,6 +4,7 @@ using Core.Misc;
 
 namespace Core.Animator
 {
+    [RequireComponent(typeof(UnityEngine.Animator))]
     public class BaseAnimator : SaiMonoBehaviour
     {
         [SerializeField] protected UnityEngine.Animator animator;
