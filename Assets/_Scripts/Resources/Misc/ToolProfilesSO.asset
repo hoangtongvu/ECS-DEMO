@@ -63,3 +63,75 @@ MonoBehaviour:
           _serializedList:
           - Key: 0
             Value: 3
+    - Key:
+        ToolType: 3
+        VariantIndex: 0
+      Value:
+        Name: NormalSword1handed
+        ProfilePicture: {fileID: 21300000, guid: 80ddf9180b71cc147876a652bf003027,
+          type: 3}
+        PresenterPrefab: {fileID: 632259581269544387, guid: aa578095870fdf24fae5af06968b56e0,
+          type: 3}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: f096a5bae6aa8d648ae63b507a2a8e4b,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        ToolType: 3
+        IsWeapon: 1
+        ToolStatsInSO:
+          BaseDmg: 6
+          BaseWorkSpeed: 1.5
+        SpawnDurationSeconds: 3
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 0
+            Value: 3
+    - Key:
+        ToolType: 4
+        VariantIndex: 0
+      Value:
+        Name: NormalHammer
+        ProfilePicture: {fileID: 0}
+        PresenterPrefab: {fileID: 0}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 0}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        ToolType: 4
+        IsWeapon: 0
+        ToolStatsInSO:
+          BaseDmg: 3
+          BaseWorkSpeed: 1.5
+        SpawnDurationSeconds: 3
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 0
+            Value: 3
+    - Key:
+        ToolType: 5
+        VariantIndex: 0
+      Value:
+        Name: NormalCrossbow1handed
+        ProfilePicture: {fileID: 21300000, guid: 4dc00b94b99472b48b6e9336ecc60f67,
+          type: 3}
+        PresenterPrefab: {fileID: 1312745687496369829, guid: 4b665127ac749a244b5fc5b4e1b87153,
+          type: 3}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: de43aaa31421a9f40a193e4acf38d0f7,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        ToolType: 5
+        IsWeapon: 1
+        ToolStatsInSO:
+          BaseDmg: 4
+          BaseWorkSpeed: 1.5
+        SpawnDurationSeconds: 2
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 0
+            Value: 2
