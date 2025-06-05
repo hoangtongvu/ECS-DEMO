@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnRadius: 3
-  SpawningPrefabs: {fileID: 11400000, guid: 5fdf25417940d054a957aee071166c77, type: 2}
+  SpawningPrefabs: {fileID: 11400000, guid: 086761ecf558c954d9bc07651336fdf3, type: 2}
 --- !u!114 &7752727647623985391
 MonoBehaviour:
   m_ObjectHideFlags: 0
