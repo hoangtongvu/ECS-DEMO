@@ -38,8 +38,7 @@ namespace Systems.Simulation.Unit.Misc
                     , TargetEntityWorldSquareRadius
                     , CanCheckInteractionRepeatTag>()
                 .WithAll<
-                    IsAliveTag
-                    , IsUnitWorkingTag>()
+                    IsAliveTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -61,8 +60,7 @@ namespace Systems.Simulation.Unit.Misc
                     , RefRO<TargetEntityWorldSquareRadius>
                     , EnabledRefRW<CanCheckInteractionRepeatTag>>()
                     .WithAll<
-                        IsAliveTag
-                        , IsUnitWorkingTag>())
+                        IsAliveTag>())
             {
                 canCheckInteractionRepeatTag.ValueRW = false;
 
@@ -83,6 +81,7 @@ namespace Systems.Simulation.Unit.Misc
                     , in interactingEntityRef.ValueRO.Value);
 
                 currentAbsDistanceXZ -= new float2(targetEntityWorldSquareRadiusRef.ValueRO.Value);
+                currentAbsDistanceXZ = math.abs(currentAbsDistanceXZ);
 
                 if (currentDistance > maxFollowDistanceMap[unitProfileIdRef.ValueRO.Value])
                 {
@@ -129,8 +128,17 @@ namespace Systems.Simulation.Unit.Misc
             in float2 absDistanceXZ
             , in InteractableDistanceRange interactableDistanceRange)
         {
-            return absDistanceXZ.x <= interactableDistanceRange.MaxValue
+            // (min <= x <= max && 0 <= z <= max) || (0 <= x <= min && min <= z <= max)
+
+            bool firstCondition = absDistanceXZ.x <= interactableDistanceRange.MaxValue
                 && absDistanceXZ.x >= interactableDistanceRange.MinValue
+                && absDistanceXZ.y <= interactableDistanceRange.MaxValue
+                && absDistanceXZ.y >= 0;
+
+            if (firstCondition) return true;
+
+            return absDistanceXZ.x <= interactableDistanceRange.MinValue
+                && absDistanceXZ.x >= 0
                 && absDistanceXZ.y <= interactableDistanceRange.MaxValue
                 && absDistanceXZ.y >= interactableDistanceRange.MinValue;
         }
