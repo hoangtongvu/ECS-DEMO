@@ -36,12 +36,12 @@ namespace Systems.Baking.Tool.Misc
             foreach (var profile in profilesSOHolder.Value.Value.Profiles)
             {
                 var targetEntity = bakedProfileElementArray[tempIndex].PrimaryEntity;
+                tempIndex++;
                 if (targetEntity == Entity.Null) continue;
 
                 if (!profile.Value.IsWeapon) continue;
 
                 this.EntityManager.AddComponent<IsWeaponTag>(targetEntity);
-                tempIndex++;
             }
 
             bakedProfileElementArray.Dispose();
