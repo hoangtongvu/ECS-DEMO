@@ -93,10 +93,13 @@ MonoBehaviour:
         VariantIndex: 0
       Value:
         Name: NormalHammer
-        ProfilePicture: {fileID: 0}
-        PresenterPrefab: {fileID: 0}
+        ProfilePicture: {fileID: 21300000, guid: 9d51f958027cd4a418b8eb3292f736bd,
+          type: 3}
+        PresenterPrefab: {fileID: 2251527002328910887, guid: 46e60f7b625294849ac4af2dd3a1fadc,
+          type: 3}
         IsPresenterEntity: 1
-        PrimaryEntityPrefab: {fileID: 0}
+        PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: f39a37a850c958441afd8547fe5d1f96,
+          type: 3}
         GameEntitySize:
           GridSquareSize: 0
           ObjectHeight: 0
