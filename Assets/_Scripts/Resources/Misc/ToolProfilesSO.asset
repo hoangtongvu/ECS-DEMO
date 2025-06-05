@@ -46,7 +46,8 @@ MonoBehaviour:
         Name: NormalPickaxe
         ProfilePicture: {fileID: 21300000, guid: d0462d85729ce134887063bb9cfe9c33,
           type: 3}
-        PresenterPrefab: {fileID: 0}
+        PresenterPrefab: {fileID: 1166552271129370700, guid: 16ef0b4d0d31b4046b361985a1adc969,
+          type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: eb43ad21f1fb5e24c87ef85ac8137741,
           type: 3}
