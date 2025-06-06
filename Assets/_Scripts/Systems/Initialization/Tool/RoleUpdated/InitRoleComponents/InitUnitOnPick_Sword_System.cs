@@ -1,4 +1,3 @@
-using Components.Harvest;
 using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
@@ -7,11 +6,11 @@ using Core.Unit;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Simulation.Tool.RoleUpdated.InitRoleComponents
+namespace Systems.Initialization.Tool.RoleUpdated.InitRoleComponents
 {
     [UpdateInGroup(typeof(InitRoleComponentsSystemGroup))]
     [BurstCompile]
-    public partial struct InitUnitOnPick_Axe_System : ISystem
+    public partial struct InitUnitOnPick_Sword_System : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -52,12 +51,9 @@ namespace Systems.Simulation.Tool.RoleUpdated.InitRoleComponents
                 , Entity unitEntity
                 , [EntityIndexInQuery] int entityIndexInQuery)
             {
-                if (toolProfileIdHolder.Value.ToolType != ToolType.Axe) return;
+                if (toolProfileIdHolder.Value.ToolType != ToolType.Sword) return;
 
-                unitProfileIdHolder.Value.UnitType = UnitType.Harvester;
-
-                this.ECB.AddComponent<HarvesterICD>(entityIndexInQuery, unitEntity);
-                this.ECB.AddComponent<HarvesteeTypeHolder>(entityIndexInQuery, unitEntity);
+                unitProfileIdHolder.Value.UnitType = UnitType.Knight;
 
             }
 

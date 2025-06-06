@@ -5,7 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Simulation.Tool.RoleUpdated
+namespace Systems.Initialization.Tool.RoleUpdated
 {
     [UpdateInGroup(typeof(RoleUpdatedSystemGroup), OrderLast = true)]
     [BurstCompile]
