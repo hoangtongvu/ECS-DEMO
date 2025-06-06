@@ -7,7 +7,7 @@ using Core.Unit;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Simulation.Tool.InitRoleComponents
+namespace Systems.Simulation.Tool.RoleUpdated.InitRoleComponents
 {
     [UpdateInGroup(typeof(InitRoleComponentsSystemGroup))]
     [BurstCompile]
@@ -20,7 +20,7 @@ namespace Systems.Simulation.Tool.InitRoleComponents
                 .WithAll<
                     ToolProfileIdHolder
                     , UnitProfileIdHolder
-                    , NeedInitRoleComponentsTag>()
+                    , NeedRoleUpdatedTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -39,7 +39,7 @@ namespace Systems.Simulation.Tool.InitRoleComponents
 
         }
 
-        [WithAll(typeof(NeedInitRoleComponentsTag))]
+        [WithAll(typeof(NeedRoleUpdatedTag))]
         [BurstCompile]
         private partial struct InitRoleComponentsJob : IJobEntity
         {
@@ -58,8 +58,6 @@ namespace Systems.Simulation.Tool.InitRoleComponents
 
                 this.ECB.AddComponent<HarvesterICD>(entityIndexInQuery, unitEntity);
                 this.ECB.AddComponent<HarvesteeTypeHolder>(entityIndexInQuery, unitEntity);
-
-                this.ECB.RemoveComponent<NeedInitRoleComponentsTag>(entityIndexInQuery, unitEntity);
 
             }
 

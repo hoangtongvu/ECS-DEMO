@@ -1,10 +1,10 @@
 using Unity.Entities;
 
-namespace Systems.Simulation.Tool.InitRoleComponents
+namespace Systems.Simulation.Tool.RoleUpdated
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(ToolPickSystem))]
-    public partial class InitRoleComponentsSystemGroup : ComponentSystemGroup
+    public partial class RoleUpdatedSystemGroup : ComponentSystemGroup
     {
 	}
 }

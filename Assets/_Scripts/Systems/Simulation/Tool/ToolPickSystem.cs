@@ -144,7 +144,7 @@ namespace Systems.Simulation.Tool
             SystemAPI.GetComponentRW<BaseDmg>(unitEntity).ValueRW.Value = toolStats.BaseDmg;
             SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity).ValueRW.Value = toolStats.BaseWorkSpeed;
 
-            ecb.AddComponent<NeedInitRoleComponentsTag>(unitEntity);
+            ecb.AddComponent<NeedRoleUpdatedTag>(unitEntity);
             ecb.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);
 
         }
