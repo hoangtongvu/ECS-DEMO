@@ -1,5 +1,4 @@
 using Components.Misc.Presenter.PresenterPrefabGO;
-using Core.Misc.Presenter.PresenterPrefabGO;
 using Unity.Collections;
 using Unity.Entities;
 using Utilities;
@@ -24,13 +23,7 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                 Value = new(15, Allocator.Persistent),
             };
 
-            var latestPresenterPrefabGOKey = new LatestPresenterPrefabGOKey
-            {
-                Value = PresenterPrefabGOKey.DefaultNotNull,
-            };
-
             su.AddOrSetComponentData(presenterPrefabGOMap);
-            su.AddOrSetComponentData(latestPresenterPrefabGOKey);
 
         }
 

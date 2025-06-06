@@ -1,3 +1,4 @@
+using Components.GameEntity;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Core.Animator;
@@ -24,7 +25,8 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                 .WithAll<
                     NeedSpawnPresenterTag
                     , LocalTransform
-                    , PresenterPrefabGOKeyHolder>()
+                    , PrimaryPrefabEntityHolder
+                    , HasPresenterPrefabGOTag>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -44,16 +46,17 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
             var ecb = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(this.World.Unmanaged);
 
-            foreach (var (needSpawnPresenterTag, transformRef, keyHolderRef, entity) in
+            foreach (var (needSpawnPresenterTag, transformRef, primaryPrefabEntityHolderRef, entity) in
                 SystemAPI.Query<
                     EnabledRefRW<NeedSpawnPresenterTag>
                     , RefRO<LocalTransform>
-                    , RefRO<PresenterPrefabGOKeyHolder>>()
+                    , RefRO<PrimaryPrefabEntityHolder>>()
+                    .WithAll<HasPresenterPrefabGOTag>()
                     .WithEntityAccess())
             {
-                if (!presenterPrefabGOMap.Value.TryGetValue(keyHolderRef.ValueRO.Value, out var basePresenterPrefab))
+                if (!presenterPrefabGOMap.Value.TryGetValue(primaryPrefabEntityHolderRef.ValueRO, out var basePresenterPrefab))
                 {
-                    UnityEngine.Debug.LogWarning($"Can't find any presenter prefab with Key: {keyHolderRef.ValueRO.Value}");
+                    UnityEngine.Debug.LogWarning($"Can't find any presenter prefab with Key: {primaryPrefabEntityHolderRef.ValueRO}");
                     needSpawnPresenterTag.ValueRW = false;
                     continue;
                 }
