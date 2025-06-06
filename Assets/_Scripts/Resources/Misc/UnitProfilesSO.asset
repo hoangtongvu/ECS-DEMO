@@ -117,9 +117,11 @@ MonoBehaviour:
       Value:
         Name: NormalBuilder
         ProfilePicture: {fileID: 0}
-        PresenterPrefab: {fileID: 0}
+        PresenterPrefab: {fileID: 1052591493456220867, guid: 7586fbf75355de041a19f46d5f673117,
+          type: 3}
         IsPresenterEntity: 0
-        PrimaryEntityPrefab: {fileID: 0}
+        PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: d7dfa3a0662af2947b518a9cce390925,
+          type: 3}
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
@@ -147,7 +149,8 @@ MonoBehaviour:
         PresenterPrefab: {fileID: 6385762350749957642, guid: 4caaa0d2f363fd3419e1043d46e8a89b,
           type: 3}
         IsPresenterEntity: 0
-        PrimaryEntityPrefab: {fileID: 0}
+        PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: aaa2acfce11f35449b31a3f4a3d715cf,
+          type: 3}
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
