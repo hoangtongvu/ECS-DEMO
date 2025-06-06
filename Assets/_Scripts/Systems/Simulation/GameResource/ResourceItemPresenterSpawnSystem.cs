@@ -4,6 +4,7 @@ using Components.GameResource;
 using Core.GameResource;
 using Unity.Transforms;
 using Components.Misc.Presenter;
+using Unity.Collections;
 
 namespace Systems.Simulation.GameResource
 {
@@ -16,6 +17,7 @@ namespace Systems.Simulation.GameResource
         {
             state.RequireForUpdate<ResourceItemEntityHolder>();
             state.RequireForUpdate<ResourceItemSpawnCommandList>();
+            state.RequireForUpdate<NeedSpawnPresenterTag>();
 
         }
 
@@ -23,17 +25,17 @@ namespace Systems.Simulation.GameResource
         public void OnUpdate(ref SystemState state)
         {
             var presenterEntityPrefabMap = SystemAPI.GetSingleton<ResourceItemPresenterEntityPrefabMap>().Value;
-            var ecb = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             var id = new ResourceProfileId
             {
                 VariantIndex = 0,
             };
 
-            foreach (var (needSpawnPresenterTag, resourceItemICDRef, primaryEntity) in
+            foreach (var (resourceItemICDRef, primaryEntity) in
                 SystemAPI.Query<
-                    EnabledRefRW<NeedSpawnPresenterTag>
-                    , RefRO<ResourceItemICD>>()
+                    RefRO<ResourceItemICD>>()
+                    .WithAll<NeedSpawnPresenterTag>()
                     .WithEntityAccess())
             {
                 id.ResourceType = resourceItemICDRef.ValueRO.ResourceType;
@@ -57,9 +59,12 @@ namespace Systems.Simulation.GameResource
                     Value = newPresenter,
                 });
 
-                needSpawnPresenterTag.ValueRW = false;
+                ecb.RemoveComponent<NeedSpawnPresenterTag>(primaryEntity);
 
             }
+
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
 
         }
 

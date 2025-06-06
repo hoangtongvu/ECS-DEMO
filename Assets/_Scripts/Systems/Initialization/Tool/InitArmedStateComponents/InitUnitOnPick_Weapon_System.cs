@@ -7,7 +7,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Simulation.Tool.InitArmedStateComponents
+namespace Systems.Initialization.Tool.InitArmedStateComponents
 {
     [UpdateInGroup(typeof(InitArmedStateComponentsSystemGroup))]
     [BurstCompile]
@@ -59,8 +59,6 @@ namespace Systems.Simulation.Tool.InitArmedStateComponents
                 if (!toolIsWeapon) return;
 
                 this.AddComponents(in entityIndexInQuery, in unitEntity);
-
-                this.ECB.RemoveComponent<NeedInitArmedStateComponentsTag>(entityIndexInQuery, unitEntity);
 
             }
 

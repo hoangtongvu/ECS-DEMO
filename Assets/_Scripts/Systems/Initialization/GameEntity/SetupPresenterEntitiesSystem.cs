@@ -20,7 +20,7 @@ namespace Systems.Initialization.GameEntity
         {
             this.Enabled = false;
 
-            var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var bakedProfiles in
                 SystemAPI.Query<
@@ -34,16 +34,15 @@ namespace Systems.Initialization.GameEntity
 
                     if (prefabsElement.PresenterEntity == Entity.Null) continue;
                     if (!SystemAPI.HasComponent<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity)) continue;
-                    if (!SystemAPI.IsComponentEnabled<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity)) continue;
 
-                    SystemAPI.SetComponentEnabled<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity, false);
+                    ecb.RemoveComponent<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity);
 
-                    entityCommandBuffer.AddComponent(prefabsElement.PresenterEntity, new Parent
+                    ecb.AddComponent(prefabsElement.PresenterEntity, new Parent
                     {
                         Value = prefabsElement.PrimaryEntity,
                     });
 
-                    var linkedEntityGroup = entityCommandBuffer.AddBuffer<LinkedEntityGroup>(prefabsElement.PrimaryEntity);
+                    var linkedEntityGroup = ecb.AddBuffer<LinkedEntityGroup>(prefabsElement.PrimaryEntity);
                     linkedEntityGroup.Add(new()
                     {
                         Value = prefabsElement.PrimaryEntity,
@@ -75,8 +74,8 @@ namespace Systems.Initialization.GameEntity
 
             }
 
-            entityCommandBuffer.Playback(this.EntityManager);
-            entityCommandBuffer.Dispose();
+            ecb.Playback(this.EntityManager);
+            ecb.Dispose();
 
         }
 
