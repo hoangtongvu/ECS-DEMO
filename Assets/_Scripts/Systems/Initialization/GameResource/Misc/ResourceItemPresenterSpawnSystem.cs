@@ -1,14 +1,15 @@
-using Unity.Entities;
-using Unity.Burst;
 using Components.GameResource;
-using Core.GameResource;
-using Unity.Transforms;
 using Components.Misc.Presenter;
+using Core.GameResource;
+using Systems.Initialization.Misc.Presenter;
+using Unity.Burst;
 using Unity.Collections;
+using Unity.Entities;
+using Unity.Transforms;
 
 namespace Systems.Initialization.GameResource.Misc
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(NeedSpawnPresenterTagProcessSystemGroup))]
     [BurstCompile]
     public partial struct ResourceItemPresenterSpawnSystem : ISystem
     {
@@ -65,8 +66,6 @@ namespace Systems.Initialization.GameResource.Misc
                 {
                     Value = newPresenter,
                 });
-
-                ecb.RemoveComponent<NeedSpawnPresenterTag>(primaryEntity);
 
             }
 

@@ -12,7 +12,7 @@ using Utilities;
 
 namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(NeedSpawnPresenterTagProcessSystemGroup))]
     public partial class SpawnPresenterGOsSystem : SystemBase
     {
         protected override void OnCreate()
@@ -58,7 +58,6 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                 if (!presenterPrefabGOMap.Value.TryGetValue(primaryPrefabEntityHolderRef.ValueRO, out var basePresenterPrefab))
                 {
                     UnityEngine.Debug.LogWarning($"Can't find any presenter prefab with Key: {primaryPrefabEntityHolderRef.ValueRO}");
-                    ecb.RemoveComponent<NeedSpawnPresenterTag>(entity);
                     continue;
                 }
 
@@ -82,7 +81,6 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                 this.TryInitAnimatorHolder(ecb, in entity, in newPresenter);
 
                 SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
-                ecb.RemoveComponent<NeedSpawnPresenterTag>(entity);
 
             }
 

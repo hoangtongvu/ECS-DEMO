@@ -1,6 +1,7 @@
 using Components.Harvest;
 using Components.Misc.Presenter;
 using System.Collections.Generic;
+using Systems.Initialization.Misc.Presenter;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,7 +10,7 @@ using Unity.Transforms;
 
 namespace Systems.Initialization.Harvest
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(NeedSpawnPresenterTagProcessSystemGroup))]
     [BurstCompile]
     public partial struct SpawnHarvesteePresentersSystem : ISystem
     {
@@ -63,8 +64,6 @@ namespace Systems.Initialization.Harvest
 
                 if (!profileIdToPresenterVariancesRangeMap.TryGetValue(key, out var range))
                     throw new KeyNotFoundException($"{nameof(HarvesteeProfileIdToPresenterVariancesRangeMap)} does not contain key: {key}");
-
-                ecb.RemoveComponent<NeedSpawnPresenterTag>(primaryEntity);
 
                 int upperBound = range.StartIndex + range.Count;
 
