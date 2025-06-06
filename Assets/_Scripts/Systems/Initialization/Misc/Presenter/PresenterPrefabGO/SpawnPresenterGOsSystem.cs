@@ -3,6 +3,7 @@ using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Core.Animator;
 using Core.Misc.Presenter;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -43,21 +44,21 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
             // NOTE: Be careful when using EcbSystem.ecb in this System,
             // TransformAccessArrayIndex is assigned long after TransformAccessArray adding new element.
             // Make sure any system that use TransformAccessArray will get final version of TransformAccessArrayIndexes.
-            var ecb = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(this.World.Unmanaged);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (needSpawnPresenterTag, transformRef, primaryPrefabEntityHolderRef, entity) in
+            foreach (var (transformRef, primaryPrefabEntityHolderRef, entity) in
                 SystemAPI.Query<
-                    EnabledRefRW<NeedSpawnPresenterTag>
-                    , RefRO<LocalTransform>
+                    RefRO<LocalTransform>
                     , RefRO<PrimaryPrefabEntityHolder>>()
-                    .WithAll<HasPresenterPrefabGOTag>()
+                    .WithAll<
+                        NeedSpawnPresenterTag
+                        , HasPresenterPrefabGOTag>()
                     .WithEntityAccess())
             {
                 if (!presenterPrefabGOMap.Value.TryGetValue(primaryPrefabEntityHolderRef.ValueRO, out var basePresenterPrefab))
                 {
                     UnityEngine.Debug.LogWarning($"Can't find any presenter prefab with Key: {primaryPrefabEntityHolderRef.ValueRO}");
-                    needSpawnPresenterTag.ValueRW = false;
+                    ecb.RemoveComponent<NeedSpawnPresenterTag>(entity);
                     continue;
                 }
 
@@ -81,9 +82,12 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                 this.TryInitAnimatorHolder(ecb, in entity, in newPresenter);
 
                 SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
-                needSpawnPresenterTag.ValueRW = false;
+                ecb.RemoveComponent<NeedSpawnPresenterTag>(entity);
 
             }
+
+            ecb.Playback(this.EntityManager);
+            ecb.Dispose();
 
         }
 

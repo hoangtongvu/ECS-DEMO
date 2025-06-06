@@ -11,10 +11,10 @@ namespace Systems.Presentation.Misc.Presenter
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    NeedSpawnPresenterTag
-                    , AnimatorData
+                    AnimatorData
                     , AnimatorTransitionDuration
                     , AnimatorHolder>()
+                .WithNone<NeedSpawnPresenterTag>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -29,7 +29,7 @@ namespace Systems.Presentation.Misc.Presenter
                     RefRW<AnimatorData>
                     , RefRO<AnimatorTransitionDuration>
                     , RefRO<AnimatorHolder>>()
-                    .WithDisabled<NeedSpawnPresenterTag>())
+                    .WithNone<NeedSpawnPresenterTag>())
             {
                 if (!animDataRef.ValueRO.Value.ValueChanged) continue;
 

@@ -53,10 +53,10 @@ namespace Systems.Initialization.Harvest
 
             int tempIndex = 0;
 
-            foreach (var (profileIdHolderRef, needSpawnPresenterTag, primaryEntity) in
+            foreach (var (profileIdHolderRef, primaryEntity) in
                 SystemAPI.Query<
-                    RefRO<HarvesteeProfileIdHolder>
-                    , EnabledRefRW<NeedSpawnPresenterTag>>()
+                    RefRO<HarvesteeProfileIdHolder>>()
+                    .WithAll<NeedSpawnPresenterTag>()
                     .WithEntityAccess())
             {
                 var key = profileIdHolderRef.ValueRO.Value;
@@ -64,7 +64,7 @@ namespace Systems.Initialization.Harvest
                 if (!profileIdToPresenterVariancesRangeMap.TryGetValue(key, out var range))
                     throw new KeyNotFoundException($"{nameof(HarvesteeProfileIdToPresenterVariancesRangeMap)} does not contain key: {key}");
 
-                needSpawnPresenterTag.ValueRW = false;
+                ecb.RemoveComponent<NeedSpawnPresenterTag>(primaryEntity);
 
                 int upperBound = range.StartIndex + range.Count;
 
