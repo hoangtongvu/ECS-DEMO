@@ -6,18 +6,25 @@ using Unity.Transforms;
 using Components.Misc.Presenter;
 using Unity.Collections;
 
-namespace Systems.Simulation.GameResource
+namespace Systems.Initialization.GameResource.Misc
 {
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]
     public partial struct ResourceItemPresenterSpawnSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            var query0 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    ResourceItemICD
+                    , NeedSpawnPresenterTag>()
+                .Build();
+
+            state.RequireForUpdate(query0);
             state.RequireForUpdate<ResourceItemEntityHolder>();
             state.RequireForUpdate<ResourceItemSpawnCommandList>();
-            state.RequireForUpdate<NeedSpawnPresenterTag>();
+            state.RequireForUpdate<ResourceItemPresenterEntityPrefabMap>();
 
         }
 
