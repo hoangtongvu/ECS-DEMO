@@ -86,9 +86,11 @@ MonoBehaviour:
       Value:
         Name: NormalHarvester
         ProfilePicture: {fileID: 0}
-        PresenterPrefab: {fileID: 0}
+        PresenterPrefab: {fileID: 1052591493456220867, guid: 7586fbf75355de041a19f46d5f673117,
+          type: 3}
         IsPresenterEntity: 0
-        PrimaryEntityPrefab: {fileID: 0}
+        PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: d88518ea2880deb43b7b215e4d730149,
+          type: 3}
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
