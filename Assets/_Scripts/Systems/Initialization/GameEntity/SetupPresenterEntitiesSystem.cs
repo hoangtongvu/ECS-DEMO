@@ -1,26 +1,33 @@
 using Components.GameEntity;
 using Components.Misc.Presenter;
+using Systems.Initialization.Misc.Presenter;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
 namespace Systems.Initialization.GameEntity
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
-    public partial class SetupPresenterEntitiesSystem : SystemBase
+    // Note: This system run only once in order to set-up presenter entity as child of primary entity **PREFABs**.
+    // While **ClearNeedSpawnPresenterTagsSystem** can't remove tags for **PREFABs**, we will remove tags right in this system with ecb.
+    [UpdateInGroup(typeof(NeedSpawnPresenterTagProcessSystemGroup), OrderFirst = true)]
+    [BurstCompile]
+    public partial struct SetupPresenterEntitiesSystem : ISystem
     {
-        protected override void OnCreate()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
-            this.RequireForUpdate<BakedGameEntityProfileElement>();
-            this.RequireForUpdate<NeedSpawnPresenterTag>();
+            state.RequireForUpdate<BakedGameEntityProfileElement>();
+            state.RequireForUpdate<NeedSpawnPresenterTag>();
 
         }
 
-        protected override void OnUpdate()
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
-            this.Enabled = false;
+            state.Enabled = false;
 
-            var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var bakedProfiles in
                 SystemAPI.Query<
@@ -34,49 +41,63 @@ namespace Systems.Initialization.GameEntity
 
                     if (prefabsElement.PresenterEntity == Entity.Null) continue;
                     if (!SystemAPI.HasComponent<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity)) continue;
-                    if (!SystemAPI.IsComponentEnabled<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity)) continue;
 
-                    SystemAPI.SetComponentEnabled<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity, false);
+                    ecb.RemoveComponent<NeedSpawnPresenterTag>(prefabsElement.PrimaryEntity);
 
-                    entityCommandBuffer.AddComponent(prefabsElement.PresenterEntity, new Parent
-                    {
-                        Value = prefabsElement.PrimaryEntity,
-                    });
-
-                    var linkedEntityGroup = entityCommandBuffer.AddBuffer<LinkedEntityGroup>(prefabsElement.PrimaryEntity);
-                    linkedEntityGroup.Add(new()
-                    {
-                        Value = prefabsElement.PrimaryEntity,
-                    });
-
-                    linkedEntityGroup.Add(new()
-                    {
-                        Value = prefabsElement.PresenterEntity,
-                    });
-
-                    if (SystemAPI.HasBuffer<LinkedEntityGroup>(prefabsElement.PresenterEntity))
-                    {
-                        var presenterLinkedSystemGroup = SystemAPI.GetBuffer<LinkedEntityGroup>(prefabsElement.PresenterEntity);
-
-                        int length = presenterLinkedSystemGroup.Length;
-                        if (length == 1) continue;
-
-                        var presenterLinkedSystemGroupArray = presenterLinkedSystemGroup.ToNativeArray(Allocator.Temp);
-
-                        for (int j = 1; j < length; j++)
-                        {
-                            linkedEntityGroup.Add(presenterLinkedSystemGroupArray[j]);
-                        }
-                        
-                        presenterLinkedSystemGroupArray.Dispose();
-                    }
+                    this.AddPresenterEntityAsChild(
+                        ref state
+                        , ecb
+                        , in prefabsElement.PrimaryEntity
+                        , in prefabsElement.PresenterEntity);
 
                 }
 
             }
 
-            entityCommandBuffer.Playback(this.EntityManager);
-            entityCommandBuffer.Dispose();
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
+
+        }
+
+        [BurstCompile]
+        private void AddPresenterEntityAsChild(
+            ref SystemState state
+            , EntityCommandBuffer ecb
+            , in Entity primaryEntity
+            , in Entity presenterEntity)
+        {
+            ecb.AddComponent(presenterEntity, new Parent
+            {
+                Value = primaryEntity,
+            });
+
+            var linkedEntityGroup = ecb.AddBuffer<LinkedEntityGroup>(primaryEntity);
+            linkedEntityGroup.Add(new()
+            {
+                Value = primaryEntity,
+            });
+
+            linkedEntityGroup.Add(new()
+            {
+                Value = presenterEntity,
+            });
+
+            if (SystemAPI.HasBuffer<LinkedEntityGroup>(presenterEntity))
+            {
+                var presenterLinkedSystemGroup = SystemAPI.GetBuffer<LinkedEntityGroup>(presenterEntity);
+
+                int length = presenterLinkedSystemGroup.Length;
+                if (length == 1) return;
+
+                var presenterLinkedSystemGroupArray = presenterLinkedSystemGroup.ToNativeArray(Allocator.Temp);
+
+                for (int j = 1; j < length; j++)
+                {
+                    linkedEntityGroup.Add(presenterLinkedSystemGroupArray[j]);
+                }
+
+                presenterLinkedSystemGroupArray.Dispose();
+            }
 
         }
 

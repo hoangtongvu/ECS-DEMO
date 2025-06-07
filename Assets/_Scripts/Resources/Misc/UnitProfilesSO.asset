@@ -53,7 +53,8 @@ MonoBehaviour:
         Name: NormalKnight
         ProfilePicture: {fileID: 21300000, guid: 6f34760afcacfa946a441a9f5bda8873,
           type: 3}
-        PresenterPrefab: {fileID: 0}
+        PresenterPrefab: {fileID: 2108327356210891175, guid: 993575e1d7426854db0beb42bc727d80,
+          type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 3552774824711469151, guid: abf102b7e42e9874183ffb8ec9d78bfb,
           type: 3}
@@ -72,7 +73,7 @@ MonoBehaviour:
         DetectionRadius: 10
         AttackConfigs:
           MinAttackDistance: 0
-          MaxAttackDistance: 2
+          MaxAttackDistance: 1
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -85,9 +86,11 @@ MonoBehaviour:
       Value:
         Name: NormalHarvester
         ProfilePicture: {fileID: 0}
-        PresenterPrefab: {fileID: 0}
+        PresenterPrefab: {fileID: 1052591493456220867, guid: 7586fbf75355de041a19f46d5f673117,
+          type: 3}
         IsPresenterEntity: 0
-        PrimaryEntityPrefab: {fileID: 0}
+        PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: d88518ea2880deb43b7b215e4d730149,
+          type: 3}
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
@@ -108,5 +111,64 @@ MonoBehaviour:
           _serializedList:
           - Key: 2
             Value: 5
+    - Key:
+        UnitType: 4
+        VariantIndex: 0
+      Value:
+        Name: NormalBuilder
+        ProfilePicture: {fileID: 0}
+        PresenterPrefab: {fileID: 1052591493456220867, guid: 7586fbf75355de041a19f46d5f673117,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: d7dfa3a0662af2947b518a9cce390925,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        UnitType: 4
+        SpawnDurationSeconds: 5
+        UnitReactionConfigs:
+          UnitWalkSpeed: 3
+          UnitRunSpeed: 7
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
+        BaseSpawningCosts:
+          _serializedList: []
+    - Key:
+        UnitType: 5
+        VariantIndex: 0
+      Value:
+        Name: NormalArcher
+        ProfilePicture: {fileID: 0}
+        PresenterPrefab: {fileID: 6385762350749957642, guid: 4caaa0d2f363fd3419e1043d46e8a89b,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: aaa2acfce11f35449b31a3f4a3d715cf,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        UnitType: 5
+        SpawnDurationSeconds: 5
+        UnitReactionConfigs:
+          UnitWalkSpeed: 3
+          UnitRunSpeed: 7
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
+        MaxFollowDistance: 14
+        DetectionRadius: 12
+        AttackConfigs:
+          MinAttackDistance: 3
+          MaxAttackDistance: 6
+        BaseSpawningCosts:
+          _serializedList: []
   UnitGlobalConfigs:
     MoveSpeedScale: 1
+    UnarmedUnitFleeTotalSeconds: 2

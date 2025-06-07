@@ -1,7 +1,9 @@
+using Components.GameEntity;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Core.Animator;
 using Core.Misc.Presenter;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -10,7 +12,7 @@ using Utilities;
 
 namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(NeedSpawnPresenterTagProcessSystemGroup))]
     public partial class SpawnPresenterGOsSystem : SystemBase
     {
         protected override void OnCreate()
@@ -24,7 +26,8 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                 .WithAll<
                     NeedSpawnPresenterTag
                     , LocalTransform
-                    , PresenterPrefabGOKeyHolder>()
+                    , PrimaryPrefabEntityHolder
+                    , HasPresenterPrefabGOTag>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -41,20 +44,20 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
             // NOTE: Be careful when using EcbSystem.ecb in this System,
             // TransformAccessArrayIndex is assigned long after TransformAccessArray adding new element.
             // Make sure any system that use TransformAccessArray will get final version of TransformAccessArrayIndexes.
-            var ecb = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(this.World.Unmanaged);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (needSpawnPresenterTag, transformRef, keyHolderRef, entity) in
+            foreach (var (transformRef, primaryPrefabEntityHolderRef, entity) in
                 SystemAPI.Query<
-                    EnabledRefRW<NeedSpawnPresenterTag>
-                    , RefRO<LocalTransform>
-                    , RefRO<PresenterPrefabGOKeyHolder>>()
+                    RefRO<LocalTransform>
+                    , RefRO<PrimaryPrefabEntityHolder>>()
+                    .WithAll<
+                        NeedSpawnPresenterTag
+                        , HasPresenterPrefabGOTag>()
                     .WithEntityAccess())
             {
-                if (!presenterPrefabGOMap.Value.TryGetValue(keyHolderRef.ValueRO.Value, out var basePresenterPrefab))
+                if (!presenterPrefabGOMap.Value.TryGetValue(primaryPrefabEntityHolderRef.ValueRO, out var basePresenterPrefab))
                 {
-                    UnityEngine.Debug.LogWarning($"Can't find any presenter prefab with Key: {keyHolderRef.ValueRO.Value}");
-                    needSpawnPresenterTag.ValueRW = false;
+                    UnityEngine.Debug.LogWarning($"Can't find any presenter prefab with Key: {primaryPrefabEntityHolderRef.ValueRO}");
                     continue;
                 }
 
@@ -78,9 +81,11 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                 this.TryInitAnimatorHolder(ecb, in entity, in newPresenter);
 
                 SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);
-                needSpawnPresenterTag.ValueRW = false;
 
             }
+
+            ecb.Playback(this.EntityManager);
+            ecb.Dispose();
 
         }
 

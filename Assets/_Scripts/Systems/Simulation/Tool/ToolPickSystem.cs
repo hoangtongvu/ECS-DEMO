@@ -99,24 +99,17 @@ namespace Systems.Simulation.Tool
             , RefRW<ToolPickerEntity> toolPickerEntityRef
             , Entity toolEntity)
         {
-            // Make unit become tool's parent
-            ecb.AddComponent(toolEntity, new Parent
-            {
-                Value = toolPickerEntityRef.ValueRO.Value
-            });
-
             // Remove Gravity of tool
             ecb.AddComponent(toolEntity, new PhysicsGravityFactor
             {
                 Value = 0
             });
 
-            // Set temp offset for tool (stay on unit's head)
+            // Hide tool out of view
             var unitTransform = SystemAPI.GetComponentRO<LocalTransform>(toolPickerEntityRef.ValueRO.Value);
-            transformRef.ValueRW.Position = unitTransform.ValueRO.Position.Add(y: 4f);
-            transformRef.ValueRW.Scale *= 2;
+            transformRef.ValueRW.Position = unitTransform.ValueRO.Position.Add(y: 100f);
+            transformRef.ValueRW.Scale = 0;
             transformRef.ValueRW.Rotation = quaternion.identity;
-
 
             SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
             canBePickedTagRef.ValueRW = false;
@@ -144,7 +137,7 @@ namespace Systems.Simulation.Tool
             SystemAPI.GetComponentRW<BaseDmg>(unitEntity).ValueRW.Value = toolStats.BaseDmg;
             SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity).ValueRW.Value = toolStats.BaseWorkSpeed;
 
-            ecb.AddComponent<NeedInitRoleComponentsTag>(unitEntity);
+            ecb.AddComponent<NeedRoleUpdatedTag>(unitEntity);
             ecb.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);
 
         }

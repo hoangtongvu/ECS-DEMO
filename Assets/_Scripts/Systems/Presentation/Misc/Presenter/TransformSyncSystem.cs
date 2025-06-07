@@ -21,14 +21,14 @@ namespace Systems.Presentation.Misc.Presenter
                     LocalTransform
                     , PresenterHolder
                     , TransformAccessArrayIndex>()
-                .WithDisabled<NeedSpawnPresenterTag>()
+                .WithNone<NeedSpawnPresenterTag>()
                 .Build();
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    NeedSpawnPresenterTag
-                    , LocalTransform
+                    LocalTransform
                     , PresenterHolder>()
+                .WithNone<NeedSpawnPresenterTag>()
                 .Build();
 
             this.RequireForUpdate(query0);

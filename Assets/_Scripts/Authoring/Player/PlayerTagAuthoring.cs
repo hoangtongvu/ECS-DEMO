@@ -3,11 +3,9 @@ using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.Misc;
 using Components.Misc.Presenter;
-using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Player;
 using Components.Unit.NearUnitDropItems;
 using Core.GameEntity.Misc;
-using Core.Misc.Presenter.PresenterPrefabGO;
 using Unity.Entities;
 using UnityEngine;
 
@@ -27,10 +25,6 @@ namespace Authoring.Player
                 AddBuffer<NearbyUnitDropItemTimerElement>(entity);
 
                 AddComponent<NeedSpawnPresenterTag>(entity);
-                AddComponent(entity, new PresenterPrefabGOKeyHolder
-                {
-                    Value = PresenterPrefabGOKey.Null,
-                });
 
                 AddComponent<InteractableEntityTag>(entity);
                 AddComponent(entity, new ArmedStateHolder

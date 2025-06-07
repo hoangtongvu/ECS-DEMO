@@ -8,7 +8,6 @@ using Components.GameEntity.Movement.MoveCommand;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;
-using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool.Misc;
 using Components.Unit;
@@ -18,7 +17,6 @@ using Components.Unit.UnitSelection;
 using Core.GameEntity;
 using Core.GameEntity.Misc;
 using Core.GameEntity.Movement.MoveCommand;
-using Core.Misc.Presenter.PresenterPrefabGO;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -50,11 +48,6 @@ namespace Authoring.Unit
                 SetComponentEnabled<WalkStartedTag>(entity, false);
                 AddComponent<RunStartedTag>(entity);
                 SetComponentEnabled<RunStartedTag>(entity, false);
-
-                AddComponent(entity, new PresenterPrefabGOKeyHolder
-                {
-                    Value = PresenterPrefabGOKey.Null,
-                });
 
                 AddComponent<SelectableUnitTag>(entity);
                 AddComponent<UnitSelectedTag>(entity);
@@ -198,6 +191,8 @@ namespace Authoring.Unit
                 SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, false);
 
                 AddComponent(entity, new FactionIndex { Value = 1 });
+
+                AddComponent<PresenterHandSlotsHolder>(entity);
 
             }
 
