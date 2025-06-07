@@ -192,6 +192,8 @@ namespace Authoring.Unit
 
                 AddComponent(entity, new FactionIndex { Value = 1 });
 
+                AddComponent<PresenterHandSlotsHolder>(entity);
+
             }
 
         }

@@ -169,6 +169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8779042515261682867}
+  - component: {fileID: 5664378315627028972}
   m_Layer: 0
   m_Name: handslot.r
   m_TagString: Untagged
@@ -191,6 +192,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6137408238016883922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5664378315627028972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132918159614783304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f83365da5ea852488786f5c0bf875c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandSlotSide: 1
 --- !u!1 &1466571242330816820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1723,6 +1737,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7929484732339442816}
+  - component: {fileID: 7766883094887134127}
   m_Layer: 0
   m_Name: handslot.l
   m_TagString: Untagged
@@ -1745,6 +1760,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7673897702642522092}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7766883094887134127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7459507802464934899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f83365da5ea852488786f5c0bf875c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandSlotSide: 2
 --- !u!1 &7520161569749499059
 GameObject:
   m_ObjectHideFlags: 0
