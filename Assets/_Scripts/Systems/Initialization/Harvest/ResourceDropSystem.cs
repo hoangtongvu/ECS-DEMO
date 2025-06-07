@@ -13,8 +13,7 @@ using Components.GameEntity.Damage;
 
 namespace Systems.Initialization.Harvest
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(HpChangeHandleSystem))]
+    [UpdateInGroup(typeof(HpChangesHandleSystemGroup))]
     [BurstCompile]
     public partial struct ResourceDropSystem : ISystem
     {
@@ -43,7 +42,6 @@ namespace Systems.Initialization.Harvest
             var itemSpawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
             var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourceDropInfoMap>().Value;
 
-            // TODO: Fix missing last drop due to the IsAliveTag
             foreach (var (currentHpRef, dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef) in
                 SystemAPI.Query<
                     RefRO<CurrentHp>
@@ -68,13 +66,10 @@ namespace Systems.Initialization.Harvest
                         , resourceDropInfo.ResourceType
                         , quantityPerDrop);
 
-                    if (hpThreshold < deductAmount)
-                    {
-                        hpThreshold = 0;
+                    if (hpThreshold == 0)
                         break;
-                    }
 
-                    hpThreshold -= deductAmount;
+                    hpThreshold = math.max(0, hpThreshold - deductAmount);
 
                 }
 
