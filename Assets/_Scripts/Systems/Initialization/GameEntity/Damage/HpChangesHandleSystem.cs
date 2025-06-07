@@ -4,9 +4,9 @@ using Unity.Entities;
 
 namespace Systems.Initialization.GameEntity.Damage
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(HpChangesHandleSystemGroup), OrderFirst = true)]
     [BurstCompile]
-    public partial struct HpChangeHandleSystem : ISystem
+    public partial struct HpChangesHandleSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -25,18 +25,18 @@ namespace Systems.Initialization.GameEntity.Damage
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new HpChangeJob()
+            new HpChangesHandleJob()
                 .ScheduleParallel();
         }
 
+        [WithAll(typeof(IsAliveTag))]
         [BurstCompile]
-        private partial struct HpChangeJob : IJobEntity
+        private partial struct HpChangesHandleJob : IJobEntity
         {
             void Execute(
                 ref CurrentHp currentHp
                 , in MaxHp maxHp
-                , ref DynamicBuffer<HpChangeRecordElement> hpChangeRecords
-                , EnabledRefRW<IsAliveTag> aliveTag)
+                , ref DynamicBuffer<HpChangeRecordElement> hpChangeRecords)
             {
                 int length = hpChangeRecords.Length;
                 if (length == 0) return;
@@ -53,7 +53,7 @@ namespace Systems.Initialization.GameEntity.Damage
                     else if (rawCurrentHp <= 0)
                     {
                         currentHp.Value = 0;
-                        aliveTag.ValueRW = false;
+                        break;
                     }
                     else
                         currentHp.Value = rawCurrentHp;
