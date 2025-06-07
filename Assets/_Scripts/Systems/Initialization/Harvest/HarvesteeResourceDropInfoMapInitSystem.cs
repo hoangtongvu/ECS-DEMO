@@ -1,14 +1,13 @@
 using Components.GameEntity;
 using Components.Harvest;
-using Components.Harvest.HarvesteeHp;
 using Unity.Collections;
 using Unity.Entities;
 using Utilities;
 
-namespace Systems.Initialization.Harvest.HarvesteeHp
+namespace Systems.Initialization.Harvest
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial class HarvesteeMaxHpMapInitSystem : SystemBase
+    public partial class HarvesteeResourceDropInfoMapInitSystem : SystemBase
     {
         private EntityQuery query;
 
@@ -31,7 +30,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
             var bakedProfileElementArray = this.query.GetSingletonBuffer<BakedGameEntityProfileElement>().ToNativeArray(Allocator.Temp);
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 
-            var maxHpMap = new HarvesteeMaxHpMap
+            var resourceDropInfoMap = new HarvesteeResourceDropInfoMap
             {
                 Value = new(10, Allocator.Persistent),
             };
@@ -42,13 +41,13 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
             {
                 var keyEntity = bakedProfileElementArray[tempIndex].PrimaryEntity;
                 if (keyEntity == Entity.Null)
-                    throw new System.NullReferenceException($"keyEntity for {nameof(HarvesteeMaxHpMap)} equals to Entity.Null");
+                    throw new System.NullReferenceException($"keyEntity for {nameof(HarvesteeResourceDropInfoMap)} equals to Entity.Null");
 
-                maxHpMap.Value.Add(keyEntity, profile.Value.MaxHp);
+                resourceDropInfoMap.Value.Add(keyEntity, profile.Value.ResourceDropInfo);
                 tempIndex++;
             }
 
-            su.AddOrSetComponentData(maxHpMap);
+            su.AddOrSetComponentData(resourceDropInfoMap);
             bakedProfileElementArray.Dispose();
 
         }

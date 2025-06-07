@@ -1,78 +1,54 @@
 using Unity.Entities;
 using Unity.Burst;
 using Components.Harvest;
-using Unity.Collections;
-using Utilities;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity;
 using Components.Harvest.HarvesteeHp;
+using Components.GameEntity.Damage;
 
-namespace Systems.Simulation.Harvest
+namespace Systems.Initialization.Harvest.HarvesteeHp
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct HealthHandlerSystem : ISystem
+    public partial struct HpThresholdInitSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            SingletonUtilities.GetInstance(state.EntityManager)
-                .AddOrSetComponentData(new HarvesteeCurrentHpMap
-                {
-                    Value = new(200, Allocator.Persistent),
-                });
-
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     DropResourceHpThreshold
+                    , MaxHp
+                    , PrimaryPrefabEntityHolder
                     , NewlySpawnedTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
-            state.RequireForUpdate<HarvesteeMaxHpMap>();
+            state.RequireForUpdate<HarvesteeResourceDropInfoMap>();
 
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var maxHpMap = SystemAPI.GetSingleton<HarvesteeMaxHpMap>().Value;
-            var currentHpMap = SystemAPI.GetSingleton<HarvesteeCurrentHpMap>();
-            var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourcceDropInfoMap>().Value;
+            var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourceDropInfoMap>().Value;
 
-            foreach (var (dropThresholdRef, primaryPrefabEntityHolderRef, harvesteeEntity) in
+            foreach (var (dropThresholdRef, maxHpRef, primaryPrefabEntityHolderRef) in
                 SystemAPI.Query<
                     RefRW<DropResourceHpThreshold>
+                    , RefRO<MaxHp>
                     , RefRO<PrimaryPrefabEntityHolder>>()
-                    .WithAll<NewlySpawnedTag>()
-                    .WithEntityAccess())
+                    .WithAll<NewlySpawnedTag>())
             {
-                uint maxHp = maxHpMap[primaryPrefabEntityHolderRef.ValueRO];
                 var resourceDropInfo = resourceDropInfoMap[primaryPrefabEntityHolderRef.ValueRO];
-
                 uint hpAmountPerDrop = resourceDropInfo.HpAmountPerDrop;
-
-                this.InitCurrentHp(
-                    in currentHpMap
-                    , in harvesteeEntity
-                    , maxHp);
 
                 this.InitHpThreshold(
                     ref dropThresholdRef.ValueRW
-                    , maxHp
+                    , (uint)maxHpRef.ValueRO.Value
                     , hpAmountPerDrop);
 
             }
-
-        }
-
-        [BurstCompile]
-        private void InitCurrentHp(
-            in HarvesteeCurrentHpMap currentHpMap
-            , in Entity harvesteeEntity
-            , uint maxHp)
-        {
-            currentHpMap.Value.Add(harvesteeEntity, maxHp);
 
         }
 

@@ -1,6 +1,6 @@
+using Components.GameEntity.Damage;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
-using Components.Harvest.HarvesteeHp;
 using Components.Misc;
 using Components.Tool;
 using Components.Tool.Misc;
@@ -8,10 +8,10 @@ using Components.Unit;
 using Core.GameEntity;
 using Core.Harvest;
 using Core.Tool;
-using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
+using Utilities.Extensions.GameEntity.Damage;
 
 namespace Systems.Simulation.Harvest
 {
@@ -48,7 +48,6 @@ namespace Systems.Simulation.Harvest
                 workTimeCounterSecondRef.ValueRW.Value = 0;
             }
 
-            var currentHpMap = SystemAPI.GetSingleton<HarvesteeCurrentHpMap>();
             var dmgBonusMap = SystemAPI.GetSingleton<Tool2HarvesteeDmgBonusMap>();
 
             foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, toolProfileIdHolderRef, harvesteeTypeRef, entity) in
@@ -69,13 +68,15 @@ namespace Systems.Simulation.Harvest
                 bool noHarvestTargetFound = harvestEntity == Entity.Null;
                 if (noHarvestTargetFound) continue;
 
+                bool isHarvesteeAlive = SystemAPI.IsComponentEnabled<IsAliveTag>(harvestEntity);
+                if (!isHarvesteeAlive) continue;
+
                 workTimeCounterSecondRef.ValueRW.Value += baseWorkSpeedRef.ValueRO.Value * SystemAPI.Time.DeltaTime;
                 if (workTimeCounterSecondRef.ValueRO.Value < 1f) continue;
                 workTimeCounterSecondRef.ValueRW.Value = 0;
 
                 this.DealDmgToHarvestee(
                     ref state
-                    , ref currentHpMap
                     , in dmgBonusMap
                     , toolProfileIdHolderRef.ValueRO.Value.ToolType
                     , harvesteeTypeRef.ValueRO.Value
@@ -91,27 +92,18 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         private void DealDmgToHarvestee(
             ref SystemState state
-            , ref HarvesteeCurrentHpMap currentHpMap
             , in Tool2HarvesteeDmgBonusMap dmgBonusMap
             , ToolType toolType
             , HarvesteeType harvesteeType
             , in Entity harvesteeEntity
             , uint baseDmgValue)
         {
+            var hpChangeRecords = SystemAPI.GetBuffer<HpChangeRecordElement>(harvesteeEntity);
+
             float bonusValue = this.GetDmgBonusValue(in dmgBonusMap, toolType, harvesteeType);
-            uint finalDmg = (uint) math.round(baseDmgValue * bonusValue); // this is round down.
+            int finalDmg = (int) math.round(baseDmgValue * bonusValue); // this is round down.
 
-            if (!currentHpMap.Value.TryGetValue(harvesteeEntity, out var currentHp))
-                throw new KeyNotFoundException($"{nameof(HarvesteeCurrentHpMap)} does not contain key: {harvesteeEntity}");
-
-            bool harvesteeIsDead = currentHp == 0;
-            if (harvesteeIsDead) return;
-
-            currentHpMap.Value[harvesteeEntity] = currentHp <= finalDmg ? 0 : currentHp - finalDmg;
-
-            SystemAPI.SetComponentEnabled<HarvesteeHpChangedTag>(harvesteeEntity, true);
-
-            UnityEngine.Debug.Log($"CurrHp = {currentHpMap.Value[harvesteeEntity]}");
+            hpChangeRecords.AddDeductRecord(finalDmg);
 
         }
 
@@ -121,20 +113,13 @@ namespace Systems.Simulation.Harvest
             , ToolType toolType
             , HarvesteeType harvesteeType)
         {
-
             var bonusId = new ToolHarvesteePairId
             {
                 ToolType = toolType,
                 HarvesteeType = harvesteeType,
             };
 
-            if (!dmgBonusMap.Value.TryGetValue(bonusId, out float bonusValue))
-            {
-                UnityEngine.Debug.LogError($"DmgBonusMap does not contain {bonusId}");
-                return 0;
-            }
-
-            return bonusValue;
+            return dmgBonusMap.Value[bonusId];
         }
 
     }

@@ -8,12 +8,13 @@ using Unity.Transforms;
 using Core.Utilities.Extensions;
 using Components.GameEntity;
 using Components.Harvest.HarvesteeHp;
-using System.Collections.Generic;
+using Systems.Initialization.GameEntity.Damage;
+using Components.GameEntity.Damage;
 
-namespace Systems.Simulation.Harvest
+namespace Systems.Initialization.Harvest
 {
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateAfter(typeof(HarvestSystem))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateAfter(typeof(HpChangeHandleSystem))]
     [BurstCompile]
     public partial struct ResourceDropSystem : ISystem
     {
@@ -24,8 +25,11 @@ namespace Systems.Simulation.Harvest
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    DropResourceHpThreshold
-                    , HarvesteeHpChangedTag>()
+                    CurrentHp
+                    , DropResourceHpThreshold
+                    , LocalTransform
+                    , PrimaryPrefabEntityHolder>()
+                .WithAll<IsAliveTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -36,21 +40,21 @@ namespace Systems.Simulation.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var currentHpMap = SystemAPI.GetSingleton<HarvesteeCurrentHpMap>();
             var itemSpawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
-            var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourcceDropInfoMap>().Value;
+            var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourceDropInfoMap>().Value;
 
-            foreach (var (dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef, harvesteeEntity) in
+            // TODO: Fix missing last drop due to the IsAliveTag
+            foreach (var (currentHpRef, dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef) in
                 SystemAPI.Query<
-                    RefRW<DropResourceHpThreshold>
+                    RefRO<CurrentHp>
+                    , RefRW<DropResourceHpThreshold>
                     , RefRO<LocalTransform>
                     , RefRO<PrimaryPrefabEntityHolder>>()
-                    .WithAll<HarvesteeHpChangedTag>()
-                    .WithEntityAccess())
+                    .WithAll<IsAliveTag>())
             {
                 var resourceDropInfo = resourceDropInfoMap[primaryPrefabEntityHolderRef.ValueRO];
 
-                uint currentHp = this.GetCurrentHp(in currentHpMap, in harvesteeEntity);
+                uint currentHp = (uint)currentHpRef.ValueRO.Value;
 
                 uint hpThreshold = dropResourceHpThresholdRef.ValueRO.Value;
                 uint deductAmount = resourceDropInfo.HpAmountPerDrop;
@@ -63,7 +67,6 @@ namespace Systems.Simulation.Harvest
                         , transformRef.ValueRO.Position
                         , resourceDropInfo.ResourceType
                         , quantityPerDrop);
-
 
                     if (hpThreshold < deductAmount)
                     {
@@ -79,15 +82,6 @@ namespace Systems.Simulation.Harvest
 
             }
 
-        }
-
-        [BurstCompile]
-        private uint GetCurrentHp(in HarvesteeCurrentHpMap currentHpMap, in Entity harvesteeEntity)
-        {
-            if (!currentHpMap.Value.TryGetValue(harvesteeEntity, out var currentHp))
-                throw new KeyNotFoundException($"{nameof(HarvesteeCurrentHpMap)} does not contain key: {harvesteeEntity}");
-
-            return currentHp;
         }
 
         [BurstCompile]

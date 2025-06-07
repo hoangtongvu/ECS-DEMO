@@ -4,7 +4,7 @@ using Unity.Entities;
 
 namespace Components.Harvest
 {
-    public struct HarvesteeResourcceDropInfoMap : IComponentData
+    public struct HarvesteeResourceDropInfoMap : IComponentData
     {
         public NativeHashMap<Entity, ResourceDropInfo> Value;
     }
