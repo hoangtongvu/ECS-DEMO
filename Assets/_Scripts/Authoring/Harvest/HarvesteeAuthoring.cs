@@ -4,6 +4,7 @@ using Components.GameEntity.Interaction;
 using Components.Harvest;
 using Components.Harvest.HarvesteeHp;
 using Components.Misc.Presenter;
+using TweenLib.ShakeTween.Data;
 using Unity.Entities;
 using UnityEngine;
 
@@ -35,6 +36,7 @@ namespace Authoring.Harvest
                 AddComponent<IsAliveTag>(entity);
 
                 AddComponent<DropResourceHpThreshold>(entity);
+                AddComponent(entity, ShakeDataIdHolder.Invalid);
 
             }
 
