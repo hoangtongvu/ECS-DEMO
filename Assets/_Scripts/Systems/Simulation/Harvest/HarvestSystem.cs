@@ -65,8 +65,11 @@ namespace Systems.Simulation.Harvest
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Harvest) continue;
 
                 var harvestEntity = interactingEntityRef.ValueRO.Value;
-                bool noHarvestTargetFound = harvestEntity == Entity.Null;
-                if (noHarvestTargetFound) continue;
+                bool targetIsValid = SystemAPI.Exists(harvestEntity);
+                if (!targetIsValid) continue;
+
+                // TODO: This is just a temp fix because harvestEntity has Child Buffer (ICleanupBuffer) -> harvestEntity destruction will be delayed.
+                if (!SystemAPI.HasComponent<IsAliveTag>(harvestEntity)) continue;
 
                 bool isHarvesteeAlive = SystemAPI.IsComponentEnabled<IsAliveTag>(harvestEntity);
                 if (!isHarvesteeAlive) continue;
