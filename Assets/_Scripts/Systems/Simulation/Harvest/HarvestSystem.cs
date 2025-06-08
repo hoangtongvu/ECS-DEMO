@@ -116,13 +116,18 @@ namespace Systems.Simulation.Harvest
             , ToolType toolType
             , HarvesteeType harvesteeType)
         {
+            const float defaultDmgScale = 0.7f;
+
             var bonusId = new ToolHarvesteePairId
             {
                 ToolType = toolType,
                 HarvesteeType = harvesteeType,
             };
 
-            return dmgBonusMap.Value[bonusId];
+            if (!dmgBonusMap.Value.TryGetValue(bonusId, out float dmgBonus))
+                dmgBonus = defaultDmgScale;
+
+            return dmgBonus;
         }
 
     }

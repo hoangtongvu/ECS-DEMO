@@ -11,12 +11,12 @@ using Unity.Transforms;
 
 namespace Systems.Simulation.Unit.Misc
 {
-    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class InteractionRepeatSystemGroup : ComponentSystemGroup
     {
         public InteractionRepeatSystemGroup()
         {
-            this.RateManager = new RateUtils.VariableRateManager(1000);
+            this.RateManager = new RateUtils.VariableRateManager(500);
         }
 
     }
