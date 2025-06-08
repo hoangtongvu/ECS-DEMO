@@ -1,5 +1,4 @@
-﻿using Components.GameEntity.Damage;
-using Components.GameEntity.EntitySpawning;
+﻿using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
 using Components.Harvest;
 using Components.Harvest.HarvesteeHp;
@@ -23,17 +22,6 @@ namespace Authoring.Harvest
                 AddComponent<InteractableEntityTag>(entity);
 
                 AddComponent<HarvesteeTag>(entity);
-
-                AddComponent(entity, new CurrentHp
-                {
-                    Value = 100,
-                });
-                AddComponent(entity, new MaxHp
-                {
-                    Value = 100,
-                });
-                AddBuffer<HpChangeRecordElement>(entity);
-                AddComponent<IsAliveTag>(entity);
 
                 AddComponent<DropResourceHpThreshold>(entity);
                 AddComponent(entity, ShakeDataIdHolder.Invalid);

@@ -26,6 +26,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 200
         PlayerBuildingIds:
           _serializedList:
           - Key:

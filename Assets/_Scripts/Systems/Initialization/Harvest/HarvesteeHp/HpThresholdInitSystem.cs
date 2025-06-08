@@ -18,7 +18,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     DropResourceHpThreshold
-                    , MaxHp
+                    , HpDataHolder
                     , PrimaryPrefabEntityHolder
                     , NewlySpawnedTag>()
                 .Build();
@@ -33,10 +33,10 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
         {
             var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourceDropInfoMap>().Value;
 
-            foreach (var (dropThresholdRef, maxHpRef, primaryPrefabEntityHolderRef) in
+            foreach (var (dropThresholdRef, hpDataHolder, primaryPrefabEntityHolderRef) in
                 SystemAPI.Query<
                     RefRW<DropResourceHpThreshold>
-                    , RefRO<MaxHp>
+                    , HpDataHolder
                     , RefRO<PrimaryPrefabEntityHolder>>()
                     .WithAll<NewlySpawnedTag>())
             {
@@ -45,7 +45,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
 
                 this.InitHpThreshold(
                     ref dropThresholdRef.ValueRW
-                    , (uint)maxHpRef.ValueRO.Value
+                    , (uint)hpDataHolder.Value.MaxHp
                     , hpAmountPerDrop);
 
             }

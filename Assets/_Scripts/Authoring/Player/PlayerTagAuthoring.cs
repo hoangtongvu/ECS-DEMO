@@ -32,17 +32,6 @@ namespace Authoring.Player
                     Value = ArmedState.True,
                 });
 
-                AddComponent(entity, new CurrentHp
-                {
-                    Value = 100,
-                });
-                AddComponent(entity, new MaxHp
-                {
-                    Value = 100,
-                });
-                AddBuffer<HpChangeRecordElement>(entity);
-                AddComponent<IsAliveTag>(entity);
-
                 AddComponent(entity, new FactionIndex { Value = 1 });
 
                 AddComponent(entity, new DmgValue

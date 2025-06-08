@@ -1,5 +1,4 @@
 ﻿using Components.GameEntity;
-using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
@@ -26,10 +25,6 @@ namespace Authoring.Unit
 {
     public class JoblessUnitAuthoring : MonoBehaviour
     {
-        [SerializeField] private int maxHp = 100; //Can put this into Unit profile SO;
-        [SerializeField] private int currentHp = 100; //Can put this into Unit profile SO;
-        [SerializeField] private float speed = 5f; //Can put this into Unit profile SO;
-
         private class Baker : Baker<JoblessUnitAuthoring>
         {
             public override void Bake(JoblessUnitAuthoring authoring)
@@ -53,21 +48,10 @@ namespace Authoring.Unit
                 AddComponent<UnitSelectedTag>(entity);
                 SetComponentEnabled<UnitSelectedTag>(entity, false);
 
-                AddComponent(entity, new CurrentHp
-                {
-                    Value = authoring.currentHp,
-                });
-                AddComponent(entity, new MaxHp
-                {
-                    Value = authoring.maxHp,
-                });
-                AddBuffer<HpChangeRecordElement>(entity);
-                AddComponent<IsAliveTag>(entity);
-
                 AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
                 {
-                    Value = authoring.speed,
+                    Value = 0f,
                 });
                 AddComponent<MoveableEntityTag>(entity);
                 AddComponent<CanMoveEntityTag>(entity);

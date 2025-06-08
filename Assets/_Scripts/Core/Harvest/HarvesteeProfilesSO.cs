@@ -9,7 +9,6 @@ namespace Core.Harvest
     {
         [Header("Harvestee ProfileElement")]
         public HarvesteeType HarvesteeType;
-        public uint MaxHp;
         public ResourceDropInfo ResourceDropInfo;
         public List<GameObject> PresenterVariances;
     }
