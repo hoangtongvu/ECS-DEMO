@@ -62,6 +62,11 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             while (messageQueue.Value.TryDequeue(out var message))
             {
                 var profiles = SystemAPI.GetBuffer<EntitySpawningProfileElement>(message.SpawnerEntity);
+                var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(message.SpawnerEntity);
+                int spawnedEntityCountLimit = SystemAPI.GetComponent<SpawnedEntityCountLimit>(message.SpawnerEntity).Value;
+
+                bool canIncSpawnCount = spawnedEntityCounterRef.ValueRO.Value < spawnedEntityCountLimit;
+                if (!canIncSpawnCount) continue;
 
                 ref var profile = ref profiles.ElementAt(message.SpawningProfileElementIndex);
 
@@ -75,6 +80,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                 if (!canSpendResources) continue;
 
                 profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
+                spawnedEntityCounterRef.ValueRW.Value++;
 
             }
 

@@ -39,7 +39,6 @@ namespace Authoring.GameEntity.EntitySpawning
                     {
                         PrefabToSpawn = GetEntity(prefab.Value, TransformUsageFlags.Dynamic),
                         CanSpawnState = false,
-                        CanIncSpawnCount = true,
                         SpawnCount = new()
                         {
                             Value = 0,

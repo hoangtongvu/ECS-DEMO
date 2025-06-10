@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct DurationCountSystem : ISystem
     {
@@ -39,14 +39,13 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         [BurstCompile]
         private partial struct CountUpJob : IJobEntity
         {
-            public float DeltaTime;
+            [ReadOnly] public float DeltaTime;
             [ReadOnly] public EntityToContainerIndexMap EntityToContainerIndexMap;
             [ReadOnly] public EntitySpawningDurationsContainer DurationsContainer;
 
             [BurstCompile]
             void Execute(
-                ref DynamicBuffer<EntitySpawningProfileElement> profileElements
-                , in Entity entity)
+                ref DynamicBuffer<EntitySpawningProfileElement> profileElements)
             {
                 for (int i = 0; i < profileElements.Length; i++)
                 {
