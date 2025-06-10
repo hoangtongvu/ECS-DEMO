@@ -53,6 +53,16 @@
       },
       "hash": "22d66883c9c56da601eb2b0f36aad81fcf8fd483"
     },
+    "com.darksun.unity-file-debug-logger": {
+      "version": "https://github.com/hoangtongvu/UnityFileDebugLogger.git?path=/Assets/Scripts/com.darksun.unity-file-debug-logger",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.collections": "2.4.0",
+        "com.unity.burst": "1.8.12"
+      },
+      "hash": "ec7985cb5ae4dfd9b14b3b95505a9fd9fbc8e916"
+    },
     "com.github-joc0de.visual-studio-solution-generator": {
       "version": "1.0.13",
       "depth": 0,

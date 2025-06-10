@@ -9,7 +9,6 @@ namespace Core.Misc.WorldMap.WorldBuilding
     public class GameBuildingProfileElement : GameEntityProfileElement
     {
         [Header("GameBuilding ProfileElement")]
-        public uint MaxHp;
 
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;

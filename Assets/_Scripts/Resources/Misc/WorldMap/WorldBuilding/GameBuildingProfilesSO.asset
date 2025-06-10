@@ -27,7 +27,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 2
           ObjectHeight: 2
-        MaxHp: 200
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 50
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -47,7 +49,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 5
           ObjectHeight: 2
-        MaxHp: 200
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 75
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -67,7 +71,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 2
           ObjectHeight: 2
-        MaxHp: 300
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 75
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -87,7 +93,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
-        MaxHp: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         BaseSpawningCosts:
           _serializedList:
           - Key: 1
@@ -105,7 +113,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
-        MaxHp: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         BaseSpawningCosts:
           _serializedList:
           - Key: 3

@@ -1,3 +1,4 @@
+using Core.GameEntity.Damage;
 using UnityEngine;
 
 namespace Core.GameEntity
@@ -16,6 +17,9 @@ namespace Core.GameEntity
 
         public GameEntitySize GameEntitySize;
 
-    }
+        [Header("Hp components")]
+        public bool HasHpComponents;
+        public HpData HpData = new();
 
+    }
 }

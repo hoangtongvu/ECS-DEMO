@@ -29,6 +29,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 100
         UnitType: 1
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
@@ -61,6 +64,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 170
         UnitType: 2
         SpawnDurationSeconds: 3
         UnitReactionConfigs:
@@ -94,6 +100,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 100
         UnitType: 3
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
@@ -125,6 +134,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 100
         UnitType: 4
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
@@ -154,6 +166,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 120
         UnitType: 5
         SpawnDurationSeconds: 5
         UnitReactionConfigs:

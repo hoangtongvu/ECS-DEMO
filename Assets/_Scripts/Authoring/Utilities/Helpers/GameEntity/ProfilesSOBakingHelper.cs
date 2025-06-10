@@ -25,6 +25,8 @@ namespace Authoring.Utilities.Helpers.GameEntity
                         ? baker.GetEntity(profile.Value.PresenterPrefab, TransformUsageFlags.None)
                         : Entity.Null,
                     GameEntitySize = profile.Value.GameEntitySize,
+                    HasHpComponents = profile.Value.HasHpComponents,
+                    HpData = profile.Value.HpData,
                 });
 
             }

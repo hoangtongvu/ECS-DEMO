@@ -14,7 +14,7 @@ namespace Systems.Initialization.GameEntity.Damage
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     CurrentHp
-                    , MaxHp
+                    , HpDataHolder
                     , HpChangeRecordElement
                     , IsAliveTag>()
                 .Build();
@@ -35,7 +35,7 @@ namespace Systems.Initialization.GameEntity.Damage
         {
             void Execute(
                 ref CurrentHp currentHp
-                , in MaxHp maxHp
+                , in HpDataHolder hpDataHolder
                 , ref DynamicBuffer<HpChangeRecordElement> hpChangeRecords)
             {
                 int length = hpChangeRecords.Length;
@@ -48,8 +48,8 @@ namespace Systems.Initialization.GameEntity.Damage
                     int rawCurrentHp = currentHp.Value;
                     rawCurrentHp += hpChangeRecord.Value;
 
-                    if (rawCurrentHp > maxHp.Value)
-                        currentHp.Value = maxHp.Value;
+                    if (rawCurrentHp > hpDataHolder.Value.MaxHp)
+                        currentHp.Value = hpDataHolder.Value.MaxHp;
                     else if (rawCurrentHp <= 0)
                     {
                         currentHp.Value = 0;

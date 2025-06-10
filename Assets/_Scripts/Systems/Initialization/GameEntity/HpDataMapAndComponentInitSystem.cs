@@ -1,4 +1,5 @@
 using Components.GameEntity;
+using Components.GameEntity.Damage;
 using Core.GameEntity;
 using Unity.Collections;
 using Unity.Entities;
@@ -8,7 +9,7 @@ using Utilities;
 namespace Systems.Initialization.GameEntity
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial class GameEntitySizeMapInitSystem : SystemBase
+    public partial class HpDataMapAndComponentInitSystem : SystemBase
     {
         private EntityQuery query;
 
@@ -16,7 +17,7 @@ namespace Systems.Initialization.GameEntity
         {
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    BakedGameEntityProfileElement >()
+                    BakedGameEntityProfileElement>()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -28,10 +29,12 @@ namespace Systems.Initialization.GameEntity
             this.Enabled = false;
             var su = SingletonUtilities.GetInstance(this.EntityManager);
 
-            var gameEntitySizeMap = new GameEntitySizeMap
+            var map = new HpDataMap
             {
                 Value = new(20, Allocator.Persistent),
             };
+
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             var fileDebugLogger = FileDebugLogger.CreateLogger128Bytes(10, Allocator.Temp);
 
@@ -45,27 +48,42 @@ namespace Systems.Initialization.GameEntity
                 for (int i = 0; i < count; i++)
                 {
                     var bakedProfile = bakedProfiles[i];
-                    var keyEntity = bakedProfile.PrimaryEntity;
-                    if (keyEntity == Entity.Null) continue;
+                    var primaryEntity = bakedProfile.PrimaryEntity;
+                    if (primaryEntity == Entity.Null) continue;
 
-                    if (!gameEntitySizeMap.Value.TryAdd(keyEntity, bakedProfile.GameEntitySize))
+                    if (!bakedProfile.HasHpComponents) continue;
+
+                    if (!map.Value.TryAdd(primaryEntity, bakedProfile.HpData))
                     {
                         UnityEngine.Debug.LogWarning(
-                            $"{nameof(GameEntitySizeMap)} already contains key: [{this.EntityManager.GetName(keyEntity)} - {keyEntity}]" +
+                            $"{nameof(HpDataMap)} already contains key: [{this.EntityManager.GetName(primaryEntity)} - {primaryEntity}]" +
                             $", which mean more than 2 {nameof(GameEntityProfileElement)} use the same GO as PrimaryEntityPrefab.\n" +
                             $"<b>The Data with duplicated key lay in [{this.EntityManager.GetName(bakerEntity)} - {bakerEntity}] and they will be discarded.</b>");
 
                     }
 
-                    fileDebugLogger.Log($"Added [{this.EntityManager.GetName(keyEntity)} - {keyEntity}] - [{bakedProfile.GameEntitySize}]");
+                    ecb.AddComponent(primaryEntity, new CurrentHp
+                    {
+                        Value = bakedProfile.HpData.MaxHp,
+                    });
+
+                    ecb.AddSharedComponent(primaryEntity, new HpDataHolder
+                    {
+                        Value = bakedProfile.HpData,
+                    });
+
+                    ecb.AddBuffer<HpChangeRecordElement>(primaryEntity);
+                    ecb.AddComponent<IsAliveTag>(primaryEntity);
+
+                    fileDebugLogger.Log($"Added [{this.EntityManager.GetName(primaryEntity)} - {primaryEntity}] - [{bakedProfile.HpData}]");
 
                 }
 
             }
 
-            su.AddOrSetComponentData(gameEntitySizeMap);
-            fileDebugLogger.Save("GameEntitySizeMapInitSystemLogs.csv");
-
+            su.AddOrSetComponentData(map);
+            ecb.Playback(this.EntityManager);
+            fileDebugLogger.Save("HpDataMapAndComponentInitSystemLogs.csv");
         }
 
     }

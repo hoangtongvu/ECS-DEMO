@@ -28,8 +28,10 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 100
         HarvesteeType: 1
-        MaxHp: 100
         ResourceDropInfo:
           ResourceType: 1
           QuantityPerDrop: 5
@@ -54,8 +56,10 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 1
           ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 150
         HarvesteeType: 2
-        MaxHp: 100
         ResourceDropInfo:
           ResourceType: 3
           QuantityPerDrop: 5

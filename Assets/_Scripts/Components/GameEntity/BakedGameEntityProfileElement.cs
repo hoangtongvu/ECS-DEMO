@@ -1,4 +1,5 @@
 using Core.GameEntity;
+using Core.GameEntity.Damage;
 using Unity.Entities;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ namespace Components.GameEntity
         public Entity PrimaryEntity;
 
         public GameEntitySize GameEntitySize;
+
+        public bool HasHpComponents;
+        public HpData HpData;
 
     }
 
