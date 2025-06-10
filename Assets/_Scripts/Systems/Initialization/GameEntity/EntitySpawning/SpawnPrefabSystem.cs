@@ -46,12 +46,6 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
 
                     toSpawnPrefabs.Add(profile.PrefabToSpawn);
                     spawnerEntities.Add(spawnerEntity);
-
-                    if (SystemAPI.HasComponent<SpawnedEntityCounter>(spawnerEntity))
-                    {
-                        var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(spawnerEntity);
-                        spawnedEntityCounterRef.ValueRW.Value++;
-                    }
                     
                 }
 
