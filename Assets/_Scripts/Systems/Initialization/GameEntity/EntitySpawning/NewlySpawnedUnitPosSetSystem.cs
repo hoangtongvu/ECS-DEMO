@@ -25,7 +25,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 .WithAll<
                     NewlySpawnedTag
                     , LocalTransform
-                    , SpawnerPos>()
+                    , SpawnerEntityRef>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
@@ -34,13 +34,16 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (spawnerPos, transformRef) in
+            foreach (var (spawnerEntityHolderRef, transformRef) in
                 SystemAPI.Query<
-                    RefRO<SpawnerPos>
+                    RefRO<SpawnerEntityRef>
                     , RefRW<LocalTransform>>()
                     .WithAll<NewlySpawnedTag>())
             {
-                transformRef.ValueRW.Position = this.GetRandomPositionInRadius(3, spawnerPos.ValueRO.Value);
+                var spawnerEntity = spawnerEntityHolderRef.ValueRO.Value;
+                var spawnerTransform = SystemAPI.GetComponent<LocalTransform>(spawnerEntity);
+
+                transformRef.ValueRW.Position = this.GetRandomPositionInRadius(3, spawnerTransform.Position);
             }
 
         }
