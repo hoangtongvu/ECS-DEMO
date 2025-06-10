@@ -3,6 +3,7 @@ using Components.GameEntity.Damage;
 using Core.GameEntity;
 using Unity.Collections;
 using Unity.Entities;
+using UnityFileDebugLogger;
 using Utilities;
 
 namespace Systems.Initialization.GameEntity
@@ -34,6 +35,8 @@ namespace Systems.Initialization.GameEntity
             };
 
             var ecb = new EntityCommandBuffer(Allocator.Temp);
+
+            var fileDebugLogger = FileDebugLogger.CreateLogger128Bytes(10, Allocator.Temp);
 
             foreach (var (bakedProfiles, bakerEntity) in
                 SystemAPI.Query<
@@ -72,14 +75,15 @@ namespace Systems.Initialization.GameEntity
                     ecb.AddBuffer<HpChangeRecordElement>(primaryEntity);
                     ecb.AddComponent<IsAliveTag>(primaryEntity);
 
+                    fileDebugLogger.Log($"Added [{this.EntityManager.GetName(primaryEntity)} - {primaryEntity}] - [{bakedProfile.HpData}]");
+
                 }
 
             }
 
             su.AddOrSetComponentData(map);
-
             ecb.Playback(this.EntityManager);
-
+            fileDebugLogger.Save("HpDataMapAndComponentInitSystemLogs.csv");
         }
 
     }

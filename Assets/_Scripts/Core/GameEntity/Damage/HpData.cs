@@ -34,5 +34,8 @@ namespace Core.GameEntity.Damage
             
         public override readonly int GetHashCode() => this.raw.GetHashCode();
 
+        public override string ToString() => $"{nameof(MaxHp)}: {MaxHp}";
+
     }
+
 }

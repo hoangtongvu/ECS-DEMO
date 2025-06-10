@@ -2,6 +2,7 @@ using Components.GameEntity;
 using Core.GameEntity;
 using Unity.Collections;
 using Unity.Entities;
+using UnityFileDebugLogger;
 using Utilities;
 
 namespace Systems.Initialization.GameEntity
@@ -32,6 +33,8 @@ namespace Systems.Initialization.GameEntity
                 Value = new(20, Allocator.Persistent),
             };
 
+            var fileDebugLogger = FileDebugLogger.CreateLogger128Bytes(10, Allocator.Temp);
+
             foreach (var (bakedProfiles, bakerEntity) in
                 SystemAPI.Query<
                     DynamicBuffer<BakedGameEntityProfileElement>>()
@@ -54,11 +57,14 @@ namespace Systems.Initialization.GameEntity
 
                     }
 
+                    fileDebugLogger.Log($"Added [{this.EntityManager.GetName(keyEntity)} - {keyEntity}] - [{bakedProfile.GameEntitySize}]");
+
                 }
 
             }
 
             su.AddOrSetComponentData(gameEntitySizeMap);
+            fileDebugLogger.Save("GameEntitySizeMapInitSystemLogs.csv");
 
         }
 

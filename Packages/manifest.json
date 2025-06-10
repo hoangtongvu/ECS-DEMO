@@ -6,6 +6,7 @@
     "com.darksun.core.testing": "https://github.com/hoangtongvu/com.darksun.core.testing.git",
     "com.darksun.enum-length-generator": "https://github.com/hoangtongvu/com.darksun.enum-length-generator.git?path=/Assets",
     "com.darksun.tweenlib": "https://github.com/hoangtongvu/com.darksun.tweenlib.git?path=/Assets/Scripts/com.darksun.tweenlib",
+    "com.darksun.unity-file-debug-logger": "https://github.com/hoangtongvu/UnityFileDebugLogger.git?path=/Assets/Scripts/com.darksun.unity-file-debug-logger",
     "com.github-joc0de.visual-studio-solution-generator": "1.0.13",
     "com.mackysoft.serializereference-extensions": "1.4.0",
     "com.unity.2d.sprite": "1.0.0",
