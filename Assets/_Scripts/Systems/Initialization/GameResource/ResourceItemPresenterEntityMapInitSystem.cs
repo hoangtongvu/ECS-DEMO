@@ -49,7 +49,6 @@ namespace Systems.Initialization.GameResource
             }
 
             su.AddOrSetComponentData(resourceItemPresenterEntityPrefabMap);
-            bakedProfileElementArray.Dispose();
 
         }
 

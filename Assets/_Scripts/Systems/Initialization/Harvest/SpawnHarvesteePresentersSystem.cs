@@ -79,9 +79,6 @@ namespace Systems.Initialization.Harvest
             }
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
-            primaryEntityArray.Dispose();
-            presenterPrefabIndexArray.Dispose();
 
         }
 
@@ -118,7 +115,6 @@ namespace Systems.Initialization.Harvest
                     linkedEntityGroup.Add(presenterLinkedSystemGroupArray[j]);
                 }
 
-                presenterLinkedSystemGroupArray.Dispose();
             }
 
         }

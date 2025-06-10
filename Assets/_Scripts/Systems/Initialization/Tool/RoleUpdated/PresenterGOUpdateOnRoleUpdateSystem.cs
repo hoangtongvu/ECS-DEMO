@@ -69,7 +69,6 @@ namespace Systems.Initialization.Tool.RoleUpdated
             }
 
             ecb.Playback(this.EntityManager);
-            ecb.Dispose();
 
         }
 

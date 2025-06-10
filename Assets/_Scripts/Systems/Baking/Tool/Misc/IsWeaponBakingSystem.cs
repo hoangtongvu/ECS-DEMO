@@ -44,8 +44,6 @@ namespace Systems.Baking.Tool.Misc
                 this.EntityManager.AddComponent<IsWeaponTag>(targetEntity);
             }
 
-            bakedProfileElementArray.Dispose();
-
         }
 
     }

@@ -80,13 +80,9 @@ namespace Systems.Initialization.Misc.WorldMap
                     Amount = totalExits,
                 };
 
-                borderCellPositions.Dispose();
-
                 highestExitCountRef.ValueRW.Value = math.max(totalExits, highestExitCountRef.ValueRO.Value);
 
             }
-
-            chunkExitHashMap.Dispose();
 
         }
 
@@ -180,8 +176,6 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in cellPos
                 , cellChunkIndex
                 , ref singleCellExitAmount);
-
-            straightNeighborPassableStates.Dispose();
 
         }
 

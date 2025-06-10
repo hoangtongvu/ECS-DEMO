@@ -52,8 +52,6 @@ namespace Systems.Initialization.Unit.Misc
 
             su.AddOrSetComponentData(map);
 
-            bakedProfileElementArray.Dispose();
-
         }
 
     }

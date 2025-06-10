@@ -32,8 +32,6 @@ namespace Systems.Initialization.Tool.InitArmedStateComponents
             var entities = this.entityQuery.ToEntityArray(Allocator.Temp);
             state.EntityManager.RemoveComponent<NeedInitArmedStateComponentsTag>(entities);
 
-            entities.Dispose();
-
         }
 
     }

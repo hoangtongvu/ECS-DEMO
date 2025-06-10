@@ -55,7 +55,6 @@ namespace Systems.Initialization.GameEntity
             }
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
 
         }
 
@@ -96,7 +95,6 @@ namespace Systems.Initialization.GameEntity
                     linkedEntityGroup.Add(presenterLinkedSystemGroupArray[j]);
                 }
 
-                presenterLinkedSystemGroupArray.Dispose();
             }
 
         }

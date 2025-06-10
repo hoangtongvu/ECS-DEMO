@@ -31,16 +31,11 @@ namespace Systems.Initialization.Harvest
         {
             var toDestroyEntities = this.entityQuery.ToEntityArray(Allocator.Temp);
 
-            if (toDestroyEntities.Length == 0)
-            {
-                toDestroyEntities.Dispose();
-                return;
-            }
+            if (toDestroyEntities.Length == 0) return;
 
             SystemAPI.GetSingletonRW<WorldMapChangedTag>().ValueRW.Value = true;
 
             state.EntityManager.DestroyEntity(toDestroyEntities);
-            toDestroyEntities.Dispose();
 
         }
 

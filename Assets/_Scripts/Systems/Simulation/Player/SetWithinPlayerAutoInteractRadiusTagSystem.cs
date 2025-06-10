@@ -70,8 +70,6 @@ namespace Systems.Simulation.Player
 
             }
 
-            hitList.Dispose();
-
         }
 
     }

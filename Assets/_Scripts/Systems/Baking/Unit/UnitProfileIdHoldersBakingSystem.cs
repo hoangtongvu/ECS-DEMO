@@ -46,8 +46,6 @@ namespace Systems.Baking.Unit
                 tempIndex++;
             }
 
-            bakedProfileElementArray.Dispose();
-
         }
 
     }

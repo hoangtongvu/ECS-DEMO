@@ -32,8 +32,6 @@ namespace Systems.Initialization.Tool.RoleUpdated
             var entities = this.entityQuery.ToEntityArray(Allocator.Temp);
             state.EntityManager.RemoveComponent<NeedRoleUpdatedTag>(entities);
 
-            entities.Dispose();
-
         }
 
     }

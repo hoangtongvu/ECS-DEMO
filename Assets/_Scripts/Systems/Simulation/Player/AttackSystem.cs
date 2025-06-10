@@ -104,8 +104,6 @@ namespace Systems.Simulation.Player
 
                 //UnityEngine.Debug.Log($"{entity} received {dmgValueRef.ValueRO.Value} Dmg.");
             }
-
-            hits.Dispose();
             
         }
 

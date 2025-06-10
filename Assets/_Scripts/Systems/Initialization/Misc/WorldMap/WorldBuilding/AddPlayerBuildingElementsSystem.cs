@@ -66,7 +66,6 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             }
 
             ecb.Playback(this.EntityManager);
-            ecb.Dispose();
 
         }
 

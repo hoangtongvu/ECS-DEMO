@@ -28,8 +28,6 @@ namespace Systems.Initialization.Misc.Presenter
             var entities = this.entityQuery.ToEntityArray(Allocator.Temp);
             state.EntityManager.RemoveComponent<NeedSpawnPresenterTag>(entities);
 
-            entities.Dispose();
-
         }
 
     }
