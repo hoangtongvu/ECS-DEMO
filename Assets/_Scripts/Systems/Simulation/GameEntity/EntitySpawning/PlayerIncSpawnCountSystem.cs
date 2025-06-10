@@ -14,7 +14,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 {
     [BurstCompile]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    public partial struct IncSpawnCountSystem : ISystem
+    public partial struct PlayerIncSpawnCountSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
