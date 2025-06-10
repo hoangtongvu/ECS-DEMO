@@ -4,17 +4,18 @@ using UnityEngine;
 
 namespace Authoring.GameEntity.EntitySpawning
 {
-    public class SpawnerPosAuthoring : MonoBehaviour
+    public class SpawnerAutoSpawnTagAuthoring : MonoBehaviour
     {
-
-        private class Baker : Baker<SpawnerPosAuthoring>
+        private class Baker : Baker<SpawnerAutoSpawnTagAuthoring>
         {
-            public override void Bake(SpawnerPosAuthoring authoring)
+            public override void Bake(SpawnerAutoSpawnTagAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
-
-                AddComponent<SpawnerPos>(entity);
+                AddComponent<SpawnerAutoSpawnTag>(entity);
             }
+
         }
+
     }
+
 }

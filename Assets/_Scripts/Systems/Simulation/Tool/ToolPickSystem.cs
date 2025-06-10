@@ -24,7 +24,7 @@ namespace Systems.Simulation.Tool
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    SpawnerEntityRef
+                    SpawnerEntityHolder
                     , CanBePickedTag
                     , ToolPickerEntity
                     , DerelictToolTag>()
@@ -33,7 +33,7 @@ namespace Systems.Simulation.Tool
             state.RequireForUpdate(query0);
 
             state.RequireForUpdate<UnitToolHolder>();
-            state.RequireForUpdate<ToolHoldCount>();
+            state.RequireForUpdate<SpawnedEntityCounter>();
 
         }
 
@@ -43,10 +43,10 @@ namespace Systems.Simulation.Tool
             var toolStatsMap = SystemAPI.GetSingleton<ToolStatsMap>();
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (transformRef, spawnerEntityRef, toolProfileIdHolder, canBePickedTagRef, toolPickerEntityRef, toolEntity) in
+            foreach (var (transformRef, spawnerEntityHolderRef, toolProfileIdHolder, canBePickedTagRef, toolPickerEntityRef, toolEntity) in
                 SystemAPI.Query<
                     RefRW<LocalTransform>
-                    , RefRW<SpawnerEntityRef>
+                    , RefRW<SpawnerEntityHolder>
                     , RefRO<ToolProfileIdHolder>
                     , EnabledRefRW<CanBePickedTag>
                     , RefRW<ToolPickerEntity>>()
@@ -63,7 +63,7 @@ namespace Systems.Simulation.Tool
 
                 this.HandleToolSpawner(
                     ref state
-                    , ref spawnerEntityRef.ValueRW);
+                    , ref spawnerEntityHolderRef.ValueRW);
 
                 this.HandleTool(
                     ref state
@@ -82,11 +82,11 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         private void HandleToolSpawner(
             ref SystemState state
-            , ref SpawnerEntityRef spawnerEntityRef)
+            , ref SpawnerEntityHolder spawnerEntityHolder)
         {
-            var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityRef.Value);
-            toolHoldCountRef.ValueRW.Value--;
-            spawnerEntityRef.Value = Entity.Null;
+            var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(spawnerEntityHolder.Value);
+            spawnedEntityCounterRef.ValueRW.Value--;
+            spawnerEntityHolder.Value = Entity.Null;
         }
 
         [BurstCompile]

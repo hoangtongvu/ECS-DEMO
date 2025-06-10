@@ -8,7 +8,6 @@ namespace Components.GameEntity.EntitySpawning
         public Entity PrefabToSpawn;
         public bool CanSpawnState;
 
-        public bool CanIncSpawnCount;
         public ChangedFlagValue<int> SpawnCount;
 
         public float DurationCounterSeconds;
