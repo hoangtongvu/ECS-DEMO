@@ -178,7 +178,7 @@ namespace Authoring.Unit
 
                 AddComponent<PresenterHandSlotsHolder>(entity);
 
-                AddComponent<SpawnerEntityRef>(entity);
+                AddComponent<SpawnerEntityHolder>(entity);
 
             }
 

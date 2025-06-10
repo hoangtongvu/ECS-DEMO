@@ -71,7 +71,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             {
                 Entities = spawnedEntities,
                 SpawnerEntities = spawnerEntities.ToArray(Allocator.TempJob),
-                SpawnerEntityHolderLookup = SystemAPI.GetComponentLookup<SpawnerEntityRef>(),
+                SpawnerEntityHolderLookup = SystemAPI.GetComponentLookup<SpawnerEntityHolder>(),
             }.ScheduleParallel(count, initialCap / 2, state.Dependency);
 
         }
@@ -86,7 +86,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             public NativeArray<Entity> SpawnerEntities;
 
             [NativeDisableParallelForRestriction]
-            public ComponentLookup<SpawnerEntityRef> SpawnerEntityHolderLookup;
+            public ComponentLookup<SpawnerEntityHolder> SpawnerEntityHolderLookup;
 
             [BurstCompile]
             public void Execute(int startIndex, int count)

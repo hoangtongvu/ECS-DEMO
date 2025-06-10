@@ -25,7 +25,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 .WithAll<
                     NewlySpawnedTag
                     , LocalTransform
-                    , SpawnerEntityRef>()
+                    , SpawnerEntityHolder>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
@@ -36,7 +36,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
         {
             foreach (var (spawnerEntityHolderRef, transformRef) in
                 SystemAPI.Query<
-                    RefRO<SpawnerEntityRef>
+                    RefRO<SpawnerEntityHolder>
                     , RefRW<LocalTransform>>()
                     .WithAll<NewlySpawnedTag>())
             {

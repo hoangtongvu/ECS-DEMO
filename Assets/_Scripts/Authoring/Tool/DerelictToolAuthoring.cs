@@ -16,7 +16,7 @@ namespace Authoring.Tool
 
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<DerelictToolTag>(entity);
-                AddComponent<SpawnerEntityRef>(entity);
+                AddComponent<SpawnerEntityHolder>(entity);
 
                 AddComponent<CanBePickedTag>(entity);
                 SetComponentEnabled<CanBePickedTag>(entity, false);
