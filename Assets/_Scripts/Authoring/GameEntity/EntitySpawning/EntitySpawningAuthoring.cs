@@ -22,6 +22,12 @@ namespace Authoring.GameEntity.EntitySpawning
                 AddComponent<WithinPlayerAutoInteractRadiusTag>(entity);
                 SetComponentEnabled<WithinPlayerAutoInteractRadiusTag>(entity, false);
 
+                AddComponent<SpawnedEntityCounter>(entity);
+                AddComponent(entity, new SpawnedEntityCountLimit
+                {
+                    Value = 3
+                });
+
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
                 if (authoring.SpawningPrefabs == null)

@@ -1,24 +1,22 @@
 using Unity.Entities;
 using Unity.Burst;
-using Unity.Transforms;
 using Utilities.Extensions;
 using Components.GameEntity.EntitySpawning;
+using Unity.Collections;
+using Unity.Jobs;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
-
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
     public partial struct SpawnPrefabSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             var spawnerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    EntitySpawningProfileElement
-                    , LocalTransform>()
+                    EntitySpawningProfileElement>()
                 .Build();
 
             state.RequireForUpdate(spawnerQuery);
@@ -27,13 +25,16 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (profiles, transformRef, selfEntity) in
+            const int initialCap = 30;
+
+            var toSpawnPrefabs = new NativeList<Entity>(initialCap, Allocator.Temp);
+            var spawnerEntities = new NativeList<Entity>(initialCap, Allocator.Temp);
+
+            foreach (var (profiles, spawnerEntity) in
                 SystemAPI.Query<
-                    DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<LocalTransform>>()
+                    DynamicBuffer<EntitySpawningProfileElement>>()
                     .WithEntityAccess())
             {
-                
                 for (int i = 0; i < profiles.Length; i++)
                 {
                     ref var profile = ref profiles.ElementAt(i);
@@ -43,27 +44,70 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 
                     profile.SpawnCount.ChangeValue(profile.SpawnCount.Value - 1);
 
-                    Entity entity = state.EntityManager.Instantiate(profile.PrefabToSpawn);
-                    
-                    if (SystemAPI.HasComponent<SpawnerPos>(entity))
-                    {
-                        var spawnerPosRef = SystemAPI.GetComponentRW<SpawnerPos>(entity);
-                        spawnerPosRef.ValueRW.Value = transformRef.ValueRO.Position;
-                    }
+                    toSpawnPrefabs.Add(profile.PrefabToSpawn);
+                    spawnerEntities.Add(spawnerEntity);
 
-                    
-                    if (SystemAPI.HasComponent<SpawnerEntityRef>(entity))
+                    if (SystemAPI.HasComponent<SpawnedEntityCounter>(spawnerEntity))
                     {
-                        var spawnerEntityRef = SystemAPI.GetComponentRW<SpawnerEntityRef>(entity);
-                        spawnerEntityRef.ValueRW.Value = selfEntity;
+                        var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(spawnerEntity);
+                        spawnedEntityCounterRef.ValueRW.Value++;
                     }
-
                     
                 }
 
             }
+
+            var em = state.EntityManager;
+            int count = toSpawnPrefabs.Length;
+
+            var spawnedEntities = new NativeArray<Entity>(count, Allocator.TempJob);
+
+            for (int i = 0; i < count; i++)
+            {
+                spawnedEntities[i] = em.Instantiate(toSpawnPrefabs[i]);
+            }
+
+            state.Dependency = new SetComponentsJob
+            {
+                Entities = spawnedEntities,
+                SpawnerEntities = spawnerEntities.ToArray(Allocator.TempJob),
+                SpawnerEntityHolderLookup = SystemAPI.GetComponentLookup<SpawnerEntityRef>(),
+            }.ScheduleParallel(count, initialCap / 2, state.Dependency);
+
         }
 
+        [BurstCompile]
+        private struct SetComponentsJob : IJobParallelForBatch
+        {
+            [ReadOnly] [DeallocateOnJobCompletion]
+            public NativeArray<Entity> Entities;
+
+            [ReadOnly] [DeallocateOnJobCompletion]
+            public NativeArray<Entity> SpawnerEntities;
+
+            [NativeDisableParallelForRestriction]
+            public ComponentLookup<SpawnerEntityRef> SpawnerEntityHolderLookup;
+
+            [BurstCompile]
+            public void Execute(int startIndex, int count)
+            {
+                int upperBound = startIndex + count;
+
+                for (int i = 0; i < upperBound; i++)
+                {
+                    var entity = this.Entities[i];
+
+                    if (!this.SpawnerEntityHolderLookup.HasComponent(entity)) continue;
+
+                    var spawnerEntityHolderRef = this.SpawnerEntityHolderLookup.GetRefRW(entity);
+                    spawnerEntityHolderRef.ValueRW.Value = this.SpawnerEntities[i];
+
+                }
+
+            }
+
+        }
 
     }
+
 }
