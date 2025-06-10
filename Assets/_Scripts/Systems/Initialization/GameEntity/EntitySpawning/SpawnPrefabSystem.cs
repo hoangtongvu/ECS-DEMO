@@ -5,9 +5,9 @@ using Components.GameEntity.EntitySpawning;
 using Unity.Collections;
 using Unity.Jobs;
 
-namespace Systems.Simulation.GameEntity.EntitySpawning
+namespace Systems.Initialization.GameEntity.EntitySpawning
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]
     public partial struct SpawnPrefabSystem : ISystem
     {

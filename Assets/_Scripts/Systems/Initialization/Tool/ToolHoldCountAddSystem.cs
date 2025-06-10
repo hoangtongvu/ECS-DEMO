@@ -1,18 +1,16 @@
 using Unity.Entities;
 using Unity.Burst;
 using Components.Tool;
-using Systems.Simulation.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning;
+using Systems.Initialization.GameEntity.EntitySpawning;
 
-namespace Systems.Simulation.Tool
+namespace Systems.Initialization.Tool
 {
-
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateAfter(typeof(SpawnPrefabSystem))]
     [BurstCompile]
     public partial struct ToolHoldCountAddSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -47,6 +45,6 @@ namespace Systems.Simulation.Tool
 
         }
 
-
     }
+
 }

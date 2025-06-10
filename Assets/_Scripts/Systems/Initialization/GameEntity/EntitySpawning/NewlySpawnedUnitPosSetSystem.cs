@@ -5,10 +5,9 @@ using Unity.Mathematics;
 using Core.Utilities.Extensions;
 using Components.GameEntity.EntitySpawning;
 
-namespace Systems.Simulation.GameEntity.EntitySpawning
+namespace Systems.Initialization.GameEntity.EntitySpawning
 {
-
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateAfter(typeof(SpawnPrefabSystem))]
     [BurstCompile]
     public partial struct NewlySpawnedUnitPosSetSystem : ISystem
@@ -16,27 +15,25 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         private Random rand;
         private float2 tempVector;
 
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             this.rand = new Random(1);
             this.tempVector = new(1, 1);
 
-
-            EntityQuery entityQuery = SystemAPI.QueryBuilder()
+            var entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     NewlySpawnedTag
                     , LocalTransform
                     , SpawnerPos>()
                 .Build();
+
             state.RequireForUpdate(entityQuery);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-
             foreach (var (spawnerPos, transformRef) in
                 SystemAPI.Query<
                     RefRO<SpawnerPos>
@@ -56,4 +53,5 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         }
 
     }
+
 }
