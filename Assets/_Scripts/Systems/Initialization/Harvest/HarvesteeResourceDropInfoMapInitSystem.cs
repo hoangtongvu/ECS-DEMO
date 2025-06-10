@@ -48,7 +48,6 @@ namespace Systems.Initialization.Harvest
             }
 
             su.AddOrSetComponentData(resourceDropInfoMap);
-            bakedProfileElementArray.Dispose();
 
         }
 

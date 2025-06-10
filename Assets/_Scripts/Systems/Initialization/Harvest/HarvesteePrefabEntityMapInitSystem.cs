@@ -47,7 +47,6 @@ namespace Systems.Initialization.Harvest
 
             }
 
-            bakedProfileElementArray.Dispose();
             su.AddOrSetComponentData(prefabMap);
 
         }

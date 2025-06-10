@@ -64,7 +64,6 @@ namespace Systems.Initialization.Harvest
 
             }
 
-            presenterVarianceTempArray.Dispose();
             su.AddOrSetComponentData(profileIdToPresenterVariancesRangeMap);
             su.AddOrSetComponentData(presenterVariancesContainer);
 

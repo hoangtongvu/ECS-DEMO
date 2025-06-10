@@ -89,8 +89,6 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 
             }
 
-            exits.Dispose();
-
         }
 
         [BurstCompile]

@@ -136,8 +136,6 @@ namespace Systems.Simulation.Misc
                 });
             }
 
-            distanceHits.Dispose();
-
         }
 
         private bool MetDragDistance(

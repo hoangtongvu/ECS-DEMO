@@ -219,11 +219,7 @@ namespace Systems.Simulation.Unit.Misc
                         CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Player),
                     });
 
-                if (!hasHit)
-                {
-                    hitList.Dispose();
-                    return;
-                }
+                if (!hasHit) return;
 
                 int length = hitList.Length;
                 var dangerousEntity = Entity.Null;
@@ -256,7 +252,6 @@ namespace Systems.Simulation.Unit.Misc
                 if (dangerousEntity != Entity.Null)
                     canSetTargetJobScheduleTag.ValueRW = true;
 
-                hitList.Dispose();
             }
 
         }

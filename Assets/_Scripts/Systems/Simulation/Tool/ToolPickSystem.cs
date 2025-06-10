@@ -76,7 +76,6 @@ namespace Systems.Simulation.Tool
             }
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
 
         }
 

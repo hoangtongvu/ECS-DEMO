@@ -70,7 +70,6 @@ namespace Systems.Initialization.GameResource.Misc
             }
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
 
         }
 

@@ -97,8 +97,6 @@ namespace Systems.Initialization.GameEntity.Movement.MoveCommand
             // Explicitly Add "None" at the end
             commandPrioritiesMap.Value[startIndex + tempIndex] = MoveCommandSource.None;
 
-            addedCommandSources.Dispose();
-
         }
 
     }

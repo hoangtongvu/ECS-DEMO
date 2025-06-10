@@ -37,7 +37,6 @@ namespace Systems.Initialization.GameEntity
             }
 
             ecb.Playback(this.EntityManager);
-            ecb.Dispose();
 
         }
 

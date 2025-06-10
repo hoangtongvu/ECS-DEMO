@@ -47,7 +47,6 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 
             }
 
-            bakedProfileElementArray.Dispose();
             su.AddOrSetComponentData(prefabMap);
 
         }

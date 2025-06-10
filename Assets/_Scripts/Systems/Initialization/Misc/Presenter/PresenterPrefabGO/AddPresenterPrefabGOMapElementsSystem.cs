@@ -51,7 +51,6 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
             }
 
             ecb.Playback(this.EntityManager);
-            ecb.Dispose();
 
         }
 
