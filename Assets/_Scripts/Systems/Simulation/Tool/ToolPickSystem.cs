@@ -33,7 +33,7 @@ namespace Systems.Simulation.Tool
             state.RequireForUpdate(query0);
 
             state.RequireForUpdate<UnitToolHolder>();
-            state.RequireForUpdate<ToolHoldCount>();
+            state.RequireForUpdate<SpawnedEntityCounter>();
 
         }
 
@@ -84,8 +84,8 @@ namespace Systems.Simulation.Tool
             ref SystemState state
             , ref SpawnerEntityHolder spawnerEntityHolder)
         {
-            var toolHoldCountRef = SystemAPI.GetComponentRW<ToolHoldCount>(spawnerEntityHolder.Value);
-            toolHoldCountRef.ValueRW.Value--;
+            var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(spawnerEntityHolder.Value);
+            spawnedEntityCounterRef.ValueRW.Value--;
             spawnerEntityHolder.Value = Entity.Null;
         }
 
