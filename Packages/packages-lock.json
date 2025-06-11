@@ -59,9 +59,10 @@
       "source": "git",
       "dependencies": {
         "com.unity.collections": "2.4.0",
-        "com.unity.burst": "1.8.12"
+        "com.unity.burst": "1.8.12",
+        "com.unity.entities": "1.2.0"
       },
-      "hash": "ec7985cb5ae4dfd9b14b3b95505a9fd9fbc8e916"
+      "hash": "2225743c5b79695a6f6b4ddbd41e90a3e40c0175"
     },
     "com.github-joc0de.visual-studio-solution-generator": {
       "version": "1.0.13",

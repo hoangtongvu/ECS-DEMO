@@ -64,7 +64,7 @@ namespace Systems.Initialization.GameEntity
             }
 
             su.AddOrSetComponentData(gameEntitySizeMap);
-            fileDebugLogger.Save("GameEntitySizeMapInitSystemLogs.csv");
+            fileDebugLogger.Save("GameEntitySizeMapInitSystemLogs.txt");
 
         }
 

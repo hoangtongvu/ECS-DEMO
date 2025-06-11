@@ -83,7 +83,7 @@ namespace Systems.Initialization.GameEntity
 
             su.AddOrSetComponentData(map);
             ecb.Playback(this.EntityManager);
-            fileDebugLogger.Save("HpDataMapAndComponentInitSystemLogs.csv");
+            fileDebugLogger.Save("HpDataMapAndComponentInitSystemLogs.txt");
         }
 
     }
