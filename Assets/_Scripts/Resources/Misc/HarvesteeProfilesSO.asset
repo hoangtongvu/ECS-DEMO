@@ -72,3 +72,28 @@ MonoBehaviour:
         - {fileID: 919132149155446097, guid: 7678b5958dae76549bf4e174493a3f39, type: 3}
         - {fileID: 919132149155446097, guid: a64e58fe276609b4ca02ee6e57ae47ff, type: 3}
         - {fileID: 919132149155446097, guid: 5e3f979748cb5fe45b3632d2373a6dd1, type: 3}
+    - Key:
+        HarvesteeType: 3
+        VariantIndex: 0
+      Value:
+        Name: NormalBerryBush
+        ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
+          type: 3}
+        PresenterPrefab: {fileID: 0}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: f51692cabb8658f4eacde5708443c27d,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 100
+        HarvesteeType: 3
+        ResourceDropInfo:
+          ResourceType: 2
+          QuantityPerDrop: 5
+          HpAmountPerDrop: 25
+        PresenterVariances:
+        - {fileID: 525647612135561435, guid: cdd4c87a888346a4093fff72dd5cee78, type: 3}
+        - {fileID: 6502534516247326416, guid: 7ab9afe6af2dbf64b99b9f9f9f7555ac, type: 3}

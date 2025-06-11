@@ -6,5 +6,6 @@ namespace Core.Harvest
         None = 0,
         Tree = 1,
         ResourcePit = 2,
+        BerryBush = 3,
     }
 }

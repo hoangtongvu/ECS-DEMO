@@ -9,5 +9,6 @@ namespace Core.Tool
         Sword = 3,
         Hammer = 4,
         Bow = 5,
+        Basket = 6,
     }
 }

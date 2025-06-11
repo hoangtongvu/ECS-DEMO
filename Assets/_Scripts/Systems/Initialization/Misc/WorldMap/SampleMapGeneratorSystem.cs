@@ -177,6 +177,14 @@ namespace Systems.Initialization.Misc.WorldMap
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius);
 
+            this.PlaceRandomBerryBushessOnMap(
+                in physicsWorld
+                , in harvesteePrefabEntityMap
+                , in gameEntitySizeMap
+                , ref costMap
+                , mapWidth, mapHeight
+                , in gridOffset, in cellRadius);
+
         }
 
         private void PlaceRandomTreesOnMap(
@@ -229,6 +237,37 @@ namespace Systems.Initialization.Misc.WorldMap
             };
 
             var entityPrefab = harvesteePrefabEntityMap[treeId];
+
+            this.PlaceRandomEntitiesOnMap(
+                in physicsWorld
+                , in gameEntitySizeMap
+                , ref costMap
+                , mapWidth, mapHeight
+                , in gridOffset, in cellRadius
+                , placementPercentage
+                , in entityPrefab);
+
+        }
+
+        private void PlaceRandomBerryBushessOnMap(
+            in PhysicsWorldSingleton physicsWorld
+            , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
+            , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
+            , ref NativeArray<Cell> costMap
+            , int mapWidth
+            , int mapHeight
+            , in int2 gridOffset
+            , in half cellRadius)
+        {
+            const float placementPercentage = 0.01f;
+
+            var prefabId = new HarvesteeProfileId
+            {
+                HarvesteeType = HarvesteeType.BerryBush,
+                VariantIndex = 0,
+            };
+
+            var entityPrefab = harvesteePrefabEntityMap[prefabId];
 
             this.PlaceRandomEntitiesOnMap(
                 in physicsWorld

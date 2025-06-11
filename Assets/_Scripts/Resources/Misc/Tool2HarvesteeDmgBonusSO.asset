@@ -22,3 +22,7 @@ MonoBehaviour:
         ToolType: 2
         HarvesteeType: 2
       Value: 1.5
+    - Key:
+        ToolType: 6
+        HarvesteeType: 3
+      Value: 2

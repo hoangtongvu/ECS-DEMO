@@ -29,6 +29,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 0
           ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ToolType: 1
         IsWeapon: 0
         ToolStatsInSO:
@@ -54,6 +57,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 0
           ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ToolType: 2
         IsWeapon: 0
         ToolStatsInSO:
@@ -79,6 +85,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 0
           ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ToolType: 3
         IsWeapon: 1
         ToolStatsInSO:
@@ -104,6 +113,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 0
           ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ToolType: 4
         IsWeapon: 0
         ToolStatsInSO:
@@ -129,6 +141,9 @@ MonoBehaviour:
         GameEntitySize:
           GridSquareSize: 0
           ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ToolType: 5
         IsWeapon: 1
         ToolStatsInSO:
@@ -138,4 +153,32 @@ MonoBehaviour:
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
+            Value: 2
+    - Key:
+        ToolType: 6
+        VariantIndex: 0
+      Value:
+        Name: NormalBasket
+        ProfilePicture: {fileID: 21300000, guid: f86c75d3182a6dd458f1da213049fa9a,
+          type: 3}
+        PresenterPrefab: {fileID: 6164855466783433436, guid: c53852cbb6310ce4cb29ecb4b8ecbe20,
+          type: 3}
+        IsPresenterEntity: 1
+        PrimaryEntityPrefab: {fileID: 8250307934144521707, guid: 2da6fa83872f462479cae7a6f7fbde11,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
+        ToolType: 6
+        IsWeapon: 0
+        ToolStatsInSO:
+          BaseDmg: 3
+          BaseWorkSpeed: 1.5
+        SpawnDurationSeconds: 3
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 1
             Value: 2
