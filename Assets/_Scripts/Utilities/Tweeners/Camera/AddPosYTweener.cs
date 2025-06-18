@@ -1,7 +1,8 @@
 using Components.Camera;
 using TweenLib;
+using TweenLib.Utilities;
+using TweenLib.Utilities.Helpers;
 using Unity.Burst;
-using Unity.Mathematics;
 
 namespace Utilities.Tweeners.Camera
 {
@@ -9,16 +10,22 @@ namespace Utilities.Tweeners.Camera
     public partial struct AddPosYTweener : ITweener<AddPos, float>
     {
         [BurstCompile]
-        public bool CanStop(in AddPos componentData, in float lifeTimeSecond, in float baseSpeed, in float target)
-        {
-            return math.abs(target - componentData.Value.y) < Configs.Epsilon;
-        }
+        public void GetDefaultStartValue(in AddPos componentData, out float defaultStartValue)
+            => defaultStartValue = componentData.Value.y;
 
         [BurstCompile]
-        public void Tween(ref AddPos componentData, in float baseSpeed, in float target)
+        public void GetSum(in float a, in float b, out float result)
+            => result = a + b;
+
+        [BurstCompile]
+        public void GetDifference(in float a, in float b, out float result)
+            => result = a - b;
+
+        [BurstCompile]
+        public void Tween(ref AddPos componentData, in float normalizedTime, EasingType easingType, in float startValue, in float target)
         {
             componentData.Value.y =
-                math.lerp(componentData.Value.y, target, baseSpeed * this.DeltaTime);
+                TweenHelper.FloatTween(in normalizedTime, easingType, in startValue, in target);
         }
 
     }

@@ -3,6 +3,7 @@ using UnityEngine;
 using Components.Misc.GameView;
 using Components.Camera;
 using Utilities.Tweeners.Camera;
+using TweenLib.Utilities;
 
 namespace Systems.Simulation.Misc.GameView.FreeView
 {
@@ -39,9 +40,8 @@ namespace Systems.Simulation.Misc.GameView.FreeView
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                AddPosYTweener.TweenBuilder.Create()
-                    .WithBaseSpeed(2f)
-                    .WithTarget(addPosTweenDataRef.ValueRO.Target - scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime)
+                AddPosYTweener.TweenBuilder.Create(0.8f, addPosTweenDataRef.ValueRO.Target - scrollAxis * zoomSpeed * SystemAPI.Time.DeltaTime)
+                    .WithEase(EasingType.EaseOutQuad)
                     .Build(ref addPosTweenDataRef.ValueRW, canAddPosTweenTag);
 
             }

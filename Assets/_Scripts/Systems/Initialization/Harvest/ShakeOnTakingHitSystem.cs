@@ -1,10 +1,8 @@
 using Components.GameEntity.Damage;
-using TweenLib.ShakeTween.Data;
-using TweenLib.ShakeTween.Logic;
-using TweenLib.Timer.Data;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
+using TweenLib.StandardTweeners.ShakePositionTweeners;
 
 namespace Systems.Initialization.Harvest
 {
@@ -19,7 +17,8 @@ namespace Systems.Initialization.Harvest
                 .WithAll<
                     HpChangeRecordElement
                     , LocalTransform
-                    , ShakeDataIdHolder>()
+                    , ShakePositionXZTweener_TweenData
+                    , Can_ShakePositionXZTweener_TweenTag>()
                 .WithAll<IsAliveTag>()
                 .Build();
 
@@ -30,27 +29,21 @@ namespace Systems.Initialization.Harvest
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            state.EntityManager.CompleteDependencyBeforeRW<TimerList>();
-            state.EntityManager.CompleteDependencyBeforeRW<TimerIdPool>();
-            state.EntityManager.CompleteDependencyBeforeRW<ShakeDataList>();
-            state.EntityManager.CompleteDependencyBeforeRW<ShakeDataIdPool>();
-
-            var timerList = SystemAPI.GetSingleton<TimerList>();
-            var timerIdPool = SystemAPI.GetSingleton<TimerIdPool>();
-            var shakeDataList = SystemAPI.GetSingleton<ShakeDataList>();
-            var shakeDataIdPool = SystemAPI.GetSingleton<ShakeDataIdPool>();
-
-            foreach (var (hpChangeRecords, transformRef, shakeDataIdHolderRef) in
+            foreach (var (hpChangeRecords, transformRef, tweenDataRef, canTweenTag, isAliveTag) in
                 SystemAPI.Query<
                     DynamicBuffer<HpChangeRecordElement>
                     , RefRO<LocalTransform>
-                    , RefRW<ShakeDataIdHolder>>()
-                    .WithAll<IsAliveTag>())
+                    , RefRW<ShakePositionXZTweener_TweenData>
+                    , EnabledRefRW<Can_ShakePositionXZTweener_TweenTag>
+                    , EnabledRefRO<IsAliveTag>>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+
             {
+                if (!isAliveTag.ValueRO) continue;
                 if (hpChangeRecords.IsEmpty) continue;
 
-                ShakeBuilder.Create(0.5f, 15f, 0.2f, transformRef.ValueRO.Position)
-                    .Build(ref timerList, in timerIdPool, ref shakeDataList, in shakeDataIdPool, ref shakeDataIdHolderRef.ValueRW);
+                ShakePositionXZTweener.TweenBuilder.Create(0.4f, new(15f, 0.4f, 0f))
+                    .Build(ref tweenDataRef.ValueRW, canTweenTag);
 
             }
 

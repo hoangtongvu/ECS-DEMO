@@ -3,9 +3,9 @@ using Components.GameEntity.Interaction;
 using Components.Harvest;
 using Components.Harvest.HarvesteeHp;
 using Components.Misc.Presenter;
-using TweenLib.ShakeTween.Data;
 using Unity.Entities;
 using UnityEngine;
+using TweenLib.StandardTweeners.ShakePositionTweeners;
 
 namespace Authoring.Harvest
 {
@@ -24,7 +24,8 @@ namespace Authoring.Harvest
                 AddComponent<HarvesteeTag>(entity);
 
                 AddComponent<DropResourceHpThreshold>(entity);
-                AddComponent(entity, ShakeDataIdHolder.Invalid);
+
+                ShakePositionXZTweener.AddTweenComponents(this, entity);
 
             }
 

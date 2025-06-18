@@ -1,7 +1,8 @@
 ﻿using Components.Camera;
+using TweenLib.StandardTweeners;
 using Unity.Entities;
 using UnityEngine;
-using Unity.Transforms;
+using Utilities.Tweeners.Camera;
 
 namespace Authoring.Camera
 {
@@ -22,17 +23,9 @@ namespace Authoring.Camera
                     Value = authoring.AddPos,
                 });
 
-                AddComponent<AddPosYTweener_TweenData>(entity);
-                AddComponent<Can_AddPosYTweener_TweenTag>(entity);
-                SetComponentEnabled<Can_AddPosYTweener_TweenTag>(entity, false);
-                
-                AddComponent<AddPosXZTweener_TweenData>(entity);
-                AddComponent<Can_AddPosXZTweener_TweenTag>(entity);
-                SetComponentEnabled<Can_AddPosXZTweener_TweenTag>(entity, false);
-
-                AddComponent<Can_TransformRotationTweener_TweenTag>(entity);
-                SetComponentEnabled<Can_TransformRotationTweener_TweenTag>(entity, false);
-                AddComponent<TransformRotationTweener_TweenData>(entity);
+                AddPosYTweener.AddTweenComponents(this, entity);
+                AddPosXZTweener.AddTweenComponents(this, entity);
+                TransformRotationTweener.AddTweenComponents(this, entity);
 
             }
         }

@@ -5,6 +5,7 @@ using Components.Camera;
 using Unity.Mathematics;
 using Unity.Burst;
 using Utilities.Tweeners.Camera;
+using TweenLib.Utilities;
 
 namespace Systems.Simulation.Misc.GameView.PlayerView
 {
@@ -46,14 +47,12 @@ namespace Systems.Simulation.Misc.GameView.PlayerView
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                AddPosXZTweener.TweenBuilder.Create()
-                    .WithBaseSpeed(2f)
-                    .WithTarget(playerViewCamOffset.xz)
+                AddPosXZTweener.TweenBuilder.Create(0.8f, playerViewCamOffset.xz)
+                    .WithEase(EasingType.EaseOutQuad)
                     .Build(ref addPosXZTweenDataRef.ValueRW, canAddPosXZTweenTag);
 
-                AddPosYTweener.TweenBuilder.Create()
-                    .WithBaseSpeed(2f)
-                    .WithTarget(playerViewCamOffset.y)
+                AddPosYTweener.TweenBuilder.Create(0.8f, playerViewCamOffset.y)
+                    .WithEase(EasingType.EaseOutQuad)
                     .Build(ref addPosYTweenDataRef.ValueRW, canAddPosYTweenTag);
 
             }

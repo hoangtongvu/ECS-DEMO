@@ -5,6 +5,7 @@ using Components.Camera;
 using Unity.Mathematics;
 using Unity.Burst;
 using Utilities.Tweeners.Camera;
+using TweenLib.Utilities;
 
 namespace Systems.Simulation.Misc.GameView.FreeView
 {
@@ -46,14 +47,12 @@ namespace Systems.Simulation.Misc.GameView.FreeView
                     .WithAll<CameraEntityTag>()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                AddPosYTweener.TweenBuilder.Create()
-                    .WithBaseSpeed(2f)
-                    .WithTarget(defaultOffsetY)
+                AddPosYTweener.TweenBuilder.Create(0.8f, defaultOffsetY)
+                    .WithEase(EasingType.EaseOutQuad)
                     .Build(ref addPosYTweenDataRef.ValueRW, canAddPosYTweenTag);
 
-                AddPosXZTweener.TweenBuilder.Create()
-                    .WithBaseSpeed(2f)
-                    .WithTarget(float2.zero)
+                AddPosXZTweener.TweenBuilder.Create(0.8f, float2.zero)
+                    .WithEase(EasingType.EaseOutQuad)
                     .Build(ref addPosXZTweenDataRef.ValueRW, canAddPosXZTweenTag);
 
             }

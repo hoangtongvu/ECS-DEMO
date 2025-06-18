@@ -51,9 +51,7 @@ namespace Systems.Simulation.Misc.GameView
                 canQuaternionTweenTag = item.Item2;
             }
 
-            TransformRotationTweener.TweenBuilder.Create()
-                .WithBaseSpeed(2f)
-                .WithTarget(quaternion.EulerXYZ(math.radians(newAngle)).value)
+            TransformRotationTweener.TweenBuilder.Create(1f, quaternion.EulerXYZ(math.radians(newAngle)).value)
                 .Build(ref quaternionTweenDataRef.ValueRW, canQuaternionTweenTag);
 
         }

@@ -42,7 +42,7 @@
       "hash": "5d4378942d82840189a0922dd85d3e154594be0e"
     },
     "com.darksun.tweenlib": {
-      "version": "https://github.com/hoangtongvu/com.darksun.tweenlib.git?path=/Assets/Scripts/com.darksun.tweenlib",
+      "version": "https://github.com/hoangtongvu/TweenLib.git?path=/Assets/TweenLib",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -51,7 +51,7 @@
         "com.unity.mathematics": "1.3.1",
         "com.unity.burst": "1.8.12"
       },
-      "hash": "22d66883c9c56da601eb2b0f36aad81fcf8fd483"
+      "hash": "fb99621ed1dced9cfffa0c1c3fd8be0550269085"
     },
     "com.darksun.unity-file-debug-logger": {
       "version": "https://github.com/hoangtongvu/UnityFileDebugLogger.git?path=/Assets/Scripts/com.darksun.unity-file-debug-logger",
