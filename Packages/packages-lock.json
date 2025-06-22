@@ -35,11 +35,11 @@
       "hash": "24938d88e1535a5bfbd2d08dc84f7427ccd4c751"
     },
     "com.darksun.enum-length-generator": {
-      "version": "https://github.com/hoangtongvu/com.darksun.enum-length-generator.git?path=/Assets",
+      "version": "https://github.com/hoangtongvu/EnumLengthGenerator.git?path=/Assets/EnumLengthGenerator",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "5d4378942d82840189a0922dd85d3e154594be0e"
+      "hash": "65c8990d499f5ba71f9a300771be49075c5188c8"
     },
     "com.darksun.tweenlib": {
       "version": "https://github.com/hoangtongvu/TweenLib.git?path=/Assets/TweenLib",
