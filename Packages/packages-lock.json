@@ -54,7 +54,7 @@
       "hash": "fb99621ed1dced9cfffa0c1c3fd8be0550269085"
     },
     "com.darksun.unity-file-debug-logger": {
-      "version": "https://github.com/hoangtongvu/UnityFileDebugLogger.git?path=/Assets/Scripts/com.darksun.unity-file-debug-logger",
+      "version": "https://github.com/hoangtongvu/UnityFileDebugLogger.git?path=/Assets/UnityFileDebugLogger",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -62,7 +62,7 @@
         "com.unity.burst": "1.8.12",
         "com.unity.entities": "1.2.0"
       },
-      "hash": "2225743c5b79695a6f6b4ddbd41e90a3e40c0175"
+      "hash": "fc33c1a6142d203dc402202b4b6285f1e13a959b"
     },
     "com.github-joc0de.visual-studio-solution-generator": {
       "version": "1.0.13",
