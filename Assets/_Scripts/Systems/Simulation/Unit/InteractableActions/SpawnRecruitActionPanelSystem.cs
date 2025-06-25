@@ -2,6 +2,7 @@ using Components.ComponentMap;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameEntity.Misc;
 using Components.GameResource;
 using Components.Unit.InteractableActions;
 using Core.GameResource;
@@ -43,9 +44,10 @@ namespace Systems.Simulation.Unit.InteractableActions
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
             var resourceProfiles = SystemAPI.GetSingleton<ResourceProfilesSOHolder>().Value.Value.Profiles;
 
-            foreach (var (actionsContainerUIHolderRef, primaryPrefabEntityHolderRef, canShowUITag, uiShownTag, entity) in SystemAPI
+            foreach (var (factionIndexRef, actionsContainerUIHolderRef, primaryPrefabEntityHolderRef, canShowUITag, uiShownTag, entity) in SystemAPI
                 .Query<
-                    RefRO<ActionsContainerUIHolder>
+                    RefRO<FactionIndex>
+                    , RefRO<ActionsContainerUIHolder>
                     , RefRO<PrimaryPrefabEntityHolder>
                     , EnabledRefRO<CanShowActionsContainerUITag>
                     , EnabledRefRO<ActionsContainerUIShownTag>>()
@@ -54,6 +56,7 @@ namespace Systems.Simulation.Unit.InteractableActions
             {
                 if (!canShowUITag.ValueRO) continue;
                 if (uiShownTag.ValueRO) continue;
+                if (factionIndexRef.ValueRO != FactionIndex.Neutral) continue;
 
                 float3 spawnPos = actionsContainerUIHolderRef.ValueRO.Value.Value.transform.position;
 
