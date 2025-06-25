@@ -4,6 +4,7 @@ using Components.GameEntity.Misc;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Player;
+using Components.Unit.InteractableActions;
 using Components.Unit.NearUnitDropItems;
 using Core.GameEntity.Misc;
 using Unity.Entities;
@@ -38,6 +39,8 @@ namespace Authoring.Player
                 {
                     Value = 10,
                 });
+
+                AddComponent<NearestInteractableEntity>(entity);
 
             }
 

@@ -20,6 +20,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Utilities.Helpers;
+using Authoring.Utilities.Extensions;
+using Components.Unit.InteractableActions;
 
 namespace Authoring.Unit
 {
@@ -35,18 +37,13 @@ namespace Authoring.Unit
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
-                AddComponent<IdleStartedTag>(entity);
-                SetComponentEnabled<IdleStartedTag>(entity, false);
-                AddComponent<WorkStartedTag>(entity);
-                SetComponentEnabled<WorkStartedTag>(entity, false);
-                AddComponent<WalkStartedTag>(entity);
-                SetComponentEnabled<WalkStartedTag>(entity, false);
-                AddComponent<RunStartedTag>(entity);
-                SetComponentEnabled<RunStartedTag>(entity, false);
+                this.AddAndDisableComponent<IdleStartedTag>(entity);
+                this.AddAndDisableComponent<WorkStartedTag>(entity);
+                this.AddAndDisableComponent<WalkStartedTag>(entity);
+                this.AddAndDisableComponent<RunStartedTag>(entity);
 
                 AddComponent<SelectableUnitTag>(entity);
-                AddComponent<UnitSelectedTag>(entity);
-                SetComponentEnabled<UnitSelectedTag>(entity, false);
+                this.AddAndDisableComponent<UnitSelectedTag>(entity);
 
                 AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
@@ -54,13 +51,10 @@ namespace Authoring.Unit
                     Value = 0f,
                 });
                 AddComponent<MoveableEntityTag>(entity);
-                AddComponent<CanMoveEntityTag>(entity);
-                SetComponentEnabled<CanMoveEntityTag>(entity, false);
-                
+                this.AddAndDisableComponent<CanMoveEntityTag>(entity);
 
                 AddComponent<CurrentWorldWaypoint>(entity);
-                AddComponent<TargetPosChangedTag>(entity);
-                SetComponentEnabled<TargetPosChangedTag>(entity, false);
+                this.AddAndDisableComponent<TargetPosChangedTag>(entity);
                 AddComponent<DistanceToCurrentWaypoint>(entity);
                 AddComponent(entity, AbsoluteDistanceXZToTarget.MaxDistance);
                 AddComponent(entity, new MoveCommandElement
@@ -75,9 +69,7 @@ namespace Authoring.Unit
                     Value = 0,
                 });
 
-                AddComponent<NeedInitWalkTag>(entity);
-                SetComponentEnabled<NeedInitWalkTag>(entity, false);
-
+                this.AddAndDisableComponent<NeedInitWalkTag>(entity);
 
                 AddComponent(entity, new UnitToolHolder
                 {
@@ -89,8 +81,7 @@ namespace Authoring.Unit
                 AddComponent<RotationFreezer>(entity);
 
 
-                AddComponent<CanInteractEntityTag>(entity);
-                SetComponentEnabled<CanInteractEntityTag>(entity, false);
+                this.AddAndDisableComponent<CanInteractEntityTag>(entity);
                 AddComponent(entity, new TargetEntity
                 {
                     Value = Entity.Null,
@@ -109,10 +100,8 @@ namespace Authoring.Unit
                 });
 
 
-                AddComponent<NewlySelectedUnitTag>(entity);
-                SetComponentEnabled<NewlySelectedUnitTag>(entity, false);
-                AddComponent<NewlyDeselectedUnitTag>(entity);
-                SetComponentEnabled<NewlyDeselectedUnitTag>(entity, false);
+                this.AddAndDisableComponent<NewlySelectedUnitTag>(entity);
+                this.AddAndDisableComponent<NewlyDeselectedUnitTag>(entity);
 
 
                 AddComponent<TargetPosMarkerHolder>(entity);
@@ -132,12 +121,10 @@ namespace Authoring.Unit
                     Value = 0f,
                 });
 
-                AddComponent<IsUnitWorkingTag>(entity);
-                SetComponentEnabled<IsUnitWorkingTag>(entity, false);
+                this.AddAndDisableComponent<IsUnitWorkingTag>(entity);
 
                 ResourceWalletHelper.AddResourceWalletToEntity(this, entity);
-                AddComponent<WalletChangedTag>(entity);
-                SetComponentEnabled<WalletChangedTag>(entity, false);
+                this.AddAndDisableComponent<WalletChangedTag>(entity);
 
                 AddComponent(entity, new AnimatorData
                 {
@@ -153,32 +140,32 @@ namespace Authoring.Unit
                 });
 
                 AddBuffer<WaypointElement>(entity);
-                AddComponent<CanFindPathTag>(entity);
-                SetComponentEnabled<CanFindPathTag>(entity, false);
+                this.AddAndDisableComponent<CanFindPathTag>(entity);
 
                 AddComponent(entity, new ArmedStateHolder
                 {
                     Value = ArmedState.False,
                 });
 
-                AddComponent<CanSetTargetJobScheduleTag>(entity);
-                SetComponentEnabled<CanSetTargetJobScheduleTag>(entity, false);
+                this.AddAndDisableComponent<CanSetTargetJobScheduleTag>(entity);
 
-                AddComponent<CanOverrideMoveCommandTag>(entity);
-                SetComponentEnabled<CanOverrideMoveCommandTag>(entity, false);
+                this.AddAndDisableComponent<CanOverrideMoveCommandTag>(entity);
 
                 AddComponent<IsUnarmedEntityTag>(entity);
 
                 AddComponent(entity, InteractableDistanceRange.Default);
 
-                AddComponent<CanCheckInteractionRepeatTag>(entity);
-                SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, false);
+                this.AddAndDisableComponent<CanCheckInteractionRepeatTag>(entity);
 
                 AddComponent(entity, new FactionIndex { Value = 1 });
 
                 AddComponent<PresenterHandSlotsHolder>(entity);
 
                 AddComponent<SpawnerEntityHolder>(entity);
+
+                this.AddAndDisableComponent<CanShowActionsContainerUITag>(entity);
+                this.AddAndDisableComponent<ActionsContainerUIShownTag>(entity);
+                this.AddComponent<ActionsContainerUIHolder>(entity);
 
             }
 
