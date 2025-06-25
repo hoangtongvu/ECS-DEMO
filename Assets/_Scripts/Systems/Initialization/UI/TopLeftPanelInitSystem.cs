@@ -2,12 +2,12 @@ using Core.GameResource;
 using System;
 using Unity.Entities;
 using UnityEngine;
-using Utilities.Helpers;
 using Components.ComponentMap;
 using Core.UI.Identification;
 using Core.UI.TopLeftPanel;
 using System.Collections.Generic;
 using Core.UI.TopLeftPanel.ResourceDisplay;
+using Core.Utilities.Helpers;
 using Components.GameEntity;
 using Components.GameResource;
 using AYellowpaper.SerializedCollections;
@@ -64,8 +64,8 @@ namespace Systems.Initialization.UI
         {
             topLeftPanelManager = (TopLeftPanelManager)
                 UISpawningHelper.Spawn(
-                    uiPrefabAndPoolMap
-                    , spawnedUIMap
+                    uiPrefabAndPoolMap.Value
+                    , spawnedUIMap.Value
                     , UIType.TopLeftPanel);
             topLeftPanelManager.gameObject.SetActive(true);
         }
@@ -81,9 +81,9 @@ namespace Systems.Initialization.UI
 
             for (int i = 0; i < length; i++)
             {
-                var resourceDisplay = (ResourceDisplayCtrl) UISpawningHelper.Spawn(
-                    uiPrefabAndPoolMap
-                    , spawnedUIMap
+                var resourceDisplay = (ResourceDisplayCtrl)UISpawningHelper.Spawn(
+                    uiPrefabAndPoolMap.Value
+                    , spawnedUIMap.Value
                     , UIType.ResourceDisplay);
 
                 resourceDisplay.gameObject.SetActive(true);
