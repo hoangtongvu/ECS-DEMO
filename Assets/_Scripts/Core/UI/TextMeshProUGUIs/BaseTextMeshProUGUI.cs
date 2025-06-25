@@ -1,12 +1,15 @@
+using Core.Misc;
 using TMPro;
 using UnityEngine;
 
 namespace Core.UI.TextMeshProUGUIs
 {
-    public abstract class BaseTextMeshProUGUI : BaseUICtrl
+    public class BaseTextMeshProUGUI : SaiMonoBehaviour
     {
         [Header("Base TextMeshPro")]
         [SerializeField] protected TextMeshProUGUI text;
+
+        public TextMeshProUGUI TextMeshProUGUI => text;
 
         protected override void LoadComponents()
         {
@@ -15,4 +18,5 @@ namespace Core.UI.TextMeshProUGUIs
         }
 
     }
+
 }

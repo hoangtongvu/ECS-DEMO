@@ -7,13 +7,13 @@ namespace Core.UI.EntitySpawningPanel
 {
     public class SpawningDisplaysHolder : SaiMonoBehaviour
     {
-        [SerializeField] private List<SpawningProfileDisplayCtrl> spawningProfileDisplayCtrls;
+        [SerializeField] private List<SpawningProfileDisplayCtrl> value;
 
-        public List<SpawningProfileDisplayCtrl> SpawningProfileDisplayCtrls => spawningProfileDisplayCtrls;
+        public List<SpawningProfileDisplayCtrl> Value => value;
 
         public void Add(SpawningProfileDisplayCtrl profileDisplayCtrl)
         {
-            this.spawningProfileDisplayCtrls.Add(profileDisplayCtrl);
+            this.value.Add(profileDisplayCtrl);
             profileDisplayCtrl.transform.SetParent(transform);
         }
 

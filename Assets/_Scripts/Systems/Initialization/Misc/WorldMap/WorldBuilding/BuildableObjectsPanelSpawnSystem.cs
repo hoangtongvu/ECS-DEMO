@@ -1,7 +1,7 @@
 using Unity.Entities;
-using Utilities.Helpers;
 using Components.ComponentMap;
 using Core.UI.Identification;
+using Core.Utilities.Helpers;
 using Components.Misc.WorldMap.WorldBuilding;
 using Utilities;
 
@@ -29,7 +29,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             var runtimeUIIDRef = SystemAPI.GetSingletonRW<BuildableObjectsPanelRuntimeUIID>();
 
             runtimeUIIDRef.ValueRW.Value =
-                UISpawningHelper.Spawn(uiPrefabAndPoolMap, spawnedUIMap, UIType.BuildableObjectsPanel).RuntimeUIID;
+                UISpawningHelper.Spawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value, UIType.BuildableObjectsPanel).RuntimeUIID;
 
         }
 

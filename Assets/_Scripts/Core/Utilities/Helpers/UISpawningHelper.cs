@@ -1,23 +1,19 @@
-using Components.ComponentMap;
 using Core.UI;
 using Core.UI.Identification;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Utilities.Helpers
+namespace Core.Utilities.Helpers
 {
     public static class UISpawningHelper
     {
         public static BaseUICtrl Spawn(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
+            Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap
+            , Dictionary<UIID, BaseUICtrl> spawnedUIMap
             , UIType uiType)
         {
-            if (!uiPrefabAndPoolMap.Value.TryGetValue(uiType, out var uiPrefabAndPool))
-            {
-                Debug.LogError($"Can't find UI prefab of type {uiType}");
-                return null;
-            }
+            var uiPrefabAndPool = uiPrefabAndPoolMap[uiType];
 
             uint newID = uiPrefabAndPool.GlobalID + 1;
             var uiPool = uiPrefabAndPool.UIPool;
@@ -42,8 +38,8 @@ namespace Utilities.Helpers
         }
 
         public static BaseUICtrl Spawn(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
+            Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap
+            , Dictionary<UIID, BaseUICtrl> spawnedUIMap
             , UIType uiType
             , float3 position
             , quaternion quaternion)
@@ -54,8 +50,8 @@ namespace Utilities.Helpers
         }
 
         public static BaseUICtrl Spawn(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
+            Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap
+            , Dictionary<UIID, BaseUICtrl> spawnedUIMap
             , UIType uiType
             , float3 position)
         {
@@ -68,37 +64,35 @@ namespace Utilities.Helpers
         }
 
         public static void Despawn(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
+            Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap
+            , Dictionary<UIID, BaseUICtrl> spawnedUIMap
             , UIID uiID)
         {
-            if (!spawnedUIMap.Value.TryGetValue(uiID, out BaseUICtrl baseUICtrl))
-            {
-                Debug.LogError($"Can't find BaseUICtrl with ID = {uiID}");
-                return;
-            }
+            var baseUICtrl = spawnedUIMap[uiID];
+            baseUICtrl.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
+        }
 
-            if (!uiPrefabAndPoolMap.Value.TryGetValue(uiID.Type, out var uiPoolMapValue))
-            {
-                Debug.LogError($"Can't find UI prefab of type {uiID.Type}");
-                return;
-            }
+        public static void Despawn(
+            Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap
+            , Dictionary<UIID, BaseUICtrl> spawnedUIMap
+            , BaseUICtrl baseUICtrl)
+        {
+            var uiPoolMapValue = uiPrefabAndPoolMap[baseUICtrl.GetUIType()];
 
             baseUICtrl.gameObject.SetActive(false);
             baseUICtrl.transform
                 .SetParent(GetParentTransform(uiPoolMapValue));
-            spawnedUIMap.Value.Remove(uiID);
+            spawnedUIMap.Remove(baseUICtrl.RuntimeUIID);
             uiPoolMapValue.UIPool.AddToPool(baseUICtrl);
         }
 
         private static Transform GetParentTransform(UIPrefabAndPool uiPrefabAndPool) => uiPrefabAndPool.DefaultHolderTransform;
 
         private static void AddSpawnedUIIntoMap(
-            SpawnedUIMap spawnedUIMap
+            Dictionary<UIID, BaseUICtrl> spawnedUIMap
             , BaseUICtrl baseUICtrl)
         {
-            if (spawnedUIMap.Value.TryAdd(baseUICtrl.RuntimeUIID, baseUICtrl)) return;
-            Debug.LogError($"SpawnedUIMap has already contained ID = {baseUICtrl.RuntimeUIID}");
+            spawnedUIMap.Add(baseUICtrl.RuntimeUIID, baseUICtrl);
         }
 
     }
