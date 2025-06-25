@@ -105,19 +105,18 @@ namespace Utilities.Helpers
             return true;
         }
 
+        // TODO: this is not performant due to re-lookup the EntityToContainerIndexMap
         [BurstCompile]
-        private static uint GetCostFromResourceType(
+        public static uint GetCostFromResourceType(
             in EntityToContainerIndexMap entityToContainerIndexMap
             , in EntitySpawningCostsContainer entitySpawningCostsContainer
-            , in Entity prefabEntity
+            , in Entity entity
             , ResourceType resourceType)
         {
-            if (!entityToContainerIndexMap.Value.TryGetValue(prefabEntity, out int costMapIndex))
-                throw new KeyNotFoundException($"{nameof(entityToContainerIndexMap)} does not contain key: {prefabEntity}");
-
+            int costMapIndex = entityToContainerIndexMap.Value[entity];
             int costIndexInContainer = costMapIndex * ResourceType_Length.Value + (int)resourceType;
-            return entitySpawningCostsContainer.Value[costIndexInContainer];
 
+            return entitySpawningCostsContainer.Value[costIndexInContainer];
         }
 
     }
