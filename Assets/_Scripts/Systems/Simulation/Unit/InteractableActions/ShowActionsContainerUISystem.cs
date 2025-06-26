@@ -26,11 +26,12 @@ namespace Systems.Simulation.Unit.InteractableActions
             this.RequireForUpdate(query0);
             this.RequireForUpdate<UIPrefabAndPoolMap>();
             this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<ActionsContainerUIOffsetY>();
         }
 
         protected override void OnUpdate()
         {
-            const float offsetY = 4f; // TODO: Get this value from else where
+            half offsetY = SystemAPI.GetSingleton<ActionsContainerUIOffsetY>().Value;
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
 
