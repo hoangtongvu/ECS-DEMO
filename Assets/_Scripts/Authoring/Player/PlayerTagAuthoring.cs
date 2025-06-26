@@ -42,6 +42,11 @@ namespace Authoring.Player
 
                 AddComponent<NearestInteractableEntity>(entity);
 
+                AddComponent(entity, new PlayerInteractRadius
+                {
+                    Value = new(3f),
+                });
+
             }
 
         }

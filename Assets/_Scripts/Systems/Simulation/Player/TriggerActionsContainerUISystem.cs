@@ -37,7 +37,8 @@ namespace Systems.Simulation.Player
             this.playerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerTag
-                    , LocalTransform>()
+                    , LocalTransform
+                    , PlayerInteractRadius>()
                 .WithAllRW<NearestInteractableEntity>()
                 .Build();
 
@@ -53,9 +54,10 @@ namespace Systems.Simulation.Player
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             var playerTransform = this.playerQuery.GetSingleton<LocalTransform>();
             var nearestInteractableEntityRef = this.playerQuery.GetSingletonRW<NearestInteractableEntity>();
+            half playerInteractRadius = this.playerQuery.GetSingleton<PlayerInteractRadius>().Value;
 
             var hitList = new NativeList<DistanceHit>(5, Allocator.Temp);
-            this.OverlapSphere(in physicsWorld, in playerTransform.Position, ref hitList);
+            this.OverlapSphere(in physicsWorld, in playerTransform.Position, in playerInteractRadius, ref hitList);
 
             var currentNearestEntity = nearestInteractableEntityRef.ValueRO.Value;
 
@@ -91,10 +93,9 @@ namespace Systems.Simulation.Player
         private void OverlapSphere(
             in PhysicsWorldSingleton physicsWorld
             , in float3 centerPos
+            , in half radius
             , ref NativeList<DistanceHit> hitList)
         {
-            const float radius = 3f; // TODO: Need to get this from else where
-
             var collisionFilter = new CollisionFilter
             {
                 BelongsTo = (uint)CollisionLayer.Player,
