@@ -1,6 +1,9 @@
+using Core.MyEvent.PubSub.Messengers;
 using Core.UI.Identification;
+using Core.Unit.Misc;
 using System.Collections.Generic;
 using UnityEngine;
+using ZBase.Foundation.PubSub;
 
 namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel
 {
@@ -29,6 +32,12 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel
 
             this.recruitActionCostViewsHolder.Value.Clear();
 
+        }
+
+        public override void Activate()
+        {
+            GameplayMessenger.MessagePublisher
+                .Publish(new RecruitUnitMessage(this.BaseEntity));
         }
 
     }

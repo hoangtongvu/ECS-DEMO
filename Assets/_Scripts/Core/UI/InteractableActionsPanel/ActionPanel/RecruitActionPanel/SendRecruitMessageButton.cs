@@ -1,7 +1,4 @@
-using Core.MyEvent.PubSub.Messengers;
-using Core.Unit.Misc;
 using UnityEngine;
-using ZBase.Foundation.PubSub;
 
 namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel
 {
@@ -17,12 +14,7 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel
 
         private void LoadCtrl(out RecruitActionPanelCtrl ctrl) => ctrl = GetComponent<RecruitActionPanelCtrl>();
 
-        protected override void OnClick()
-        {
-            GameplayMessenger.MessagePublisher
-                .Publish(new RecruitUnitMessage(this.ctrl.BaseEntity));
-            
-        }
+        protected override void OnClick() => this.ctrl.Activate();
 
     }
 

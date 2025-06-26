@@ -98,7 +98,7 @@ namespace Systems.Simulation.Unit.InteractableActions
 
                 }
 
-                actionPanelCtrl.Initialize(in entity, 0);
+                actionPanelCtrl.Initialize(in entity, 0, actionsContainerUIHolderRef.ValueRO.Value);
                 actionPanelCtrl.gameObject.SetActive(true);
                 actionsContainerUIHolderRef.ValueRO.Value.Value.ActionPanelsHolder.Add(actionPanelCtrl);
 

@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -218,6 +218,7 @@ GameObject:
   - component: {fileID: 5625069851195845900}
   - component: {fileID: 1996558030524638614}
   - component: {fileID: 8498536974075985559}
+  - component: {fileID: -1532357902466070691}
   m_Layer: 0
   m_Name: RecruitActionPanel
   m_TagString: Untagged
@@ -399,5 +400,32 @@ MonoBehaviour:
     LocalId: 0
   CanvasType: 1
   CanvasAnchorPreset: 0
+  actionsContainerUICtrl: {fileID: 0}
+  transformScaler: {fileID: -1532357902466070691}
+  originalScale:
+    x: 0
+    y: 0
+    z: 0
   <PriorityInContainer>k__BackingField: 0
   recruitActionCostViewsHolder: {fileID: 8019039375908006334}
+--- !u!114 &-1532357902466070691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8368578966582362874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fed700618f6beb044ac1ebe343f66daa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tweenDuration: 0.4
+  targetScale:
+    x: 1.3
+    y: 1.3
+    z: 1
+  originalScale:
+    x: 0
+    y: 0
+    z: 0

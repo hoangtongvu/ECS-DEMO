@@ -22,6 +22,7 @@ namespace Core.UI.InteractableActionsPanel
 
                 this.value.Insert(i, newCtrl);
                 newCtrl.transform.SetParent(transform);
+                newCtrl.transform.SetSiblingIndex(i);
                 return;
             }
 

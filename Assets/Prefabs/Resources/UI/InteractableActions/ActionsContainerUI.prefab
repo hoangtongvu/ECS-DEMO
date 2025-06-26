@@ -64,6 +64,7 @@ MonoBehaviour:
   CanvasType: 1
   CanvasAnchorPreset: 0
   actionPanelsHolder: {fileID: 846689467605184651}
+  chosenActionPanelCtrl: {fileID: 0}
 --- !u!1 &9051269734694153287
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,4 +138,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcbf6536678a7b24e9d76cc5360eb11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionsContainerUICtrl: {fileID: -5448288403968067478}
   value: []
