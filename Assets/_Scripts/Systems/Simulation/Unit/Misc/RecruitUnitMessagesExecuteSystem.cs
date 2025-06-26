@@ -4,14 +4,16 @@ using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.Misc;
 using Components.GameResource;
 using Components.Player;
+using Components.Unit.InteractableActions;
 using Components.Unit.Misc;
+using Systems.Simulation.Unit.InteractableActions;
 using Unity.Burst;
 using Unity.Entities;
 using Utilities.Helpers;
 
 namespace Systems.Simulation.Unit.Misc
 {
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+    [UpdateInGroup(typeof(ActionsTriggeredSystemGroup))]
     [BurstCompile]
     public partial struct RecruitUnitMessagesExecuteSystem : ISystem
     {
@@ -53,6 +55,7 @@ namespace Systems.Simulation.Unit.Misc
                 if (!canSpendResources) continue;
 
                 unitFactionIndexRef.ValueRW = playerFactionIndex;
+                SystemAPI.SetComponentEnabled<NewlyActionTriggeredTag>(baseEntity, true);
 
             }
 

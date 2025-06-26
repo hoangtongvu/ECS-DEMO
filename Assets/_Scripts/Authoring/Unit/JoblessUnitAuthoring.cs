@@ -166,6 +166,7 @@ namespace Authoring.Unit
                 this.AddAndDisableComponent<CanShowActionsContainerUITag>(entity);
                 this.AddAndDisableComponent<ActionsContainerUIShownTag>(entity);
                 this.AddComponent<ActionsContainerUIHolder>(entity);
+                this.AddAndDisableComponent<NewlyActionTriggeredTag>(entity);
 
             }
 
