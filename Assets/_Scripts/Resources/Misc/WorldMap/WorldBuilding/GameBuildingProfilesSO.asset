@@ -148,3 +148,5 @@ MonoBehaviour:
             Value: 1
           - Key: 1
             Value: 1
+  GameBuildingGlobalConfigs:
+    BlueprintMaterial: {fileID: 2100000, guid: 0755802db9fa1b541b14d4639bdb8f70, type: 2}

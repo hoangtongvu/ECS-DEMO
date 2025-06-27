@@ -19,6 +19,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
     public class GameBuildingProfilesSO : GameEntityProfilesSO<GameBuildingProfileId, GameBuildingProfileElement>
     {
         public static readonly string DefaultAssetPath = "Misc/GameBuildingProfilesSO";
+        public GameBuildingGlobalConfigs GameBuildingGlobalConfigs;
     }
 
 }
