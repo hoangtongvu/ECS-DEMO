@@ -30,6 +30,7 @@ namespace Authoring.GameEntity.EntitySpawning
                 });
 
                 AddComponent(entity, FactionIndex.Neutral);
+                AddComponent<SpawnerEntityHolder>(entity);
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 

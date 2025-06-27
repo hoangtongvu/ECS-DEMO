@@ -8,6 +8,7 @@ using Utilities;
 using Unity.Collections;
 using Utilities.Extensions;
 using Core.Misc.WorldMap;
+using Components.GameEntity.EntitySpawning;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
@@ -44,6 +45,14 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                 var newEntity = state.EntityManager.Instantiate(buildCommand.Entity);
 
                 state.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(buildCommand.BuildingCenterPos));
+
+                if (SystemAPI.HasComponent<SpawnerEntityHolder>(newEntity))
+                {
+                    SystemAPI.SetComponent(newEntity, new SpawnerEntityHolder
+                    {
+                        Value = buildCommand.SpawnerEntity,
+                    });
+                }
 
                 this.MarkCellsAsObstacle(in costMap, in buildCommand.TopLeftCellGridPos, buildCommand.GridSquareSize);
 

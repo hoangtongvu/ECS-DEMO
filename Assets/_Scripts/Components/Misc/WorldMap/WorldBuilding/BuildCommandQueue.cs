@@ -10,6 +10,7 @@ namespace Components.Misc.WorldMap.WorldBuilding
         public int2 TopLeftCellGridPos;
         public float3 BuildingCenterPos;
         public int GridSquareSize;
+        public Entity SpawnerEntity;
     }
 
     public struct BuildCommandQueue : IComponentData
