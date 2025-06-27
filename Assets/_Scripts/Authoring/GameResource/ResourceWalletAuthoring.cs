@@ -20,7 +20,7 @@ namespace Authoring.GameResource
 
                 for (int i = 0; i < walletLength; i++)
                 {
-                    resourceWallet.ElementAt(i).Quantity = 10;
+                    resourceWallet.ElementAt(i).Quantity = 100;
                 }
 
                 AddComponent<WalletChangedTag>(entity);
