@@ -4,6 +4,8 @@ using Components.Unit.UnitSelection;
 using Systems.Simulation.Misc;
 using Components.Misc;
 using Core.Misc;
+using Components.GameEntity.Misc;
+using Components.Player;
 
 namespace Systems.Simulation.Unit
 {
@@ -12,9 +14,18 @@ namespace Systems.Simulation.Unit
     [BurstCompile]
     public partial struct SelectUnitSystem : ISystem
     {
+        private EntityQuery playerQuery;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            this.playerQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    PlayerTag
+                    , FactionIndex>()
+                .Build();
+
+            state.RequireForUpdate(this.playerQuery);
             state.RequireForUpdate<SelectionHitElement>();
             state.RequireForUpdate<UnitSelectedTag>();
         }
@@ -34,16 +45,21 @@ namespace Systems.Simulation.Unit
             var selectionHits = SystemAPI.GetSingletonBuffer<SelectionHitElement>();
             if (selectionHits.IsEmpty) return;
 
+            byte playerFactionIndex = this.playerQuery.GetSingleton<FactionIndex>().Value;
+
             for (int i = 0; i < selectionHits.Length; i++)
             {
                 var hit = selectionHits[i];
                 if (hit.SelectionType != SelectionType.Unit) continue;
 
-                
                 selectionHits.RemoveAt(i);
                 i--;
 
                 var hitEntity = hit.HitEntity;
+
+                bool unitFromDifferentFaction = SystemAPI.GetComponent<FactionIndex>(hitEntity).Value != playerFactionIndex;
+                if (unitFromDifferentFaction) continue;
+
                 bool unitIsSelected = SystemAPI.IsComponentEnabled<UnitSelectedTag>(hitEntity);
 
                 if (unitIsSelected) continue;
