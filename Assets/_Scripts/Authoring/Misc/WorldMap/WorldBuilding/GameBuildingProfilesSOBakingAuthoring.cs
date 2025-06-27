@@ -46,7 +46,7 @@ namespace Authoring.Misc.WorldMap.WorldBuilding
 
                     spawningDurationSecondsBuffer.Add(new()
                     {
-                        Value = 0f,
+                        Value = profile.Value.SpawnDurationSeconds,
                     });
 
                     for (int i = 0; i < resourceCount; i++)
