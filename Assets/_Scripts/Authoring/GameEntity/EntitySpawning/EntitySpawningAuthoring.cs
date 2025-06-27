@@ -1,4 +1,5 @@
 ﻿using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.Misc;
 using Components.Misc;
 using Core.GameEntity;
 using System;
@@ -27,6 +28,8 @@ namespace Authoring.GameEntity.EntitySpawning
                 {
                     Value = 3
                 });
+
+                AddComponent(entity, FactionIndex.Neutral);
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 

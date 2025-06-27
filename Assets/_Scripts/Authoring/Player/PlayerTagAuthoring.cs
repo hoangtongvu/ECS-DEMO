@@ -4,6 +4,7 @@ using Components.GameEntity.Misc;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Player;
+using Components.Unit.InteractableActions;
 using Components.Unit.NearUnitDropItems;
 using Core.GameEntity.Misc;
 using Unity.Entities;
@@ -37,6 +38,13 @@ namespace Authoring.Player
                 AddComponent(entity, new DmgValue
                 {
                     Value = 10,
+                });
+
+                AddComponent<NearestInteractableEntity>(entity);
+
+                AddComponent(entity, new PlayerInteractRadius
+                {
+                    Value = new(3f),
                 });
 
             }

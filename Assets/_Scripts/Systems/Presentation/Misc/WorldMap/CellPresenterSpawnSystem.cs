@@ -6,6 +6,7 @@ using Components.ComponentMap;
 using Core.UI.Identification;
 using Components.Misc.WorldMap;
 using Core.UI.WorldMapDebug;
+using Core.Utilities.Helpers;
 using Utilities;
 using UnityEngine;
 
@@ -86,8 +87,8 @@ namespace Systems.Presentation.Misc.WorldMap
 
                 var presenterCtrl = (CellPresenterCtrl)
                     UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap
-                        , spawnedUIMap
+                        uiPrefabAndPoolMap.Value
+                        , spawnedUIMap.Value
                         , UIType.WorldMapCellPresenter
                         , center);
 

@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Unity.Transforms;
 using Components.ComponentMap;
-using Utilities.Helpers;
 using Core.UI.EntitySpawningPanel;
 using Components.GameEntity.EntitySpawning;
 using Components.Misc;
@@ -63,36 +62,14 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             , EntitySpawningPanelCtrl entitySpawningPanelCtrl
             , float3 toPos)
         {
-            var spawningProfileDisplayCtrls = entitySpawningPanelCtrl.SpawningDisplaysHolder.SpawningProfileDisplayCtrls;
-            int profileCount = spawningProfileDisplayCtrls.Count;
-
             LMotion.Create(new float3(1, 1, 1), float3.zero, 1f)
                 .WithEase(Ease.OutExpo)
-                .WithOnComplete(() =>
-                {
-                    UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, entitySpawningPanelCtrl.RuntimeUIID);
-                })
+                .WithOnComplete(() => entitySpawningPanelCtrl.Despawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value))
                 .Bind(tempScale => entitySpawningPanelCtrl.transform.localScale = tempScale);
 
             LMotion.Create(entitySpawningPanelCtrl.transform.position, toPos, 1f)
                 .WithEase(Ease.OutExpo)
                 .Bind(tempPos => entitySpawningPanelCtrl.transform.position = tempPos);
-
-            for (int i = 0; i < profileCount; i++)
-            {
-                var profileDisplayCtrl = spawningProfileDisplayCtrls[i];
-
-                LMotion.Create(new float3(1, 1, 1), float3.zero, 1f)
-                    .WithEase(Ease.OutExpo)
-                    .WithOnComplete(() =>
-                    {
-                        UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, profileDisplayCtrl.RuntimeUIID);
-                    })
-                    .Bind(tempScale => profileDisplayCtrl.transform.localScale = tempScale);
-
-            }
-
-            spawningProfileDisplayCtrls.Clear();
 
         }
 

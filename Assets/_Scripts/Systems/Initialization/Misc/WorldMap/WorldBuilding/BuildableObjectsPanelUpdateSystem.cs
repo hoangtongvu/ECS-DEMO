@@ -6,9 +6,9 @@ using Core.UI;
 using Core.UI.Identification;
 using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel;
 using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjectDisplay;
+using Core.Utilities.Helpers;
 using Unity.Collections;
 using Unity.Entities;
-using Utilities.Helpers;
 using ZBase.Foundation.PubSub;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
@@ -52,7 +52,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                 // Despawn all existing DisplayPanel
                 foreach (var displayCtrl in displaysHolder.Displays)
                 {
-                    UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, displayCtrl.RuntimeUIID);
+                    displayCtrl.Despawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value);
                 }
 
                 displaysHolder.Displays.Clear();
@@ -62,8 +62,8 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                 foreach (var playerBuildableObjectElement in buildableObjects)
                 {
                     var buildableObjectDisplayCtrl = (BuildableObjectDisplayCtrl)UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap
-                        , spawnedUIMap
+                        uiPrefabAndPoolMap.Value
+                        , spawnedUIMap.Value
                         , UIType.BuildableObjectDisplay);
 
                     buildableObjectDisplayCtrl.gameObject.SetActive(true);

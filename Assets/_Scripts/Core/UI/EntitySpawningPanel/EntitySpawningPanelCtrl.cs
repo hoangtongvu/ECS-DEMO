@@ -1,3 +1,5 @@
+using Core.UI.Identification;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.UI.EntitySpawningPanel
@@ -13,6 +15,19 @@ namespace Core.UI.EntitySpawningPanel
         {
             base.LoadComponents();
             this.LoadComponentInChildren(ref this.spawningDisplaysHolder);
+        }
+
+        public override void Despawn(Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap, Dictionary<UIID, BaseUICtrl> spawnedUIMap)
+        {
+            base.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
+
+            foreach (var spawningProfileDisplay in this.spawningDisplaysHolder.Value)
+            {
+                spawningProfileDisplay.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
+            }
+
+            this.spawningDisplaysHolder.Value.Clear();
+
         }
 
     }

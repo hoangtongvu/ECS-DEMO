@@ -1,7 +1,7 @@
 using Unity.Entities;
-using Utilities.Helpers;
 using Components.ComponentMap;
 using Core.UI.Identification;
+using Core.Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
@@ -21,7 +21,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
 
-            UISpawningHelper.Spawn(uiPrefabAndPoolMap, spawnedUIMap, UIType.BuildModeTrigger);
+            UISpawningHelper.Spawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value, UIType.BuildModeTrigger);
 
         }
 

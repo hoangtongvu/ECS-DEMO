@@ -2,10 +2,10 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Core.UI.Identification;
+using Core.Utilities.Helpers;
 using Core.UI.EntitySpawningPanel;
 using Core.UI.EntitySpawningPanel.SpawningProfileDisplay;
 using Components.ComponentMap;
-using Utilities.Helpers;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
@@ -90,9 +90,9 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             , out EntitySpawningPanelCtrl entitySpawningPanelCtrl)
         {
             entitySpawningPanelCtrl =
-                (EntitySpawningPanelCtrl) UISpawningHelper.Spawn(
-                    uiPrefabAndPoolMap
-                    , spawnedUIMap
+                (EntitySpawningPanelCtrl)UISpawningHelper.Spawn(
+                    uiPrefabAndPoolMap.Value
+                    , spawnedUIMap.Value
                     , UIType.EntitySpawningPanel
                     , spawnPos);
 
@@ -124,9 +124,9 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 
                 // Grid layout won't config Z dimension, that why setting unitProfileUICtrl position is required.
                 var profileDisplayCtrl =
-                    (SpawningProfileDisplayCtrl) UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap
-                        , spawnedUIMap
+                    (SpawningProfileDisplayCtrl)UISpawningHelper.Spawn(
+                        uiPrefabAndPoolMap.Value
+                        , spawnedUIMap.Value
                         , UIType.SpawningProfileDisplay
                         , spawnPos);
 
