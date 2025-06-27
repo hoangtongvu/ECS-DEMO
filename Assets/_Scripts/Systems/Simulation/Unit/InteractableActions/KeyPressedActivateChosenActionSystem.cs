@@ -25,7 +25,7 @@ namespace Systems.Simulation.Unit.InteractableActions
                 .Query<
                     RefRO<ActionsContainerUIHolder>>())
             {
-                actionsContainerUIHolderRef.ValueRO.Value.Value.ChosenActionPanelCtrl?.Activate();
+                actionsContainerUIHolderRef.ValueRO.Value.Value?.ChosenActionPanelCtrl?.Activate();
             }
 
         }
