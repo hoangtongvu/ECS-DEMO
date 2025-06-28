@@ -20,8 +20,9 @@ MonoBehaviour:
         Name: House
         ProfilePicture: {fileID: 21300000, guid: ed5474fc2732ba54f99fae691ce9cdf8,
           type: 3}
-        PresenterPrefab: {fileID: 0}
-        IsPresenterEntity: 1
+        PresenterPrefab: {fileID: 6544274273311614958, guid: cd7c14d43ba0ecd46a7f5609e1b97b4c,
+          type: 3}
+        IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
           type: 3}
         GameEntitySize:
@@ -43,8 +44,9 @@ MonoBehaviour:
         Name: AxeSpawner
         ProfilePicture: {fileID: 21300000, guid: 223a61bc9202046408dd1a38e0051eeb,
           type: 3}
-        PresenterPrefab: {fileID: 0}
-        IsPresenterEntity: 1
+        PresenterPrefab: {fileID: 9115495792767966074, guid: 8d4b68f910c4b5f4999c536bb282dd6c,
+          type: 3}
+        IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 9115495792767966074, guid: 136dbed38cae8cc419daa750f6417450,
           type: 3}
         GameEntitySize:
@@ -66,8 +68,9 @@ MonoBehaviour:
         Name: PickaxeSpawner
         ProfilePicture: {fileID: 21300000, guid: d0462d85729ce134887063bb9cfe9c33,
           type: 3}
-        PresenterPrefab: {fileID: 0}
-        IsPresenterEntity: 1
+        PresenterPrefab: {fileID: 9115495792767966074, guid: 7b00cdfd4f764b84b8da5ac8f0b6deaa,
+          type: 3}
+        IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 9115495792767966074, guid: a492c0a594144a84084624c553eac045,
           type: 3}
         GameEntitySize:
