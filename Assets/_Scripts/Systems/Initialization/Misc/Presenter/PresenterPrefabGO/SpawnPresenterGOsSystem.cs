@@ -1,7 +1,6 @@
 using Components.GameEntity;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
-using Core.Animator;
 using Core.Misc.Presenter;
 using Unity.Collections;
 using Unity.Entities;
@@ -114,8 +113,7 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
 
         private void TryInitAnimatorHolder(EntityCommandBuffer ecb, in Entity entity, in BasePresenter newPresenter)
         {
-            if (!newPresenter.TryGetBaseAnimator(out var animator))
-                throw new System.NullReferenceException($"Presenter with name {newPresenter.gameObject.name} is expected to have {nameof(BaseAnimator)}, but it's is missing.");
+            if (!newPresenter.TryGetBaseAnimator(out var animator)) return;
 
             ecb.AddComponent(entity, new AnimatorHolder
             {
