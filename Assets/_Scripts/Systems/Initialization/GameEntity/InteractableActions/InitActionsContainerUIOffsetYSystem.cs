@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Utilities;
 
-namespace Systems.Initialization.Unit.InteractableActions
+namespace Systems.Initialization.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]
