@@ -1,5 +1,5 @@
 using Components.ComponentMap;
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel;
 using Core.Utilities.Extensions;
@@ -8,7 +8,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup), OrderFirst = true)]
     public partial class ShowActionsContainerUISystem : SystemBase

@@ -2,9 +2,9 @@ using Components.ComponentMap;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.GameResource;
-using Components.Unit.InteractableActions;
 using Core.GameResource;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel;
@@ -13,7 +13,7 @@ using Core.Utilities.Helpers;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
     public partial class SpawnRecruitActionPanelSystem : SystemBase

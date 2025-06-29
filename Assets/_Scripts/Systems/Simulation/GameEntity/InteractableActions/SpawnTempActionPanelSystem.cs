@@ -1,12 +1,12 @@
 using Components.ComponentMap;
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel;
 using Core.Utilities.Helpers;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
     public partial class SpawnTempActionPanelSystem : SystemBase

@@ -1,5 +1,5 @@
+using Components.GameEntity.InteractableActions;
 using Components.Player;
-using Components.Unit.InteractableActions;
 using Core.Misc;
 using System.Collections.Generic;
 using Unity.Burst;

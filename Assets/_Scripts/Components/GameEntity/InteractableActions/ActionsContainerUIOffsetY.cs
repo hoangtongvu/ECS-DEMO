@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components.Unit.InteractableActions
+namespace Components.GameEntity.InteractableActions
 {
     public struct ActionsContainerUIOffsetY : IComponentData
     {

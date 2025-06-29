@@ -1,11 +1,11 @@
+using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Movement;
-using Components.Unit.InteractableActions;
 using Core.Utilities.Extensions;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup), OrderLast = true)]
     [UpdateAfter(typeof(ActionsContainerUIShownTagHandleSystem))]

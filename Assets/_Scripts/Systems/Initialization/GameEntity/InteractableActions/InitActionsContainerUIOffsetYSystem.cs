@@ -1,10 +1,10 @@
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Utilities;
 
-namespace Systems.Initialization.Unit.InteractableActions
+namespace Systems.Initialization.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]

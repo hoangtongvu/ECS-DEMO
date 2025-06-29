@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Components.Unit.InteractableActions
+namespace Components.GameEntity.InteractableActions
 {
     public struct NearestInteractableEntity : IComponentData
     {

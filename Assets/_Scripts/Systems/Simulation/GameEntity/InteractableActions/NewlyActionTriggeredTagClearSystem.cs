@@ -1,8 +1,8 @@
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionsTriggeredSystemGroup), OrderFirst = true)]
     [BurstCompile]
