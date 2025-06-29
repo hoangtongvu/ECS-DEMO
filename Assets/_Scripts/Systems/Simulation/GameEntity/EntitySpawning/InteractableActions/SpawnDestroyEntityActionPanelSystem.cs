@@ -11,7 +11,7 @@ using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Systems.Simulation.GameEntity.EntitySpawning
+namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
     public partial class SpawnDestroyEntityActionPanelSystem : SystemBase
