@@ -1,4 +1,4 @@
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 using Unity.Burst;
 using Unity.Entities;
 

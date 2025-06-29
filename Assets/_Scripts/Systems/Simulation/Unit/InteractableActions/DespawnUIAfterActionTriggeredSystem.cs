@@ -1,5 +1,5 @@
 using Components.ComponentMap;
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 using Unity.Entities;
 
 namespace Systems.Simulation.Unit.InteractableActions

@@ -21,7 +21,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Utilities.Helpers;
 using Authoring.Utilities.Extensions;
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 
 namespace Authoring.Unit
 {

@@ -1,7 +1,7 @@
 using Core.UI.InteractableActionsPanel;
 using Unity.Entities;
 
-namespace Components.Unit.InteractableActions
+namespace Components.GameEntity.InteractableActions
 {
     public struct ActionsContainerUIHolder : IComponentData
     {

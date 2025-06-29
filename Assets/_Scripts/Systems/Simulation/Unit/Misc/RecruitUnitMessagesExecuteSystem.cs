@@ -1,10 +1,10 @@
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.GameResource;
 using Components.Player;
-using Components.Unit.InteractableActions;
 using Components.Unit.Misc;
 using Systems.Simulation.Unit.InteractableActions;
 using Unity.Burst;

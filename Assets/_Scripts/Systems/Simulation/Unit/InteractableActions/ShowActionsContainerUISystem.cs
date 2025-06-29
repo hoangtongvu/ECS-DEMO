@@ -1,5 +1,5 @@
 using Components.ComponentMap;
-using Components.Unit.InteractableActions;
+using Components.GameEntity.InteractableActions;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel;
 using Core.Utilities.Extensions;
