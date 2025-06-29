@@ -3,11 +3,11 @@ using Components.GameEntity.Damage;
 using Components.GameEntity.Interaction;
 using Components.Unit;
 using Components.Unit.Misc;
-using Core.GameEntity;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using static Utilities.Helpers.Misc.InteractionHelper;
 
 namespace Systems.Simulation.Unit.Misc
 {
@@ -66,7 +66,7 @@ namespace Systems.Simulation.Unit.Misc
 
                 if (!SystemAPI.Exists(interactingEntityRef.ValueRO.Value))
                 {
-                    this.StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
+                    StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
                     continue;
                 }
 
@@ -85,7 +85,7 @@ namespace Systems.Simulation.Unit.Misc
 
                 if (currentDistance > maxFollowDistanceMap[unitProfileIdRef.ValueRO.Value])
                 {
-                    this.StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
+                    StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
                     continue;
                 }
 
@@ -95,7 +95,7 @@ namespace Systems.Simulation.Unit.Misc
 
                 if (!isCurrentDistanceInInteractableRange)
                 {
-                    this.StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
+                    StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
                     continue;
                 }
 
@@ -141,15 +141,6 @@ namespace Systems.Simulation.Unit.Misc
                 && absDistanceXZ.x >= 0
                 && absDistanceXZ.y <= interactableDistanceRange.MaxValue
                 && absDistanceXZ.y >= interactableDistanceRange.MinValue;
-        }
-
-        [BurstCompile]
-        private void StopInteraction(
-            ref InteractingEntity interactingEntity
-            , ref InteractionTypeICD interactionTypeICD)
-        {
-            interactingEntity.Value = Entity.Null;
-            interactionTypeICD.Value = InteractionType.None;
         }
 
     }

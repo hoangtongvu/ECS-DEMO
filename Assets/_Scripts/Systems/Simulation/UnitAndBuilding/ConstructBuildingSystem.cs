@@ -6,6 +6,7 @@ using Components.Unit.Misc;
 using Core.GameEntity;
 using Unity.Burst;
 using Unity.Entities;
+using static Utilities.Helpers.Misc.InteractionHelper;
 
 namespace Systems.Simulation.UnitAndBuilding
 {
@@ -59,7 +60,7 @@ namespace Systems.Simulation.UnitAndBuilding
                 bool buildingInConstruction = SystemAPI.HasComponent<ConstructionRemaining>(interactingEntity);
                 if (!buildingInConstruction)
                 {
-                    this.StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
+                    StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
                     continue;
                 }
 
@@ -85,15 +86,6 @@ namespace Systems.Simulation.UnitAndBuilding
             constructionRemainingRef.ValueRW.Value = constructionRemainingRef.ValueRO.Value < dmgValue
                 ? 0
                 : constructionRemainingRef.ValueRO.Value - dmgValue;
-        }
-
-        [BurstCompile]
-        private void StopInteraction(
-            ref InteractingEntity interactingEntity
-            , ref InteractionTypeICD interactionTypeICD)
-        {
-            interactingEntity.Value = Entity.Null;
-            interactionTypeICD.Value = InteractionType.None;
         }
 
     }
