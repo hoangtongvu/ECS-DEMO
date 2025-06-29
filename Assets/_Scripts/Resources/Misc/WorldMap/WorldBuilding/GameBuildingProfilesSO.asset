@@ -31,7 +31,7 @@ MonoBehaviour:
         HasHpComponents: 1
         HpData:
           MaxHp: 50
-        SpawnDurationSeconds: 2
+        SpawnDurationSeconds: 0.2
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
