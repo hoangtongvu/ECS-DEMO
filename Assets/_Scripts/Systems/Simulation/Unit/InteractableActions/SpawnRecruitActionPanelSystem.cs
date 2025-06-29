@@ -10,10 +10,11 @@ using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel.RecruitActionCostView;
 using Core.Utilities.Helpers;
+using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Systems.Simulation.GameEntity.InteractableActions
+namespace Systems.Simulation.Unit.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
     public partial class SpawnRecruitActionPanelSystem : SystemBase
