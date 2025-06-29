@@ -9,7 +9,7 @@ using Unity.Collections;
 using Utilities.Extensions;
 using Core.Misc.WorldMap;
 using Components.GameEntity.EntitySpawning;
-using Components.Misc.WorldMap.WorldBuilding.Blueprint;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {

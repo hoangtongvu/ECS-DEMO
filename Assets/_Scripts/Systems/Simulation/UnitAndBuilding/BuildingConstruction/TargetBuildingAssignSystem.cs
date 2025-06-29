@@ -3,9 +3,9 @@ using Unity.Burst;
 using Systems.Simulation.GameEntity;
 using Core.GameEntity;
 using Components.GameEntity.Interaction;
-using Components.Misc.WorldMap.WorldBuilding.Blueprint;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 
-namespace Systems.Simulation.UnitAndBuilding
+namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetCanInteractFlagSystem))]

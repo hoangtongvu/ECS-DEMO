@@ -1,10 +1,10 @@
 using Components.GameEntity;
 using Components.Misc.WorldMap.WorldBuilding;
-using Components.Misc.WorldMap.WorldBuilding.Blueprint;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 using Unity.Entities;
 using Utilities;
 
-namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.Blueprint
+namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildingConstruction
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class BlueprintMaterialHolderInitSystem : SystemBase

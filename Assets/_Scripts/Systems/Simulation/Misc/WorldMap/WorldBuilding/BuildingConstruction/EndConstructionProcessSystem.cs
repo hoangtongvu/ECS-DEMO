@@ -1,13 +1,13 @@
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
-using Components.Misc.WorldMap.WorldBuilding.Blueprint;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 using Core.Misc.Presenter;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.Blueprint
+namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildingConstruction
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class EndConstructionProcessSystem : SystemBase

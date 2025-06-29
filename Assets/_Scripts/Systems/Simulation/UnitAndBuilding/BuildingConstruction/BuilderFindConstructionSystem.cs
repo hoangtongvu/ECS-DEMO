@@ -5,7 +5,7 @@ using Components.GameEntity.Movement;
 using Components.GameEntity.Movement.MoveCommand;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.PathFinding;
-using Components.Misc.WorldMap.WorldBuilding.Blueprint;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 using Components.Unit;
 using Components.Unit.Misc;
 using Components.Unit.Reaction;
@@ -19,7 +19,7 @@ using Unity.Physics;
 using Unity.Transforms;
 using Utilities.Jobs;
 
-namespace Systems.Simulation.UnitAndBuilding
+namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class BuilderFindConstructionSystemGroup : ComponentSystemGroup

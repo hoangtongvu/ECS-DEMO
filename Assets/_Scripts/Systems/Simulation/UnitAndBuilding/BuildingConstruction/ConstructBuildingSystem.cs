@@ -1,14 +1,14 @@
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
 using Components.Misc;
-using Components.Misc.WorldMap.WorldBuilding.Blueprint;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 using Components.Unit.Misc;
 using Core.GameEntity;
 using Unity.Burst;
 using Unity.Entities;
 using static Utilities.Helpers.Misc.InteractionHelper;
 
-namespace Systems.Simulation.UnitAndBuilding
+namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]

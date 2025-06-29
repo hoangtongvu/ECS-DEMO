@@ -3,7 +3,7 @@ using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
-using Components.Misc.WorldMap.WorldBuilding.Blueprint;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 using Core.Misc.Presenter;
 using Systems.Initialization.Misc.Presenter;
 using Systems.Initialization.Misc.Presenter.PresenterPrefabGO;
@@ -13,7 +13,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.Blueprint
+namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildingConstruction
 {
     [UpdateInGroup(typeof(NeedSpawnPresenterTagProcessSystemGroup))]
     [UpdateAfter(typeof(SpawnPresenterGOsSystem))]
