@@ -1,7 +1,7 @@
 using Components.GameEntity.InteractableActions;
 using Unity.Entities;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup), OrderLast = true)]
     [UpdateBefore(typeof(ActionsContainerUIShownTagHandleSystem))]

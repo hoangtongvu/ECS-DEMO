@@ -6,7 +6,7 @@ using Components.GameEntity.Misc;
 using Components.GameResource;
 using Components.Player;
 using Components.Unit.Misc;
-using Systems.Simulation.Unit.InteractableActions;
+using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Burst;
 using Unity.Entities;
 using Utilities.Helpers;

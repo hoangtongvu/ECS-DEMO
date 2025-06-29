@@ -6,7 +6,7 @@ using Core.Utilities.Helpers;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
     public partial class SpawnTempActionPanelSystem : SystemBase

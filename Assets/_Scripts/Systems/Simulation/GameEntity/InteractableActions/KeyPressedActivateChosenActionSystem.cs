@@ -2,7 +2,7 @@ using Components.GameEntity.InteractableActions;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class KeyPressedActivateChosenActionSystem : SystemBase

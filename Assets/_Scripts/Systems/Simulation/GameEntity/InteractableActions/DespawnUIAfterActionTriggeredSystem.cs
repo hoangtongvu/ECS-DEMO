@@ -2,7 +2,7 @@ using Components.ComponentMap;
 using Components.GameEntity.InteractableActions;
 using Unity.Entities;
 
-namespace Systems.Simulation.Unit.InteractableActions
+namespace Systems.Simulation.GameEntity.InteractableActions
 {
     [UpdateInGroup(typeof(ActionUIsHandleSystemGroup), OrderFirst = true)]
     [UpdateBefore(typeof(ShowActionsContainerUISystem))]
