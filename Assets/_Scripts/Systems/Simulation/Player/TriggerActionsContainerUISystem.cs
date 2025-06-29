@@ -99,7 +99,7 @@ namespace Systems.Simulation.Player
             var collisionFilter = new CollisionFilter
             {
                 BelongsTo = (uint)CollisionLayer.Player,
-                CollidesWith = (uint)CollisionLayer.Unit,
+                CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Building),
             };
 
             physicsWorld.OverlapSphere(centerPos, radius, ref hitList, collisionFilter);

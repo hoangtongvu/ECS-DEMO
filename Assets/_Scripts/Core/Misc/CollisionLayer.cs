@@ -10,5 +10,6 @@ namespace Core.Misc
         Ground = 1 << 7,
         Unit = 1 << 8,
         Item = 1 << 9,
+        Building = 1 << 10,
     }
 }
