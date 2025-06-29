@@ -17,6 +17,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.Blueprint
 {
     [UpdateInGroup(typeof(NeedSpawnPresenterTagProcessSystemGroup))]
     [UpdateAfter(typeof(SpawnPresenterGOsSystem))]
+    [UpdateAfter(typeof(PresenterOriginalMaterialHolderInitSystem))]
     public partial class ChangeBuildingToBlueprintSystem : SystemBase
     {
         private EntityQuery query0;
