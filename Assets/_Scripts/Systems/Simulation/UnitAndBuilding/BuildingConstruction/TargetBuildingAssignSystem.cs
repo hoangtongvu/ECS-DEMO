@@ -44,7 +44,7 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
                 if (!SystemAPI.HasComponent<ConstructionRemaining>(targetEntity)) continue;
 
                 interactingEntityRef.ValueRW.Value = targetEntity;
-                interactionTypeICDRef.ValueRW.Value = InteractionType.Attack; // TODO: Change this
+                interactionTypeICDRef.ValueRW.Value = InteractionType.WorkOn;
 
             }
 

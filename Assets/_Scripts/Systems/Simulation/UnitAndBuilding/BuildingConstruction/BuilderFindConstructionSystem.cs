@@ -143,7 +143,7 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
             state.Dependency = new SetCanOverrideMoveCommandTagJob
             {
                 MoveCommandPrioritiesMap = moveCommandPrioritiesMap,
-                NewMoveCommandSource = MoveCommandSource.AutoAttack, // TODO: Change this to something else
+                NewMoveCommandSource = MoveCommandSource.AutoWork,
             }.ScheduleParallel(this.setCanOverrideMoveCommandTagJobQuery, state.Dependency);
 
             state.Dependency = new SetSpeedsAsRunSpeedsJob()
