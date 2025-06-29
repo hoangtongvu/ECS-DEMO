@@ -51,7 +51,8 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
 
             this.builderUnitQuery = SystemAPI.QueryBuilder()
                 .WithAll<
-                    LocalTransform
+                    UnitProfileIdHolder
+                    , LocalTransform
                     , FactionIndex
                     , InteractingEntity
                     , MoveCommandElement
@@ -100,6 +101,7 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
             state.RequireForUpdate<GameEntitySizeMap>();
             state.RequireForUpdate<CellRadius>();
             state.RequireForUpdate<UnitReactionConfigsMap>();
+            state.RequireForUpdate<DetectionRadiusMap>();
 
         }
 
@@ -110,6 +112,7 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>();
             var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
+            var detectionRadiusMap = SystemAPI.GetSingleton<DetectionRadiusMap>();
 
             var buildingEntities = this.needConstructionBuildingQuery.ToEntityArray(Allocator.TempJob);
             var buildingTransforms = this.needConstructionBuildingQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
@@ -128,6 +131,7 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
                 BuildingEntities = buildingEntities,
                 BuildingTransforms = buildingTransforms,
                 FactionIndexLookup = SystemAPI.GetComponentLookup<FactionIndex>(),
+                DetectionRadiusMap = detectionRadiusMap,
                 TargetEntities = targetEntities,
                 TargetPositions = targetPositions,
             }.ScheduleParallel(state.Dependency);
@@ -180,11 +184,14 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
             [ReadOnly] public NativeArray<LocalTransform> BuildingTransforms;
             [ReadOnly] public ComponentLookup<FactionIndex> FactionIndexLookup;
 
+            [ReadOnly] public DetectionRadiusMap DetectionRadiusMap;
+
             [WriteOnly] public NativeArray<Entity> TargetEntities;
             [WriteOnly] public NativeArray<float3> TargetPositions;
 
             void Execute(
-                in LocalTransform unitTransform
+                in UnitProfileIdHolder unitProfileIdHolder
+                , in LocalTransform unitTransform
                 , in FactionIndex unitFactionIndex
                 , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
                 , in InteractingEntity interactingEntity
@@ -194,8 +201,10 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
                 if (interactingEntity.Value != Entity.Null) return;
                 if (moveCommandElement.TargetEntity != Entity.Null) return;
 
+                half detectionRadius = this.DetectionRadiusMap.Value[unitProfileIdHolder.Value];
+
                 bool canGetBuildingIndex =
-                    this.TryGetNearestValidBuildingIndex(in unitTransform.Position, in unitFactionIndex.Value, out int buildingIndex);
+                    this.TryGetNearestValidBuildingIndex(in unitTransform.Position, in detectionRadius, in unitFactionIndex.Value, out int buildingIndex);
 
                 if (!canGetBuildingIndex) return;
 
@@ -208,10 +217,11 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
             [BurstCompile]
             private bool TryGetNearestValidBuildingIndex(
                 in float3 unitPos
+                , in half detectionRadius
                 , in byte unitFactionIndex
                 , out int index)
             {
-                const int radiusSq = 225; // TODO: GET THIS VALUE FROM ELSE WHERE
+                float radiusSq = math.square(detectionRadius);
                 index = -1;
                 float minDistanceSq = float.MaxValue;
 
