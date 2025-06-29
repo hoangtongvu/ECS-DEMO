@@ -1,4 +1,6 @@
-﻿using Components.GameEntity;
+﻿using Authoring.Utilities.Extensions;
+using Authoring.Utilities.Helpers.GameEntity.InteractableActions;
+using Components.GameEntity;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
@@ -20,8 +22,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Utilities.Helpers;
-using Authoring.Utilities.Extensions;
-using Components.GameEntity.InteractableActions;
 
 namespace Authoring.Unit
 {
@@ -163,10 +163,7 @@ namespace Authoring.Unit
 
                 AddComponent<SpawnerEntityHolder>(entity);
 
-                this.AddAndDisableComponent<CanShowActionsContainerUITag>(entity);
-                this.AddAndDisableComponent<ActionsContainerUIShownTag>(entity);
-                this.AddComponent<ActionsContainerUIHolder>(entity);
-                this.AddAndDisableComponent<NewlyActionTriggeredTag>(entity);
+                InteractableActionsBakingHelper.AddComponents(this, entity);
 
             }
 
