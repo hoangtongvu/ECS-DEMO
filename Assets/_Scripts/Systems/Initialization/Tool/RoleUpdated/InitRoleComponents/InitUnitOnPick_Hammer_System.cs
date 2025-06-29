@@ -55,6 +55,8 @@ namespace Systems.Initialization.Tool.RoleUpdated.InitRoleComponents
 
                 unitProfileIdHolder.Value.UnitType = UnitType.Builder;
 
+                this.ECB.AddComponent<IsBuilderUnitTag>(entityIndexInQuery, unitEntity);
+
             }
 
         }

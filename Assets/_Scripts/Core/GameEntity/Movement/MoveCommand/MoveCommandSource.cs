@@ -10,6 +10,7 @@ namespace Core.GameEntity.Movement.MoveCommand
         Danger = 2,
         ToolCall = 3,
         AutoAttack = 4,
+        AutoWork = 5,
     }
 
 }

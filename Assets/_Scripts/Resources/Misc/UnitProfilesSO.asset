@@ -145,8 +145,8 @@ MonoBehaviour:
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
-        MaxFollowDistance: 12
-        DetectionRadius: 10
+        MaxFollowDistance: 20
+        DetectionRadius: 20
         AttackConfigs:
           MinAttackDistance: 0
           MaxAttackDistance: 2

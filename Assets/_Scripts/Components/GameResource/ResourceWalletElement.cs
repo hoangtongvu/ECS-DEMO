@@ -3,6 +3,7 @@ using Unity.Entities;
 
 namespace Components.GameResource
 {
+    [InternalBufferCapacity(ResourceType_Length.Value)]
     public struct ResourceWalletElement : IBufferElementData
     {
         public ResourceType Type;

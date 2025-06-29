@@ -1,9 +1,11 @@
-using Unity.Entities;
-using Unity.Burst;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Core.Utilities.Extensions;
 using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.Misc;
+using Core.Utilities.Extensions;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Systems.Initialization.GameEntity.EntitySpawning
 {
@@ -24,6 +26,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             var entityQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     NewlySpawnedTag
+                    , NeedInitPosAroundSpawnerTag
                     , LocalTransform
                     , SpawnerEntityHolder>()
                 .Build();
@@ -34,17 +37,27 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (spawnerEntityHolderRef, transformRef) in
-                SystemAPI.Query<
+            var entities = new NativeList<Entity>(10, Allocator.Temp);
+
+            foreach (var (spawnerEntityHolderRef, transformRef, entity) in SystemAPI
+                .Query<
                     RefRO<SpawnerEntityHolder>
                     , RefRW<LocalTransform>>()
-                    .WithAll<NewlySpawnedTag>())
+                .WithAll<
+                    NewlySpawnedTag
+                    , NeedInitPosAroundSpawnerTag>()
+                .WithEntityAccess())
             {
+                entities.Add(entity);
                 var spawnerEntity = spawnerEntityHolderRef.ValueRO.Value;
+                if (spawnerEntity == Entity.Null) continue;
+
                 var spawnerTransform = SystemAPI.GetComponent<LocalTransform>(spawnerEntity);
 
-                transformRef.ValueRW.Position = this.GetRandomPositionInRadius(3, spawnerTransform.Position);
+                transformRef.ValueRW.Position = this.GetRandomPositionInRadius(3, spawnerTransform.Position); // TODO: Find another way to get this value
             }
+
+            state.EntityManager.RemoveComponent<NeedInitPosAroundSpawnerTag>(entities.AsArray());
 
         }
 

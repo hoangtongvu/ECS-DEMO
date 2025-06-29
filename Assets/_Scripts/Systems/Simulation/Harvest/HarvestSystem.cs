@@ -12,6 +12,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Utilities.Extensions.GameEntity.Damage;
+using static Utilities.Helpers.Misc.InteractionHelper;
 
 namespace Systems.Simulation.Harvest
 {
@@ -52,8 +53,8 @@ namespace Systems.Simulation.Harvest
 
             foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, toolProfileIdHolderRef, harvesteeTypeRef, entity) in
                 SystemAPI.Query<
-                    RefRO<InteractionTypeICD>
-                    , RefRO<InteractingEntity>
+                    RefRW<InteractionTypeICD>
+                    , RefRW<InteractingEntity>
                     , RefRO<BaseDmg>
                     , RefRO<BaseWorkSpeed>
                     , RefRW<WorkTimeCounterSecond>
@@ -65,14 +66,16 @@ namespace Systems.Simulation.Harvest
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Harvest) continue;
 
                 var harvestEntity = interactingEntityRef.ValueRO.Value;
-                bool targetIsValid = SystemAPI.Exists(harvestEntity);
-                if (!targetIsValid) continue;
 
-                // TODO: This is just a temp fix because harvestEntity has Child Buffer (ICleanupBuffer) -> harvestEntity destruction will be delayed.
+                // NOTE: harvestEntity has Child Buffer (ICleanupBuffer) -> harvestEntity destruction will be delayed -> can't check using Exists().
                 if (!SystemAPI.HasComponent<IsAliveTag>(harvestEntity)) continue;
 
                 bool isHarvesteeAlive = SystemAPI.IsComponentEnabled<IsAliveTag>(harvestEntity);
-                if (!isHarvesteeAlive) continue;
+                if (!isHarvesteeAlive)
+                {
+                    StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
+                    continue;
+                }
 
                 workTimeCounterSecondRef.ValueRW.Value += baseWorkSpeedRef.ValueRO.Value * SystemAPI.Time.DeltaTime;
                 if (workTimeCounterSecondRef.ValueRO.Value < 1f) continue;

@@ -8,6 +8,8 @@ using Utilities;
 using Unity.Collections;
 using Utilities.Extensions;
 using Core.Misc.WorldMap;
+using Components.GameEntity.EntitySpawning;
+using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
@@ -39,11 +41,23 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                 SystemAPI.GetSingletonRW<WorldMapChangedTag>().ValueRW.Value = true;
             }
 
+            var em = state.EntityManager;
+
             while (this.TryGetCommandFromQueue(in commandQueue, out var buildCommand))
             {
                 var newEntity = state.EntityManager.Instantiate(buildCommand.Entity);
 
-                state.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(buildCommand.BuildingCenterPos));
+                SystemAPI.SetComponent(newEntity, LocalTransform.FromPosition(buildCommand.BuildingCenterPos));
+
+                if (SystemAPI.HasComponent<SpawnerEntityHolder>(newEntity))
+                {
+                    SystemAPI.SetComponent(newEntity, new SpawnerEntityHolder
+                    {
+                        Value = buildCommand.SpawnerEntity,
+                    });
+                }
+
+                em.AddComponent<NeedChangeToBlueprintTag>(newEntity);
 
                 this.MarkCellsAsObstacle(in costMap, in buildCommand.TopLeftCellGridPos, buildCommand.GridSquareSize);
 

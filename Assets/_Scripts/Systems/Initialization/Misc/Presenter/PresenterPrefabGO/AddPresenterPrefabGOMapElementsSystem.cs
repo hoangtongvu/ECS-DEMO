@@ -40,7 +40,11 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                     if (presenterEntity != Entity.Null) continue;
 
                     if (presenterPrefabGO == null) continue;
-                    if (!presenterPrefabGO.TryGetComponent<BasePresenter>(out var basePresenter)) continue;
+                    if (!presenterPrefabGO.TryGetComponent<BasePresenter>(out var basePresenter))
+                    {
+                        UnityEngine.Debug.LogError($"{presenterPrefabGO.name} does not contain {nameof(BasePresenter)} component");
+                        continue;
+                    }
 
                     ecb.AddComponent<HasPresenterPrefabGOTag>(targetEntity);
 

@@ -7,7 +7,6 @@ using Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview;
 using Unity.Entities;
 using UnityEngine;
 using Components.GameResource;
-using Unity.Burst;
 using Components.Player;
 using Utilities.Helpers;
 
@@ -17,8 +16,16 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
     [UpdateAfter(typeof(PlacementPreviewDataUpdateSystem))]
     public partial class PlayerBuildSystem : SystemBase
     {
+        private EntityQuery playerQuery;
+
         protected override void OnCreate()
         {
+            this.playerQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    PlayerTag>()
+                .Build();
+
+            this.RequireForUpdate(this.playerQuery);
             this.RequireForUpdate<PlacementPreviewData>();
             this.RequireForUpdate<BuildableObjectChoiceIndex>();
             this.RequireForUpdate<PlayerBuildableObjectElement>();
@@ -54,12 +61,15 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
 
             if (!canSpendResources) return;
 
+            var playerEntity = this.playerQuery.GetSingletonEntity();
+
             commandQueue.Value.Add(new()
             {
                 Entity = prefabEntity,
                 TopLeftCellGridPos = placementPreviewData.TopLeftCellGridPos,
                 BuildingCenterPos = placementPreviewData.BuildingCenterPosOnGround.Add(y: buildableObjectElement.ObjectHeight),
                 GridSquareSize = buildableObjectElement.GridSquareSize,
+                SpawnerEntity = playerEntity,
             });
 
         }

@@ -3,11 +3,11 @@ using Components.GameEntity.Misc;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Initialization.Unit.Misc
+namespace Systems.Initialization.GameEntity.Misc
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]
-    public partial struct SetSpawnedUnitFactionIndexSystem : ISystem
+    public partial struct SetSpawnerFactionToSpawnedEntitySystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -25,18 +25,17 @@ namespace Systems.Initialization.Unit.Misc
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (factionIndexRef, spawnerEntityHolderRef, entity) in SystemAPI
+            foreach (var (spawnedEntityfactionIndexRef, spawnerEntityHolderRef) in SystemAPI
                 .Query<
                     RefRW<FactionIndex>
                     , RefRO<SpawnerEntityHolder>>()
-                .WithAll<NewlySpawnedTag>()
-                .WithEntityAccess())
+                .WithAll<NewlySpawnedTag>())
             {
                 var spawnerEntity = spawnerEntityHolderRef.ValueRO.Value;
                 if (!SystemAPI.HasComponent<FactionIndex>(spawnerEntity)) continue;
 
                 byte spawnerFactionIndex = SystemAPI.GetComponent<FactionIndex>(spawnerEntity).Value;
-                factionIndexRef.ValueRW.Value = spawnerFactionIndex;
+                spawnedEntityfactionIndexRef.ValueRW.Value = spawnerFactionIndex;
 
             }
 

@@ -9,6 +9,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
     public class GameBuildingProfileElement : GameEntityProfileElement
     {
         [Header("GameBuilding ProfileElement")]
+        public float SpawnDurationSeconds;
 
         [SerializedDictionary("ResourceType ", "Quantity")]
         public SerializedDictionary<ResourceType, uint> BaseSpawningCosts;
@@ -18,6 +19,7 @@ namespace Core.Misc.WorldMap.WorldBuilding
     public class GameBuildingProfilesSO : GameEntityProfilesSO<GameBuildingProfileId, GameBuildingProfileElement>
     {
         public static readonly string DefaultAssetPath = "Misc/GameBuildingProfilesSO";
+        public GameBuildingGlobalConfigs GameBuildingGlobalConfigs;
     }
 
 }
