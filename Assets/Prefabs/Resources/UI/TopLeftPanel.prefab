@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2927684563124434451}
   - component: {fileID: 2021130476227984157}
   - component: {fileID: 1262258574152630513}
+  - component: {fileID: 7386685205525145856}
   - component: {fileID: 4037240337261968572}
   m_Layer: 5
   m_Name: TopLeftPanel
@@ -61,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4566037, g: 0.2873613, b: 0.1473193, a: 1}
+  m_Color: {r: 0.15471691, g: 0.15471691, b: 0.15471691, a: 0.79607844}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -100,8 +101,22 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 100}
   m_Spacing: {x: 10, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 5
+  m_Constraint: 2
+  m_ConstraintCount: 1
+--- !u!114 &7386685205525145856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2185121688643287519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
 --- !u!114 &4037240337261968572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +221,7 @@ PrefabInstance:
     - target: {fileID: 5467649886199732229, guid: bd5e361ce4e35194bab111b34316390a,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5467649886199732229, guid: bd5e361ce4e35194bab111b34316390a,
         type: 3}
