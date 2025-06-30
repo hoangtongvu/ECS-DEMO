@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace Components.Unit
 {
-    public struct JoblessUnitTag : IComponentData, IEnableableComponent
+    public struct JoblessUnitTag : IComponentData
     {
     }
 

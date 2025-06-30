@@ -174,7 +174,7 @@ namespace Systems.Simulation.UnitAndTool
 
         }
 
-        //[WithAll(typeof(JoblessUnitTag))]
+        [WithAll(typeof(JoblessUnitTag))]
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct GetTargetEntitiesAndPositionsJob : IJobEntity
@@ -192,12 +192,10 @@ namespace Systems.Simulation.UnitAndTool
                 in UnitProfileIdHolder unitProfileIdHolder
                 , in LocalTransform unitTransform
                 , EnabledRefRW<CanSetTargetJobScheduleTag> canSetTargetJobScheduleTag
-                , EnabledRefRO<JoblessUnitTag> joblessUnitTag
                 , in InteractingEntity interactingEntity
                 , in MoveCommandElement moveCommandElement
                 , [EntityIndexInQuery] int entityIndex)
             {
-                if (!joblessUnitTag.ValueRO) return;
                 if (interactingEntity.Value != Entity.Null) return;
                 if (moveCommandElement.TargetEntity != Entity.Null) return;
 
