@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.InitArmedStateComponents
+namespace Systems.Initialization.UnitAndTool.InitArmedStateComponents
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class InitArmedStateComponentsSystemGroup : ComponentSystemGroup

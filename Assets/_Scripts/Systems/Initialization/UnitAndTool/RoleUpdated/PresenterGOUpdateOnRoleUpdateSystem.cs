@@ -11,7 +11,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Systems.Initialization.Tool.RoleUpdated
+namespace Systems.Initialization.UnitAndTool.RoleUpdated
 {
     [UpdateInGroup(typeof(RoleUpdatedSystemGroup))]
     [UpdateAfter(typeof(PrimaryEntityUpdateOnRoleUpdateSystem))]

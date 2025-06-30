@@ -7,11 +7,11 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.InitArmedStateComponents
+namespace Systems.Initialization.UnitAndTool.InitArmedStateComponents
 {
     [UpdateInGroup(typeof(InitArmedStateComponentsSystemGroup))]
     [BurstCompile]
-    public partial struct InitUnitOnPick_NonWeapon_System : ISystem
+    public partial struct InitUnitOnPick_Weapon_System : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -56,12 +56,22 @@ namespace Systems.Initialization.Tool.InitArmedStateComponents
             {
                 bool toolIsWeapon = this.IsWeaponTagLookup.HasComponent(unitToolHolder.Value);
 
-                if (toolIsWeapon) return;
+                if (!toolIsWeapon) return;
 
-                this.ECB.SetComponent(entityIndexInQuery, unitEntity, new ArmedStateHolder
+                this.AddComponents(in entityIndexInQuery, in unitEntity);
+
+            }
+
+            [BurstCompile]
+            private void AddComponents(in int entityIndexInQuery, in Entity entity)
+            {
+                this.ECB.SetComponent(entityIndexInQuery, entity, new ArmedStateHolder
                 {
-                    Value = ArmedState.False,
+                    Value = ArmedState.True,
                 });
+
+                this.ECB.RemoveComponent<IsUnarmedEntityTag>(entityIndexInQuery, entity);
+                this.ECB.AddComponent<IsArmedEntityTag>(entityIndexInQuery, entity);
 
             }
 

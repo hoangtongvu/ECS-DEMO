@@ -1,12 +1,12 @@
 using Components.GameEntity;
 using Components.Unit;
 using Components.Unit.Misc;
-using Systems.Initialization.Tool.RoleUpdated.InitRoleComponents;
+using Systems.Initialization.UnitAndTool.RoleUpdated.InitRoleComponents;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.RoleUpdated
+namespace Systems.Initialization.UnitAndTool.RoleUpdated
 {
     [UpdateInGroup(typeof(RoleUpdatedSystemGroup))]
     [UpdateAfter(typeof(InitRoleComponentsSystemGroup))]

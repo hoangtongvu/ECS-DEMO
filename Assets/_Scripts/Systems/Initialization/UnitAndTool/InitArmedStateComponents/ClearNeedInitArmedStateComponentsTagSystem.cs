@@ -5,7 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.InitArmedStateComponents
+namespace Systems.Initialization.UnitAndTool.InitArmedStateComponents
 {
     [UpdateInGroup(typeof(InitArmedStateComponentsSystemGroup), OrderLast = true)]
     [BurstCompile]

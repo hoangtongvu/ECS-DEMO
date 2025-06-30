@@ -11,8 +11,9 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
+using Systems.Simulation.Tool;
 
-namespace Systems.Simulation.Tool
+namespace Systems.Simulation.UnitAndTool
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(ToolAssignSystem))]

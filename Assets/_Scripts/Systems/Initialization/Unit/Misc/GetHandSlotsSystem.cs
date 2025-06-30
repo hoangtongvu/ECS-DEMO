@@ -2,7 +2,7 @@ using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Unit.Misc;
 using Core.Misc.Presenter;
-using Systems.Initialization.Tool.RoleUpdated;
+using Systems.Initialization.UnitAndTool.RoleUpdated;
 using Unity.Entities;
 
 namespace Systems.Initialization.Unit.Misc

@@ -6,11 +6,11 @@ using Core.Unit;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.RoleUpdated.InitRoleComponents
+namespace Systems.Initialization.UnitAndTool.RoleUpdated.InitRoleComponents
 {
     [UpdateInGroup(typeof(InitRoleComponentsSystemGroup))]
     [BurstCompile]
-    public partial struct InitUnitOnPick_Bow_System : ISystem
+    public partial struct InitUnitOnPick_Hammer_System : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -51,9 +51,11 @@ namespace Systems.Initialization.Tool.RoleUpdated.InitRoleComponents
                 , Entity unitEntity
                 , [EntityIndexInQuery] int entityIndexInQuery)
             {
-                if (toolProfileIdHolder.Value.ToolType != ToolType.Bow) return;
+                if (toolProfileIdHolder.Value.ToolType != ToolType.Hammer) return;
 
-                unitProfileIdHolder.Value.UnitType = UnitType.Archer;
+                unitProfileIdHolder.Value.UnitType = UnitType.Builder;
+
+                this.ECB.AddComponent<IsBuilderUnitTag>(entityIndexInQuery, unitEntity);
 
             }
 

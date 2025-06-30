@@ -6,7 +6,7 @@ using Core.Unit;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.RoleUpdated.InitRoleComponents
+namespace Systems.Initialization.UnitAndTool.RoleUpdated.InitRoleComponents
 {
     [UpdateInGroup(typeof(InitRoleComponentsSystemGroup))]
     [BurstCompile]

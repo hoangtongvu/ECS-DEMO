@@ -7,11 +7,11 @@ using Core.Unit;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.RoleUpdated.InitRoleComponents
+namespace Systems.Initialization.UnitAndTool.RoleUpdated.InitRoleComponents
 {
     [UpdateInGroup(typeof(InitRoleComponentsSystemGroup))]
     [BurstCompile]
-    public partial struct InitUnitOnPick_Pickaxe_System : ISystem
+    public partial struct InitUnitOnPick_Basket_System : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -52,7 +52,7 @@ namespace Systems.Initialization.Tool.RoleUpdated.InitRoleComponents
                 , Entity unitEntity
                 , [EntityIndexInQuery] int entityIndexInQuery)
             {
-                if (toolProfileIdHolder.Value.ToolType != ToolType.Pickaxe) return;
+                if (toolProfileIdHolder.Value.ToolType != ToolType.Basket) return;
 
                 unitProfileIdHolder.Value.UnitType = UnitType.Harvester;
 

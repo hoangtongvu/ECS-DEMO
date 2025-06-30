@@ -1,15 +1,17 @@
 using Components.GameEntity;
+using Components.GameEntity.Damage;
 using Components.Unit;
 using Components.Unit.Misc;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Initialization.Tool.RoleUpdated
+namespace Systems.Initialization.UnitAndTool.RoleUpdated
 {
     [UpdateInGroup(typeof(RoleUpdatedSystemGroup))]
     [UpdateAfter(typeof(PrimaryEntityUpdateOnRoleUpdateSystem))]
     [BurstCompile]
-    public partial struct EntityNameUpdateOnRoleUpdateSystem : ISystem
+    public partial struct HpDataUpdateOnRoleUpdateSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -22,12 +24,15 @@ namespace Systems.Initialization.Tool.RoleUpdated
                 .Build();
 
             state.RequireForUpdate(query0);
+            state.RequireForUpdate<HpDataMap>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var em = state.EntityManager;
+            var hpDataMap = SystemAPI.GetSingleton<HpDataMap>().Value;
+
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (primaryPrefabEntityHolderRef, entity) in
                 SystemAPI.Query<
@@ -35,9 +40,21 @@ namespace Systems.Initialization.Tool.RoleUpdated
                     .WithAll<NeedRoleUpdatedTag>()
                     .WithEntityAccess())
             {
-                em.GetName(primaryPrefabEntityHolderRef.ValueRO, out var name64Bytes);
-                em.SetName(entity, name64Bytes);
+                var hpData = hpDataMap[primaryPrefabEntityHolderRef.ValueRO];
+
+                ecb.SetComponent(entity, new CurrentHp
+                {
+                    Value = hpData.MaxHp,
+                });
+
+                ecb.SetSharedComponent(entity, new HpDataHolder
+                {
+                    Value = hpData,
+                });
+
             }
+
+            ecb.Playback(state.EntityManager);
 
         }
 
