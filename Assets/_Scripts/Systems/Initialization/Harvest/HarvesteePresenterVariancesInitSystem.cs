@@ -2,6 +2,7 @@ using Components.GameEntity;
 using Components.Harvest;
 using Unity.Collections;
 using Unity.Entities;
+using UnityFileDebugLogger;
 using Utilities;
 
 namespace Systems.Initialization.Harvest
@@ -30,6 +31,7 @@ namespace Systems.Initialization.Harvest
             var profilesSOHolder = this.query.GetSingleton<HarvesteeProfilesSOHolder>();
             var presenterVarianceTempArray = this.query.GetSingletonBuffer<HarvesteePresenterVarianceTempBufferElement>().ToNativeArray(Allocator.Temp);
             var su = SingletonUtilities.GetInstance(this.EntityManager);
+            var fileLogger = FileDebugLogger.CreateLogger512Bytes(20, Allocator.Temp);
 
             var profileIdToPresenterVariancesRangeMap = new HarvesteeProfileIdToPresenterVariancesRangeMap
             {
@@ -58,11 +60,15 @@ namespace Systems.Initialization.Harvest
 
                 for (; tempIndex < upperBound; tempIndex++)
                 {
-                    presenterVariancesContainer.Value.Add(presenterVarianceTempArray[tempIndex].Value);
+                    var entity = presenterVarianceTempArray[tempIndex].Value;
+                    presenterVariancesContainer.Value.Add(entity);
+                    fileLogger.Log($"{pair.Key} | {entity} - {this.EntityManager.GetName(entity)}");
                     //UnityEngine.Debug.Log($"[{pair.Key}] element: {presenterVarianceTempArray[tempIndex].Value}");
                 }
 
             }
+
+            fileLogger.Save("HarvesteePresenterVariancesInitSystem_Logs.txt");
 
             su.AddOrSetComponentData(profileIdToPresenterVariancesRangeMap);
             su.AddOrSetComponentData(presenterVariancesContainer);
