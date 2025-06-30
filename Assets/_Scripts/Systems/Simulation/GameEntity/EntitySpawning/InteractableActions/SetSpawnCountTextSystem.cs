@@ -1,13 +1,13 @@
-using Unity.Entities;
-using Core.MyEvent.PubSub.Messengers;
-using ZBase.Foundation.PubSub;
-using Core.MyEvent.PubSub.Messages;
 using Components.GameEntity.EntitySpawning;
-using Components.Misc;
+using Components.GameEntity.InteractableActions;
+using Core.MyEvent.PubSub.Messages;
+using Core.MyEvent.PubSub.Messengers;
+using Unity.Entities;
+using ZBase.Foundation.PubSub;
 
-namespace Systems.Simulation.GameEntity.EntitySpawning
+namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 {
-    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class SetSpawnCountTextSystem : SystemBase
     {
         protected override void OnCreate()
@@ -15,7 +15,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     EntitySpawningProfileElement
-                    , UISpawned>()
+                    , ActionsContainerUIShownTag>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -23,21 +23,17 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
 
         protected override void OnUpdate()
         {
-            foreach (var (spawningProfiles, uiSpawnedRef, spawnerEntity) in
-                SystemAPI.Query<
-                    DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<UISpawned>>()
-                    .WithEntityAccess())
+            foreach (var (spawningProfiles, spawnerEntity) in SystemAPI
+                .Query<
+                    DynamicBuffer<EntitySpawningProfileElement>>()
+                .WithAll<ActionsContainerUIShownTag>()
+                .WithEntityAccess())
             {
-                if (!uiSpawnedRef.ValueRO.IsSpawned) continue;
-
                 int profileCount = spawningProfiles.Length;
 
                 for (int i = 0; i < profileCount; i++)
                 {
                     var profile = spawningProfiles[i];
-
-                    if (!profile.SpawnCount.ValueChanged) continue;
                     this.UpdateUI(in spawnerEntity, i, in profile);
                 }
 

@@ -1,8 +1,8 @@
 using Core.MyEvent.PubSub.Messages;
 using Core.MyEvent.PubSub.Messengers;
+using Core.UI.TextMeshProUGUIs;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
-using Core.UI.TextMeshProUGUIs;
 
 namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActionPanel
 {
@@ -10,6 +10,9 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActi
     {
         [SerializeField] private EntitySpawningProfileActionPanelCtrl ctrl;
         private ISubscription subscriptions;
+        private int internalSpawnCount;
+
+        protected override void Awake() => this.UpdateUI();
 
         protected override void LoadComponents()
         {
@@ -31,10 +34,19 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActi
             if (message.SpawningProfileElementIndex != this.ctrl.SpawningProfileElementIndex) return;
 
             if (message.Value < 0) Debug.LogWarning($"SpawnCount value is greater than 1, is potentially a bug");
-            this.SetSpawnCount(message.Value);
+
+            this.TrySetSpawnCount(message.Value);
         }
 
-        public void SetSpawnCount(int value) => this.text.text = $"{value}";
+        public void TrySetSpawnCount(int newValue)
+        {
+            if (newValue == this.internalSpawnCount) return;
+
+            this.internalSpawnCount = newValue;
+            this.UpdateUI();
+        }
+
+        private void UpdateUI() => this.text.text = $"{this.internalSpawnCount}";
 
     }
 

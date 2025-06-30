@@ -1,14 +1,14 @@
-using Unity.Entities;
-using Core.MyEvent.PubSub.Messengers;
-using ZBase.Foundation.PubSub;
-using Core.MyEvent.PubSub.Messages;
 using Components.GameEntity.EntitySpawning;
-using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
+using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameEntity.InteractableActions;
+using Core.MyEvent.PubSub.Messages;
+using Core.MyEvent.PubSub.Messengers;
 using System.Collections.Generic;
-using Components.Misc;
+using Unity.Entities;
+using ZBase.Foundation.PubSub;
 
-namespace Systems.Simulation.GameEntity.EntitySpawning
+namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class SetProgressBarUISystem : SystemBase
@@ -17,9 +17,8 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    WithinPlayerAutoInteractRadiusTag
-                    , EntitySpawningProfileElement
-                    , UISpawned>()
+                    EntitySpawningProfileElement
+                    , ActionsContainerUIShownTag>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -33,15 +32,12 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var durationsContainer = SystemAPI.GetSingleton<EntitySpawningDurationsContainer>();
 
-            foreach (var (spawningProfiles, uiSpawnedRef, spawnerEntity) in
-                SystemAPI.Query<
-                    DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<UISpawned>>()
-                    .WithAll<WithinPlayerAutoInteractRadiusTag>()
-                    .WithEntityAccess())
+            foreach (var (spawningProfiles, spawnerEntity) in SystemAPI
+                .Query<
+                    DynamicBuffer<EntitySpawningProfileElement>>()
+                .WithAll<ActionsContainerUIShownTag>()
+                .WithEntityAccess())
             {
-                if (!uiSpawnedRef.ValueRO.IsSpawned) continue;
-
                 int profileCount = spawningProfiles.Length;
 
                 for (int i = 0; i < profileCount; i++)
@@ -55,7 +51,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                         , in durationsContainer
                         , in profile.PrefabToSpawn);
 
-                    // This means when nothing to spawned, UI won't update.
+                    // NOTE: This means when nothing to spawned, UI won't update.
                     float progressValue =
                         profile.DurationCounterSeconds / spawnDurationSeconds;
 

@@ -84,7 +84,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
                         , spawnPos);
 
                     actionPanelCtrl.ProfilePic.Image.sprite = spritesContainer.Value[entityToContainerIndexMap.Value[entityToSpawn]];
-                    actionPanelCtrl.SpawnCountText.SetSpawnCount(profile.SpawnCount.Value);
+                    actionPanelCtrl.SpawnCountText.TrySetSpawnCount(profile.SpawnCount.Value);
                     actionPanelCtrl.ProgressBar.ClearProgress();
 
                     actionPanelCtrl.Initialize(in entity, (sbyte)i, actionsContainerUIHolderRef.ValueRO.Value, i);
