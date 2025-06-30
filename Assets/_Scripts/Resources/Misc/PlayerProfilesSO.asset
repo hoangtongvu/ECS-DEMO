@@ -49,3 +49,6 @@ MonoBehaviour:
           - Key:
               VariantIndex: 5
             Value: 0
+          - Key:
+              VariantIndex: 6
+            Value: 0

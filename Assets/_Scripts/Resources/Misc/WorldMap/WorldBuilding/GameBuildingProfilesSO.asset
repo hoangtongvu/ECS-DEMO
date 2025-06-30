@@ -151,5 +151,27 @@ MonoBehaviour:
             Value: 1
           - Key: 1
             Value: 1
+    - Key:
+        VariantIndex: 6
+      Value:
+        Name: Wall
+        ProfilePicture: {fileID: 21300000, guid: ed5474fc2732ba54f99fae691ce9cdf8,
+          type: 3}
+        PresenterPrefab: {fileID: 7132406582673071809, guid: fea67afcf2f2f414d87cfc8daa1d4441,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 4437979767870840149, guid: 70209b3d0ee304544ab8f4b891dba161,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 2.7
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 400
+        SpawnDurationSeconds: 0.2
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 1
+            Value: 10
   GameBuildingGlobalConfigs:
     BlueprintMaterial: {fileID: 2100000, guid: 0755802db9fa1b541b14d4639bdb8f70, type: 2}

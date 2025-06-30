@@ -1,9 +1,5 @@
-﻿using Authoring.Utilities.Helpers.GameEntity.InteractableActions;
+﻿using Authoring.Utilities.Helpers.GameBuilding;
 using Components.GameEntity.EntitySpawning;
-using Components.GameEntity.Misc;
-using Components.Misc;
-using Components.Misc.Presenter;
-using Components.Misc.Presenter.PresenterPrefabGO;
 using Core.GameEntity;
 using System;
 using Unity.Entities;
@@ -22,22 +18,13 @@ namespace Authoring.GameEntity.EntitySpawning
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent<NewlySpawnedTag>(entity);
-                AddComponent<NeedSpawnPresenterTag>(entity);
-                AddComponent<WithinPlayerAutoInteractRadiusTag>(entity);
-                SetComponentEnabled<WithinPlayerAutoInteractRadiusTag>(entity, false);
+                GameBuildingBakingHelper.AddComponents(this, entity);
 
                 AddComponent<SpawnedEntityCounter>(entity);
                 AddComponent(entity, new SpawnedEntityCountLimit
                 {
                     Value = 3
                 });
-
-                AddComponent(entity, FactionIndex.Neutral);
-                AddComponent<SpawnerEntityHolder>(entity);
-
-                AddSharedComponent<PresenterOriginalMaterialHolder>(entity, default);
-                InteractableActionsBakingHelper.AddComponents(this, entity);
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
