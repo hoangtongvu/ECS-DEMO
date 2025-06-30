@@ -1,64 +1,47 @@
-using Components.Misc.Presenter;
-using Components.Misc.Presenter.PresenterPrefabGO;
+using Components.Misc.WorldMap.WorldBuilding;
 using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
-using Core.Misc.Presenter;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildingConstruction
 {
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    public partial class EndConstructionProcessSystem : SystemBase
+    [UpdateInGroup(typeof(EndConstructionProcessSystemGroup), OrderFirst = true)]
+    [BurstCompile]
+    public partial struct EndConstructionProcessSystem : ISystem
     {
-        private EntityQuery query0;
-
-        protected override void OnCreate()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
-            this.query0 = SystemAPI.QueryBuilder()
+            var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    ConstructionRemaining
-                    , PresenterHolder
-                    , PresenterOriginalMaterialHolder>()
+                    ConstructionRemaining>()
                 .Build();
 
-            this.RequireForUpdate(this.query0);
+            state.RequireForUpdate(query0);
         }
 
-        protected override void OnUpdate()
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
             var entities = new NativeList<Entity>(10, Allocator.Temp);
 
-            foreach (var (constructionRemainingRef, presenterHolderRef, originalMaterialHolder, entity) in SystemAPI
+            foreach (var (constructionRemainingRef, entity) in SystemAPI
                 .Query<
-                    RefRO<ConstructionRemaining>
-                    , RefRO<PresenterHolder>
-                    , PresenterOriginalMaterialHolder>()
+                    RefRO<ConstructionRemaining>>()
                 .WithEntityAccess())
             {
                 bool constructionEnded = constructionRemainingRef.ValueRO.Value == uint.MinValue;
                 if (!constructionEnded) continue;
 
-                var basePresenter = presenterHolderRef.ValueRO.Value.Value;
-                this.HandleBasePresenter(basePresenter, in originalMaterialHolder);
-
                 entities.Add(entity);
             }
 
-            this.EntityManager.RemoveComponent<ConstructionRemaining>(entities.AsArray());
+            var em = state.EntityManager;
+            var entityArray = entities.AsArray();
 
-        }
-
-        private void HandleBasePresenter(
-            BasePresenter basePresenter
-            , in PresenterOriginalMaterialHolder presenterOriginalMaterialHolder)
-        {
-            var meshRenderer = basePresenter.GetComponent<MeshRenderer>();
-
-            meshRenderer.sharedMaterial = presenterOriginalMaterialHolder.Value.Value;
-            meshRenderer.shadowCastingMode = ShadowCastingMode.On;
-            meshRenderer.receiveShadows = true;
+            em.RemoveComponent<ConstructionRemaining>(entityArray);
+            em.AddComponent<ConstructionNewlyEndedTag>(entityArray);
         }
 
     }
