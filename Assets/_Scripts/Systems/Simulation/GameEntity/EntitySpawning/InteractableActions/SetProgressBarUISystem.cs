@@ -2,6 +2,8 @@ using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.InteractableActions;
+using Components.GameEntity.Misc;
+using Components.Player;
 using Core.MyEvent.PubSub.Messages;
 using Core.MyEvent.PubSub.Messengers;
 using System.Collections.Generic;
@@ -13,8 +15,16 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class SetProgressBarUISystem : SystemBase
     {
+        private EntityQuery playerQuery;
+
         protected override void OnCreate()
         {
+            this.playerQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    PlayerTag
+                    , FactionIndex>()
+                .Build();
+
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     EntitySpawningProfileElement
@@ -29,15 +39,19 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 
         protected override void OnUpdate()
         {
+            var playerFactionIndex = this.playerQuery.GetSingleton<FactionIndex>();
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var durationsContainer = SystemAPI.GetSingleton<EntitySpawningDurationsContainer>();
 
-            foreach (var (spawningProfiles, spawnerEntity) in SystemAPI
+            foreach (var (factionIndexRef, spawningProfiles, spawnerEntity) in SystemAPI
                 .Query<
-                    DynamicBuffer<EntitySpawningProfileElement>>()
+                    RefRO<FactionIndex>
+                    , DynamicBuffer<EntitySpawningProfileElement>>()
                 .WithAll<ActionsContainerUIShownTag>()
                 .WithEntityAccess())
             {
+                if (factionIndexRef.ValueRO.Value != playerFactionIndex.Value) continue;
+
                 int profileCount = spawningProfiles.Length;
 
                 for (int i = 0; i < profileCount; i++)
