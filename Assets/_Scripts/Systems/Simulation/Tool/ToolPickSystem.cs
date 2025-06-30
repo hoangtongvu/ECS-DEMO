@@ -127,8 +127,6 @@ namespace Systems.Simulation.Tool
             var unitToolHolderRef = SystemAPI.GetComponentRW<UnitToolHolder>(unitEntity);
             unitToolHolderRef.ValueRW.Value = toolEntity;
 
-            SystemAPI.SetComponentEnabled<JoblessUnitTag>(unitEntity, false);
-
             SystemAPI.GetComponentRW<ToolProfileIdHolder>(unitEntity).ValueRW = toolProfileIdHolder;
 
             var toolStats = toolStatsMap.Value[toolProfileIdHolder.Value];
@@ -136,6 +134,7 @@ namespace Systems.Simulation.Tool
             SystemAPI.GetComponentRW<BaseDmg>(unitEntity).ValueRW.Value = toolStats.BaseDmg;
             SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity).ValueRW.Value = toolStats.BaseWorkSpeed;
 
+            ecb.RemoveComponent<JoblessUnitTag>(unitEntity);
             ecb.AddComponent<NeedRoleUpdatedTag>(unitEntity);
             ecb.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);
 
