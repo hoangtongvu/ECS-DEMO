@@ -1,5 +1,5 @@
+using Components.GameEntity.InteractableActions;
 using Components.Player;
-using Components.Unit.InteractableActions;
 using Core.Misc;
 using System.Collections.Generic;
 using Unity.Burst;
@@ -99,7 +99,7 @@ namespace Systems.Simulation.Player
             var collisionFilter = new CollisionFilter
             {
                 BelongsTo = (uint)CollisionLayer.Player,
-                CollidesWith = (uint)CollisionLayer.Unit,
+                CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Building),
             };
 
             physicsWorld.OverlapSphere(centerPos, radius, ref hitList, collisionFilter);

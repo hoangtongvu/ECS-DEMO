@@ -50,12 +50,12 @@ MonoBehaviour:
         PrimaryEntityPrefab: {fileID: 9115495792767966074, guid: 136dbed38cae8cc419daa750f6417450,
           type: 3}
         GameEntitySize:
-          GridSquareSize: 5
+          GridSquareSize: 1
           ObjectHeight: 2
         HasHpComponents: 1
         HpData:
           MaxHp: 75
-        SpawnDurationSeconds: 3
+        SpawnDurationSeconds: 0
         BaseSpawningCosts:
           _serializedList:
           - Key: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
         PrimaryEntityPrefab: {fileID: 9115495792767966074, guid: a492c0a594144a84084624c553eac045,
           type: 3}
         GameEntitySize:
-          GridSquareSize: 2
+          GridSquareSize: 4
           ObjectHeight: 2
         HasHpComponents: 1
         HpData:

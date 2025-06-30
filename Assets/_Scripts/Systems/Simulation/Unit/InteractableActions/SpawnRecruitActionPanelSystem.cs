@@ -2,14 +2,15 @@ using Components.ComponentMap;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.GameResource;
-using Components.Unit.InteractableActions;
 using Core.GameResource;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel.RecruitActionCostView;
 using Core.Utilities.Helpers;
+using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Entities;
 using Unity.Mathematics;
 

@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7898340371255994461}
   - component: {fileID: 6835176516545294093}
-  - component: {fileID: 7752727647623985391}
   - component: {fileID: 4738483173147056165}
   - component: {fileID: 3524788378104135634}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PickaxeSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,22 +48,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawnRadius: 3
   SpawningPrefabs: {fileID: 11400000, guid: 96224f95cd66a1e429a8700f23301284, type: 2}
---- !u!114 &7752727647623985391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9115495792767966074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f71ff979b0e6bae4da333f41d1f25de6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpawnPosOffset:
-    x: 0
-    y: 3
-    z: 0
 --- !u!114 &4738483173147056165
 MonoBehaviour:
   m_ObjectHideFlags: 0

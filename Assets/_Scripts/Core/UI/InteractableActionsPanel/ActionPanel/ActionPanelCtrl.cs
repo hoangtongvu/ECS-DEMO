@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Core.UI.InteractableActionsPanel.ActionPanel
 {
+    [RequireComponent(typeof(TransformScaler))]
     public abstract class ActionPanelCtrl : BaseUICtrl, IPointerEnterHandler
     {
         [SerializeField] protected ActionsContainerUICtrl actionsContainerUICtrl;

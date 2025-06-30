@@ -1,4 +1,5 @@
-﻿using Components.GameEntity.EntitySpawning;
+﻿using Authoring.Utilities.Helpers.GameEntity.InteractableActions;
+using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
 using Components.Misc;
 using Components.Misc.Presenter;
@@ -36,6 +37,7 @@ namespace Authoring.GameEntity.EntitySpawning
                 AddComponent<SpawnerEntityHolder>(entity);
 
                 AddSharedComponent<PresenterOriginalMaterialHolder>(entity, default);
+                InteractableActionsBakingHelper.AddComponents(this, entity);
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
