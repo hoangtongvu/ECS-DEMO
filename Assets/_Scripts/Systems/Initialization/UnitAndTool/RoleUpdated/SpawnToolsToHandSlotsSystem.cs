@@ -3,11 +3,10 @@ using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Unit;
 using Components.Unit.Misc;
-using Systems.Initialization.UnitAndTool.RoleUpdated;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Systems.Initialization.Unit.Misc
+namespace Systems.Initialization.UnitAndTool.RoleUpdated
 {
     [UpdateInGroup(typeof(RoleUpdatedSystemGroup))]
     [UpdateAfter(typeof(GetHandSlotsSystem))]

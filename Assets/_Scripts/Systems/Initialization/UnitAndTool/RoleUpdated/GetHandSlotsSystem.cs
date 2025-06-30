@@ -2,10 +2,9 @@ using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Unit.Misc;
 using Core.Misc.Presenter;
-using Systems.Initialization.UnitAndTool.RoleUpdated;
 using Unity.Entities;
 
-namespace Systems.Initialization.Unit.Misc
+namespace Systems.Initialization.UnitAndTool.RoleUpdated
 {
     [UpdateInGroup(typeof(RoleUpdatedSystemGroup))]
     [UpdateAfter(typeof(PresenterGOUpdateOnRoleUpdateSystem))]
