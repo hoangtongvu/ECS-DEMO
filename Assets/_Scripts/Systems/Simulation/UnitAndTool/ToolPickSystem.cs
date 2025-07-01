@@ -12,6 +12,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using Systems.Simulation.Tool;
+using Utilities.Extensions.GameEntity.EntitySpawning;
 
 namespace Systems.Simulation.UnitAndTool
 {
@@ -64,7 +65,8 @@ namespace Systems.Simulation.UnitAndTool
 
                 this.HandleToolSpawner(
                     ref state
-                    , ref spawnerEntityHolderRef.ValueRW);
+                    , ref spawnerEntityHolderRef.ValueRW
+                    , in toolEntity);
 
                 this.HandleTool(
                     ref state
@@ -83,10 +85,15 @@ namespace Systems.Simulation.UnitAndTool
         [BurstCompile]
         private void HandleToolSpawner(
             ref SystemState state
-            , ref SpawnerEntityHolder spawnerEntityHolder)
+            , ref SpawnerEntityHolder spawnerEntityHolder
+            , in Entity toolEntity)
         {
             var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(spawnerEntityHolder.Value);
             spawnedEntityCounterRef.ValueRW.Value--;
+
+            var spawnedEntities = SystemAPI.GetComponent<SpawnedEntityArray>(spawnerEntityHolder.Value);
+            spawnedEntities.Remove(in toolEntity);
+
             spawnerEntityHolder.Value = Entity.Null;
         }
 

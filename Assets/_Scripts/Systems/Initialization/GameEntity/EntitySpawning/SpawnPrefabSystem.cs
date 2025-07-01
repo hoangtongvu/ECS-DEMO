@@ -4,6 +4,7 @@ using Utilities.Extensions;
 using Components.GameEntity.EntitySpawning;
 using Unity.Collections;
 using Unity.Jobs;
+using Utilities.Extensions.GameEntity.EntitySpawning;
 
 namespace Systems.Initialization.GameEntity.EntitySpawning
 {
@@ -59,6 +60,9 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             for (int i = 0; i < count; i++)
             {
                 spawnedEntities[i] = em.Instantiate(toSpawnPrefabs[i]);
+
+                var spawnedEntitieArray = SystemAPI.GetComponent<SpawnedEntityArray>(spawnerEntities[i]);
+                spawnedEntitieArray.Add(spawnedEntities[i]);
             }
 
             state.Dependency = new SetComponentsJob
@@ -66,7 +70,6 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 Entities = spawnedEntities,
                 SpawnerEntities = spawnerEntities.ToArray(Allocator.TempJob),
                 SpawnerEntityHolderLookup = SystemAPI.GetComponentLookup<SpawnerEntityHolder>(),
-                SpawnedEntityBufferLookup = SystemAPI.GetBufferLookup<SpawnedEntityElement>(),
             }.ScheduleParallel(count, initialCap / 2, state.Dependency);
 
         }
@@ -83,9 +86,6 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             [NativeDisableParallelForRestriction]
             public ComponentLookup<SpawnerEntityHolder> SpawnerEntityHolderLookup;
 
-            [NativeDisableParallelForRestriction]
-            public BufferLookup<SpawnedEntityElement> SpawnedEntityBufferLookup;
-
             [BurstCompile]
             public void Execute(int startIndex, int count)
             {
@@ -100,13 +100,6 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
 
                     var spawnerEntityHolderRef = this.SpawnerEntityHolderLookup.GetRefRW(entity);
                     spawnerEntityHolderRef.ValueRW.Value = spawnerEntity;
-
-                    if (!this.SpawnedEntityBufferLookup.TryGetBuffer(spawnerEntity, out var spawnedEntities)) continue;
-
-                    spawnedEntities.Add(new SpawnedEntityElement
-                    {
-                        Value = entity,
-                    });
 
                 }
 

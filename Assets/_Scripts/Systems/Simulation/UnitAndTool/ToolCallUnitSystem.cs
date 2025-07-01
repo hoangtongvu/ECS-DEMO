@@ -1,4 +1,5 @@
 ﻿using Components.GameEntity;
+using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
@@ -10,6 +11,7 @@ using Components.Unit;
 using Components.Unit.Misc;
 using Components.Unit.Reaction;
 using Core.GameEntity.Movement.MoveCommand;
+using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -17,6 +19,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
+using Utilities.Helpers;
 using Utilities.Jobs;
 
 namespace Systems.Simulation.UnitAndTool
@@ -46,6 +49,7 @@ namespace Systems.Simulation.UnitAndTool
                 .WithAll<
                     LocalTransform
                     , ToolPickerEntity
+                    , SpawnerEntityHolder
                     , DerelictToolTag>()
                 .WithPresent<CanBePickedTag>()
                 .Build();
@@ -116,8 +120,10 @@ namespace Systems.Simulation.UnitAndTool
             var detectionRadiusMap = SystemAPI.GetSingleton<DetectionRadiusMap>();
 
             var toolEntities = this.toolQuery.ToEntityArray(Allocator.TempJob);
-            var toolTransforms = this.toolQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
             int toolCount = toolEntities.Length;
+            var toolTransforms = this.toolQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
+            var spawnerEntityHolders = this.toolQuery.ToComponentDataArray<SpawnerEntityHolder>(Allocator.TempJob);
+            this.ProcessToolTransformsBasedOnSpawnerEntities(ref state, ref toolTransforms, in spawnerEntityHolders, toolCount);
 
             var unitEntities = this.unitQuery.ToEntityArray(Allocator.TempJob);
             int unitCount = unitEntities.Length;
@@ -163,15 +169,41 @@ namespace Systems.Simulation.UnitAndTool
                 CellRadius = cellRadius,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
 
+            state.Dependency = new SetTargetEntityWorldSquareRadiusJob
+            {
+                MainEntityAndTargetInfoMap = targetInfoMap,
+                PrimaryPrefabEntityHolderLookup = SystemAPI.GetComponentLookup<PrimaryPrefabEntityHolder>(),
+                SpawnerEntityHolderLookup = SystemAPI.GetComponentLookup<SpawnerEntityHolder>(),
+                GameEntitySizeMap = gameEntitySizeMap,
+                CellRadius = cellRadius,
+            }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
+
             state.Dependency = new CleanTagsJob().ScheduleParallel(state.Dependency);
 
             state.Dependency = toolEntities.Dispose(state.Dependency);
             state.Dependency = toolTransforms.Dispose(state.Dependency);
+            state.Dependency = spawnerEntityHolders.Dispose(state.Dependency);
             state.Dependency = unitEntities.Dispose(state.Dependency);
             state.Dependency = targetEntities.Dispose(state.Dependency);
             state.Dependency = targetPositions.Dispose(state.Dependency);
             state.Dependency = targetInfoMap.Dispose(state.Dependency);
 
+        }
+
+        [BurstCompile]
+        private void ProcessToolTransformsBasedOnSpawnerEntities(
+            ref SystemState state
+            , ref NativeArray<LocalTransform> toolTransforms
+            , in NativeArray<SpawnerEntityHolder> spawnerEntityHolders
+            , in int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var spawnerEntity = spawnerEntityHolders[i].Value;
+                if (spawnerEntity == Entity.Null) continue;
+
+                toolTransforms[i] = SystemAPI.GetComponent<LocalTransform>(spawnerEntity);
+            }
         }
 
         [WithAll(typeof(JoblessUnitTag))]
@@ -263,6 +295,54 @@ namespace Systems.Simulation.UnitAndTool
                     });
                 }
 
+            }
+
+        }
+
+        [WithAll(typeof(CanSetTargetJobScheduleTag))]
+        [WithAll(typeof(CanOverrideMoveCommandTag))]
+        [BurstCompile]
+        public partial struct SetTargetEntityWorldSquareRadiusJob : IJobEntity
+        {
+            [ReadOnly] public NativeHashMap<Entity, TargetEntityInfo> MainEntityAndTargetInfoMap;
+            [ReadOnly] public ComponentLookup<PrimaryPrefabEntityHolder> PrimaryPrefabEntityHolderLookup;
+            [ReadOnly] public ComponentLookup<SpawnerEntityHolder> SpawnerEntityHolderLookup;
+            [ReadOnly] public GameEntitySizeMap GameEntitySizeMap;
+            [ReadOnly] public half CellRadius;
+
+            [BurstCompile]
+            void Execute(
+                ref TargetEntityWorldSquareRadius worldSquareRadius
+                , Entity entity)
+            {
+                if (!this.MainEntityAndTargetInfoMap.TryGetValue(entity, out var targetEntityInfo))
+                {
+                    UnityEngine.Debug.Log($"count: {this.MainEntityAndTargetInfoMap.Count}");
+                    foreach (var item in this.MainEntityAndTargetInfoMap)
+                    {
+                        UnityEngine.Debug.Log($"key: {item.Key}");
+                    }
+                    throw new KeyNotFoundException($"{nameof(MainEntityAndTargetInfoMap)} does not contain key: {entity}");
+                }
+
+                worldSquareRadius.Value = this.GetWorldSquareRadiusFromMap(in targetEntityInfo.TargetEntity);
+
+            }
+
+            [BurstCompile]
+            private half GetWorldSquareRadiusFromMap(in Entity entity)
+            {
+                this.SpawnerEntityHolderLookup.TryGetComponent(entity, out var spawnerEntityHolder);
+
+                var primaryPrefabEntityRef = spawnerEntityHolder.Value == Entity.Null
+                    ? this.PrimaryPrefabEntityHolderLookup.GetRefRO(entity)
+                    : this.PrimaryPrefabEntityHolderLookup.GetRefRO(spawnerEntityHolder.Value);
+
+                float worldSquareSize = WorldMapHelper.GridLengthToWorldLength(
+                    in this.CellRadius
+                    , this.GameEntitySizeMap.Value[primaryPrefabEntityRef.ValueRO].GridSquareSize);
+
+                return new half(worldSquareSize / 2);
             }
 
         }
