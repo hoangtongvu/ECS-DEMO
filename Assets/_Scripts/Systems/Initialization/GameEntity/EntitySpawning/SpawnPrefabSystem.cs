@@ -4,7 +4,6 @@ using Utilities.Extensions;
 using Components.GameEntity.EntitySpawning;
 using Unity.Collections;
 using Unity.Jobs;
-using Components.GameEntity.Misc;
 
 namespace Systems.Initialization.GameEntity.EntitySpawning
 {
@@ -60,7 +59,6 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             for (int i = 0; i < count; i++)
             {
                 spawnedEntities[i] = em.Instantiate(toSpawnPrefabs[i]);
-                em.AddComponent<NeedInitPosAroundSpawnerTag>(spawnedEntities[i]);
             }
 
             state.Dependency = new SetComponentsJob
