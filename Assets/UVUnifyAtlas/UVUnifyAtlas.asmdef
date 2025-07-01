@@ -2,7 +2,9 @@
     "name": "UVUnifyAtlas",
     "rootNamespace": "UVUnifyAtlas",
     "references": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
     "overrideReferences": false,
