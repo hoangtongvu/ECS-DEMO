@@ -180,9 +180,6 @@ MonoBehaviour:
   - {fileID: 7400000, guid: f91440c7cc000884785151c951e2acd5, type: 2}
   - {fileID: 7400000, guid: ffbe52d5669234c47bbdaacd4f8db261, type: 2}
   currentStateName: 
-  clipList:
-  - {fileID: 7400000, guid: f91440c7cc000884785151c951e2acd5, type: 2}
-  - {fileID: 7400000, guid: ffbe52d5669234c47bbdaacd4f8db261, type: 2}
 --- !u!114 &844245512355725710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f3bc380528fb24e84cca38d6225dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseAnimator: {fileID: 7372615337154625802}
+  meshRenderer: {fileID: 0}
 --- !u!1 &2717839572171463581
 GameObject:
   m_ObjectHideFlags: 0

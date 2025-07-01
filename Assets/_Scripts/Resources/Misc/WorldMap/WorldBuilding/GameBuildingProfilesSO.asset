@@ -41,17 +41,17 @@ MonoBehaviour:
     - Key:
         VariantIndex: 1
       Value:
-        Name: AxeSpawner
+        Name: AllToolSpawner
         ProfilePicture: {fileID: 21300000, guid: 223a61bc9202046408dd1a38e0051eeb,
           type: 3}
-        PresenterPrefab: {fileID: 9115495792767966074, guid: 8d4b68f910c4b5f4999c536bb282dd6c,
+        PresenterPrefab: {fileID: 8630936706501201892, guid: 49dbbfc1879d64645ad04d2538ab0dbe,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 9115495792767966074, guid: 136dbed38cae8cc419daa750f6417450,
           type: 3}
         GameEntitySize:
-          GridSquareSize: 1
-          ObjectHeight: 2
+          GridSquareSize: 2
+          ObjectHeight: 0
         HasHpComponents: 1
         HpData:
           MaxHp: 75
@@ -68,14 +68,14 @@ MonoBehaviour:
         Name: PickaxeSpawner
         ProfilePicture: {fileID: 21300000, guid: d0462d85729ce134887063bb9cfe9c33,
           type: 3}
-        PresenterPrefab: {fileID: 9115495792767966074, guid: 7b00cdfd4f764b84b8da5ac8f0b6deaa,
+        PresenterPrefab: {fileID: 8630936706501201892, guid: 49dbbfc1879d64645ad04d2538ab0dbe,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 9115495792767966074, guid: a492c0a594144a84084624c553eac045,
           type: 3}
         GameEntitySize:
-          GridSquareSize: 4
-          ObjectHeight: 2
+          GridSquareSize: 2
+          ObjectHeight: 0
         HasHpComponents: 1
         HpData:
           MaxHp: 75
@@ -88,71 +88,6 @@ MonoBehaviour:
             Value: 2
     - Key:
         VariantIndex: 3
-      Value:
-        Name: Tree
-        ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
-          type: 3}
-        PresenterPrefab: {fileID: 0}
-        IsPresenterEntity: 1
-        PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 561c6dcbe191a7f418a0de98bfd6e2e7,
-          type: 3}
-        GameEntitySize:
-          GridSquareSize: 1
-          ObjectHeight: 0
-        HasHpComponents: 0
-        HpData:
-          MaxHp: 100
-        SpawnDurationSeconds: 0
-        BaseSpawningCosts:
-          _serializedList:
-          - Key: 1
-            Value: 2
-    - Key:
-        VariantIndex: 4
-      Value:
-        Name: RockPit
-        ProfilePicture: {fileID: 21300000, guid: 02c56d58c16f55441af8086bb2c8e236,
-          type: 3}
-        PresenterPrefab: {fileID: 0}
-        IsPresenterEntity: 1
-        PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 2afcb35a6e7e2884d8781889dbc859f3,
-          type: 3}
-        GameEntitySize:
-          GridSquareSize: 1
-          ObjectHeight: 0
-        HasHpComponents: 0
-        HpData:
-          MaxHp: 100
-        SpawnDurationSeconds: 0
-        BaseSpawningCosts:
-          _serializedList:
-          - Key: 3
-            Value: 3
-    - Key:
-        VariantIndex: 5
-      Value:
-        Name: BerryBush
-        ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
-          type: 3}
-        PresenterPrefab: {fileID: 0}
-        IsPresenterEntity: 1
-        PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: f51692cabb8658f4eacde5708443c27d,
-          type: 3}
-        GameEntitySize:
-          GridSquareSize: 1
-          ObjectHeight: 0
-        HasHpComponents: 0
-        HpData:
-          MaxHp: 50
-        SpawnDurationSeconds: 0
-        BaseSpawningCosts:
-          _serializedList:
-          - Key: 0
-            Value: 1
-          - Key: 1
-            Value: 1
-    - Key:
-        VariantIndex: 6
       Value:
         Name: Wall
         ProfilePicture: {fileID: 21300000, guid: ed5474fc2732ba54f99fae691ce9cdf8,

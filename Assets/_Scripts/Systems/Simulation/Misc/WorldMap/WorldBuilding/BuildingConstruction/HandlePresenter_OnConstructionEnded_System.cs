@@ -3,7 +3,6 @@ using Components.Misc.Presenter.PresenterPrefabGO;
 using Components.Misc.WorldMap.WorldBuilding;
 using Core.Misc.Presenter;
 using Unity.Entities;
-using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildingConstruction
@@ -44,7 +43,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildingConstruction
             BasePresenter basePresenter
             , in PresenterOriginalMaterialHolder presenterOriginalMaterialHolder)
         {
-            var meshRenderer = basePresenter.GetComponent<MeshRenderer>();
+            var meshRenderer = basePresenter.MeshRenderer;
 
             meshRenderer.sharedMaterial = presenterOriginalMaterialHolder.Value.Value;
             meshRenderer.shadowCastingMode = ShadowCastingMode.On;
