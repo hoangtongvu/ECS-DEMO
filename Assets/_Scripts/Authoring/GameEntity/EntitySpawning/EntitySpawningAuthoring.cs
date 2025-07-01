@@ -20,6 +20,7 @@ namespace Authoring.GameEntity.EntitySpawning
 
                 GameBuildingBakingHelper.AddComponents(this, entity);
 
+                AddBuffer<SpawnedEntityElement>(entity);
                 AddComponent<SpawnedEntityCounter>(entity);
                 AddComponent(entity, new SpawnedEntityCountLimit
                 {

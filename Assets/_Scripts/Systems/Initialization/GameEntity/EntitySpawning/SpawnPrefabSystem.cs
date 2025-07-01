@@ -68,6 +68,7 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 Entities = spawnedEntities,
                 SpawnerEntities = spawnerEntities.ToArray(Allocator.TempJob),
                 SpawnerEntityHolderLookup = SystemAPI.GetComponentLookup<SpawnerEntityHolder>(),
+                SpawnedEntityBufferLookup = SystemAPI.GetBufferLookup<SpawnedEntityElement>(),
             }.ScheduleParallel(count, initialCap / 2, state.Dependency);
 
         }
@@ -84,6 +85,9 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             [NativeDisableParallelForRestriction]
             public ComponentLookup<SpawnerEntityHolder> SpawnerEntityHolderLookup;
 
+            [NativeDisableParallelForRestriction]
+            public BufferLookup<SpawnedEntityElement> SpawnedEntityBufferLookup;
+
             [BurstCompile]
             public void Execute(int startIndex, int count)
             {
@@ -92,11 +96,19 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 for (int i = 0; i < upperBound; i++)
                 {
                     var entity = this.Entities[i];
+                    var spawnerEntity = this.SpawnerEntities[i];
 
                     if (!this.SpawnerEntityHolderLookup.HasComponent(entity)) continue;
 
                     var spawnerEntityHolderRef = this.SpawnerEntityHolderLookup.GetRefRW(entity);
-                    spawnerEntityHolderRef.ValueRW.Value = this.SpawnerEntities[i];
+                    spawnerEntityHolderRef.ValueRW.Value = spawnerEntity;
+
+                    if (!this.SpawnedEntityBufferLookup.TryGetBuffer(spawnerEntity, out var spawnedEntities)) continue;
+
+                    spawnedEntities.Add(new SpawnedEntityElement
+                    {
+                        Value = entity,
+                    });
 
                 }
 
