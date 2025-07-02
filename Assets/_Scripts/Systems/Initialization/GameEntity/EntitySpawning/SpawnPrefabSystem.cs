@@ -4,7 +4,7 @@ using Utilities.Extensions;
 using Components.GameEntity.EntitySpawning;
 using Unity.Collections;
 using Unity.Jobs;
-using Components.GameEntity.Misc;
+using Utilities.Extensions.GameEntity.EntitySpawning;
 
 namespace Systems.Initialization.GameEntity.EntitySpawning
 {
@@ -60,7 +60,9 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
             for (int i = 0; i < count; i++)
             {
                 spawnedEntities[i] = em.Instantiate(toSpawnPrefabs[i]);
-                em.AddComponent<NeedInitPosAroundSpawnerTag>(spawnedEntities[i]);
+
+                var spawnedEntitieArray = SystemAPI.GetComponent<SpawnedEntityArray>(spawnerEntities[i]);
+                spawnedEntitieArray.Add(spawnedEntities[i]);
             }
 
             state.Dependency = new SetComponentsJob
@@ -92,11 +94,12 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 for (int i = 0; i < upperBound; i++)
                 {
                     var entity = this.Entities[i];
+                    var spawnerEntity = this.SpawnerEntities[i];
 
                     if (!this.SpawnerEntityHolderLookup.HasComponent(entity)) continue;
 
                     var spawnerEntityHolderRef = this.SpawnerEntityHolderLookup.GetRefRW(entity);
-                    spawnerEntityHolderRef.ValueRW.Value = this.SpawnerEntities[i];
+                    spawnerEntityHolderRef.ValueRW.Value = spawnerEntity;
 
                 }
 

@@ -165,6 +165,8 @@ namespace Authoring.Unit
 
                 InteractableActionsBakingHelper.AddComponents(this, entity);
 
+                AddComponent<NeedInitPosAroundSpawnerTag>(entity);
+
             }
 
         }

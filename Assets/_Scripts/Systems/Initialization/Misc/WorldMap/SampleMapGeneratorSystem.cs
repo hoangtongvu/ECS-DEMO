@@ -2,6 +2,7 @@ using Components.GameEntity;
 using Components.Harvest;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.WorldBuilding;
+using Components.Player;
 using Core.GameEntity;
 using Core.Harvest;
 using Core.Misc;
@@ -22,10 +23,19 @@ namespace Systems.Initialization.Misc.WorldMap
     [UpdateInGroup(typeof(MapGenerateSystemGroup))]
     public partial class SampleMapGeneratorSystem : SystemBase
     {
+        private EntityQuery playerQuery;
         private Random rand;
 
         protected override void OnCreate()
         {
+            this.playerQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    PlayerProfilesSOHolder
+                    , BakedGameEntityProfileElement>()
+                .Build();
+
+            this.RequireForUpdate(this.playerQuery);
+
             this.rand = new Random(47);
 
             this.RequireForUpdate<SampleMapTag>();
@@ -44,6 +54,10 @@ namespace Systems.Initialization.Misc.WorldMap
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
 
             this.CreateWorldMap(in physicsWorld, in gameBuildingPrefabEntityMap, in harvesteePrefabEntityMap, in gameEntitySizeMap);
+
+            var bakedProfileElements = this.playerQuery.GetSingletonBuffer<BakedGameEntityProfileElement>();
+
+            this.EntityManager.Instantiate(bakedProfileElements[0].PrimaryEntity);
         }
 
         private void CreateWorldMap(

@@ -42,7 +42,7 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                     if (presenterPrefabGO == null) continue;
                     if (!presenterPrefabGO.TryGetComponent<BasePresenter>(out var basePresenter))
                     {
-                        UnityEngine.Debug.LogError($"{presenterPrefabGO.name} does not contain {nameof(BasePresenter)} component");
+                        UnityEngine.Debug.LogError($"{presenterPrefabGO.name} does not contain {nameof(BasePresenter)} component", presenterPrefabGO);
                         continue;
                     }
 

@@ -2,7 +2,6 @@ using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
 namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
 {
@@ -37,7 +36,7 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                     .WithEntityAccess())
             {
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
-                var originalMat = basePresenter.GetComponent<MeshRenderer>().sharedMaterial;
+                var originalMat = basePresenter.MeshRenderer.sharedMaterial;
 
                 ecb.SetSharedComponent(entity, new PresenterOriginalMaterialHolder
                 {

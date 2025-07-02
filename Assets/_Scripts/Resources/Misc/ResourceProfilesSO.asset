@@ -25,6 +25,12 @@ MonoBehaviour:
           type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 0}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ResourceType: 0
         MaxQuantityPerStack: 1
     - Key:
@@ -38,6 +44,12 @@ MonoBehaviour:
           type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 0}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ResourceType: 1
         MaxQuantityPerStack: 10
     - Key:
@@ -47,10 +59,16 @@ MonoBehaviour:
         Name: Food
         ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
           type: 3}
-        PresenterPrefab: {fileID: 3535422202906665777, guid: 7cf595b199dfe534d99e8692648dee9e,
+        PresenterPrefab: {fileID: 2727165731320436020, guid: 735c17accd97407459fa69ca703cf61f,
           type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 0}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ResourceType: 2
         MaxQuantityPerStack: 10
     - Key:
@@ -64,5 +82,11 @@ MonoBehaviour:
           type: 3}
         IsPresenterEntity: 1
         PrimaryEntityPrefab: {fileID: 0}
+        GameEntitySize:
+          GridSquareSize: 0
+          ObjectHeight: 0
+        HasHpComponents: 0
+        HpData:
+          MaxHp: 100
         ResourceType: 3
         MaxQuantityPerStack: 10

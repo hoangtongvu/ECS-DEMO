@@ -10,7 +10,6 @@ using Systems.Initialization.Misc.Presenter.PresenterPrefabGO;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildingConstruction
@@ -84,7 +83,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildingConstructio
             BasePresenter basePresenter
             , in BlueprintMaterialHolder blueprintMaterialHolder)
         {
-            var meshRenderer = basePresenter.GetComponent<MeshRenderer>();
+            var meshRenderer = basePresenter.MeshRenderer;
 
             meshRenderer.sharedMaterial = blueprintMaterialHolder.Value.Value;
             meshRenderer.shadowCastingMode = ShadowCastingMode.Off;

@@ -2,6 +2,7 @@
 using Components.Misc.Presenter;
 using Components.Tool;
 using Unity.Entities;
+using Unity.Physics;
 using UnityEngine;
 
 namespace Authoring.Tool
@@ -13,6 +14,8 @@ namespace Authoring.Tool
             public override void Bake(DerelictToolAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
+
+                AddComponent<PhysicsGravityFactor>(entity);
 
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<DerelictToolTag>(entity);

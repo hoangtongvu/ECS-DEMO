@@ -11,5 +11,6 @@ namespace Core.Misc
         Unit = 1 << 8,
         Item = 1 << 9,
         Building = 1 << 10,
+        Tool = 1 << 11,
     }
 }
