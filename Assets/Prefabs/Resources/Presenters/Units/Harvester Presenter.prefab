@@ -591,7 +591,7 @@ GameObject:
   - component: {fileID: 7282030295754164067}
   - component: {fileID: 6191606546656836806}
   - component: {fileID: 812225503602940198}
-  - component: {fileID: 8547320606188190807}
+  - component: {fileID: 5864618502386498653}
   m_Layer: 0
   m_Name: Harvester Presenter
   m_TagString: Untagged
@@ -661,7 +661,7 @@ MonoBehaviour:
   - {fileID: 7400000, guid: f821108a7bef8db46ba5c18ecb16ded1, type: 2}
   - {fileID: 7400000, guid: 39e911335c55ab04c92a1f125a022da7, type: 2}
   currentStateName: 
---- !u!114 &8547320606188190807
+--- !u!114 &5864618502386498653
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -670,9 +670,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1052591493456220867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1f3bc380528fb24e84cca38d6225dd3, type: 3}
+  m_Script: {fileID: 11500000, guid: beec79ae077222a4e9b5c47ef7998056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 0}
+  allChildRenderers:
+  - {fileID: 54940201675339370}
+  - {fileID: 1312469546109983634}
+  - {fileID: 1744363966292453987}
+  - {fileID: 4642552417751590675}
+  - {fileID: 1515677044450397995}
+  - {fileID: 33749804553121414}
+  - {fileID: 2118971827888988322}
+  originalSharedMaterial: {fileID: -7423125517761585655, guid: 979610c8443d98d48a5f24f0a0d122af,
+    type: 3}
+  flashDuration: 0.2
+  <FlashMaterial>k__BackingField: {fileID: 0}
 --- !u!1 &1117292658720810686
 GameObject:
   m_ObjectHideFlags: 0

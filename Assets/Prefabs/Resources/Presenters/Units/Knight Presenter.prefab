@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 7035537831173520941}
   - component: {fileID: 2405587748124382645}
   - component: {fileID: 4118442642479038172}
-  - component: {fileID: 9183712855898372489}
+  - component: {fileID: 2984231614115845487}
   m_Layer: 0
   m_Name: Knight Presenter
   m_TagString: Untagged
@@ -427,7 +427,7 @@ MonoBehaviour:
   - {fileID: 7400000, guid: f821108a7bef8db46ba5c18ecb16ded1, type: 2}
   - {fileID: 7400000, guid: 39e911335c55ab04c92a1f125a022da7, type: 2}
   currentStateName: 
---- !u!114 &9183712855898372489
+--- !u!114 &2984231614115845487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -436,9 +436,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 2108327356210891175}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1f3bc380528fb24e84cca38d6225dd3, type: 3}
+  m_Script: {fileID: 11500000, guid: beec79ae077222a4e9b5c47ef7998056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 0}
+  allChildRenderers:
+  - {fileID: 6657886502714048842}
+  - {fileID: 6512996223855420388}
+  - {fileID: 1310112688061219828}
+  - {fileID: 3255005215683695542}
+  - {fileID: 5148057278860026205}
+  - {fileID: 6891567362907892188}
+  originalSharedMaterial: {fileID: -8384745679888196477, guid: abcba669f2859fc4c88c6c94bde143e0,
+    type: 3}
+  flashDuration: 0.2
+  <FlashMaterial>k__BackingField: {fileID: 0}
 --- !u!1 &2226532473773272336
 GameObject:
   m_ObjectHideFlags: 0

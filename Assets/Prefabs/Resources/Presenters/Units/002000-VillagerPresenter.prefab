@@ -1614,7 +1614,7 @@ GameObject:
   - component: {fileID: 8096097153569295826}
   - component: {fileID: 8259342880012062875}
   - component: {fileID: 160529248230138188}
-  - component: {fileID: 53751803359982632}
+  - component: {fileID: 1709547431546711826}
   m_Layer: 0
   m_Name: 002000-VillagerPresenter
   m_TagString: Untagged
@@ -1683,7 +1683,7 @@ MonoBehaviour:
   - {fileID: 7400000, guid: 112245b4f196df04db6634d9edd8f54b, type: 2}
   - {fileID: 7400000, guid: 39e911335c55ab04c92a1f125a022da7, type: 2}
   currentStateName: 
---- !u!114 &53751803359982632
+--- !u!114 &1709547431546711826
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1692,9 +1692,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 7219495313904597495}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1f3bc380528fb24e84cca38d6225dd3, type: 3}
+  m_Script: {fileID: 11500000, guid: beec79ae077222a4e9b5c47ef7998056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 0}
+  allChildRenderers:
+  - {fileID: 844357629353437449}
+  - {fileID: 1128654991264836616}
+  - {fileID: 1504463604625975760}
+  - {fileID: 6707891049157005432}
+  - {fileID: 6699092359401185791}
+  - {fileID: 5515221591930333731}
+  originalSharedMaterial: {fileID: -7423125517761585655, guid: 979610c8443d98d48a5f24f0a0d122af,
+    type: 3}
+  flashDuration: 0.2
+  <FlashMaterial>k__BackingField: {fileID: 0}
 --- !u!1 &7347883110214783191
 GameObject:
   m_ObjectHideFlags: 0
