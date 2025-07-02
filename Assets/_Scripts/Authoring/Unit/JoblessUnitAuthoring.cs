@@ -33,6 +33,7 @@ namespace Authoring.Unit
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
+                AddComponent<UnitTag>(entity);
                 AddComponent<JoblessUnitTag>(entity);
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
