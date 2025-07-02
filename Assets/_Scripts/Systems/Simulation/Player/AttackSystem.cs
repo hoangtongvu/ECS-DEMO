@@ -89,7 +89,7 @@ namespace Systems.Simulation.Player
                 new CollisionFilter
                 {
                     BelongsTo = (uint)CollisionLayer.Player,
-                    CollidesWith = (uint)CollisionLayer.Default,
+                    CollidesWith = (uint)(CollisionLayer.Default | CollisionLayer.Unit),
                 });
 
             foreach (var hit in hits)
