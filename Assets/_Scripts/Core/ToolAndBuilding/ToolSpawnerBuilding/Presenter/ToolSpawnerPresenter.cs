@@ -11,11 +11,11 @@ namespace Core.ToolAndBuilding.ToolSpawnerBuilding.Presenter
     public class ToolSpawnerPresenter : BasePresenter
     {
         [SerializeField] private List<ToolHolderSlotMarker> toolHolderSlotMarkers;
+        [SerializeField] private WorkBenchPresenter workBenchPresenter;
         [SerializeField] private BaseAnimator benchWorkerAnimator;
         private float originalbenchWorkerEulerY;
 
         public List<ToolHolderSlotMarker> ToolHolderSlotMarkers => toolHolderSlotMarkers;
-        public BaseAnimator BenchWorkerAnimator => benchWorkerAnimator;
 
         protected override void Awake()
         {
@@ -26,6 +26,7 @@ namespace Core.ToolAndBuilding.ToolSpawnerBuilding.Presenter
         {
             base.LoadComponents();
             this.LoadToolHolderSlotMarkers();
+            this.LoadComponentInChildren(ref this.workBenchPresenter);
             this.LoadBenchWorkerAnimator();
         }
 
@@ -46,12 +47,14 @@ namespace Core.ToolAndBuilding.ToolSpawnerBuilding.Presenter
 
         public void Work()
         {
+            this.workBenchPresenter.Work();
             this.RotateBenchWorker(true);
             this.PlayWorkAnim();
         }
 
         public void EndWorking()
         {
+            this.workBenchPresenter.EndWorking();
             this.PlayIdleAnim();
             this.RotateBenchWorker(false);
         }
