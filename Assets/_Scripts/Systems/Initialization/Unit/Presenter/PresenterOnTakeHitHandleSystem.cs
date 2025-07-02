@@ -19,7 +19,8 @@ namespace Systems.Initialization.Unit.Presenter
                     HpChangeRecordElement
                     , PresenterHolder>()
                 .WithAll<
-                    UnitTag>()
+                    UnitTag
+                    , IsAliveTag>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -34,7 +35,9 @@ namespace Systems.Initialization.Unit.Presenter
                 .Query<
                     DynamicBuffer<HpChangeRecordElement>
                     , RefRO<PresenterHolder>>()
-                .WithAll<UnitTag>())
+                .WithAll<
+                    UnitTag
+                    , IsAliveTag>())
             {
                 if (hpChangeRecords.Length == 0) continue;
                 if (presenterHolderRef.ValueRO.Value.Value is not UnitPresenter unitPresenter) continue;
