@@ -1,13 +1,13 @@
 ﻿using Components.GameEntity.EntitySpawning;
+using Systems.Initialization.Misc;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Scenes;
 
 namespace Systems.Baking.GameEntity.EntitySpawning
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(SceneSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
+    [UpdateBefore(typeof(NewlySpawnedTagClearSystem))]
     [BurstCompile]
     public partial struct SpawnedEntityArrayBakingSystem : ISystem
     {
@@ -21,7 +21,7 @@ namespace Systems.Baking.GameEntity.EntitySpawning
                     EntitySpawningProfileElement
                     , SpawnedEntityCountLimit>()
                 .WithAll<
-                    Prefab>()
+                    NewlySpawnedTag>()
                 .Build();
 
             state.RequireForUpdate(this.entityQuery);
@@ -30,12 +30,12 @@ namespace Systems.Baking.GameEntity.EntitySpawning
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            state.Enabled = false;
-
             var entities = this.entityQuery.ToEntityArray(Allocator.Temp);
-            var spawnedEntityCountLimits = this.entityQuery.ToComponentDataArray<SpawnedEntityCountLimit>(Allocator.Temp);
             int length = entities.Length;
 
+            if (length == 0) return;
+
+            var spawnedEntityCountLimits = this.entityQuery.ToComponentDataArray<SpawnedEntityCountLimit>(Allocator.Temp);
             var em = state.EntityManager;
 
             for (int i = 0; i < length; i++)
