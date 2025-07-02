@@ -1854,7 +1854,7 @@ GameObject:
   - component: {fileID: 909994416407846655}
   - component: {fileID: 2300256606905612587}
   - component: {fileID: 5866414958595223142}
-  - component: {fileID: 4517203748127027708}
+  - component: {fileID: 7434073184046825263}
   m_Layer: 0
   m_Name: Archer Presenter
   m_TagString: Untagged
@@ -1924,7 +1924,7 @@ MonoBehaviour:
   - {fileID: 7400000, guid: f821108a7bef8db46ba5c18ecb16ded1, type: 2}
   - {fileID: 7400000, guid: 39e911335c55ab04c92a1f125a022da7, type: 2}
   currentStateName: 
---- !u!114 &4517203748127027708
+--- !u!114 &7434073184046825263
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1933,9 +1933,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6385762350749957642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1f3bc380528fb24e84cca38d6225dd3, type: 3}
+  m_Script: {fileID: 11500000, guid: beec79ae077222a4e9b5c47ef7998056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 0}
+  allChildRenderers:
+  - {fileID: 1514896381091546438}
+  - {fileID: 5184046571626472826}
+  - {fileID: 3047950970596520208}
+  - {fileID: 203635430764252143}
+  - {fileID: 3866170109328753281}
+  - {fileID: 5541368471853585830}
+  - {fileID: 4315174960970293664}
+  originalSharedMaterial: {fileID: 7205189804858053933, guid: f6df6fd552ed4ca4cba626e4b2808326,
+    type: 3}
+  flashDuration: 0.2
+  <FlashMaterial>k__BackingField: {fileID: 0}
 --- !u!1 &6520024810985887358
 GameObject:
   m_ObjectHideFlags: 0
