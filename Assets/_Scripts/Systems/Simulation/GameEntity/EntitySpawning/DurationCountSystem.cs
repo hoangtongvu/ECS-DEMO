@@ -5,6 +5,7 @@ using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Unity.Collections;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using System.Collections.Generic;
+using Components.GameEntity.EntitySpawning.SpawningProcess;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
 {
@@ -15,7 +16,13 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<EntitySpawningProfileElement>();
+            var query0 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    EntitySpawningProfileElement
+                    , IsInSpawningProcessTag>()
+                .Build();
+
+            state.RequireForUpdate(query0);
             state.RequireForUpdate<EntityToContainerIndexMap>();
             state.RequireForUpdate<EntitySpawningDurationsContainer>();
         }
@@ -36,6 +43,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
             job.ScheduleParallel();
         }
 
+        [WithAll(typeof(IsInSpawningProcessTag))]
         [BurstCompile]
         private partial struct CountUpJob : IJobEntity
         {

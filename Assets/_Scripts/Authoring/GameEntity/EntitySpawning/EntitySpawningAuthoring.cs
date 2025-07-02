@@ -1,5 +1,7 @@
-﻿using Authoring.Utilities.Helpers.GameBuilding;
+﻿using Authoring.Utilities.Extensions;
+using Authoring.Utilities.Helpers.GameBuilding;
 using Components.GameEntity.EntitySpawning;
+using Components.GameEntity.EntitySpawning.SpawningProcess;
 using Core.GameEntity;
 using System;
 using Unity.Entities;
@@ -25,6 +27,10 @@ namespace Authoring.GameEntity.EntitySpawning
                 {
                     Value = 3
                 });
+
+                this.AddAndDisableComponent<IsInSpawningProcessTag>(entity);
+                this.AddAndDisableComponent<JustBeginSpawningProcessTag>(entity);
+                this.AddAndDisableComponent<JustEndSpawningProcessTag>(entity);
 
                 var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
 
