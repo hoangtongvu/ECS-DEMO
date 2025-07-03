@@ -13,6 +13,7 @@ using Unity.Physics;
 using Unity.Transforms;
 using Systems.Simulation.Tool;
 using Utilities.Extensions.GameEntity.EntitySpawning;
+using static Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit.UpgradeAndRevertJoblessUnitHelper;
 
 namespace Systems.Simulation.UnitAndTool
 {
@@ -133,16 +134,21 @@ namespace Systems.Simulation.UnitAndTool
             , in ToolProfileIdHolder toolProfileIdHolder)
         {
             var unitToolHolderRef = SystemAPI.GetComponentRW<UnitToolHolder>(unitEntity);
-            unitToolHolderRef.ValueRW.Value = toolEntity;
+            var toolProfileIdHolderRef = SystemAPI.GetComponentRW<ToolProfileIdHolder>(unitEntity);
 
-            SystemAPI.GetComponentRW<ToolProfileIdHolder>(unitEntity).ValueRW = toolProfileIdHolder;
+            SetToolHolder(
+                ref unitToolHolderRef.ValueRW
+                , new UnitToolHolder { Value = toolEntity }
+                , ref toolProfileIdHolderRef.ValueRW
+                , in toolProfileIdHolder);
 
             var toolStats = toolStatsMap.Value[toolProfileIdHolder.Value];
 
             SystemAPI.GetComponentRW<BaseDmg>(unitEntity).ValueRW.Value = toolStats.BaseDmg;
             SystemAPI.GetComponentRW<BaseWorkSpeed>(unitEntity).ValueRW.Value = toolStats.BaseWorkSpeed;
 
-            ecb.RemoveComponent<JoblessUnitTag>(unitEntity);
+            RemoveJoblessUnitTag(in ecb, in unitEntity);
+
             ecb.AddComponent<NeedRoleUpdatedTag>(unitEntity);
             ecb.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);
 

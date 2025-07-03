@@ -1,11 +1,10 @@
-using Components.Harvest;
 using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
 using Core.Tool;
-using Core.Unit;
 using Unity.Burst;
 using Unity.Entities;
+using static Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit.UpgradeAndRevertJoblessUnitHelper;
 
 namespace Systems.Initialization.UnitAndTool.RoleUpdated.InitRoleComponents
 {
@@ -32,33 +31,16 @@ namespace Systems.Initialization.UnitAndTool.RoleUpdated.InitRoleComponents
             var ecb = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            new InitRoleComponentsJob
+            foreach (var (toolProfileIdHolderRef, unitProfileIdHolderRef, entity) in SystemAPI
+                .Query<
+                    RefRO<ToolProfileIdHolder>
+                    , RefRW<UnitProfileIdHolder>>()
+                .WithAll<
+                    NeedRoleUpdatedTag>()
+                .WithEntityAccess())
             {
-                ECB = ecb.AsParallelWriter(),
-            }.ScheduleParallel();
-
-        }
-
-        [WithAll(typeof(NeedRoleUpdatedTag))]
-        [BurstCompile]
-        private partial struct InitRoleComponentsJob : IJobEntity
-        {
-            public EntityCommandBuffer.ParallelWriter ECB;
-
-            [BurstCompile]
-            void Execute(
-                in ToolProfileIdHolder toolProfileIdHolder
-                , ref UnitProfileIdHolder unitProfileIdHolder
-                , Entity unitEntity
-                , [EntityIndexInQuery] int entityIndexInQuery)
-            {
-                if (toolProfileIdHolder.Value.ToolType != ToolType.Basket) return;
-
-                unitProfileIdHolder.Value.UnitType = UnitType.Harvester;
-
-                this.ECB.AddComponent<HarvesterICD>(entityIndexInQuery, unitEntity);
-                this.ECB.AddComponent<HarvesteeTypeHolder>(entityIndexInQuery, unitEntity);
-
+                if (toolProfileIdHolderRef.ValueRO.Value.ToolType != ToolType.Basket) continue;
+                InitOnPick_Basket(in ecb, ref unitProfileIdHolderRef.ValueRW, in entity);
             }
 
         }

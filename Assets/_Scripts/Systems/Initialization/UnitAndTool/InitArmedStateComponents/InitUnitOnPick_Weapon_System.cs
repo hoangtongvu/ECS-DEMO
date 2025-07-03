@@ -1,11 +1,9 @@
-using Components.GameEntity.Misc;
 using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
-using Core.GameEntity.Misc;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
+using static Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit.UpgradeAndRevertJoblessUnitHelper;
 
 namespace Systems.Initialization.UnitAndTool.InitArmedStateComponents
 {
@@ -31,47 +29,17 @@ namespace Systems.Initialization.UnitAndTool.InitArmedStateComponents
             var ecb = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            new InitArmedStateComponentsJob
+            foreach (var (unitToolHolderRef, entity) in SystemAPI
+                .Query<
+                    RefRO<UnitToolHolder>>()
+                .WithAll<
+                    NeedInitArmedStateComponentsTag>()
+                .WithEntityAccess())
             {
-                ECB = ecb.AsParallelWriter(),
-                IsWeaponTagLookup = SystemAPI.GetComponentLookup<IsWeaponTag>(),
-            }.ScheduleParallel();
+                bool toolIsWeapon = SystemAPI.HasComponent<IsWeaponTag>(unitToolHolderRef.ValueRO.Value);
+                if (!toolIsWeapon) continue;
 
-        }
-
-        [WithAll(typeof(NeedInitArmedStateComponentsTag))]
-        [BurstCompile]
-        private partial struct InitArmedStateComponentsJob : IJobEntity
-        {
-            public EntityCommandBuffer.ParallelWriter ECB;
-
-            [ReadOnly]
-            public ComponentLookup<IsWeaponTag> IsWeaponTagLookup;
-
-            [BurstCompile]
-            void Execute(
-                in UnitToolHolder unitToolHolder
-                , Entity unitEntity
-                , [EntityIndexInQuery] int entityIndexInQuery)
-            {
-                bool toolIsWeapon = this.IsWeaponTagLookup.HasComponent(unitToolHolder.Value);
-
-                if (!toolIsWeapon) return;
-
-                this.AddComponents(in entityIndexInQuery, in unitEntity);
-
-            }
-
-            [BurstCompile]
-            private void AddComponents(in int entityIndexInQuery, in Entity entity)
-            {
-                this.ECB.SetComponent(entityIndexInQuery, entity, new ArmedStateHolder
-                {
-                    Value = ArmedState.True,
-                });
-
-                this.ECB.RemoveComponent<IsUnarmedEntityTag>(entityIndexInQuery, entity);
-                this.ECB.AddComponent<IsArmedEntityTag>(entityIndexInQuery, entity);
+                InitOnPick_Weapon(in ecb, in entity);
 
             }
 
