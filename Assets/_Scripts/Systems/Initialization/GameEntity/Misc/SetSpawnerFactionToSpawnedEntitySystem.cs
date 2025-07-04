@@ -1,11 +1,12 @@
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
+using Systems.Initialization.Misc;
 using Unity.Burst;
 using Unity.Entities;
 
 namespace Systems.Initialization.GameEntity.Misc
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(NewlySpawnedTagProcessSystemGroup))]
     [BurstCompile]
     public partial struct SetSpawnerFactionToSpawnedEntitySystem : ISystem
     {

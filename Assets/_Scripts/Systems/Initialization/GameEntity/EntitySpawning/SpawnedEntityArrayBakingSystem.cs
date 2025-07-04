@@ -6,8 +6,7 @@ using Unity.Entities;
 
 namespace Systems.Baking.GameEntity.EntitySpawning
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
-    [UpdateBefore(typeof(NewlySpawnedTagClearSystem))]
+    [UpdateInGroup(typeof(NewlySpawnedTagProcessSystemGroup))]
     [BurstCompile]
     public partial struct SpawnedEntityArrayBakingSystem : ISystem
     {

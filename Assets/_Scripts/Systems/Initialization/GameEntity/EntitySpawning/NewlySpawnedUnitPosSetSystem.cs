@@ -8,8 +8,7 @@ using Unity.Transforms;
 
 namespace Systems.Initialization.GameEntity.EntitySpawning
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
-    [UpdateBefore(typeof(NewlySpawnedTagClearSystem))]
+    [UpdateInGroup(typeof(NewlySpawnedTagProcessSystemGroup))]
     [BurstCompile]
     public partial struct NewlySpawnedUnitPosSetSystem : ISystem
     {

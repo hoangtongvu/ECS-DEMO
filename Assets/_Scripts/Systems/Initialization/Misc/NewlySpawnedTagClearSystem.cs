@@ -7,6 +7,11 @@ namespace Systems.Initialization.Misc
 {
     [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
     [UpdateBefore(typeof(SceneSystemGroup))]
+    public partial class NewlySpawnedTagProcessSystemGroup : ComponentSystemGroup
+    {
+    }
+
+    [UpdateInGroup(typeof(NewlySpawnedTagProcessSystemGroup), OrderLast = true)]
     [BurstCompile]
     public partial struct NewlySpawnedTagClearSystem : ISystem
     {
