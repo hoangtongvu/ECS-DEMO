@@ -89,12 +89,20 @@ namespace Systems.Simulation.UnitAndTool
             , ref SpawnerEntityHolder spawnerEntityHolder
             , in Entity toolEntity)
         {
-            var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(spawnerEntityHolder.Value);
-            spawnedEntityCounterRef.ValueRW.Value--;
+            var spawnerEntity = spawnerEntityHolder.Value;
 
-            var spawnedEntities = SystemAPI.GetComponent<SpawnedEntityArray>(spawnerEntityHolder.Value);
-            spawnedEntities.Remove(in toolEntity);
+            if (SystemAPI.HasComponent<SpawnedEntityCounter>(spawnerEntity))
+            {
+                var spawnedEntityCounterRef = SystemAPI.GetComponentRW<SpawnedEntityCounter>(spawnerEntity);
+                spawnedEntityCounterRef.ValueRW.Value--;
+            }
 
+            if (SystemAPI.HasComponent<SpawnedEntityArray>(spawnerEntity))
+            {
+                var spawnedEntities = SystemAPI.GetComponent<SpawnedEntityArray>(spawnerEntity);
+                spawnedEntities.Remove(in toolEntity);
+            }
+            
             spawnerEntityHolder.Value = Entity.Null;
         }
 
