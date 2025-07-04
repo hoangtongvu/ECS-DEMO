@@ -1,6 +1,7 @@
 using Components.GameEntity.Misc;
 using Core.GameEntity.Misc;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit
@@ -17,7 +18,7 @@ namespace Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit
         }
 
         [BurstCompile]
-        public static void RevertOnPick_NonWeapon(in EntityCommandBuffer ecb, in Entity unitEntity)
+        public static void RevertOnPick_NonWeapon(in EntityManager em, in NativeArray<Entity> unitEntities)
         {
         }
 

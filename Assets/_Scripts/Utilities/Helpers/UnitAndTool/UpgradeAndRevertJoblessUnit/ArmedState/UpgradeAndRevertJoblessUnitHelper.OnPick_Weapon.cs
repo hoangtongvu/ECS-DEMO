@@ -1,7 +1,9 @@
 using Components.GameEntity.Misc;
 using Core.GameEntity.Misc;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using Utilities.Extensions;
 
 namespace Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit
 {
@@ -20,15 +22,15 @@ namespace Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit
         }
 
         [BurstCompile]
-        public static void RevertOnPick_Weapon(in EntityCommandBuffer ecb, in Entity unitEntity)
+        public static void RevertOnPick_Weapon(in EntityManager em, in NativeArray<Entity> unitEntities)
         {
-            ecb.SetComponent(unitEntity, new ArmedStateHolder
+            em.SetComponentData(unitEntities, new ArmedStateHolder
             {
                 Value = ArmedState.False,
             });
 
-            ecb.AddComponent<IsUnarmedEntityTag>(unitEntity);
-            ecb.RemoveComponent<IsArmedEntityTag>(unitEntity);
+            em.AddComponent<IsUnarmedEntityTag>(unitEntities);
+            em.RemoveComponent<IsArmedEntityTag>(unitEntities);
         }
 
     }

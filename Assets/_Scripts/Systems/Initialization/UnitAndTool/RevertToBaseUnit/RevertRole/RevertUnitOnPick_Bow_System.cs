@@ -3,6 +3,7 @@ using Components.Unit;
 using Components.Unit.RevertToBaseUnit;
 using Core.Tool;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using static Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit.UpgradeAndRevertJoblessUnitHelper;
 
@@ -28,8 +29,7 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit.RevertRole
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var ecb = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (toolProfileIdHolderRef, unitProfileIdHolderRef, entity) in SystemAPI
                 .Query<
@@ -42,6 +42,8 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit.RevertRole
                 if (toolProfileIdHolderRef.ValueRO.Value.ToolType != ToolType.Bow) continue;
                 RevertOnPick_Bow(in ecb, ref unitProfileIdHolderRef.ValueRW, in entity);
             }
+
+            ecb.Playback(state.EntityManager);
 
         }
 
