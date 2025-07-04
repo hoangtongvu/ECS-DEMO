@@ -1,6 +1,7 @@
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
 using Core.Utilities.Extensions;
+using Systems.Initialization.Misc;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,8 +10,8 @@ using Unity.Transforms;
 
 namespace Systems.Initialization.GameEntity.EntitySpawning
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(SpawnPrefabSystem))]
+    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
+    [UpdateBefore(typeof(NewlySpawnedTagClearSystem))]
     [BurstCompile]
     public partial struct NewlySpawnedUnitPosSetSystem : ISystem
     {
