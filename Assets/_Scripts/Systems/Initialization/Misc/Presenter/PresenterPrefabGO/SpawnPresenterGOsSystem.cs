@@ -1,4 +1,5 @@
 using Components.GameEntity;
+using Components.GameEntity.Movement;
 using Components.Misc.Presenter;
 using Components.Misc.Presenter.PresenterPrefabGO;
 using Core.Misc.Presenter;
@@ -70,13 +71,16 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                     Value = newPresenter,
                 });
 
-                presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray.Add(newPresenter.transform);
-
-                ecb.AddComponent(entity, new TransformAccessArrayIndex
+                if (SystemAPI.HasComponent<CanMoveEntityTag>(entity))
                 {
-                    Value = presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray.length - 1,
-                });
+                    presentersTransformAccessArrayGOHolder.Value.Value.AddTransform(newPresenter.transform, out var newIndex);
 
+                    ecb.AddComponent(entity, new TransformAccessArrayIndex
+                    {
+                        Value = newIndex,
+                    });
+                }
+                
                 this.TryInitAnimatorHolder(ecb, in entity, in newPresenter);
 
                 SceneManager.MoveGameObjectToScene(newPresenter.gameObject, presentersScene.Value);

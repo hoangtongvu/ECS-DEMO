@@ -64,6 +64,7 @@ namespace Systems.Simulation.Player
             if (hitList.IsEmpty)
             {
                 if (currentNearestEntity == Entity.Null) return;
+                if (!SystemAPI.HasComponent<CanShowActionsContainerUITag>(currentNearestEntity)) return;
 
                 SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(currentNearestEntity, false);
                 nearestInteractableEntityRef.ValueRW.Value = Entity.Null;
@@ -81,7 +82,11 @@ namespace Systems.Simulation.Player
             if (currentNearestEntity != Entity.Null)
             {
                 if (currentNearestEntity == newNearestEntity) return;
-                SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(currentNearestEntity, false);
+
+                if (SystemAPI.HasComponent<CanShowActionsContainerUITag>(currentNearestEntity))
+                {
+                    SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(currentNearestEntity, false);
+                }
             }
 
             SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(newNearestEntity, true);

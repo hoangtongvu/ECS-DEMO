@@ -39,13 +39,14 @@ namespace Systems.Presentation.Misc.Presenter
         protected override void OnUpdate()
         {
             var presentersTransformAccessArrayGOHolder = SystemAPI.GetSingleton<PresentersTransformAccessArrayGOHolder>();
+            var transformAccessArray = presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray;
 
             var localTransforms = this.entityQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
             var transformAccessArrayIndexes = this.entityQuery.ToComponentDataArray<TransformAccessArrayIndex>(Allocator.TempJob);
 
             int count = localTransforms.Length;
 
-            var indexToIndexMap = new NativeArray<int>(count, Allocator.TempJob);
+            var indexToIndexMap = new NativeArray<int>(transformAccessArray.length, Allocator.TempJob);
 
             var firstJob = new IndexesTransformJob()
             {
@@ -60,7 +61,7 @@ namespace Systems.Presentation.Misc.Presenter
                 IndexToIndexMap = firstJob.IndexToIndexMap,
             };
 
-            secondJob.Schedule(presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray, firstJob.Schedule());
+            secondJob.Schedule(transformAccessArray, firstJob.Schedule());
 
         }
 
@@ -101,6 +102,8 @@ namespace Systems.Presentation.Misc.Presenter
             [BurstCompile]
             public void Execute(int index, TransformAccess transform)
             {
+                if (!transform.isValid) return;
+
                 int localTransformIndex = this.IndexToIndexMap[index];
                 transform.position = this.LocalTransforms[localTransformIndex].Position;
                 transform.rotation = this.LocalTransforms[localTransformIndex].Rotation;
