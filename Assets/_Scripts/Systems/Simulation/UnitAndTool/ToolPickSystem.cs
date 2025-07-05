@@ -127,7 +127,7 @@ namespace Systems.Simulation.UnitAndTool
             transformRef.ValueRW.Scale = 0;
             transformRef.ValueRW.Rotation = quaternion.identity;
 
-            SystemAPI.SetComponentEnabled<DerelictToolTag>(toolEntity, false);
+            ecb.RemoveComponent<DerelictToolTag>(toolEntity);
             canBePickedTagRef.ValueRW = false;
             toolPickerEntityRef.ValueRW.Value = Entity.Null;
         }

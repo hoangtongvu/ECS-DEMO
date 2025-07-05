@@ -20,9 +20,14 @@ namespace Systems.Simulation.Tool
                     , CanInteractEntityTag>()
                 .Build();
 
-            state.RequireForUpdate(query0);
+            var query1 = SystemAPI.QueryBuilder()
+                .WithAll<
+                    DerelictToolTag
+                    , CanBePickedTag>()
+                .Build();
 
-            state.RequireForUpdate<DerelictToolTag>();
+            state.RequireForUpdate(query0);
+            state.RequireForUpdate(query1);
         }
 
         [BurstCompile]
@@ -36,23 +41,24 @@ namespace Systems.Simulation.Tool
             {
                 var targetEntity = targetEntityRef.ValueRO.Value;
 
-                bool targetEntityIsTool = SystemAPI.HasComponent<DerelictToolTag>(targetEntity);
-                if (!targetEntityIsTool) continue;
-
-                bool targetEntityIsDerelictTool = SystemAPI.IsComponentEnabled<DerelictToolTag>(targetEntity);
+                bool targetEntityIsDerelictTool = SystemAPI.HasComponent<DerelictToolTag>(targetEntity);
                 if (!targetEntityIsDerelictTool) continue;
 
                 bool toolMarkedAsCanBePicked = SystemAPI.IsComponentEnabled<CanBePickedTag>(targetEntity);
                 if (toolMarkedAsCanBePicked) continue;
 
-                SystemAPI.SetComponentEnabled<CanBePickedTag>(targetEntity, true);
-
-                toolMarkedAsCanBePicked = SystemAPI.IsComponentEnabled<CanBePickedTag>(targetEntity);
-
-                var toolPickerEntityRef = SystemAPI.GetComponentRW<ToolPickerEntity>(targetEntity);
-                toolPickerEntityRef.ValueRW.Value = unitEntity;
+                this.MarkToolCanBePicked(ref state, in targetEntity, in unitEntity);
             }
 
+        }
+
+        [BurstCompile]
+        private void MarkToolCanBePicked(ref SystemState state, in Entity toolEntity, in Entity unitEntity)
+        {
+            SystemAPI.SetComponentEnabled<CanBePickedTag>(toolEntity, true);
+
+            var toolPickerEntityRef = SystemAPI.GetComponentRW<ToolPickerEntity>(toolEntity);
+            toolPickerEntityRef.ValueRW.Value = unitEntity;
         }
 
     }
