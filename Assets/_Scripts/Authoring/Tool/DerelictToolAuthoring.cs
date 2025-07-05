@@ -1,6 +1,7 @@
 ﻿using Components.GameEntity.EntitySpawning;
 using Components.Misc.Presenter;
 using Components.Tool;
+using Components.Tool.Misc;
 using Unity.Entities;
 using Unity.Physics;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace Authoring.Tool
                 AddComponent<PhysicsGravityFactor>(entity);
 
                 AddComponent<NewlySpawnedTag>(entity);
+                AddComponent<ToolTag>(entity);
                 AddComponent<DerelictToolTag>(entity);
                 AddComponent<SpawnerEntityHolder>(entity);
 

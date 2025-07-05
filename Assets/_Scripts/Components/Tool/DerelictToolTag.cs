@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace Components.Tool
 {
-    public struct DerelictToolTag : IComponentData, IEnableableComponent
+    public struct DerelictToolTag : IComponentData
     {
     }
 
