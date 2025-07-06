@@ -6,6 +6,7 @@ using Core.GameEntity;
 using Unity.Burst;
 using Unity.Entities;
 using Utilities.Extensions.GameEntity.Damage;
+using static Utilities.Helpers.Misc.InteractionHelper;
 
 namespace Systems.Simulation.Unit.Misc
 {
@@ -42,8 +43,8 @@ namespace Systems.Simulation.Unit.Misc
 
             foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, entity) in
                 SystemAPI.Query<
-                    RefRO<InteractionTypeICD>
-                    , RefRO<InteractingEntity>
+                    RefRW<InteractionTypeICD>
+                    , RefRW<InteractingEntity>
                     , RefRO<BaseDmg>
                     , RefRO<BaseWorkSpeed>
                     , RefRW<WorkTimeCounterSecond>>()
@@ -51,6 +52,18 @@ namespace Systems.Simulation.Unit.Misc
                     .WithEntityAccess())
             {
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Attack) continue;
+
+                var interactingEntity = interactingEntityRef.ValueRO.Value;
+
+                bool isValidAndAliveTarget =
+                    SystemAPI.HasComponent<IsAliveTag>(interactingEntity) &&
+                    SystemAPI.IsComponentEnabled<IsAliveTag>(interactingEntity);
+
+                if (!isValidAndAliveTarget)
+                {
+                    StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
+                    continue;
+                }
 
                 workTimeCounterSecondRef.ValueRW.Value += baseWorkSpeedRef.ValueRO.Value * SystemAPI.Time.DeltaTime;
                 if (workTimeCounterSecondRef.ValueRO.Value < 1f) continue;

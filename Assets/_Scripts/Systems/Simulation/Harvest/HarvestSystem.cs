@@ -68,10 +68,11 @@ namespace Systems.Simulation.Harvest
                 var harvestEntity = interactingEntityRef.ValueRO.Value;
 
                 // NOTE: harvestEntity has Child Buffer (ICleanupBuffer) -> harvestEntity destruction will be delayed -> can't check using Exists().
-                if (!SystemAPI.HasComponent<IsAliveTag>(harvestEntity)) continue;
+                bool isValidAndAliveTarget =
+                    SystemAPI.HasComponent<IsAliveTag>(harvestEntity) &&
+                    SystemAPI.IsComponentEnabled<IsAliveTag>(harvestEntity);
 
-                bool isHarvesteeAlive = SystemAPI.IsComponentEnabled<IsAliveTag>(harvestEntity);
-                if (!isHarvesteeAlive)
+                if (!isValidAndAliveTarget)
                 {
                     StopInteraction(ref interactingEntityRef.ValueRW, ref interactionTypeICDRef.ValueRW);
                     continue;
