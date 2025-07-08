@@ -2,9 +2,11 @@ using Components.GameEntity.Damage;
 using Components.GameEntity.Misc;
 using Components.Misc.Presenter;
 using Components.Unit.Misc;
+using Core.Misc.Presenter.PresenterMessages;
 using Core.Unit.Presenter;
 using Systems.Initialization.GameEntity.Damage;
 using Unity.Entities;
+using ZBase.Foundation.PubSub;
 
 namespace Systems.Initialization.Unit.Presenter
 {
@@ -42,8 +44,9 @@ namespace Systems.Initialization.Unit.Presenter
                 if (hpChangeRecords.Length == 0) continue;
                 if (presenterHolderRef.ValueRO.Value.Value is not UnitPresenter unitPresenter) continue;
 
-                unitPresenter.FlashMaterial = flashOnTakeHitMaterial;
-                unitPresenter.OnTakeHit();
+                unitPresenter.Flasher.FlashMaterial = flashOnTakeHitMaterial;
+                unitPresenter.Messenger.MessagePublisher
+                    .Publish(new OnHitMessage(0));
 
             }
 

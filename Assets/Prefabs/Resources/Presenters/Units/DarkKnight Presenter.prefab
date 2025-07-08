@@ -2036,6 +2036,7 @@ GameObject:
   - component: {fileID: 1991153699006840457}
   - component: {fileID: 6045161960468066032}
   - component: {fileID: 3147843202649666812}
+  - component: {fileID: -9101874425746044271}
   m_Layer: 0
   m_Name: DarkKnight Presenter
   m_TagString: Untagged
@@ -2118,16 +2119,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 0}
-  allChildRenderers:
+  flasher: {fileID: -9101874425746044271}
+--- !u!114 &-9101874425746044271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863821623315164083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8e4ba3869f73c459bc7047834bdec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashDuration: 0.2
+  originalSharedMaterial: {fileID: 2100000, guid: 4e6305d4677e3944d99b931bcdbb24bb,
+    type: 2}
+  basePresenter: {fileID: 3147843202649666812}
+  renderers:
   - {fileID: 944738044274230199}
   - {fileID: 6985370123575231489}
   - {fileID: 2715511175238236859}
   - {fileID: 1310991298612061760}
   - {fileID: 3955542031736449058}
   - {fileID: 2916067009494645254}
-  originalSharedMaterial: {fileID: 2100000, guid: 4e6305d4677e3944d99b931bcdbb24bb,
-    type: 2}
-  flashDuration: 0.2
   <FlashMaterial>k__BackingField: {fileID: 0}
 --- !u!1 &7935957943162616122
 GameObject:
