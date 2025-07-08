@@ -1,5 +1,6 @@
 ﻿using Authoring.Utilities.Extensions;
 using Components.GameEntity;
+using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
@@ -42,6 +43,7 @@ namespace Authoring.Unit.DarkUnit
                 this.AddAndDisableComponent<WorkStartedTag>(entity);
                 this.AddAndDisableComponent<WalkStartedTag>(entity);
                 this.AddAndDisableComponent<RunStartedTag>(entity);
+                this.AddAndDisableComponent<NewlyDeadTag>(entity);
 
                 AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
