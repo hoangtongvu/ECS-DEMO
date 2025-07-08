@@ -9,16 +9,13 @@ namespace Core.Unit.Presenter
     {
         private Coroutine currentFlashCoroutine;
         [SerializeField] private float flashDuration = 0.2f;
+        [SerializeField] private Material flashMaterial;
         [SerializeField] private Material originalSharedMaterial;
         [SerializeField] protected BasePresenter basePresenter;
         [SerializeField] private Renderer[] renderers;
 
-        [field: SerializeField] public Material FlashMaterial { get; set; }
-        [SerializeField] public Material OriginalSharedMaterial => originalSharedMaterial;
-
-        protected override void LoadComponents()
+        protected override void Awake()
         {
-            base.LoadComponents();
             this.LoadCtrl(ref this.basePresenter);
             this.LoadRenderers();
             this.LoadOriginalSharedMaterial();
@@ -47,7 +44,7 @@ namespace Core.Unit.Presenter
 
         private IEnumerator DoFlash()
         {
-            this.SwapSharedMaterial(this.FlashMaterial);
+            this.SwapSharedMaterial(this.flashMaterial);
             yield return new WaitForSeconds(this.flashDuration);
             this.ResetOriginalSharedMaterial();
             this.currentFlashCoroutine = null;

@@ -44,7 +44,6 @@ namespace Systems.Initialization.Unit.Presenter
                 if (hpChangeRecords.Length == 0) continue;
                 if (presenterHolderRef.ValueRO.Value.Value is not UnitPresenter unitPresenter) continue;
 
-                unitPresenter.Flasher.FlashMaterial = flashOnTakeHitMaterial;
                 unitPresenter.Messenger.MessagePublisher
                     .Publish(new OnHitMessage(0));
 
