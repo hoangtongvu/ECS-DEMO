@@ -1,13 +1,12 @@
 using Components.GameEntity.Misc;
 using Components.Misc.Presenter;
 using Unity.Entities;
-using UnityEngine;
 
 namespace Systems.Initialization.GameEntity.Misc
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateBefore(typeof(DestroyEntityWithTagSystem))]
-    public partial class DestroyBasePresenterWithTagSystem : SystemBase
+    public partial class RemoveTAAIndexOnEntityDestroySystem : SystemBase
     {
         private EntityQuery query;
 
@@ -16,7 +15,8 @@ namespace Systems.Initialization.GameEntity.Misc
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     NeedDestroyBasePresenterTag
-                    , PresenterHolder>()
+                    , NeedDestroyEntityTag
+                    , TransformAccessArrayIndex>()
                 .Build();
 
             this.RequireForUpdate(this.query);
@@ -26,23 +26,15 @@ namespace Systems.Initialization.GameEntity.Misc
         {
             var presentersTransformAccessArrayGO = SystemAPI.GetSingleton<PresentersTransformAccessArrayGOHolder>().Value.Value;
 
-            foreach (var (presenterHolderRef, entity) in SystemAPI
+            foreach (var transformAccessIndexRef in SystemAPI
                 .Query<
-                    RefRW<PresenterHolder>>()
+                    RefRW<TransformAccessArrayIndex>>()
                 .WithAll<
-                    NeedDestroyBasePresenterTag>()
-                .WithEntityAccess())
+                    NeedDestroyBasePresenterTag
+                    , NeedDestroyEntityTag>())
             {
-                var go = presenterHolderRef.ValueRO.Value.Value.gameObject;
-                GameObject.Destroy(go);
-                presenterHolderRef.ValueRW.Value = null;
-
-                if (!SystemAPI.HasComponent<TransformAccessArrayIndex>(entity)) continue;
-                var transformAccessIndexRef = SystemAPI.GetComponentRW<TransformAccessArrayIndex>(entity);
-
                 presentersTransformAccessArrayGO.RemoveTransformAt(transformAccessIndexRef.ValueRO.Value);
                 transformAccessIndexRef.ValueRW = TransformAccessArrayIndex.Invalid;
-
             }
 
         }

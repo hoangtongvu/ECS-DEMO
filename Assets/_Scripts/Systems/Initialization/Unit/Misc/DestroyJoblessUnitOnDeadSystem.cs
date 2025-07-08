@@ -1,9 +1,11 @@
 using Components.GameEntity.Damage;
 using Components.GameEntity.Misc;
+using Components.GameEntity.Misc.EntityCleanup;
 using Components.Unit;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Utilities.Extensions;
 
 namespace Systems.Initialization.Unit.Misc
 {
@@ -36,6 +38,12 @@ namespace Systems.Initialization.Unit.Misc
 
             em.AddComponent<NeedDestroyBasePresenterTag>(entities);
             em.AddComponent<NeedDestroyEntityTag>(entities);
+            em.AddComponent<PendingCleanupEntityTag>(entities);
+            em.AddComponentData(entities, new PendingCleanupEntityTimer
+            {
+                TimeStamp = SystemAPI.Time.ElapsedTime,
+                DurationSeconds = new(2f),
+            });
 
         }
 

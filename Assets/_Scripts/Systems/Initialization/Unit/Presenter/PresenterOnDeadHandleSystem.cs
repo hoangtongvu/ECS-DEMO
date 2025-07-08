@@ -1,5 +1,4 @@
 using Components.GameEntity.Damage;
-using Components.GameEntity.Misc;
 using Components.Misc.Presenter;
 using Components.Unit.Misc;
 using Core.Misc.Presenter.PresenterMessages;
@@ -12,40 +11,36 @@ namespace Systems.Initialization.Unit.Presenter
 {
     [UpdateInGroup(typeof(HpChangesHandleSystemGroup), OrderFirst = true)]
     [UpdateBefore(typeof(HpChangesHandleSystem))]
-    public partial class PresenterOnTakeHitHandleSystem : SystemBase
+    public partial class PresenterOnDeadHandleSystem : SystemBase
     {
         protected override void OnCreate()
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    HpChangeRecordElement
-                    , PresenterHolder>()
+                    PresenterHolder>()
                 .WithAll<
-                    UnitTag
-                    , IsAliveTag>()
+                    UnitTag>()
+                .WithDisabled<
+                    IsAliveTag>()
                 .Build();
 
             this.RequireForUpdate(query);
-            this.RequireForUpdate<FlashOnTakeHitMaterial>();
         }
 
         protected override void OnUpdate()
         {
-            var flashOnTakeHitMaterial = SystemAPI.ManagedAPI.GetSingleton<FlashOnTakeHitMaterial>().Value;
-
-            foreach (var (hpChangeRecords, presenterHolderRef) in SystemAPI
+            foreach (var presenterHolderRef in SystemAPI
                 .Query<
-                    DynamicBuffer<HpChangeRecordElement>
-                    , RefRO<PresenterHolder>>()
+                    RefRO<PresenterHolder>>()
                 .WithAll<
-                    UnitTag
-                    , IsAliveTag>())
+                    UnitTag>()
+                .WithAll<
+                    NewlyDeadTag>())
             {
-                if (hpChangeRecords.Length == 0) continue;
                 if (presenterHolderRef.ValueRO.Value.Value is not UnitPresenter unitPresenter) continue;
 
                 unitPresenter.Messenger.MessagePublisher
-                    .Publish(new OnHitMessage(0));
+                    .Publish(new OnDeadMessage());
 
             }
 
