@@ -13,11 +13,11 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Utilities;
 
-namespace Systems.Initialization.Misc
+namespace Systems.Initialization.Unit.DarkUnit
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]
-    public partial struct MonsterWaveSpawnSystem : ISystem
+    public partial struct DarkUnitWaveSpawnSystem : ISystem
     {
         private EntityQuery playerQuery;
 
