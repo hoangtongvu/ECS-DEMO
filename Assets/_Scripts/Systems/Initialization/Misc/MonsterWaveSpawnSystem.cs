@@ -2,6 +2,7 @@ using Components.GameEntity.Misc;
 using Components.Player;
 using Components.Tool;
 using Components.Tool.Misc;
+using Components.Unit.DarkUnit;
 using Components.Unit.Misc;
 using Core.Tool;
 using Core.Unit;
@@ -10,6 +11,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Utilities;
 
 namespace Systems.Initialization.Misc
 {
@@ -31,6 +33,9 @@ namespace Systems.Initialization.Misc
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            var su = SingletonUtilities.GetInstance(state.EntityManager);
+            su.AddComponent<DarkUnitSpawnCycleCounter>();
+
             this.playerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerTag
@@ -38,6 +43,9 @@ namespace Systems.Initialization.Misc
                 .Build();
 
             state.RequireForUpdate(this.playerQuery);
+            state.RequireForUpdate<DarkUnitProfileMap>();
+            state.RequireForUpdate<DarkUnitSpawnRadius>();
+            state.RequireForUpdate<DarkUnitSpawnDurationMinutes>();
             state.RequireForUpdate<UnitProfileId2PrimaryPrefabEntityMap>();
             state.RequireForUpdate<ToolProfileId2PrimaryEntityMap>();
             state.RequireForUpdate<SetPosWithinRadiusCommandList>();
@@ -46,65 +54,91 @@ namespace Systems.Initialization.Misc
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var spawnProfileMap = SystemAPI.GetSingleton<DarkUnitProfileMap>().Value;
+            half spawnRadius = SystemAPI.GetSingleton<DarkUnitSpawnRadius>().Value;
+            half spawnDurationMinutes = SystemAPI.GetSingleton<DarkUnitSpawnDurationMinutes>().Value;
+
+            var spawnCycleCounterRef = SystemAPI.GetSingletonRW<DarkUnitSpawnCycleCounter>();
             var unitProfileId2PrimaryPrefabEntityMap = SystemAPI.GetSingleton<UnitProfileId2PrimaryPrefabEntityMap>().Value;
             var toolProfileId2PrimaryEntityMap = SystemAPI.GetSingleton<ToolProfileId2PrimaryEntityMap>().Value;
             var setPosWithinRadiusCommands = SystemAPI.GetSingleton<SetPosWithinRadiusCommandList>().Value;
             var em = state.EntityManager;
 
-            this.SpawnUnit(ref state, in em, in unitProfileId2PrimaryPrefabEntityMap, in setPosWithinRadiusCommands, out var newUnitEntity);
-            this.SpawnTool(ref state, in em, in toolProfileId2PrimaryEntityMap, out var newToolEntity);
+            spawnCycleCounterRef.ValueRW.Value++;
 
-            this.MarkToolCanBePicked(ref state, in newToolEntity, in newUnitEntity);
+            foreach (var kVPair in spawnProfileMap)
+            {
+                var spawnProfile = kVPair.Value;
+                int spawnCount = (int)math.floor(spawnCycleCounterRef.ValueRO.Value * spawnProfile.SpawnRate);
+
+                this.SpawnUnitsOfTheSameType(
+                    ref state
+                    , in em
+                    , in unitProfileId2PrimaryPrefabEntityMap
+                    , in setPosWithinRadiusCommands
+                    , kVPair.Key
+                    , in spawnRadius
+                    , in spawnCount
+                    , out var newUnitEntities);
+
+                this.SpawnToolOfTheSameType(
+                    ref state
+                    , in em
+                    , in toolProfileId2PrimaryEntityMap
+                    , in spawnProfile.ToolProfileId
+                    , in spawnCount
+                    , out var newToolEntities);
+
+                for (int i = 0; i < spawnCount; i++)
+                {
+                    this.MarkToolCanBePicked(ref state, newToolEntities[i], newUnitEntities[i]);
+                }
+
+            }
 
         }
 
         [BurstCompile]
-        private void SpawnUnit(
+        private void SpawnUnitsOfTheSameType(
             ref SystemState state
             , in EntityManager em
             , in NativeHashMap<UnitProfileId, Entity> unitProfileId2PrimaryPrefabEntityMap
             , in NativeList<SetPosWithinRadiusCommand> setPosWithinRadiusCommands
-            , out Entity newUnitEntity)
+            , in UnitProfileId prefabId
+            , in half spawnRadius
+            , in int spawnCount
+            , out NativeArray<Entity> newUnitEntities)
         {
-            var prefabId = new UnitProfileId
-            {
-                UnitType = UnitType.Knight,
-                VariantIndex = 10,
-            };
-
             em.CompleteDependencyBeforeRO<LocalTransform>();
 
             float3 playerPos = this.playerQuery.GetSingleton<LocalTransform>().Position;
             Entity prefabToSpawn = unitProfileId2PrimaryPrefabEntityMap[prefabId];
 
-            newUnitEntity = em.Instantiate(prefabToSpawn);
+            newUnitEntities = em.Instantiate(prefabToSpawn, spawnCount, Allocator.Temp);
 
-            setPosWithinRadiusCommands.Add(new()
+            for (int i = 0; i < spawnCount; i++)
             {
-                BaseEntity = newUnitEntity,
-                CenterPos = playerPos,
-                Radius = 30f,
-            });
+                setPosWithinRadiusCommands.Add(new()
+                {
+                    BaseEntity = newUnitEntities[i],
+                    CenterPos = playerPos,
+                    Radius = spawnRadius,
+                });
+            }
 
         }
 
         [BurstCompile]
-        private void SpawnTool(
+        private void SpawnToolOfTheSameType(
             ref SystemState state
             , in EntityManager em
             , in NativeHashMap<ToolProfileId, Entity> toolProfileId2PrimaryEntityMap
-            , out Entity newToolEntity)
+            , in ToolProfileId prefabId
+            , in int spawnCount
+            , out NativeArray<Entity> newToolEntities)
         {
-            var prefabId = new ToolProfileId
-            {
-                ToolType = ToolType.Sword,
-                VariantIndex = 0,
-            };
-
             Entity prefabToSpawn = toolProfileId2PrimaryEntityMap[prefabId];
-
-            newToolEntity = em.Instantiate(prefabToSpawn);
-
+            newToolEntities = em.Instantiate(prefabToSpawn, spawnCount, Allocator.Temp);
         }
 
         [BurstCompile]
