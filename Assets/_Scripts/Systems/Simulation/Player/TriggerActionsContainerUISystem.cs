@@ -89,7 +89,10 @@ namespace Systems.Simulation.Player
                 }
             }
 
-            SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(newNearestEntity, true);
+            if (SystemAPI.HasComponent<CanShowActionsContainerUITag>(newNearestEntity))
+            {
+                SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(newNearestEntity, true);
+            }
             nearestInteractableEntityRef.ValueRW.Value = newNearestEntity;
 
         }

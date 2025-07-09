@@ -49,6 +49,7 @@ namespace Systems.Simulation.Unit.Misc
                     , RefRO<BaseWorkSpeed>
                     , RefRW<WorkTimeCounterSecond>>()
                     .WithDisabled<CanMoveEntityTag>()
+                    .WithAll<IsAliveTag>()
                     .WithEntityAccess())
             {
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Attack) continue;
