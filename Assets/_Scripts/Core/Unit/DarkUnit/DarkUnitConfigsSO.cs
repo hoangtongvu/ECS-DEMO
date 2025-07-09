@@ -18,6 +18,7 @@ namespace Core.Unit.DarkUnit
 
         public float SpawnRadius = 40f;
         public float SpawnDurationMinutes = 10;
+        public byte DefaultDarkUnitFactionIndex = 2;
 
         [SerializedDictionary("Id", "Profile")]
         public SerializedDictionary<UnitProfileId, DarkUnitProfileElement> DarkUnitProfiles;
