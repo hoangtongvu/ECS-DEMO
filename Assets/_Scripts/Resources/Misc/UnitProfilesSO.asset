@@ -217,6 +217,76 @@ MonoBehaviour:
           MaxAttackDistance: 2
         BaseSpawningCosts:
           _serializedList: []
+    - Key:
+        UnitType: 2
+        VariantIndex: 11
+      Value:
+        Name: TinyDarkKnight
+        ProfilePicture: {fileID: 21300000, guid: fb0a4802955af984c86e3cc57494f666,
+          type: 3}
+        PresenterPrefab: {fileID: 8470497105908937573, guid: 372c0652c8500364aa6c9490a5be9ea6,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 6286773460591899042, guid: a49a69502f17d2b4d86f91d54f0b7944,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 50
+        UnitType: 2
+        SpawnDurationSeconds: 0
+        UnitReactionConfigs:
+          UnitWalkSpeed: 7
+          UnitRunSpeed: 10
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 2
+            Value: 5
+    - Key:
+        UnitType: 2
+        VariantIndex: 12
+      Value:
+        Name: BigDarkKnight
+        ProfilePicture: {fileID: 21300000, guid: fb0a4802955af984c86e3cc57494f666,
+          type: 3}
+        PresenterPrefab: {fileID: 6869177740179904456, guid: c7280a09ac2dce040a785a1d3cad7bdb,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 6286773460591899042, guid: 91b9c9fa4fe49b2438a43408617122a2,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 170
+        UnitType: 2
+        SpawnDurationSeconds: 0
+        UnitReactionConfigs:
+          UnitWalkSpeed: 3
+          UnitRunSpeed: 5
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 2
+            Value: 5
   UnitGlobalConfigs:
     MoveSpeedScale: 1
     UnarmedUnitFleeTotalSeconds: 2

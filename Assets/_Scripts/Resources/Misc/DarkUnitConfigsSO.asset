@@ -24,3 +24,19 @@ MonoBehaviour:
         ToolProfileId:
           ToolType: 3
           VariantIndex: 0
+    - Key:
+        UnitType: 2
+        VariantIndex: 11
+      Value:
+        SpawnRate: 0.3
+        ToolProfileId:
+          ToolType: 3
+          VariantIndex: 0
+    - Key:
+        UnitType: 2
+        VariantIndex: 12
+      Value:
+        SpawnRate: 0.2
+        ToolProfileId:
+          ToolType: 3
+          VariantIndex: 0
