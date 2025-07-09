@@ -178,7 +178,7 @@ namespace Systems.Simulation.Unit.Misc
             su.AddOrSetComponentData(new DetectDangerAndRunAwaySystemTimer
             {
                 TimeCounterSeconds = half.zero,
-                TimeLimitSeconds = new(2f),
+                TimeLimitSeconds = new(1f),
             });
 
         }
@@ -230,10 +230,9 @@ namespace Systems.Simulation.Unit.Misc
                 {
                     var hit = hitList[i];
 
-                    // Note: The following logic works fine, just commented this out for testing purpose
-                    //this.FactionIndexLookup.TryGetComponent(hit.Entity, out var targetFactionIndex);
-                    //if (targetFactionIndex == FactionIndex.Neutral) continue;
-                    //if (factionIndex.Value == targetFactionIndex.Value) continue;
+                    this.FactionIndexLookup.TryGetComponent(hit.Entity, out var targetFactionIndex);
+                    if (targetFactionIndex == FactionIndex.Neutral) continue;
+                    if (factionIndex.Value == targetFactionIndex.Value) continue;
 
                     bool isDangerousEntity = this.IsArmedEntityTagLookup.HasComponent(hit.Entity);
                     if (!isDangerousEntity) continue;
