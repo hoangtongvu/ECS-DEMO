@@ -16,15 +16,6 @@ using Utilities;
 namespace Systems.Initialization.Misc
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial class MonsterWaveSpawnSystemGroup : ComponentSystemGroup
-    {
-        public MonsterWaveSpawnSystemGroup()
-        {
-            this.RateManager = new RateUtils.VariableRateManager(5000);
-        }
-    }
-
-    [UpdateInGroup(typeof(MonsterWaveSpawnSystemGroup))]
     [BurstCompile]
     public partial struct MonsterWaveSpawnSystem : ISystem
     {
@@ -35,6 +26,7 @@ namespace Systems.Initialization.Misc
         {
             var su = SingletonUtilities.GetInstance(state.EntityManager);
             su.AddComponent<DarkUnitSpawnCycleCounter>();
+            su.AddComponent<LatestDarkUnitSpawnTimestamp>();
 
             this.playerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -54,9 +46,14 @@ namespace Systems.Initialization.Misc
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var latestDarkUnitSpawnTimestampRef = SystemAPI.GetSingletonRW<LatestDarkUnitSpawnTimestamp>();
+            half spawnDurationMinutes = SystemAPI.GetSingleton<DarkUnitSpawnDurationMinutes>().Value;
+
+            var elapsedTimeSeconds = SystemAPI.Time.ElapsedTime - latestDarkUnitSpawnTimestampRef.ValueRO.Value;
+            if (elapsedTimeSeconds / 60 < spawnDurationMinutes) return;
+
             var spawnProfileMap = SystemAPI.GetSingleton<DarkUnitProfileMap>().Value;
             half spawnRadius = SystemAPI.GetSingleton<DarkUnitSpawnRadius>().Value;
-            half spawnDurationMinutes = SystemAPI.GetSingleton<DarkUnitSpawnDurationMinutes>().Value;
 
             var spawnCycleCounterRef = SystemAPI.GetSingletonRW<DarkUnitSpawnCycleCounter>();
             var unitProfileId2PrimaryPrefabEntityMap = SystemAPI.GetSingleton<UnitProfileId2PrimaryPrefabEntityMap>().Value;
@@ -64,6 +61,7 @@ namespace Systems.Initialization.Misc
             var setPosWithinRadiusCommands = SystemAPI.GetSingleton<SetPosWithinRadiusCommandList>().Value;
             var em = state.EntityManager;
 
+            latestDarkUnitSpawnTimestampRef.ValueRW.Value = SystemAPI.Time.ElapsedTime;
             spawnCycleCounterRef.ValueRW.Value++;
 
             foreach (var kVPair in spawnProfileMap)
