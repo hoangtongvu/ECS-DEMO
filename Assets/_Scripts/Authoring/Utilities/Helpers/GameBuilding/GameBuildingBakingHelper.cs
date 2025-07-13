@@ -1,6 +1,7 @@
 ﻿using Authoring.Utilities.Extensions;
 using Authoring.Utilities.Helpers.GameEntity.InteractableActions;
 using Components.GameBuilding;
+using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
 using Components.Misc;
@@ -16,6 +17,7 @@ namespace Authoring.Utilities.Helpers.GameBuilding
         {
             baker.AddComponent<GameBuildingTag>(entity);
             baker.AddComponent<NewlySpawnedTag>(entity);
+            baker.AddAndDisableComponent<NewlyDeadTag>(entity);
             baker.AddComponent<NeedSpawnPresenterTag>(entity);
             baker.AddAndDisableComponent<WithinPlayerAutoInteractRadiusTag>(entity);
 
