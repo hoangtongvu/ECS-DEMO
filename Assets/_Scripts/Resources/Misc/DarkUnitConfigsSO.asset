@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3323e81e387bbb34089e7928c100fcef, type: 3}
+  m_Name: DarkUnitConfigsSO
+  m_EditorClassIdentifier: 
+  SpawnRadius: 40
+  SpawnDurationMinutes: 10
+  DefaultDarkUnitFactionIndex: 2
+  DarkUnitProfiles:
+    _serializedList:
+    - Key:
+        UnitType: 2
+        VariantIndex: 10
+      Value:
+        SpawnRate: 1
+        ToolProfileId:
+          ToolType: 3
+          VariantIndex: 0
+    - Key:
+        UnitType: 2
+        VariantIndex: 11
+      Value:
+        SpawnRate: 0.3
+        ToolProfileId:
+          ToolType: 3
+          VariantIndex: 0
+    - Key:
+        UnitType: 2
+        VariantIndex: 12
+      Value:
+        SpawnRate: 0.2
+        ToolProfileId:
+          ToolType: 3
+          VariantIndex: 0

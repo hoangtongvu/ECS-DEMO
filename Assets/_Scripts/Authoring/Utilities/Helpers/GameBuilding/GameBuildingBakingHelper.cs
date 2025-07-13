@@ -1,5 +1,6 @@
 ﻿using Authoring.Utilities.Extensions;
 using Authoring.Utilities.Helpers.GameEntity.InteractableActions;
+using Components.GameBuilding;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
 using Components.Misc;
@@ -13,6 +14,7 @@ namespace Authoring.Utilities.Helpers.GameBuilding
     {
         public static void AddComponents(IBaker baker, in Entity entity)
         {
+            baker.AddComponent<GameBuildingTag>(entity);
             baker.AddComponent<NewlySpawnedTag>(entity);
             baker.AddComponent<NeedSpawnPresenterTag>(entity);
             baker.AddAndDisableComponent<WithinPlayerAutoInteractRadiusTag>(entity);

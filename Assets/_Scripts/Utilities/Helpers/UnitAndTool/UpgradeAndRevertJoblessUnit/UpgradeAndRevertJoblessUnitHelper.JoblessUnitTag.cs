@@ -8,9 +8,9 @@ namespace Utilities.Helpers.UnitAndTool.UpgradeAndRevertJoblessUnit
     public static partial class UpgradeAndRevertJoblessUnitHelper
     {
         [BurstCompile]
-        public static void RemoveJoblessUnitTag(in EntityCommandBuffer ecb, in Entity unitEntity)
+        public static void RemoveJoblessUnitTag(in EntityManager em, in Entity unitEntity)
         {
-            ecb.RemoveComponent<JoblessUnitTag>(unitEntity);
+            em.RemoveComponent<JoblessUnitTag>(unitEntity);
         }
 
         [BurstCompile]

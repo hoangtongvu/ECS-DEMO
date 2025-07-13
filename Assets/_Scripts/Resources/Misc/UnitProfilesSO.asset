@@ -31,12 +31,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 100
+          MaxHp: 50
         UnitType: 1
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
-          UnitWalkSpeed: 3
-          UnitRunSpeed: 7
+          UnitWalkSpeed: 2
+          UnitRunSpeed: 4
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
@@ -66,12 +66,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 170
+          MaxHp: 100
         UnitType: 2
         SpawnDurationSeconds: 3
         UnitReactionConfigs:
-          UnitWalkSpeed: 6
-          UnitRunSpeed: 10
+          UnitWalkSpeed: 2
+          UnitRunSpeed: 7
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 7
           UnitWalkMaxDistance: 10
@@ -102,12 +102,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 100
+          MaxHp: 50
         UnitType: 3
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
-          UnitWalkSpeed: 3
-          UnitRunSpeed: 7
+          UnitWalkSpeed: 2
+          UnitRunSpeed: 4
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
@@ -136,12 +136,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 100
+          MaxHp: 50
         UnitType: 4
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
-          UnitWalkSpeed: 3
-          UnitRunSpeed: 7
+          UnitWalkSpeed: 2
+          UnitRunSpeed: 4
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
@@ -168,12 +168,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 120
+          MaxHp: 70
         UnitType: 5
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
-          UnitWalkSpeed: 3
-          UnitRunSpeed: 7
+          UnitWalkSpeed: 2
+          UnitRunSpeed: 9
           UnitIdleMaxDuration: 3
           UnitWalkMinDistance: 2
           UnitWalkMaxDistance: 5
@@ -184,6 +184,109 @@ MonoBehaviour:
           MaxAttackDistance: 6
         BaseSpawningCosts:
           _serializedList: []
+    - Key:
+        UnitType: 2
+        VariantIndex: 10
+      Value:
+        Name: DarkKnight
+        ProfilePicture: {fileID: 21300000, guid: fb0a4802955af984c86e3cc57494f666,
+          type: 3}
+        PresenterPrefab: {fileID: 7863821623315164083, guid: aa3f5e5413d5d894fa43e73cdffcaf93,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 6286773460591899042, guid: 8d6033529df40d0449b917ff81402f2b,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 100
+        UnitType: 2
+        SpawnDurationSeconds: 1
+        UnitReactionConfigs:
+          UnitWalkSpeed: 5
+          UnitRunSpeed: 7
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
+        MaxFollowDistance: 25
+        DetectionRadius: 25
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
+        BaseSpawningCosts:
+          _serializedList: []
+    - Key:
+        UnitType: 2
+        VariantIndex: 11
+      Value:
+        Name: TinyDarkKnight
+        ProfilePicture: {fileID: 21300000, guid: fb0a4802955af984c86e3cc57494f666,
+          type: 3}
+        PresenterPrefab: {fileID: 8470497105908937573, guid: 372c0652c8500364aa6c9490a5be9ea6,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 6286773460591899042, guid: a49a69502f17d2b4d86f91d54f0b7944,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 50
+        UnitType: 2
+        SpawnDurationSeconds: 0
+        UnitReactionConfigs:
+          UnitWalkSpeed: 7
+          UnitRunSpeed: 10
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 2
+            Value: 5
+    - Key:
+        UnitType: 2
+        VariantIndex: 12
+      Value:
+        Name: BigDarkKnight
+        ProfilePicture: {fileID: 21300000, guid: fb0a4802955af984c86e3cc57494f666,
+          type: 3}
+        PresenterPrefab: {fileID: 6869177740179904456, guid: c7280a09ac2dce040a785a1d3cad7bdb,
+          type: 3}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 6286773460591899042, guid: 91b9c9fa4fe49b2438a43408617122a2,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 170
+        UnitType: 2
+        SpawnDurationSeconds: 0
+        UnitReactionConfigs:
+          UnitWalkSpeed: 3
+          UnitRunSpeed: 5
+          UnitIdleMaxDuration: 3
+          UnitWalkMinDistance: 2
+          UnitWalkMaxDistance: 5
+        MaxFollowDistance: 12
+        DetectionRadius: 10
+        AttackConfigs:
+          MinAttackDistance: 0
+          MaxAttackDistance: 2
+        BaseSpawningCosts:
+          _serializedList:
+          - Key: 2
+            Value: 5
   UnitGlobalConfigs:
     MoveSpeedScale: 1
     UnarmedUnitFleeTotalSeconds: 2

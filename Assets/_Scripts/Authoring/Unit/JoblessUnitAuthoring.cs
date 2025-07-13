@@ -1,6 +1,7 @@
 ﻿using Authoring.Utilities.Extensions;
 using Authoring.Utilities.Helpers.GameEntity.InteractableActions;
 using Components.GameEntity;
+using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
@@ -42,6 +43,7 @@ namespace Authoring.Unit
                 this.AddAndDisableComponent<WorkStartedTag>(entity);
                 this.AddAndDisableComponent<WalkStartedTag>(entity);
                 this.AddAndDisableComponent<RunStartedTag>(entity);
+                this.AddAndDisableComponent<NewlyDeadTag>(entity);
 
                 AddComponent<SelectableUnitTag>(entity);
                 this.AddAndDisableComponent<UnitSelectedTag>(entity);

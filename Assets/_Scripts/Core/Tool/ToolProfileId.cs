@@ -9,7 +9,7 @@ namespace Core.Tool
     {
         [FieldOffset(0)] private readonly short _raw; // 2 bytes
         [FieldOffset(0)] public ToolType ToolType;
-        [FieldOffset(4)] public byte VariantIndex;
+        [FieldOffset(1)] public byte VariantIndex;
 
         public bool Equals(ToolProfileId other)
             => this._raw == other._raw;

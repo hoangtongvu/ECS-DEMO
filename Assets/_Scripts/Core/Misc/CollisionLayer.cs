@@ -13,4 +13,10 @@ namespace Core.Misc
         Building = 1 << 10,
         Tool = 1 << 11,
     }
+
+    public static class CollisionLayerConstants
+    {
+        public static readonly CollisionLayer Damagable = CollisionLayer.Player | CollisionLayer.Unit | CollisionLayer.Building;
+    }
+
 }
