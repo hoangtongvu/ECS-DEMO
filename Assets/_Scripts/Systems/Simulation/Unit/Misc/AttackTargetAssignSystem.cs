@@ -5,11 +5,13 @@ using Core.GameEntity;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Damage;
+using Systems.Simulation.UnitAndBuilding.BuildingConstruction;
 
 namespace Systems.Simulation.Unit.Misc
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetCanInteractFlagSystem))]
+    [UpdateAfter(typeof(TargetBuildingAssignSystem))] // NOTE: This is a temp fix for attacking in-construction building
     [BurstCompile]
     public partial struct AttackTargetAssignSystem : ISystem
     {
@@ -42,7 +44,7 @@ namespace Systems.Simulation.Unit.Misc
             {
                 var targetEntity = targetEntityRef.ValueRO.Value;
 
-                if (!SystemAPI.HasComponent<CurrentHp>(targetEntity)) continue; // <- problem here
+                if (!SystemAPI.HasComponent<CurrentHp>(targetEntity)) continue;
 
                 interactingEntityRef.ValueRW.Value = targetEntity;
                 interactionTypeICDRef.ValueRW.Value = InteractionType.Attack;
