@@ -206,7 +206,7 @@ namespace Systems.Simulation.Unit.Misc
                     , new CollisionFilter
                     {
                         BelongsTo = (uint)CollisionLayer.Unit,
-                        CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Player),
+                        CollidesWith = (uint)(CollisionLayerConstants.Damagable),
                     });
 
                 if (!hasHit) return;

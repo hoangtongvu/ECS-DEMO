@@ -4,6 +4,7 @@ using Systems.Simulation.GameEntity;
 using Core.GameEntity;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Interaction;
+using Components.GameEntity.Damage;
 
 namespace Systems.Simulation.Unit.Misc
 {
@@ -41,7 +42,7 @@ namespace Systems.Simulation.Unit.Misc
             {
                 var targetEntity = targetEntityRef.ValueRO.Value;
 
-                if (!SystemAPI.HasComponent<ArmedStateHolder>(targetEntity)) continue;
+                if (!SystemAPI.HasComponent<CurrentHp>(targetEntity)) continue; // <- problem here
 
                 interactingEntityRef.ValueRW.Value = targetEntity;
                 interactionTypeICDRef.ValueRW.Value = InteractionType.Attack;
