@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8491756151840566674}
   - component: {fileID: 3826275118434858516}
-  - component: {fileID: 4868333559864443351}
+  - component: {fileID: 5629998291250588953}
   m_Layer: 10
   m_Name: House
   m_TagString: Untagged
@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 6544274273311614958}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.53, y: -1.34, z: 8.15}
-  m_LocalScale: {x: 1.4, y: 3.21, z: 1.4}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -47,8 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawnRadius: 3
   SpawningPrefabs: {fileID: 11400000, guid: fd3be93eab4d0d44faeb5b4085636bf6, type: 2}
---- !u!136 &4868333559864443351
-CapsuleCollider:
+--- !u!65 &5629998291250588953
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -65,8 +65,6 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 4, y: 4, z: 4}
+  m_Center: {x: 0, y: 2, z: 0}

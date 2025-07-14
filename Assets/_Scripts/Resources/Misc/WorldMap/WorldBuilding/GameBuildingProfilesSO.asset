@@ -20,14 +20,14 @@ MonoBehaviour:
         Name: House
         ProfilePicture: {fileID: 21300000, guid: ed5474fc2732ba54f99fae691ce9cdf8,
           type: 3}
-        PresenterPrefab: {fileID: 6544274273311614958, guid: cd7c14d43ba0ecd46a7f5609e1b97b4c,
+        PresenterPrefab: {fileID: 2277917249080581350, guid: 91f18578dc6c1314f836ef203110a7aa,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 6544274273311614958, guid: 7ea3abd3ef752c543947ce4d1da25b0b,
           type: 3}
         GameEntitySize:
           GridSquareSize: 2
-          ObjectHeight: 2
+          ObjectHeight: 0
         HasHpComponents: 1
         HpData:
           MaxHp: 50
