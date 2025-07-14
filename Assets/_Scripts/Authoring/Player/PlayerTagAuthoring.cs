@@ -1,4 +1,5 @@
-﻿using Components.GameEntity.Damage;
+﻿using Authoring.Utilities.Extensions;
+using Components.GameEntity.Damage;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
@@ -26,6 +27,7 @@ namespace Authoring.Player
                 AddBuffer<NearbyUnitDropItemTimerElement>(entity);
 
                 AddComponent<NeedSpawnPresenterTag>(entity);
+                this.AddAndDisableComponent<NewlyDeadTag>(entity);
 
                 AddComponent<InteractableEntityTag>(entity);
                 AddComponent(entity, new ArmedStateHolder

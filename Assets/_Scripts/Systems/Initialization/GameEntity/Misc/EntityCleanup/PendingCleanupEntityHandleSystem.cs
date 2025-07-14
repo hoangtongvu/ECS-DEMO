@@ -31,11 +31,11 @@ namespace Systems.Initialization.GameEntity.Misc.EntityCleanup
 
             if (length == 0) return;
 
-            var pendingDestroyEntityTimers = this.query.ToComponentDataArray<PendingCleanupEntityTimer>(Allocator.Temp);
+            var pendingCleanupEntityTimers = this.query.ToComponentDataArray<PendingCleanupEntityTimer>(Allocator.Temp);
 
             for (int i = 0; i < length; i++)
             {
-                var pendingTimer = pendingDestroyEntityTimers[i];
+                var pendingTimer = pendingCleanupEntityTimers[i];
                 double elapsedSeconds = SystemAPI.Time.ElapsedTime - pendingTimer.TimeStamp;
 
                 if (elapsedSeconds < pendingTimer.DurationSeconds) continue;

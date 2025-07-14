@@ -60,8 +60,6 @@ namespace Systems.Initialization.GameEntity.Damage
 
                 }
 
-                hpChangeRecords.Clear();
-
             }
 
         }

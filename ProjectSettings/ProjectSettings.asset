@@ -802,7 +802,8 @@ PlayerSettings:
   webGLMemoryGeometricGrowthStep: 0.2
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: __ZBASE_FOUNDATION_PUBSUB_NO_VALIDATION__
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
