@@ -4,6 +4,7 @@ using Systems.Simulation.GameEntity;
 using Core.GameEntity;
 using Components.GameEntity.Interaction;
 using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
+using Components.Unit.Misc;
 
 namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
 {
@@ -37,7 +38,9 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
                     , RefRW<InteractingEntity>
                     , RefRW<InteractionTypeICD>>()
                     .WithAll<
-                        CanInteractEntityTag>())
+                        CanInteractEntityTag>()
+                    .WithAll<
+                        IsBuilderUnitTag>())
             {
                 var targetEntity = targetEntityRef.ValueRO.Value;
 

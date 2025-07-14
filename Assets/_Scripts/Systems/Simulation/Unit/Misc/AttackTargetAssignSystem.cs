@@ -5,13 +5,11 @@ using Core.GameEntity;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Damage;
-using Systems.Simulation.UnitAndBuilding.BuildingConstruction;
 
 namespace Systems.Simulation.Unit.Misc
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(SetCanInteractFlagSystem))]
-    [UpdateAfter(typeof(TargetBuildingAssignSystem))] // NOTE: This is a temp fix for attacking in-construction building
     [BurstCompile]
     public partial struct AttackTargetAssignSystem : ISystem
     {
@@ -40,7 +38,9 @@ namespace Systems.Simulation.Unit.Misc
                     , RefRW<InteractingEntity>
                     , RefRW<InteractionTypeICD>>()
                     .WithAll<
-                        CanInteractEntityTag>())
+                        CanInteractEntityTag>()
+                    .WithAll<
+                        IsArmedEntityTag>())
             {
                 var targetEntity = targetEntityRef.ValueRO.Value;
 
