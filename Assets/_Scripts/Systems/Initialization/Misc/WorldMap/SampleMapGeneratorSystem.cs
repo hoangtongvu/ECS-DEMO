@@ -398,8 +398,8 @@ namespace Systems.Initialization.Misc.WorldMap
             int2 topLeftCellGridPos = WorldMapHelper.MapIndexToGridPos(mapWidth, in gridOffset, mapIndex);
             WorldMapHelper.GridPosToWorldPos(in cellRadius, in topLeftCellGridPos, out float3 topLeftCellWorldPos);
 
-            float addValue = WorldMapHelper.GridLengthToWorldLength(in cellRadius, gameEntitySize.GridSquareSize) / 4;
             float3 startPos = topLeftCellWorldPos;
+            float addValue = (gameEntitySize.GridSquareSize - 1) * cellRadius;
 
             startPos.x += addValue;
             startPos.z -= addValue;
