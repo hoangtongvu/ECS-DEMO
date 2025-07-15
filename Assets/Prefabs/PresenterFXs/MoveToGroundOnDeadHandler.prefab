@@ -45,6 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
-  motionDelaySeconds: 1
+  motionDelaySeconds: 4
   motionDurationSeconds: 1
   deltaY: 5
