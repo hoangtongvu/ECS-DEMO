@@ -1,6 +1,7 @@
 using Components.GameEntity;
 using Unity.Collections;
 using Unity.Entities;
+using UnityFileDebugLogger;
 
 namespace Systems.Initialization.GameEntity
 {
@@ -16,6 +17,7 @@ namespace Systems.Initialization.GameEntity
         {
             this.Enabled = false;
 
+            var fileDebugLogger = FileDebugLogger.CreateLogger128Bytes(20, Allocator.Temp);
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var bakedProfiles in
@@ -31,12 +33,13 @@ namespace Systems.Initialization.GameEntity
                     if (primaryEntity == Entity.Null) continue;
 
                     ecb.AddComponent(primaryEntity, new PrimaryPrefabEntityHolder(primaryEntity));
-
+                    fileDebugLogger.Log($"Added {nameof(PrimaryPrefabEntityHolder)} for Entity: [{this.EntityManager.GetName(primaryEntity)} - {primaryEntity}]");
                 }
 
             }
 
             ecb.Playback(this.EntityManager);
+            fileDebugLogger.Save("AddPrimaryPrefabEntityHoldersSystemLogs.txt");
 
         }
 
