@@ -5,21 +5,19 @@ using Components.Misc.WorldMap.WorldBuilding;
 using Components.Player;
 using Core.GameEntity;
 using Core.Harvest;
-using Core.Misc;
 using Core.Misc.WorldMap;
 using Core.Misc.WorldMap.WorldBuilding;
 using Core.Utilities.Extensions;
-using System.IO;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.Transforms;
 using Utilities;
 using Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.WorldMap
 {
+    // TODO: Can make this ISystem??
     [UpdateInGroup(typeof(MapGenerateSystemGroup))]
     public partial class SampleMapGeneratorSystem : SystemBase
     {
@@ -42,6 +40,7 @@ namespace Systems.Initialization.Misc.WorldMap
             this.RequireForUpdate<GameBuildingPrefabEntityMap>();
             this.RequireForUpdate<HarvesteePrefabEntityMap>();
             this.RequireForUpdate<GameEntitySizeMap>();
+            this.RequireForUpdate<BuildCommandList>();
         }
 
         protected override void OnUpdate()
@@ -52,8 +51,9 @@ namespace Systems.Initialization.Misc.WorldMap
             var gameBuildingPrefabEntityMap = SystemAPI.GetSingleton<GameBuildingPrefabEntityMap>().Value;
             var harvesteePrefabEntityMap = SystemAPI.GetSingleton<HarvesteePrefabEntityMap>().Value;
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
+            var buildCommandList = SystemAPI.GetSingleton<BuildCommandList>();
 
-            this.CreateWorldMap(in physicsWorld, in gameBuildingPrefabEntityMap, in harvesteePrefabEntityMap, in gameEntitySizeMap);
+            this.CreateWorldMap(in physicsWorld, in gameBuildingPrefabEntityMap, in harvesteePrefabEntityMap, in gameEntitySizeMap, in buildCommandList);
 
             var bakedProfileElements = this.playerQuery.GetSingletonBuffer<BakedGameEntityProfileElement>();
 
@@ -64,7 +64,8 @@ namespace Systems.Initialization.Misc.WorldMap
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<GameBuildingProfileId, Entity> gameBuildingPrefabEntityMap
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
-            , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap)
+            , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
+            , in BuildCommandList buildCommandList)
         {
             const int mapWidth = 160;
             const int mapHeight = 90;
@@ -81,6 +82,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in harvesteePrefabEntityMap
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset
                 , in cellRadius);
@@ -106,14 +108,15 @@ namespace Systems.Initialization.Misc.WorldMap
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , ref NativeArray<Cell> costMap
+            , in BuildCommandList buildCommandList
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
             , in half cellRadius)
         {
             this.PlaceEmptyTilesOnMap(ref costMap, mapWidth, mapHeight);
-            this.PlaceRandomHousesOnMap(in physicsWorld, in gameBuildingPrefabEntityMap, in gameEntitySizeMap, ref costMap, mapWidth, mapHeight, in gridOffset, in cellRadius);
-            this.PlaceRandomHarvesteesOnMap(in physicsWorld, in harvesteePrefabEntityMap, in gameEntitySizeMap, ref costMap, mapWidth, mapHeight, in gridOffset, in cellRadius);
+            this.PlaceRandomHousesOnMap(in physicsWorld, in gameBuildingPrefabEntityMap, in gameEntitySizeMap, ref costMap, in buildCommandList, mapWidth, mapHeight, in gridOffset, in cellRadius);
+            this.PlaceRandomHarvesteesOnMap(in physicsWorld, in harvesteePrefabEntityMap, in gameEntitySizeMap, ref costMap, in buildCommandList, mapWidth, mapHeight, in gridOffset, in cellRadius);
         }
 
         private void PlaceEmptyTilesOnMap(ref NativeArray<Cell> costMap, int mapWidth, int mapHeight)
@@ -140,6 +143,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in NativeHashMap<GameBuildingProfileId, Entity> gameBuildingPrefabEntityMap
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , ref NativeArray<Cell> costMap
+            , in BuildCommandList buildCommandList
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -158,6 +162,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 in physicsWorld
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
@@ -170,6 +175,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , ref NativeArray<Cell> costMap
+            , in BuildCommandList buildCommandList
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -180,6 +186,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in harvesteePrefabEntityMap
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius);
 
@@ -188,6 +195,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in harvesteePrefabEntityMap
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius);
 
@@ -196,6 +204,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in harvesteePrefabEntityMap
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius);
 
@@ -206,6 +215,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , ref NativeArray<Cell> costMap
+            , in BuildCommandList buildCommandList
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -225,6 +235,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 in physicsWorld
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
@@ -237,6 +248,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , ref NativeArray<Cell> costMap
+            , in BuildCommandList buildCommandList
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -256,6 +268,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 in physicsWorld
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
@@ -268,6 +281,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , ref NativeArray<Cell> costMap
+            , in BuildCommandList buildCommandList
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -287,6 +301,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 in physicsWorld
                 , in gameEntitySizeMap
                 , ref costMap
+                , in buildCommandList
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
@@ -298,6 +313,7 @@ namespace Systems.Initialization.Misc.WorldMap
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , ref NativeArray<Cell> costMap
+            , in BuildCommandList buildCommandList
             , int mapWidth
             , int mapHeight
             , in int2 gridOffset
@@ -319,13 +335,11 @@ namespace Systems.Initialization.Misc.WorldMap
 
                     this.MarkCellsAsObstacles(in costMap, x, y, mapWidth, entitySize.GridSquareSize);
                     this.SpawnEntity(
-                        in physicsWorld
+                        in buildCommandList
                         , in entityPrefab
                         , in entitySize
                         , in gridOffset
-                        , in cellRadius
-                        , x, y
-                        , mapWidth);
+                        , x, y);
 
                 }
             }
@@ -384,74 +398,21 @@ namespace Systems.Initialization.Misc.WorldMap
         }
 
         private void SpawnEntity(
-            in PhysicsWorldSingleton physicsWorld
+            in BuildCommandList buildCommandList
             , in Entity prefabEntity
             , in GameEntitySize gameEntitySize
             , in int2 gridOffset
-            , in half cellRadius
             , int x
-            , int y
-            , int mapWidth)
+            , int y)
         {
-            int mapIndex = (y * mapWidth) + x;
-
-            int2 topLeftCellGridPos = WorldMapHelper.MapIndexToGridPos(mapWidth, in gridOffset, mapIndex);
-            WorldMapHelper.GridPosToWorldPos(in cellRadius, in topLeftCellGridPos, out float3 topLeftCellWorldPos);
-
-            float3 startPos = topLeftCellWorldPos;
-            float addValue = (gameEntitySize.GridSquareSize - 1) * cellRadius;
-
-            startPos.x += addValue;
-            startPos.z -= addValue;
-            startPos.y = 100f;
-
-            bool hit = this.CastRayToGround(in physicsWorld, in startPos, out var raycastHit);
-            if (!hit) return;
-
-            var newEntity = this.EntityManager.Instantiate(prefabEntity);
-            this.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(raycastHit.Position.Add(y: gameEntitySize.ObjectHeight)));
-
-        }
-
-        private bool CastRayToGround(
-            in PhysicsWorldSingleton physicsWorld
-            , in float3 startPos
-            , out Unity.Physics.RaycastHit raycastHit)
-        {
-            float3 rayStart = startPos;
-            float3 rayEnd = startPos.Add(y: -800f);
-
-            RaycastInput raycastInput = new()
+            buildCommandList.Value.Add(new()
             {
-                Start = rayStart,
-                End = rayEnd,
-                Filter = new CollisionFilter
-                {
-                    BelongsTo = (uint)CollisionLayer.Ground,
-                    CollidesWith = (uint)CollisionLayer.Ground,
-                },
-            };
+                Entity = prefabEntity,
+                TopLeftCellGridPos = new(x + gridOffset.x, y + gridOffset.y),
+                GameEntitySize = gameEntitySize,
+                SpawnerEntity = Entity.Null,
+            });
 
-            return physicsWorld.CastRay(raycastInput, out raycastHit);
-        }
-
-        public static void GenerateCSV(NativeArray<Cell> costMap, int mapWidth, int mapHeight, string filePath)
-        {
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                for (int y = 0; y < mapHeight; y++)
-                {
-                    for (int x = 0; x < mapWidth; x++)
-                    {
-                        int index = y * mapWidth + x;
-                        writer.Write(costMap[index].Cost);
-
-                        if (x < mapWidth - 1)
-                            writer.Write(",");
-                    }
-                    writer.WriteLine();
-                }
-            }
         }
 
         private void CreateMapOffsetComponent(in int2 gridOffset)

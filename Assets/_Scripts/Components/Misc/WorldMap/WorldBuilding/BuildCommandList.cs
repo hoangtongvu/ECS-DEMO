@@ -13,7 +13,7 @@ namespace Components.Misc.WorldMap.WorldBuilding
         public Entity SpawnerEntity;
     }
 
-    public struct BuildCommandQueue : IComponentData
+    public struct BuildCommandList : IComponentData
     {
         public NativeList<BuildCommand> Value;
     }

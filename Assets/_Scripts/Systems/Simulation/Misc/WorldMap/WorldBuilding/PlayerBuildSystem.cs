@@ -2,7 +2,6 @@ using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.Misc.WorldMap.WorldBuilding;
 using Components.Misc.WorldMap.WorldBuilding.PlacementPreview;
-using Core.Utilities.Extensions;
 using Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview;
 using Unity.Entities;
 using UnityEngine;
@@ -44,7 +43,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
             if (!placementPreviewData.CanPlacementPreview) return;
             if (!placementPreviewData.IsBuildable) return;
 
-            var commandQueue = SystemAPI.GetSingleton<BuildCommandQueue>();
+            var commandList = SystemAPI.GetSingleton<BuildCommandList>();
             var buildableObjectElement = SystemAPI.GetSingletonBuffer<PlayerBuildableObjectElement>()[choiceIndex];
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
@@ -63,7 +62,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
 
             var playerEntity = this.playerQuery.GetSingletonEntity();
 
-            commandQueue.Value.Add(new()
+            commandList.Value.Add(new()
             {
                 Entity = prefabEntity,
                 TopLeftCellGridPos = placementPreviewData.TopLeftCellGridPos,
