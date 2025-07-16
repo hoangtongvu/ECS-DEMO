@@ -59,7 +59,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                     Entity = buildingPrefabEntity,
                     PreviewSprite = buildingProfile.ProfilePicture,
                     Name = buildingProfile.Name,
-                    GridSquareSize = buildingProfile.GameEntitySize.GridSquareSize,
+                    GameEntitySize = buildingProfile.GameEntitySize,
                     ObjectHeight = buildingProfile.GameEntitySize.ObjectHeight,
                 });
 

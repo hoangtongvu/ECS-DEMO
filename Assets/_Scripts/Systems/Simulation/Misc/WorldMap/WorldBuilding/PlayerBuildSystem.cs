@@ -67,8 +67,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding
             {
                 Entity = prefabEntity,
                 TopLeftCellGridPos = placementPreviewData.TopLeftCellGridPos,
-                BuildingCenterPos = placementPreviewData.BuildingCenterPosOnGround.Add(y: buildableObjectElement.ObjectHeight),
-                GridSquareSize = buildableObjectElement.GridSquareSize,
+                GameEntitySize = buildableObjectElement.GameEntitySize,
                 SpawnerEntity = playerEntity,
             });
 
