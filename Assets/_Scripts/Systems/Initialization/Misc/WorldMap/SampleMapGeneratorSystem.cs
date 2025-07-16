@@ -8,6 +8,7 @@ using Core.Harvest;
 using Core.Misc.WorldMap;
 using Core.Misc.WorldMap.WorldBuilding;
 using Core.Utilities.Extensions;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -17,14 +18,15 @@ using Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.WorldMap
 {
-    // TODO: Can make this ISystem??
     [UpdateInGroup(typeof(MapGenerateSystemGroup))]
-    public partial class SampleMapGeneratorSystem : SystemBase
+    [BurstCompile]
+    public partial struct SampleMapGeneratorSystem : ISystem
     {
         private EntityQuery playerQuery;
         private Random rand;
 
-        protected override void OnCreate()
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
             this.playerQuery = SystemAPI.QueryBuilder()
                 .WithAll<
@@ -32,20 +34,21 @@ namespace Systems.Initialization.Misc.WorldMap
                     , BakedGameEntityProfileElement>()
                 .Build();
 
-            this.RequireForUpdate(this.playerQuery);
+            state.RequireForUpdate(this.playerQuery);
 
             this.rand = new Random(47);
 
-            this.RequireForUpdate<SampleMapTag>();
-            this.RequireForUpdate<GameBuildingPrefabEntityMap>();
-            this.RequireForUpdate<HarvesteePrefabEntityMap>();
-            this.RequireForUpdate<GameEntitySizeMap>();
-            this.RequireForUpdate<BuildCommandList>();
+            state.RequireForUpdate<SampleMapTag>();
+            state.RequireForUpdate<GameBuildingPrefabEntityMap>();
+            state.RequireForUpdate<HarvesteePrefabEntityMap>();
+            state.RequireForUpdate<GameEntitySizeMap>();
+            state.RequireForUpdate<BuildCommandList>();
         }
 
-        protected override void OnUpdate()
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
-            this.Enabled = false;
+            state.Enabled = false;
 
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             var gameBuildingPrefabEntityMap = SystemAPI.GetSingleton<GameBuildingPrefabEntityMap>().Value;
@@ -53,15 +56,23 @@ namespace Systems.Initialization.Misc.WorldMap
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var buildCommandList = SystemAPI.GetSingleton<BuildCommandList>();
 
-            this.CreateWorldMap(in physicsWorld, in gameBuildingPrefabEntityMap, in harvesteePrefabEntityMap, in gameEntitySizeMap, in buildCommandList);
+            this.CreateWorldMap(
+                ref state
+                , in physicsWorld
+                , in gameBuildingPrefabEntityMap
+                , in harvesteePrefabEntityMap
+                , in gameEntitySizeMap
+                , in buildCommandList);
 
             var bakedProfileElements = this.playerQuery.GetSingletonBuffer<BakedGameEntityProfileElement>();
 
-            this.EntityManager.Instantiate(bakedProfileElements[0].PrimaryEntity);
+            state.EntityManager.Instantiate(bakedProfileElements[0].PrimaryEntity);
         }
 
+        [BurstCompile]
         private void CreateWorldMap(
-            in PhysicsWorldSingleton physicsWorld
+            ref SystemState state
+            , in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<GameBuildingProfileId, Entity> gameBuildingPrefabEntityMap
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
@@ -72,7 +83,7 @@ namespace Systems.Initialization.Misc.WorldMap
             half cellRadius = new(1f);
             WorldMapHelper.GetGridOffset(mapWidth, mapHeight, out int2 gridOffset);
 
-            var su = SingletonUtilities.GetInstance(this.EntityManager);
+            var su = SingletonUtilities.GetInstance(state.EntityManager);
             
             var costMap = new NativeArray<Cell>(mapWidth * mapHeight, Allocator.Persistent);
 
@@ -87,8 +98,8 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in gridOffset
                 , in cellRadius);
 
-            this.CreateMapOffsetComponent(in gridOffset);
-            this.CreateCostMap(in costMap, mapWidth, mapHeight, in gridOffset);
+            this.CreateMapOffsetComponent(ref state, in gridOffset);
+            this.CreateCostMap(ref state, in costMap, mapWidth, mapHeight, in gridOffset);
 
             su.AddOrSetComponentData(new CellRadius
             {
@@ -102,6 +113,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void GenerateMap(
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<GameBuildingProfileId, Entity> gameBuildingPrefabEntityMap
@@ -119,6 +131,7 @@ namespace Systems.Initialization.Misc.WorldMap
             this.PlaceRandomHarvesteesOnMap(in physicsWorld, in harvesteePrefabEntityMap, in gameEntitySizeMap, ref costMap, in buildCommandList, mapWidth, mapHeight, in gridOffset, in cellRadius);
         }
 
+        [BurstCompile]
         private void PlaceEmptyTilesOnMap(ref NativeArray<Cell> costMap, int mapWidth, int mapHeight)
         {
             for (int y = 0; y < mapHeight; y++)
@@ -138,6 +151,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void PlaceRandomHousesOnMap(
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<GameBuildingProfileId, Entity> gameBuildingPrefabEntityMap
@@ -170,6 +184,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void PlaceRandomHarvesteesOnMap(
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
@@ -210,6 +225,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void PlaceRandomTreesOnMap(
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
@@ -243,6 +259,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void PlaceRandomRocksOnMap(
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
@@ -276,6 +293,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void PlaceRandomBerryBushessOnMap(
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<HarvesteeProfileId, Entity> harvesteePrefabEntityMap
@@ -309,6 +327,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void PlaceRandomEntitiesOnMap(
             in PhysicsWorldSingleton physicsWorld
             , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
@@ -346,6 +365,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private bool CellsArePassable(
             in NativeArray<Cell> costMap
             , int topLeftX
@@ -375,6 +395,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void MarkCellsAsObstacles(
             in NativeArray<Cell> costMap
             , int topLeftX
@@ -397,6 +418,7 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
+        [BurstCompile]
         private void SpawnEntity(
             in BuildCommandList buildCommandList
             , in Entity prefabEntity
@@ -415,9 +437,10 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
-        private void CreateMapOffsetComponent(in int2 gridOffset)
+        [BurstCompile]
+        private void CreateMapOffsetComponent(ref SystemState state, in int2 gridOffset)
         {
-            SingletonUtilities.GetInstance(this.EntityManager)
+            SingletonUtilities.GetInstance(state.EntityManager)
                 .AddOrSetComponentData(new MapGridOffset
                 {
                     Value = gridOffset,
@@ -425,7 +448,8 @@ namespace Systems.Initialization.Misc.WorldMap
 
         }
 
-        private void CreateCostMap(in NativeArray<Cell> costs, int mapWidth, int mapHeight, in int2 offset)
+        [BurstCompile]
+        private void CreateCostMap(ref SystemState state, in NativeArray<Cell> costs, int mapWidth, int mapHeight, in int2 offset)
         {
             var costMap = new WorldTileCostMap
             {
@@ -435,7 +459,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 Offset = offset,
             };
 
-            SingletonUtilities.GetInstance(this.EntityManager)
+            SingletonUtilities.GetInstance(state.EntityManager)
                 .AddOrSetComponentData(costMap);
 
         }
