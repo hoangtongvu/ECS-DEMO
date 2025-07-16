@@ -1,3 +1,4 @@
+using Core.GameEntity;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace Components.Misc.WorldMap.WorldBuilding
         public Entity Entity;
         public FixedString64Bytes Name;
         public UnityObjectRef<Sprite> PreviewSprite;
-        public int GridSquareSize;
+        public GameEntitySize GameEntitySize;
         public float ObjectHeight;
     }
 

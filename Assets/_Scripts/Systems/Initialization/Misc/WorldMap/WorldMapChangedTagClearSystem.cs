@@ -4,7 +4,7 @@ using Unity.Entities;
 
 namespace Systems.Initialization.Misc.WorldMap
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(MapComponentsProcessSystemGroup), OrderLast = true)]
     [BurstCompile]
     public partial struct WorldMapChangedTagClearSystem : ISystem
     {

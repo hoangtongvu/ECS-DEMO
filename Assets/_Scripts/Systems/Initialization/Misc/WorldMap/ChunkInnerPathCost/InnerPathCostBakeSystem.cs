@@ -14,8 +14,7 @@ using Utilities.Helpers.Misc.WorldMap;
 
 namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(MapChangedSystemGroup))]
+    [UpdateInGroup(typeof(MapComponentsProcessSystemGroup))]
     [UpdateAfter(typeof(CreateChunkExitsSystem))]
     [BurstCompile]
     public partial struct InnerPathCostBakeSystem : ISystem

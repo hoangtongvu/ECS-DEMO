@@ -1,15 +1,19 @@
-using Unity.Entities;
-using Unity.Burst;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Components.Misc.WorldMap.WorldBuilding;
-using Components.Misc.WorldMap;
-using Utilities;
-using Unity.Collections;
-using Utilities.Extensions;
-using Core.Misc.WorldMap;
 using Components.GameEntity.EntitySpawning;
-using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
+using Components.Misc.WorldMap;
+using Components.Misc.WorldMap.Misc;
+using Components.Misc.WorldMap.WorldBuilding;
+using Core.Misc;
+using Core.Misc.WorldMap;
+using Core.Utilities.Extensions;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Physics;
+using Unity.Transforms;
+using Utilities;
+using Utilities.Extensions;
+using Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
@@ -21,33 +25,38 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
         public void OnCreate(ref SystemState state)
         {
             SingletonUtilities.GetInstance(state.EntityManager)
-                .AddOrSetComponentData(new BuildCommandQueue
+                .AddOrSetComponentData(new BuildCommandList
                 {
                     Value = new(30, Allocator.Persistent),
                 });
 
+            state.RequireForUpdate<PhysicsWorldSingleton>();
             state.RequireForUpdate<WorldTileCostMap>();
-            
+            state.RequireForUpdate<CellRadius>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var commandQueue = SystemAPI.GetSingleton<BuildCommandQueue>();
+            var commandList = SystemAPI.GetSingleton<BuildCommandList>();
+            int length = commandList.Value.Length;
+
+            if (length == 0) return;
+
+            var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
+            var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
-            if (commandQueue.Value.Length > 0)
-            {
-                SystemAPI.GetSingletonRW<WorldMapChangedTag>().ValueRW.Value = true;
-            }
-
+            SystemAPI.GetSingletonRW<WorldMapChangedTag>().ValueRW.Value = true;
             var em = state.EntityManager;
 
-            while (this.TryGetCommandFromQueue(in commandQueue, out var buildCommand))
+            for (int i = 0; i < length; i++)
             {
+                var buildCommand = commandList.Value[i];
                 var newEntity = state.EntityManager.Instantiate(buildCommand.Entity);
 
-                SystemAPI.SetComponent(newEntity, LocalTransform.FromPosition(buildCommand.BuildingCenterPos));
+                this.GetBuildCenterWorldPos(in physicsWorld, in buildCommand, in cellRadius, out var posOnGround);
+                SystemAPI.SetComponent(newEntity, LocalTransform.FromPosition(posOnGround.Add(y: buildCommand.GameEntitySize.ObjectHeight)));
 
                 if (SystemAPI.HasComponent<SpawnerEntityHolder>(newEntity))
                 {
@@ -57,28 +66,70 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                     });
                 }
 
-                em.AddComponent<NeedChangeToBlueprintTag>(newEntity);
+                em.AddComponentData(newEntity, new TopLeftCellPos
+                {
+                    Value = buildCommand.TopLeftCellGridPos,
+                });
 
-                this.MarkCellsAsObstacle(in costMap, in buildCommand.TopLeftCellGridPos, buildCommand.GridSquareSize);
+                this.MarkCellsAsObstacle(in costMap, in buildCommand.TopLeftCellGridPos, buildCommand.GameEntitySize.GridSquareSize);
 
             }
+
+            commandList.Value.Clear();
 
         }
 
         [BurstCompile]
-        private bool TryGetCommandFromQueue(in BuildCommandQueue buildCommandQueue, out BuildCommand buildCommand)
+        private void GetBuildCenterWorldPos(
+            in PhysicsWorldSingleton physicsWorld
+            , in BuildCommand buildCommand
+            , in half cellRadius
+            , out float3 posOnGround)
         {
-            if (buildCommandQueue.Value.Length == 0)
+            posOnGround = default;
+            WorldMapHelper.GridPosToWorldPos(in cellRadius, in buildCommand.TopLeftCellGridPos, out float3 topLeftCellWorldPos);
+
+            float3 startPos = topLeftCellWorldPos;
+            float addValueXZ = (buildCommand.GameEntitySize.GridSquareSize - 1) * cellRadius;
+
+            startPos.x += addValueXZ;
+            startPos.z -= addValueXZ;
+            startPos.y = 100f;
+
+            bool hit = this.CastRayToGround(in physicsWorld, in startPos, out var raycastHit);
+            if (!hit)
             {
-                buildCommand = default;
-                return false;
+                return;
+                // TODO: As the ground in the sample scene is not big enough to cover the whole map width
+                // -> this hit will miss some at the both left and right sides -> Can't throw any exception here
+                //throw new System.Exception($"Can't hit the Ground with TopLeftCellGridPos: {buildCommand.TopLeftCellGridPos}, GridSquareSize: {buildCommand.GameEntitySize.GridSquareSize}, topLeftCellWorldPos: {topLeftCellWorldPos}, startPos: {startPos}");
             }
 
-            int lastIndex = buildCommandQueue.Value.Length - 1;
-            buildCommand = buildCommandQueue.Value[lastIndex];
-            buildCommandQueue.Value.RemoveAt(lastIndex);
-            return true;
+            posOnGround = raycastHit.Position;
 
+        }
+
+        [BurstCompile]
+        private bool CastRayToGround(
+            in PhysicsWorldSingleton physicsWorld
+            , in float3 startPos
+            , out Unity.Physics.RaycastHit raycastHit)
+        {
+            float3 rayStart = startPos;
+            float3 rayEnd = startPos.Add(y: -500f);
+
+            RaycastInput raycastInput = new()
+            {
+                Start = rayStart,
+                End = rayEnd,
+                Filter = new CollisionFilter
+                {
+                    BelongsTo = (uint)CollisionLayer.Ground,
+                    CollidesWith = (uint)CollisionLayer.Ground,
+                },
+            };
+
+            return physicsWorld.CastRay(raycastInput, out raycastHit);
         }
 
         [BurstCompile]

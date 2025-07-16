@@ -10,9 +10,7 @@ using Utilities.Helpers;
 
 namespace Systems.Initialization.Misc.WorldMap
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(MapChangedSystemGroup))] //Note: CreateChunksSystem needs to update after WorldMapChangedTag writer systems
-    [UpdateAfter(typeof(ChunkComponentsInitSystem))]
+    [UpdateInGroup(typeof(MapComponentsProcessSystemGroup))]
     [UpdateAfter(typeof(CreateChunksSystem))]
     [BurstCompile]
     public partial struct CreateChunkExitsSystem : ISystem
