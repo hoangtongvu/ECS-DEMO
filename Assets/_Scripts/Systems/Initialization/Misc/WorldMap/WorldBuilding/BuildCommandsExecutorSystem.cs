@@ -38,20 +38,21 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             var commandList = SystemAPI.GetSingleton<BuildCommandList>();
+            int length = commandList.Value.Length;
+
+            if (length == 0) return;
+
+            var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
             var cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
 
-            if (commandList.Value.Length > 0)
-            {
-                SystemAPI.GetSingletonRW<WorldMapChangedTag>().ValueRW.Value = true;
-            }
-
+            SystemAPI.GetSingletonRW<WorldMapChangedTag>().ValueRW.Value = true;
             var em = state.EntityManager;
 
-            while (this.TryGetCommandFromQueue(in commandList, out var buildCommand))
+            for (int i = 0; i < length; i++)
             {
+                var buildCommand = commandList.Value[i];
                 var newEntity = state.EntityManager.Instantiate(buildCommand.Entity);
 
                 this.GetBuildCenterWorldPos(in physicsWorld, in buildCommand, in cellRadius, out var posOnGround);
@@ -73,6 +74,8 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                 this.MarkCellsAsObstacle(in costMap, in buildCommand.TopLeftCellGridPos, buildCommand.GameEntitySize.GridSquareSize);
 
             }
+
+            commandList.Value.Clear();
 
         }
 
@@ -127,22 +130,6 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             };
 
             return physicsWorld.CastRay(raycastInput, out raycastHit);
-        }
-
-        [BurstCompile]
-        private bool TryGetCommandFromQueue(in BuildCommandList commandList, out BuildCommand buildCommand)
-        {
-            if (commandList.Value.Length == 0)
-            {
-                buildCommand = default;
-                return false;
-            }
-
-            int lastIndex = commandList.Value.Length - 1;
-            buildCommand = commandList.Value[lastIndex];
-            commandList.Value.RemoveAt(lastIndex);
-            return true;
-
         }
 
         [BurstCompile]
