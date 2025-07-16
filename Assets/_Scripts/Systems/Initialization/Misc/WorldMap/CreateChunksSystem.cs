@@ -8,9 +8,7 @@ using Core.Utilities.Extensions;
 
 namespace Systems.Initialization.Misc.WorldMap
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(MapChangedSystemGroup))] //Note: CreateChunksSystem needs to update after WorldMapChangedTag writer systems
-    [UpdateAfter(typeof(ChunkComponentsInitSystem))]
+    [UpdateInGroup(typeof(MapComponentsProcessSystemGroup))]
     [BurstCompile]
     public partial struct CreateChunksSystem : ISystem
     {
