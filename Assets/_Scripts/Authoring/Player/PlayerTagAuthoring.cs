@@ -49,6 +49,7 @@ namespace Authoring.Player
                     Value = new(3f),
                 });
 
+                AddComponent(entity, LookDirectionXZ.DefaultValue);
             }
 
         }
