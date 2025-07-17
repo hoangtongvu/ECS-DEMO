@@ -50,6 +50,9 @@ namespace Authoring.Player
                 });
 
                 AddComponent(entity, LookDirectionXZ.DefaultValue);
+                AddComponent<InAttackStateTimeStamp>(entity);
+                this.AddAndDisableComponent<InAttackStateTag>(entity);
+
             }
 
         }

@@ -9,6 +9,7 @@ using Utilities.Extensions;
 using Utilities.Extensions.GameEntity.Damage;
 using Components.Misc;
 using Core.Misc;
+using Components.GameEntity.Misc;
 
 namespace Systems.Simulation.Player
 {
@@ -33,14 +34,16 @@ namespace Systems.Simulation.Player
         {
             PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
-            foreach (var (transformRef, hitboxRef, dmgValueRef, attackDataRef, attackInputRef) in
-                SystemAPI.Query<
+            foreach (var (transformRef, hitboxRef, dmgValueRef, attackDataRef, attackInputRef, entity) in SystemAPI
+                .Query<
                     RefRO<LocalTransform>
                     , RefRO<HitBox>
                     , RefRO<DmgValue>
                     , RefRW<AttackData>
                     , RefRO<AttackInput>>()
-                    .WithAll<PlayerTag>())
+                .WithAll<
+                    PlayerTag>()
+                .WithEntityAccess())
             {
                 if (attackDataRef.ValueRO.isAttacking)
                 {
@@ -54,14 +57,14 @@ namespace Systems.Simulation.Player
                 }
 
                 if (!attackInputRef.ValueRO.IsAttackable) return;
-                this.Attack(attackDataRef);
+                this.Attack(attackDataRef, in entity);
                 this.TryCatchColliderInHitbox(physicsWorld, hitboxRef, transformRef, dmgValueRef);
 
             }
 
         }
 
-        private void Attack(RefRW<AttackData> attackDataRef)
+        private void Attack(RefRW<AttackData> attackDataRef, in Entity entity)
         {
             //Play Attack Animation.
             attackDataRef.ValueRW.isAttacking = true;
@@ -70,6 +73,12 @@ namespace Systems.Simulation.Player
             {
                 animatorDataRef.ValueRW.Value.ChangeValue(ATTACK_ANIM_NAME);
             }
+
+            SystemAPI.SetComponentEnabled<InAttackStateTag>(entity, true);
+            SystemAPI.SetComponent(entity, new InAttackStateTimeStamp
+            {
+                Value = SystemAPI.Time.ElapsedTime,
+            });
 
         }
 
