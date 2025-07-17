@@ -34,10 +34,10 @@ namespace Systems.Simulation.Player
         {
             PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
-            foreach (var (transformRef, hitboxRef, dmgValueRef, attackDataRef, attackInputRef, entity) in SystemAPI
+            foreach (var (transformRef, lookDirXZRef, dmgValueRef, attackDataRef, attackInputRef, entity) in SystemAPI
                 .Query<
                     RefRO<LocalTransform>
-                    , RefRO<HitBox>
+                    , RefRO<LookDirectionXZ>
                     , RefRO<DmgValue>
                     , RefRW<AttackData>
                     , RefRO<AttackInput>>()
@@ -58,7 +58,7 @@ namespace Systems.Simulation.Player
 
                 if (!attackInputRef.ValueRO.IsAttackable) return;
                 this.Attack(attackDataRef, in entity);
-                this.TryCatchColliderInHitbox(physicsWorld, hitboxRef, transformRef, dmgValueRef);
+                this.TryCatchColliderInHitbox(physicsWorld, in lookDirXZRef.ValueRO, in transformRef.ValueRO, in dmgValueRef.ValueRO);
 
             }
 
@@ -84,36 +84,33 @@ namespace Systems.Simulation.Player
 
         private void TryCatchColliderInHitbox(
             in PhysicsWorldSingleton physicsWorld
-            , RefRO<HitBox> hitboxRef
-            , RefRO<LocalTransform> transformRef
-            , RefRO<DmgValue> dmgValueRef)
+            , in LookDirectionXZ lookDirectionXZ
+            , in LocalTransform transform
+            , in DmgValue dmgValue)
         {
             NativeList<DistanceHit> hits = new(Allocator.Temp);
 
-            physicsWorld.OverlapBox(
-                transformRef.ValueRO.Position + hitboxRef.ValueRO.HitBoxLocalPos,
-                quaternion.identity,
-                hitboxRef.ValueRO.HitBoxSize / 2,
-                ref hits,
-                new CollisionFilter
+            const float hitBoxRadius = 1.0f; // TODO: Find this value else where
+
+            physicsWorld.OverlapSphere(
+                transform.Position + new float3(lookDirectionXZ.Value.x, 0f, lookDirectionXZ.Value.y)
+                , hitBoxRadius
+                , ref hits
+                , new()
                 {
                     BelongsTo = (uint)CollisionLayer.Player,
-                    CollidesWith = (uint)(CollisionLayer.Default | CollisionLayer.Unit),
+                    CollidesWith = (uint)(CollisionLayerConstants.Damagable | CollisionLayer.Default),
                 });
 
             foreach (var hit in hits)
             {
                 Entity entity = hit.Entity;
-
                 if (!SystemAPI.HasComponent<CurrentHp>(entity)) continue;
 
-
                 var hpChangeRecords = SystemAPI.GetBuffer<HpChangeRecordElement>(entity);
-                hpChangeRecords.AddDeductRecord(dmgValueRef.ValueRO.Value);
-
-                //UnityEngine.Debug.Log($"{entity} received {dmgValueRef.ValueRO.Value} Dmg.");
+                hpChangeRecords.AddDeductRecord(dmgValue.Value);
             }
-            
+
         }
 
         private void UpdateAttackTimeCounter(ref float attackTimeCounter) =>
