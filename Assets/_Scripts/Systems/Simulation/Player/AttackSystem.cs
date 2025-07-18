@@ -16,7 +16,7 @@ namespace Systems.Simulation.Player
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class AttackSystem : SystemBase //TODO: This can be changed into ISystem + burst.
     {
-        private const string ATTACK_ANIM_NAME = "Punching";
+        private const string ATTACK_ANIM_NAME = "2H_Melee_Attack_Slice";
         private const string IDLE_ANIM_NAME = "Idle";
 
         protected override void OnCreate()
@@ -58,7 +58,7 @@ namespace Systems.Simulation.Player
 
                 if (!attackInputRef.ValueRO.IsAttackable) return;
                 this.Attack(attackDataRef, in entity);
-                this.TryCatchColliderInHitbox(physicsWorld, in lookDirXZRef.ValueRO, in transformRef.ValueRO, in dmgValueRef.ValueRO);
+                this.TryCatchColliderInHitbox(physicsWorld, in lookDirXZRef.ValueRO, in transformRef.ValueRO, in dmgValueRef.ValueRO, in entity);
 
             }
 
@@ -86,7 +86,8 @@ namespace Systems.Simulation.Player
             in PhysicsWorldSingleton physicsWorld
             , in LookDirectionXZ lookDirectionXZ
             , in LocalTransform transform
-            , in DmgValue dmgValue)
+            , in DmgValue dmgValue
+            , in Entity playerEntity)
         {
             NativeList<DistanceHit> hits = new(Allocator.Temp);
 
@@ -105,6 +106,7 @@ namespace Systems.Simulation.Player
             foreach (var hit in hits)
             {
                 Entity entity = hit.Entity;
+                if (entity == playerEntity) continue;
                 if (!SystemAPI.HasComponent<CurrentHp>(entity)) continue;
 
                 var hpChangeRecords = SystemAPI.GetBuffer<HpChangeRecordElement>(entity);
