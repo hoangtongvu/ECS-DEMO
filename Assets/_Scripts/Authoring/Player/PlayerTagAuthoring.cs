@@ -3,6 +3,8 @@ using Components.GameEntity.Damage;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
+using Components.GameEntity.Movement;
+using Components.GameEntity.Reaction;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Player;
@@ -52,6 +54,28 @@ namespace Authoring.Player
                 AddComponent(entity, LookDirectionXZ.DefaultValue);
                 AddComponent<InAttackStateTimeStamp>(entity);
                 this.AddAndDisableComponent<InAttackStateTag>(entity);
+
+                AddComponent<MoveableEntityTag>(entity);
+                this.AddAndDisableComponent<CanMoveEntityTag>(entity);
+
+                AddComponent<MoveDirectionFloat2>(entity);
+                AddComponent<CurrentMoveSpeed>(entity);
+                AddComponent<TargetMoveSpeed>(entity);
+
+                this.AddAndDisableComponent<IdleReaction.StartedTag>(entity);
+                this.AddAndDisableComponent<IdleReaction.CanUpdateTag>(entity);
+                this.AddAndDisableComponent<IdleReaction.UpdatingTag>(entity);
+                this.AddAndDisableComponent<IdleReaction.EndedTag>(entity);
+
+                this.AddAndDisableComponent<WalkReaction.StartedTag>(entity);
+                this.AddAndDisableComponent<WalkReaction.CanUpdateTag>(entity);
+                this.AddAndDisableComponent<WalkReaction.UpdatingTag>(entity);
+                this.AddAndDisableComponent<WalkReaction.EndedTag>(entity);
+
+                this.AddAndDisableComponent<RunReaction.StartedTag>(entity);
+                this.AddAndDisableComponent<RunReaction.CanUpdateTag>(entity);
+                this.AddAndDisableComponent<RunReaction.UpdatingTag>(entity);
+                this.AddAndDisableComponent<RunReaction.EndedTag>(entity);
 
             }
 

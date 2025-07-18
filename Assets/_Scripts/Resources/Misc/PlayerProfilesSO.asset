@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Profiles:
     _serializedList:
-    - Key: 0
+    - Key:
+        VariantIndex: 0
       Value:
         Name: DefaultPlayer
         ProfilePicture: {fileID: 0}
@@ -32,6 +33,8 @@ MonoBehaviour:
         PlayerReactionConfigs:
           WalkSpeed: 5
           RunSpeed: 8
+          AccelerationValue: 12
+          DecelerationValue: 20
         PlayerBuildingIds:
           _serializedList:
           - Key:

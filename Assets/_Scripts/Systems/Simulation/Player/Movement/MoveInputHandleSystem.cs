@@ -5,23 +5,22 @@ using Unity.Mathematics;
 using Components.GameEntity.Movement;
 using Components.Misc;
 
-namespace Systems.Simulation.Player
+namespace Systems.Simulation.Player.Movement
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct SetMoveDirSystem : ISystem
+    public partial struct MoveInputHandleSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            var entityQuery = SystemAPI.QueryBuilder()
+            var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerTag
                     , MoveDirectionFloat2>()
                 .Build();
 
-            state.RequireForUpdate(entityQuery);
-
+            state.RequireForUpdate(query0);
             state.RequireForUpdate<InputData>();
         }
 
@@ -44,7 +43,7 @@ namespace Systems.Simulation.Player
                 }
 
                 canMoveEntityTag.ValueRW = true;
-                moveDirRef.ValueRW.Value = inputMoveDirection;
+                moveDirRef.ValueRW.Value = math.normalize(inputMoveDirection);
                 
             }
 
