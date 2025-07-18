@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 8477947255026551287}
   - component: {fileID: 6654826011958844978}
   - component: {fileID: 2128705594191680724}
-  - component: {fileID: 3204898026454366709}
   - component: {fileID: 4461126228301769458}
   m_Layer: 6
   m_Name: Player
@@ -141,21 +140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentStateName: Idle
---- !u!114 &3204898026454366709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1335492856152722597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c0e1e9066f0a9948ad28c8a09008c72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Direction: {x: 0, y: 0, z: 0}
-  Speed: 5
-  CanMoveEntity: 0
 --- !u!114 &4461126228301769458
 MonoBehaviour:
   m_ObjectHideFlags: 0
