@@ -29,6 +29,9 @@ MonoBehaviour:
         HasHpComponents: 1
         HpData:
           MaxHp: 200
+        PlayerReactionConfigs:
+          WalkSpeed: 5
+          RunSpeed: 8
         PlayerBuildingIds:
           _serializedList:
           - Key:

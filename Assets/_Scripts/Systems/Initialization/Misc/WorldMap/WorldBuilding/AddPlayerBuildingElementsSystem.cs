@@ -44,7 +44,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             var playerBuildableObjectElements = ecb.AddBuffer<PlayerBuildableObjectElement>(su.DefaultSingletonEntity);
 
-            var firstPlayerProfile = profilesSOHolder.Value.Value.Profiles[0];
+            var firstPlayerProfile = profilesSOHolder.Value.Value.Profiles[new() { VariantIndex = 0 }];
 
             foreach (var id in firstPlayerProfile.PlayerBuildingIds)
             {

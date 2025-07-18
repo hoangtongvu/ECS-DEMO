@@ -12,7 +12,7 @@ namespace Core.Player
     }
 
     [CreateAssetMenu(fileName = "PlayerProfilesSO", menuName = "SO/GameEntity/PlayerProfilesSO")]
-    public class PlayerProfilesSO : GameEntityProfilesSO<int, PlayerProfileElement>
+    public class PlayerProfilesSO : GameEntityProfilesSO<PlayerProfileId, PlayerProfileElement>
     {
         public static readonly string DefaultAssetPath = "Misc/PlayerProfilesSO";
     }
