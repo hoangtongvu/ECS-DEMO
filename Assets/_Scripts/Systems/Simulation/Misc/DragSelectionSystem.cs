@@ -34,13 +34,13 @@ namespace Systems.Simulation.Misc
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             var dragSelectionDataRef = SystemAPI.GetSingletonRW<DragSelectionData>();
 
-            if (inputData.LeftMouseData.Down)
+            if (inputData.RightMouseData.Down)
                 this.OnInputDown(physicsWorld, dragSelectionDataRef);
 
-            if (inputData.LeftMouseData.Hold)
+            if (inputData.RightMouseData.Hold)
                 this.OnInputHold(physicsWorld, dragSelectionDataRef);
 
-            if (inputData.LeftMouseData.Up)
+            if (inputData.RightMouseData.Up)
                 this.OnInputUp(physicsWorld, dragSelectionDataRef);
 
         }
