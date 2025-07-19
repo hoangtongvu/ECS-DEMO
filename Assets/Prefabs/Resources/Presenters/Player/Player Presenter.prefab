@@ -2002,6 +2002,7 @@ GameObject:
   - component: {fileID: 8751123754049817585}
   - component: {fileID: 1434096435103587551}
   - component: {fileID: 7241777563370842606}
+  - component: {fileID: 4463229414207029664}
   - component: {fileID: 8290110953721160210}
   m_Layer: 0
   m_Name: AnimationPlayer
@@ -2065,6 +2066,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b1af613d6b946c45b5683131c769741, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  baseAnimator: {fileID: 0}
+  transitionDuration: 0.2
+--- !u!114 &4463229414207029664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8284627289445197274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aee07c2e71e22a48bede07257a6e518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}

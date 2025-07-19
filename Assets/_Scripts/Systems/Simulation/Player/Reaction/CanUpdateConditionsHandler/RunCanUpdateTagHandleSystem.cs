@@ -11,6 +11,7 @@ using UnityEngine;
 namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
+    [UpdateAfter(typeof(CanUpdateConditionsHandler.AttackCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct RunCanUpdateTagHandleSystem : ISystem
     {
@@ -21,7 +22,8 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                 .WithAll<
                     WalkReaction.CanUpdateTag>()
                 .WithAll<
-                    IsAliveTag
+                    AttackReaction.CanUpdateTag
+                    , IsAliveTag
                     , CanMoveEntityTag
                     , CurrentMoveSpeed
                     , PlayerReactionConfigsHolder>()
@@ -37,16 +39,17 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
         {
             bool playerInput = Input.GetKey(KeyCode.LeftShift);
 
-            foreach (var (reactionCanUpdateTag, isAliveTag, canMoveEntityTag) in SystemAPI
+            foreach (var (reactionCanUpdateTag, attackCanUpdateTag, isAliveTag, canMoveEntityTag) in SystemAPI
                 .Query<
                     EnabledRefRW<RunReaction.CanUpdateTag>
+                    , EnabledRefRO<AttackReaction.CanUpdateTag>
                     , EnabledRefRO<IsAliveTag>
                     , EnabledRefRO<CanMoveEntityTag>>()
                 .WithAll<
                     PlayerTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && canMoveEntityTag.ValueRO && playerInput;
+                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && canMoveEntityTag.ValueRO && !attackCanUpdateTag.ValueRO && playerInput;
             }
 
         }

@@ -11,6 +11,7 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
     [UpdateAfter(typeof(CanUpdateConditionsHandler.RunCanUpdateTagHandleSystem))]
+    [UpdateAfter(typeof(CanUpdateConditionsHandler.AttackCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct WalkCanUpdateTagHandleSystem : ISystem
     {
@@ -21,7 +22,8 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                 .WithAll<
                     WalkReaction.CanUpdateTag>()
                 .WithAll<
-                    IsAliveTag
+                    AttackReaction.CanUpdateTag
+                    , IsAliveTag
                     , CanMoveEntityTag
                     , CurrentMoveSpeed
                     , PlayerReactionConfigsHolder>()
@@ -46,11 +48,13 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<WalkReaction.CanUpdateTag> reactionCanUpdateTag
+                , EnabledRefRO<AttackReaction.CanUpdateTag> attackCanUpdateTag
                 , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
                 , EnabledRefRO<RunReaction.CanUpdateTag> canRunUpdateTag)
             {
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && canMoveEntityTag.ValueRO && !canRunUpdateTag.ValueRO;
+                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && canMoveEntityTag.ValueRO 
+                    && !canRunUpdateTag.ValueRO && !attackCanUpdateTag.ValueRO;
             }
 
         }

@@ -9,6 +9,7 @@ using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
 namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
+    [UpdateAfter(typeof(CanUpdateConditionsHandler.AttackCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct IdleCanUpdateTagHandleSystem : ISystem
     {
@@ -19,7 +20,8 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                 .WithAll<
                     IdleReaction.CanUpdateTag>()
                 .WithAll<
-                    IsAliveTag
+                    AttackReaction.CanUpdateTag
+                    , IsAliveTag
                     , CanMoveEntityTag>()
                 .WithAll<
                     PlayerTag>()
@@ -42,10 +44,11 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<IdleReaction.CanUpdateTag> reactionCanUpdateTag
+                , EnabledRefRO<AttackReaction.CanUpdateTag> attackCanUpdateTag
                 , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag)
             {
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !canMoveEntityTag.ValueRO;
+                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !canMoveEntityTag.ValueRO && !attackCanUpdateTag.ValueRO;
             }
 
         }

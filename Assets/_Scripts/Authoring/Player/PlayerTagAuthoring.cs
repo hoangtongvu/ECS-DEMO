@@ -1,4 +1,5 @@
 ﻿using Authoring.Utilities.Extensions;
+using Components.GameEntity.Attack;
 using Components.GameEntity.Damage;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Interaction;
@@ -76,6 +77,24 @@ namespace Authoring.Player
                 this.AddAndDisableComponent<RunReaction.CanUpdateTag>(entity);
                 this.AddAndDisableComponent<RunReaction.UpdatingTag>(entity);
                 this.AddAndDisableComponent<RunReaction.EndedTag>(entity);
+
+                this.AddAndDisableComponent<AttackReaction.StartedTag>(entity);
+                this.AddAndDisableComponent<AttackReaction.CanUpdateTag>(entity);
+                this.AddAndDisableComponent<AttackReaction.UpdatingTag>(entity);
+                this.AddAndDisableComponent<AttackReaction.EndedTag>(entity);
+                AddComponent<AttackReaction.TimerSeconds>(entity);
+
+                // Note: These are magic numbers taken from the attack animation
+                AddComponent(entity, new AttackDurationSeconds
+                {
+                    Value = new(1.1f),
+                });
+
+                this.AddAndDisableComponent<AttackEventTriggeredTag>(entity);
+                AddComponent(entity, new AttackEventTimestamp
+                {
+                    Value = new(0.5f),
+                });
 
             }
 
