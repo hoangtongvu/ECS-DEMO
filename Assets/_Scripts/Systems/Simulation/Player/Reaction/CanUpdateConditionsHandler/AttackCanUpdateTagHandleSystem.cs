@@ -2,6 +2,7 @@ using Components.GameEntity.Attack;
 using Components.GameEntity.Damage;
 using Components.GameEntity.Reaction;
 using Components.Misc;
+using Components.Misc.WorldMap.WorldBuilding.PlacementPreview;
 using Components.Player;
 using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
 using Unity.Burst;
@@ -29,12 +30,16 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 
             state.RequireForUpdate(query0);
             state.RequireForUpdate<InputData>();
+            state.RequireForUpdate<PlacementPreviewData>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            bool hardwareInputState = SystemAPI.GetSingleton<InputData>().LeftMouseData.Down;
+            var placementPreviewData = SystemAPI.GetSingleton<PlacementPreviewData>();
+            var inputData = SystemAPI.GetSingleton<InputData>();
+
+            bool hardwareInputState = inputData.LeftMouseData.Down && ! inputData.IsPointerOverGameObject;
 
             foreach (var (reactionCanUpdateTag, reactionUpdatingTag, reactionTimerSecondsRef, attackDurationSecondsRef, isAliveTag) in SystemAPI
                 .Query<
@@ -47,9 +52,10 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                     PlayerTag>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
+                bool isInBuildMode = placementPreviewData.CanPlacementPreview;
                 bool timedOut = reactionTimerSecondsRef.ValueRO.Value >= attackDurationSecondsRef.ValueRO.Value;
 
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO
+                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !isInBuildMode
                     && (hardwareInputState || (reactionUpdatingTag.ValueRO && !timedOut));
             }
 

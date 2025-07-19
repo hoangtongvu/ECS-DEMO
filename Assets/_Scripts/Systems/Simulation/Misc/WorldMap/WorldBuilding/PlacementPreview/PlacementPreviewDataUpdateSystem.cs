@@ -1,4 +1,5 @@
 using Components.Camera;
+using Components.Misc;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.WorldBuilding;
 using Components.Misc.WorldMap.WorldBuilding.PlacementPreview;
@@ -9,7 +10,6 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Utilities;
 using Utilities.Extensions;
 using Utilities.Helpers;
@@ -28,6 +28,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
             this.RequireForUpdate<PlacementPreviewSpriteTag>();
             this.RequireForUpdate<BuildableObjectChoiceIndex>();
+            this.RequireForUpdate<InputData>();
         }
 
         protected override void OnStartRunning()
@@ -37,9 +38,10 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.PlacementPreview
 
         protected override void OnUpdate()
         {
+            var inputData = SystemAPI.GetSingleton<InputData>();
             var placementPreviewDataRef = SystemAPI.GetSingletonRW<PlacementPreviewData>();
 
-            bool mouseHoverOnUI = EventSystem.current.IsPointerOverGameObject();
+            bool mouseHoverOnUI = inputData.IsPointerOverGameObject;
             if (mouseHoverOnUI)
             {
                 placementPreviewDataRef.ValueRW.CanPlacementPreview = false;

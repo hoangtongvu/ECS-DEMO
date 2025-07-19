@@ -10,6 +10,7 @@ namespace Components.Misc
 
         public MouseData LeftMouseData;
         public MouseData RightMouseData;
+        public bool IsPointerOverGameObject; // PointerHoverOnUI
     }
 
     public struct MouseData

@@ -2,6 +2,7 @@ using Components.Misc;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utilities;
 
 namespace Systems.Simulation.Misc
@@ -23,6 +24,7 @@ namespace Systems.Simulation.Misc
 
             this.SetMouseData(ref inputDataRef.ValueRW.LeftMouseData, 0);
             this.SetMouseData(ref inputDataRef.ValueRW.RightMouseData, 1);
+            this.SetIsPointerOverGameObject(ref inputDataRef.ValueRW);
         }
 
         private void CreateInputDataSingleton()
@@ -54,6 +56,11 @@ namespace Systems.Simulation.Misc
             mouseData.Down = Input.GetMouseButtonDown(mouseValue);
             mouseData.Hold = Input.GetMouseButton(mouseValue);
             mouseData.Up = Input.GetMouseButtonUp(mouseValue);
+        }
+
+        private void SetIsPointerOverGameObject(ref InputData inputData)
+        {
+            inputData.IsPointerOverGameObject = EventSystem.current.IsPointerOverGameObject();
         }
 
     }
