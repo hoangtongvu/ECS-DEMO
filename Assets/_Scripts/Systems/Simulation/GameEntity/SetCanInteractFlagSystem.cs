@@ -5,6 +5,7 @@ using Components.GameEntity.Movement.MoveCommand;
 using Core.GameEntity.Movement.MoveCommand;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Systems.Simulation.GameEntity
 {
@@ -52,11 +53,11 @@ namespace Systems.Simulation.GameEntity
                 if (targetEntityRef.ValueRO.Value == Entity.Null) continue;
 
                 // NOTE: addValue = MaxDistanceRange -> Stay too close to upper bound of interactable range -> Possibly lose interaction
-                // addValue = (MaxDistanceRange + MinDistanceRange) / 2 -> Possibly move stopped before interaction occurred (if the interactableDistanceRange is between celRadius * 2)
-                // -> addValue = (MaxDistanceRange + MinDistanceRange) * 0.75f is the best possible value
+                // addValue = lerp(MinDistanceRange, MaxDistanceRange, 0.5f) -> Possibly move stopped before interaction occurred (if the interactableDistanceRange is between celRadius * 2)
+                // -> addValue = lerp(MinDistanceRange, MaxDistanceRange, 0.75f) is the best possible value
                 const float centerInteractableDistanceRatio = 0.75f;
                 float addValue =
-                    (interactableDistanceRangeRef.ValueRO.MaxValue + interactableDistanceRangeRef.ValueRO.MinValue) * centerInteractableDistanceRatio;
+                    math.lerp(interactableDistanceRangeRef.ValueRO.MinValue, interactableDistanceRangeRef.ValueRO.MaxValue, centerInteractableDistanceRatio);
 
                 float interactRadius = targetEntityWorldSquareRadiusRef.ValueRO.Value + addValue;
 
