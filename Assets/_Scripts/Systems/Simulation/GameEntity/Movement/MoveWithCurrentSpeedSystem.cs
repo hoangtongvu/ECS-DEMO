@@ -19,7 +19,8 @@ namespace Systems.Simulation.GameEntity.Movement
                     CanMoveEntityTag
                     , LocalTransform
                     , MoveDirectionFloat2
-                    , CurrentMoveSpeed>()
+                    , CurrentMoveSpeed
+                    , MoveSpeedScale>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
@@ -37,12 +38,13 @@ namespace Systems.Simulation.GameEntity.Movement
             private void Execute(
                 ref PhysicsVelocity physicsVelocity
                 , in CurrentMoveSpeed speed
-                , in MoveDirectionFloat2 direction)
+                , in MoveDirectionFloat2 direction
+                , in MoveSpeedScale moveSpeedScale)
             {
                 if (speed.Value == 0) return;
 
                 float3 float3Dir = new (direction.Value.x, 0f, direction.Value.y);
-                physicsVelocity.Linear = float3Dir * speed.Value;
+                physicsVelocity.Linear = float3Dir * speed.Value * moveSpeedScale.Value;
             }
 
         }

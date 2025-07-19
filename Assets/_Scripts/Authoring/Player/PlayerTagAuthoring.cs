@@ -97,6 +97,8 @@ namespace Authoring.Player
                     Value = new(0.5f),
                 });
 
+                AddComponent(entity, MoveSpeedScale.DefaultValue);
+
             }
 
         }
