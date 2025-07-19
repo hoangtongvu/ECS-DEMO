@@ -12,7 +12,7 @@ using Components.GameEntity.Misc;
 using Components.GameEntity.Reaction;
 using Components.GameEntity.Attack;
 
-namespace Systems.Simulation.Player
+namespace Systems.Simulation.Player.Attack
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]

@@ -4,7 +4,7 @@ using Unity.Burst;
 using Components.GameEntity.Reaction;
 using Components.GameEntity.Attack;
 
-namespace Systems.Simulation.Player
+namespace Systems.Simulation.Player.Attack
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
