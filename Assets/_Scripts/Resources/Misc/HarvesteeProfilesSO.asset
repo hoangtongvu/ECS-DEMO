@@ -43,6 +43,34 @@ MonoBehaviour:
         - {fileID: 919132149155446097, guid: f0263a3b21c0f434fb2bb5efcf332b87, type: 3}
         - {fileID: 919132149155446097, guid: 898844255babc064e945ea17d098e211, type: 3}
     - Key:
+        HarvesteeType: 1
+        VariantIndex: 1
+      Value:
+        Name: 2x NormalTree
+        ProfilePicture: {fileID: 21300000, guid: b7bb888abad480c4e8438a8a0937d4a4,
+          type: 3}
+        PresenterPrefab: {fileID: 0}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: e275da995828c254dbe0545f55a3a823,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 1
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 200
+        HarvesteeType: 1
+        ResourceDropInfo:
+          ResourceType: 1
+          QuantityPerDrop: 5
+          HpAmountPerDrop: 25
+        PresenterVariances:
+        - {fileID: 919132149155446097, guid: 36bb24e2ff316a648ac65cc0389f34e9, type: 3}
+        - {fileID: 919132149155446097, guid: 3df7b035d9748d74087653b0fb97ab9d, type: 3}
+        - {fileID: 919132149155446097, guid: d2b52071013ecce40ac88c7312db6fc2, type: 3}
+        - {fileID: 919132149155446097, guid: 2a7211f58371cab46a917eb40aa65576, type: 3}
+        - {fileID: 919132149155446097, guid: 2931a54a549386c41a27586e68a9fc8f, type: 3}
+    - Key:
         HarvesteeType: 2
         VariantIndex: 0
       Value:
@@ -72,6 +100,36 @@ MonoBehaviour:
         - {fileID: 919132149155446097, guid: 7678b5958dae76549bf4e174493a3f39, type: 3}
         - {fileID: 919132149155446097, guid: a64e58fe276609b4ca02ee6e57ae47ff, type: 3}
         - {fileID: 919132149155446097, guid: 5e3f979748cb5fe45b3632d2373a6dd1, type: 3}
+    - Key:
+        HarvesteeType: 2
+        VariantIndex: 1
+      Value:
+        Name: 2x NormalRockPit
+        ProfilePicture: {fileID: 21300000, guid: 02c56d58c16f55441af8086bb2c8e236,
+          type: 3}
+        PresenterPrefab: {fileID: 0}
+        IsPresenterEntity: 0
+        PrimaryEntityPrefab: {fileID: 7309894390091400788, guid: 1ab4493f8429a4b4bb203207e68baf82,
+          type: 3}
+        GameEntitySize:
+          GridSquareSize: 2
+          ObjectHeight: 0
+        HasHpComponents: 1
+        HpData:
+          MaxHp: 300
+        HarvesteeType: 2
+        ResourceDropInfo:
+          ResourceType: 3
+          QuantityPerDrop: 5
+          HpAmountPerDrop: 25
+        PresenterVariances:
+        - {fileID: 919132149155446097, guid: a9aa7e5fe1b08184cba3a195f26c8ce4, type: 3}
+        - {fileID: 919132149155446097, guid: 8a349ebee1bb79345affba35d546e9f9, type: 3}
+        - {fileID: 919132149155446097, guid: b8a1b1c498091d34a844b74114bff468, type: 3}
+        - {fileID: 919132149155446097, guid: 0ce42dc8dc0fe674bb2a510abfb1e4e7, type: 3}
+        - {fileID: 919132149155446097, guid: 9aa57f17f5861fa4ba162d6f8843bfc7, type: 3}
+        - {fileID: 919132149155446097, guid: 0c4dec53e40c96b47bea590caa0169c6, type: 3}
+        - {fileID: 919132149155446097, guid: 86f0b5ca29c733046a1390fd02629495, type: 3}
     - Key:
         HarvesteeType: 3
         VariantIndex: 0

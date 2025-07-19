@@ -79,7 +79,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in BuildCommandList buildCommandList)
         {
             const int mapWidth = 160;
-            const int mapHeight = 90;
+            const int mapHeight = 160;
             half cellRadius = new(1f);
             WorldMapHelper.GetGridOffset(mapWidth, mapHeight, out int2 gridOffset);
 
@@ -165,12 +165,19 @@ namespace Systems.Initialization.Misc.WorldMap
         {
             const float placementPercentage = 0.005f;
 
-            var houseId = new GameBuildingProfileId
-            {
-                VariantIndex = 0,
-            };
+            const int prefabCount = 1;
+            var prefabs = new NativeArray<Entity>(prefabCount, Allocator.Temp);
 
-            var entityPrefab = gameBuildingPrefabEntityMap[houseId];
+            for (int i = 0; i < prefabCount; i++)
+            {
+                var buildingId = new GameBuildingProfileId
+                {
+                    VariantIndex = 0,
+                };
+
+                var entityPrefab = gameBuildingPrefabEntityMap[buildingId];
+                prefabs[i] = entityPrefab;
+            }
 
             this.PlaceRandomEntitiesOnMap(
                 in physicsWorld
@@ -180,7 +187,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
-                , in entityPrefab);
+                , in prefabs);
 
         }
 
@@ -239,13 +246,20 @@ namespace Systems.Initialization.Misc.WorldMap
         {
             const float placementPercentage = 0.02f;
 
-            var treeId = new HarvesteeProfileId
-            {
-                HarvesteeType = HarvesteeType.Tree,
-                VariantIndex = 0,
-            };
+            const int prefabCount = 2;
+            var prefabs = new NativeArray<Entity>(prefabCount, Allocator.Temp);
 
-            var entityPrefab = harvesteePrefabEntityMap[treeId];
+            for (int i = 0; i < prefabCount; i++)
+            {
+                var harvesteeId = new HarvesteeProfileId
+                {
+                    HarvesteeType = HarvesteeType.Tree,
+                    VariantIndex = (byte)i,
+                };
+
+                var entityPrefab = harvesteePrefabEntityMap[harvesteeId];
+                prefabs[i] = entityPrefab;
+            }
 
             this.PlaceRandomEntitiesOnMap(
                 in physicsWorld
@@ -255,7 +269,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
-                , in entityPrefab);
+                , in prefabs);
 
         }
 
@@ -273,13 +287,20 @@ namespace Systems.Initialization.Misc.WorldMap
         {
             const float placementPercentage = 0.01f;
 
-            var treeId = new HarvesteeProfileId
-            {
-                HarvesteeType = HarvesteeType.ResourcePit,
-                VariantIndex = 0,
-            };
+            const int prefabCount = 2;
+            var prefabs = new NativeArray<Entity>(prefabCount, Allocator.Temp);
 
-            var entityPrefab = harvesteePrefabEntityMap[treeId];
+            for (int i = 0; i < prefabCount; i++)
+            {
+                var harvesteeId = new HarvesteeProfileId
+                {
+                    HarvesteeType = HarvesteeType.ResourcePit,
+                    VariantIndex = (byte)i,
+                };
+
+                var entityPrefab = harvesteePrefabEntityMap[harvesteeId];
+                prefabs[i] = entityPrefab;
+            }
 
             this.PlaceRandomEntitiesOnMap(
                 in physicsWorld
@@ -289,7 +310,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
-                , in entityPrefab);
+                , in prefabs);
 
         }
 
@@ -307,13 +328,20 @@ namespace Systems.Initialization.Misc.WorldMap
         {
             const float placementPercentage = 0.01f;
 
-            var prefabId = new HarvesteeProfileId
-            {
-                HarvesteeType = HarvesteeType.BerryBush,
-                VariantIndex = 0,
-            };
+            const int prefabCount = 1;
+            var prefabs = new NativeArray<Entity>(prefabCount, Allocator.Temp);
 
-            var entityPrefab = harvesteePrefabEntityMap[prefabId];
+            for (int i = 0; i < prefabCount; i++)
+            {
+                var harvesteeId = new HarvesteeProfileId
+                {
+                    HarvesteeType = HarvesteeType.BerryBush,
+                    VariantIndex = (byte)i,
+                };
+
+                var entityPrefab = harvesteePrefabEntityMap[harvesteeId];
+                prefabs[i] = entityPrefab;
+            }
 
             this.PlaceRandomEntitiesOnMap(
                 in physicsWorld
@@ -323,7 +351,7 @@ namespace Systems.Initialization.Misc.WorldMap
                 , mapWidth, mapHeight
                 , in gridOffset, in cellRadius
                 , placementPercentage
-                , in entityPrefab);
+                , in prefabs);
 
         }
 
@@ -338,19 +366,20 @@ namespace Systems.Initialization.Misc.WorldMap
             , in int2 gridOffset
             , in half cellRadius
             , in float placementPercentage
-            , in Entity entityPrefab)
+            , in NativeArray<Entity> entityPrefabs)
         {
-            var entitySize = gameEntitySizeMap[entityPrefab];
-
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
-                    bool cellsArePassable = this.CellsArePassable(in costMap, x, y, mapWidth, mapHeight, entitySize.GridSquareSize);
-                    if (!cellsArePassable) continue;
-
                     float randomValue = this.rand.NextFloat(0, 100);
                     if (randomValue > placementPercentage * 100) continue;
+
+                    var entityPrefab = entityPrefabs[this.rand.NextInt(0, entityPrefabs.Length)];
+                    var entitySize = gameEntitySizeMap[entityPrefab];
+
+                    bool cellsArePassable = this.CellsArePassable(in costMap, x, y, mapWidth, mapHeight, entitySize.GridSquareSize);
+                    if (!cellsArePassable) continue;
 
                     this.MarkCellsAsObstacles(in costMap, x, y, mapWidth, entitySize.GridSquareSize);
                     this.SpawnEntity(
