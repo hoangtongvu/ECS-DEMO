@@ -39,25 +39,31 @@ namespace Systems.Simulation.GameEntity
                 targetEntityRef.ValueRW.Value = Entity.Null;
             }
 
-            foreach (var (absoluteDistanceXZToTargetRef, targetEntityRef, targetEntityWorldSquareRadiusRef, interactableDistanceRangeRef, canMoveEntityTag, moveCommandElementRef, entity) in
-                SystemAPI.Query<
+            foreach (var (absoluteDistanceXZToTargetRef, targetEntityRef, targetEntityWorldSquareRadiusRef, interactableDistanceRangeRef, moveCommandElementRef, entity) in SystemAPI
+                .Query<
                     RefRO<AbsoluteDistanceXZToTarget>
                     , RefRO<TargetEntity>
                     , RefRO<TargetEntityWorldSquareRadius>
                     , RefRO<InteractableDistanceRange>
-                    , EnabledRefRW<CanMoveEntityTag>
                     , RefRW<MoveCommandElement>>()
-                    .WithDisabled<CanInteractEntityTag>()
-                    .WithEntityAccess())
-            {
+                .WithDisabled<CanInteractEntityTag>()
+                .WithEntityAccess())
+        {
                 if (targetEntityRef.ValueRO.Value == Entity.Null) continue;
 
-                float interactRadius = targetEntityWorldSquareRadiusRef.ValueRO.Value + interactableDistanceRangeRef.ValueRO.MaxValue;
+                // NOTE: addValue = MaxDistanceRange -> Stay too close to upper bound of interactable range -> Possibly lose interaction
+                // addValue = (MaxDistanceRange + MinDistanceRange) / 2 -> Possibly move stopped before interaction occurred (if the interactableDistanceRange is between celRadius * 2)
+                // -> addValue = (MaxDistanceRange + MinDistanceRange) * 0.75f is the best possible value
+                const float centerInteractableDistanceRatio = 0.75f;
+                float addValue =
+                    (interactableDistanceRangeRef.ValueRO.MaxValue + interactableDistanceRangeRef.ValueRO.MinValue) * centerInteractableDistanceRatio;
+
+                float interactRadius = targetEntityWorldSquareRadiusRef.ValueRO.Value + addValue;
 
                 if (absoluteDistanceXZToTargetRef.ValueRO.X > interactRadius) continue;
                 if (absoluteDistanceXZToTargetRef.ValueRO.Z > interactRadius) continue;
 
-                this.StopMove(canMoveEntityTag, ref moveCommandElementRef.ValueRW);
+                this.StopMove(ref state, ref moveCommandElementRef.ValueRW, in entity);
 
                 SystemAPI.SetComponentEnabled<CanInteractEntityTag>(entity, true);
 
@@ -67,10 +73,11 @@ namespace Systems.Simulation.GameEntity
 
         [BurstCompile]
         private void StopMove(
-            EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
-            , ref MoveCommandElement moveCommandElement)
+            ref SystemState state
+            , ref MoveCommandElement moveCommandElement
+            , in Entity entity)
         {
-            canMoveEntityTag.ValueRW = false;
+            SystemAPI.SetComponentEnabled<CanMoveEntityTag>(entity, false);
             moveCommandElement.CommandSource = MoveCommandSource.None;
             moveCommandElement.TargetEntity = Entity.Null;
         }
