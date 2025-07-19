@@ -33,7 +33,7 @@ MonoBehaviour:
         PlayerReactionConfigs:
           WalkSpeed: 3
           RunSpeed: 8
-          AccelerationValue: 12
+          AccelerationValue: 15
           DecelerationValue: 20
         PlayerBuildingIds:
           _serializedList:

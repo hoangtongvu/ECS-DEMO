@@ -1,8 +1,8 @@
 using Components.GameEntity.Movement;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Transforms;
 
 namespace Systems.Simulation.GameEntity.Movement
@@ -28,26 +28,21 @@ namespace Systems.Simulation.GameEntity.Movement
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new MoveJob
-            {
-                DeltaTime = SystemAPI.Time.DeltaTime,
-            }.ScheduleParallel();
+            new MoveJob().ScheduleParallel();
         }
 
         [BurstCompile]
         private partial struct MoveJob : IJobEntity
         {
-            [ReadOnly] public float DeltaTime;
-
             private void Execute(
-                ref LocalTransform transform
+                ref PhysicsVelocity physicsVelocity
                 , in CurrentMoveSpeed speed
                 , in MoveDirectionFloat2 direction)
             {
                 if (speed.Value == 0) return;
 
                 float3 float3Dir = new (direction.Value.x, 0f, direction.Value.y);
-                transform = transform.Translate(float3Dir * speed.Value * this.DeltaTime);
+                physicsVelocity.Linear = float3Dir * speed.Value;
             }
 
         }

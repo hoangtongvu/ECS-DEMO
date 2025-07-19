@@ -26,6 +26,7 @@ namespace Authoring.Player
 
                 AddComponent<PlayerTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
+                AddComponent<RotationFreezer>(entity);
 
                 AddBuffer<NearbyUnitDropItemTimerElement>(entity);
 
