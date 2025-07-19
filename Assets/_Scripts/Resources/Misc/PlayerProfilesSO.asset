@@ -31,7 +31,7 @@ MonoBehaviour:
         HpData:
           MaxHp: 200
         PlayerReactionConfigs:
-          WalkSpeed: 5
+          WalkSpeed: 3
           RunSpeed: 8
           AccelerationValue: 12
           DecelerationValue: 20
