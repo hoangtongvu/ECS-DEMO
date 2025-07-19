@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Profiles:
     _serializedList:
-    - Key: 0
+    - Key:
+        VariantIndex: 0
       Value:
         Name: DefaultPlayer
         ProfilePicture: {fileID: 0}
-        PresenterPrefab: {fileID: 1496310061940961595, guid: 23c418acf13118041afa6c1f324442d0,
+        PresenterPrefab: {fileID: 6331949679279542157, guid: d4fb7569e5e20574f97d9bb09dfb8d40,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 1335492856152722597, guid: 16fcba7f92a037145a3b9c5e53f2e7ef,
@@ -29,6 +30,11 @@ MonoBehaviour:
         HasHpComponents: 1
         HpData:
           MaxHp: 200
+        PlayerReactionConfigs:
+          WalkSpeed: 3
+          RunSpeed: 8
+          AccelerationValue: 15
+          DecelerationValue: 20
         PlayerBuildingIds:
           _serializedList:
           - Key:

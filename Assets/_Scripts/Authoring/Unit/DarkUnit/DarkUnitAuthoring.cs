@@ -45,6 +45,7 @@ namespace Authoring.Unit.DarkUnit
                 this.AddAndDisableComponent<RunStartedTag>(entity);
                 this.AddAndDisableComponent<NewlyDeadTag>(entity);
 
+                AddComponent(entity, LookDirectionXZ.DefaultValue);
                 AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
                 {

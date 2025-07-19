@@ -48,6 +48,7 @@ namespace Authoring.Unit
                 AddComponent<SelectableUnitTag>(entity);
                 this.AddAndDisableComponent<UnitSelectedTag>(entity);
 
+                AddComponent(entity, LookDirectionXZ.DefaultValue);
                 AddComponent(entity, MoveDirectionFloat2.DefaultValue);
                 AddComponent(entity, new MoveSpeedLinear
                 {
