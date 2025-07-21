@@ -41,9 +41,9 @@ namespace Authoring.Player
 
                 AddComponent(entity, new FactionIndex { Value = 1 });
 
-                AddComponent(entity, new DmgValue
+                AddComponent(entity, new BaseDmg
                 {
-                    Value = 10,
+                    Value = 30,
                 });
 
                 AddComponent<NearestInteractableEntity>(entity);

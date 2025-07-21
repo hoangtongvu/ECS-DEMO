@@ -11,6 +11,7 @@ using Unity.Burst;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Reaction;
 using Components.GameEntity.Attack;
+using Components.Misc;
 
 namespace Systems.Simulation.Player.Attack
 {
@@ -25,7 +26,7 @@ namespace Systems.Simulation.Player.Attack
                 .WithAll<
                     LocalTransform
                     , LookDirectionXZ
-                    , DmgValue
+                    , BaseDmg
                     , AttackReaction.TimerSeconds
                     , AttackEventTimestamp>()
                 .WithAll<
@@ -44,11 +45,11 @@ namespace Systems.Simulation.Player.Attack
         {
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
-            foreach (var (transformRef, lookDirXZRef, dmgValueRef, attackTimerSecondsRef, attackEventTimestampRef, entity) in SystemAPI
+            foreach (var (transformRef, lookDirXZRef, baseDmgRef, attackTimerSecondsRef, attackEventTimestampRef, entity) in SystemAPI
                 .Query<
                     RefRO<LocalTransform>
                     , RefRO<LookDirectionXZ>
-                    , RefRO<DmgValue>
+                    , RefRO<BaseDmg>
                     , RefRO<AttackReaction.TimerSeconds>
                     , RefRO<AttackEventTimestamp>>()
                 .WithAll<
@@ -68,7 +69,7 @@ namespace Systems.Simulation.Player.Attack
                     Value = SystemAPI.Time.ElapsedTime,
                 });
 
-                this.DealDmg(ref state, physicsWorld, in lookDirXZRef.ValueRO, in transformRef.ValueRO, in dmgValueRef.ValueRO, in entity);
+                this.DealDmg(ref state, physicsWorld, in lookDirXZRef.ValueRO, in transformRef.ValueRO, in baseDmgRef.ValueRO, in entity);
 
             }
 
@@ -80,7 +81,7 @@ namespace Systems.Simulation.Player.Attack
             , in PhysicsWorldSingleton physicsWorld
             , in LookDirectionXZ lookDirectionXZ
             , in LocalTransform transform
-            , in DmgValue dmgValue
+            , in BaseDmg baseDmg
             , in Entity playerEntity)
         {
             NativeList<DistanceHit> hits = new(Allocator.Temp);
@@ -104,7 +105,7 @@ namespace Systems.Simulation.Player.Attack
                 if (!SystemAPI.HasComponent<CurrentHp>(entity)) continue;
 
                 var hpChangeRecords = SystemAPI.GetBuffer<HpChangeRecordElement>(entity);
-                hpChangeRecords.AddDeductRecord(dmgValue.Value);
+                hpChangeRecords.AddDeductRecord((int)baseDmg.Value);
             }
 
         }
