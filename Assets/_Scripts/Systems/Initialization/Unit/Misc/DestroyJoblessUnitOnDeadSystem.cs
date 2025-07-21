@@ -42,7 +42,7 @@ namespace Systems.Initialization.Unit.Misc
             em.AddComponentData(entities, new PendingCleanupEntityTimer
             {
                 TimeStamp = SystemAPI.Time.ElapsedTime,
-                DurationSeconds = new(2f),
+                DurationSeconds = new(3.5f),
             });
 
         }
