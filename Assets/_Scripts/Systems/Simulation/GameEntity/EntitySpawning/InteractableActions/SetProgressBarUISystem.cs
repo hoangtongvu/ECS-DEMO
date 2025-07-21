@@ -32,6 +32,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
                 .Build();
 
             this.RequireForUpdate(query);
+            this.RequireForUpdate(this.playerQuery);
             this.RequireForUpdate<EntityToContainerIndexMap>();
             this.RequireForUpdate<EntitySpawningDurationsContainer>();
 

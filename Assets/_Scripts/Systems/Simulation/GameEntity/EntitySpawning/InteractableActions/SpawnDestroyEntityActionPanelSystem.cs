@@ -36,6 +36,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
                 .Build();
 
             this.RequireForUpdate(query0);
+            this.RequireForUpdate(this.playerQuery);
             this.RequireForUpdate<UIPrefabAndPoolMap>();
             this.RequireForUpdate<SpawnedUIMap>();
         }

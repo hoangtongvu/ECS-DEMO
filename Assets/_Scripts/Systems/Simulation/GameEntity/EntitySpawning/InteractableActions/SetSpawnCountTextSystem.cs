@@ -29,6 +29,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
                 .Build();
 
             this.RequireForUpdate(query);
+            this.RequireForUpdate(this.playerQuery);
         }
 
         protected override void OnUpdate()
