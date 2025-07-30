@@ -1,6 +1,7 @@
 namespace Audio.JSAM {
     public enum UnitSound_LibrarySounds {
-        DeadSound
+        DeadSound,
+        OnHitSound
     }
 }
 namespace Audio.JSAM {
