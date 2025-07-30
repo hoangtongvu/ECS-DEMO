@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2204bf128383ced4f8a374a536984a4c, type: 3}
+  m_Name: UnitSound_Library
+  m_EditorClassIdentifier: 
+  soundCategories:
+  - 
+  musicCategories:
+  - 
+  Sounds:
+  - {fileID: 11400000, guid: 6108ee52303e07742832eb0943202174, type: 2}
+  Music: []
+  useCustomNames: 1
+  generatedName: UnitSound_Library
+  musicEnum: UnitSound_LibraryMusic
+  musicEnumGenerated: UnitSound_LibraryMusic
+  musicNamespace: Audio.JSAM
+  musicNamespaceGenerated: Audio.JSAM
+  soundEnum: UnitSound_LibrarySounds
+  soundEnumGenerated: UnitSound_LibrarySounds
+  soundNamespace: Audio.JSAM
+  soundNamespaceGenerated: Audio.JSAM
+  soundCategoriesToList:
+  - name: 
+    files:
+    - {fileID: 11400000, guid: 6108ee52303e07742832eb0943202174, type: 2}
+    foldout: 1
+  musicCategoriesToList:
+  - name: 
+    files: []
+    foldout: 1
