@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5924589230838825457}
   - component: {fileID: -4830300344644020277}
   - component: {fileID: 3604628759176724830}
+  - component: {fileID: -2215597207553452121}
   m_Layer: 0
   m_Name: SFXPlayer
   m_TagString: Untagged
@@ -76,3 +77,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
   sfx: 0
+--- !u!114 &-2215597207553452121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4730337036307819011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6272f62bb7d0247b3013e5c6dda949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  sfx: 1
+  animationEventChannel:
+    Index: 0

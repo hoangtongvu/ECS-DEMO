@@ -18,6 +18,7 @@ MonoBehaviour:
   - 
   Sounds:
   - {fileID: 11400000, guid: 945774fa57d2e6d46b898c7c223c0ea8, type: 2}
+  - {fileID: 11400000, guid: 704c93effb17e824f806090870c1811f, type: 2}
   Music: []
   useCustomNames: 1
   generatedName: PlayerSound_Library
@@ -33,6 +34,7 @@ MonoBehaviour:
   - name: 
     files:
     - {fileID: 11400000, guid: 945774fa57d2e6d46b898c7c223c0ea8, type: 2}
+    - {fileID: 11400000, guid: 704c93effb17e824f806090870c1811f, type: 2}
     foldout: 1
   musicCategoriesToList:
   - name: 

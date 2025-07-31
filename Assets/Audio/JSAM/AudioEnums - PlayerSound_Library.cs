@@ -1,6 +1,7 @@
 namespace Audio.JSAM {
     public enum PlayerSound_LibrarySounds {
-        SwordSlashSound
+        SwordSlashSound,
+        FootStepSound
     }
 }
 namespace Audio.JSAM {
