@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2204bf128383ced4f8a374a536984a4c, type: 3}
+  m_Name: HarvesteeSound_Library
+  m_EditorClassIdentifier: 
+  soundCategories:
+  - 
+  musicCategories:
+  - 
+  Sounds:
+  - {fileID: 11400000, guid: 99e967da98c9d4b469a36a4355c18ae3, type: 2}
+  - {fileID: 11400000, guid: 681ba6002f7aacd42a22bf15016c50ce, type: 2}
+  - {fileID: 11400000, guid: 0dfc8fa58c2f02f4d9487df3fed2760f, type: 2}
+  Music: []
+  useCustomNames: 1
+  generatedName: HarvesteeSound_Library
+  musicEnum: HarvesteeSound_LibraryMusic
+  musicEnumGenerated: HarvesteeSound_LibraryMusic
+  musicNamespace: Audio.JSAM
+  musicNamespaceGenerated: Audio.JSAM
+  soundEnum: HarvesteeSound_LibrarySounds
+  soundEnumGenerated: HarvesteeSound_LibrarySounds
+  soundNamespace: Audio.JSAM
+  soundNamespaceGenerated: Audio.JSAM
+  soundCategoriesToList:
+  - name: 
+    files:
+    - {fileID: 11400000, guid: 99e967da98c9d4b469a36a4355c18ae3, type: 2}
+    - {fileID: 11400000, guid: 681ba6002f7aacd42a22bf15016c50ce, type: 2}
+    - {fileID: 11400000, guid: 0dfc8fa58c2f02f4d9487df3fed2760f, type: 2}
+    foldout: 1
+  musicCategoriesToList:
+  - name: 
+    files: []
+    foldout: 1
