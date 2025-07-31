@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedLibrary:
-    guid: b261ea9be3732524899af47604649da1
+    guid: 1451f3b3a9ec8404b9997f0fd66c22f7
   packagePath: Assets/JSAM
   presetsPath: Assets/JSAMPresets/
