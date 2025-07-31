@@ -18,7 +18,7 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
                     , CurrentHp
                     , HpDataHolder>()
                 .WithAll<
-                    IsAliveTag>()
+                    NewlyTakeHitTag>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -33,9 +33,8 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
                     , RefRO<CurrentHp>
                     , HpDataHolder>()
                 .WithAll<
-                    IsAliveTag>())
+                    NewlyTakeHitTag>())
             {
-                if (hpChangeRecords.Length == 0) continue;
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
 
                 int hitDmgValue = hpChangeRecords[0].Value;
