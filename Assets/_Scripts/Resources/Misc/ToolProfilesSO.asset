@@ -36,7 +36,7 @@ MonoBehaviour:
         IsWeapon: 0
         ToolStatsInSO:
           BaseDmg: 3
-          BaseWorkSpeed: 1.5
+          BaseWorkSpeed: 1
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
@@ -64,7 +64,7 @@ MonoBehaviour:
         IsWeapon: 0
         ToolStatsInSO:
           BaseDmg: 3
-          BaseWorkSpeed: 1.5
+          BaseWorkSpeed: 1
         SpawnDurationSeconds: 4
         BaseSpawningCosts:
           _serializedList:
@@ -92,7 +92,7 @@ MonoBehaviour:
         IsWeapon: 1
         ToolStatsInSO:
           BaseDmg: 6
-          BaseWorkSpeed: 1.5
+          BaseWorkSpeed: 1
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
@@ -120,7 +120,7 @@ MonoBehaviour:
         IsWeapon: 0
         ToolStatsInSO:
           BaseDmg: 3
-          BaseWorkSpeed: 1.5
+          BaseWorkSpeed: 1
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
@@ -148,7 +148,7 @@ MonoBehaviour:
         IsWeapon: 1
         ToolStatsInSO:
           BaseDmg: 4
-          BaseWorkSpeed: 1.5
+          BaseWorkSpeed: 1
         SpawnDurationSeconds: 2
         BaseSpawningCosts:
           _serializedList:
@@ -176,7 +176,7 @@ MonoBehaviour:
         IsWeapon: 0
         ToolStatsInSO:
           BaseDmg: 3
-          BaseWorkSpeed: 1.5
+          BaseWorkSpeed: 1
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
