@@ -6,6 +6,8 @@ using Components.Misc.Presenter;
 using Unity.Entities;
 using UnityEngine;
 using TweenLib.StandardTweeners.ShakePositionTweeners;
+using Authoring.Utilities.Extensions;
+using Components.GameEntity.Damage;
 
 namespace Authoring.Harvest
 {
@@ -20,6 +22,7 @@ namespace Authoring.Harvest
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
                 AddComponent<InteractableEntityTag>(entity);
+                this.AddAndDisableComponent<NewlyTakeHitTag>(entity);
 
                 AddComponent<HarvesteeTag>(entity);
 

@@ -1,5 +1,53 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7000139991646481221
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ed0412d5a0b3a45900c9be801b42c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationEventChannel:
+    Index: 0
+  lastLoopCount: 0
+  triggerTime: 0.7083333
+--- !u!114 &-3226255836542957804
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ed0412d5a0b3a45900c9be801b42c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationEventChannel:
+    Index: 0
+  lastLoopCount: 0
+  triggerTime: 0.20833333
+--- !u!114 &-2020504386170330349
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ed0412d5a0b3a45900c9be801b42c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationEventChannel:
+    Index: 0
+  lastLoopCount: 0
+  triggerTime: 0.625
 --- !u!1107 &-1189695864749355525
 AnimatorStateMachine:
   serializedVersion: 6
@@ -53,6 +101,22 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+--- !u!114 &1397421276887703621
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ed0412d5a0b3a45900c9be801b42c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationEventChannel:
+    Index: 0
+  lastLoopCount: 0
+  triggerTime: 0.1875
 --- !u!1102 &2529768153521544468
 AnimatorState:
   serializedVersion: 6
@@ -90,7 +154,9 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 1397421276887703621}
+  - {fileID: -2020504386170330349}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -116,7 +182,9 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -3226255836542957804}
+  - {fileID: -7000139991646481221}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

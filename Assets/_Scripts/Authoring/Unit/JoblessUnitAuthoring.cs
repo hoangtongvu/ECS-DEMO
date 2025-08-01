@@ -43,6 +43,7 @@ namespace Authoring.Unit
                 this.AddAndDisableComponent<WorkStartedTag>(entity);
                 this.AddAndDisableComponent<WalkStartedTag>(entity);
                 this.AddAndDisableComponent<RunStartedTag>(entity);
+                this.AddAndDisableComponent<NewlyTakeHitTag>(entity);
                 this.AddAndDisableComponent<NewlyDeadTag>(entity);
 
                 AddComponent<SelectableUnitTag>(entity);
