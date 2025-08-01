@@ -5,7 +5,6 @@ using Components.GameResource;
 using Core.GameResource;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Core.Utilities.Extensions;
 using Components.GameEntity;
 using Components.Harvest.HarvesteeHp;
 using Systems.Initialization.GameEntity.Damage;
@@ -17,8 +16,6 @@ namespace Systems.Initialization.Harvest
     [BurstCompile]
     public partial struct ResourceDropSystem : ISystem
     {
-        private Random rand;
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -28,12 +25,11 @@ namespace Systems.Initialization.Harvest
                     , DropResourceHpThreshold
                     , LocalTransform
                     , PrimaryPrefabEntityHolder>()
-                .WithAll<IsAliveTag>()
+                .WithAll<
+                    IsAliveTag>()
                 .Build();
 
             state.RequireForUpdate(query0);
-
-            this.rand = new Random(1);
         }
 
         [BurstCompile]
@@ -86,15 +82,9 @@ namespace Systems.Initialization.Harvest
             , ResourceType dropType
             , uint quantityPerDrop)
         {
-            float2 randomDir = this.rand.NextFloat2Direction();
-            const float dropRadius = 1.5f;
-            float2 distanceFloat2 = randomDir * dropRadius;
-
-            float3 spawnPos = centerPos.Add(x: distanceFloat2.x, z: distanceFloat2.y);
-
             spawnCommandList.Value.Add(new ResourceItemSpawnCommand
             {
-                SpawnPos = spawnPos,
+                SpawnPos = centerPos,
                 ResourceType = dropType,
                 Quantity = quantityPerDrop,
             });
