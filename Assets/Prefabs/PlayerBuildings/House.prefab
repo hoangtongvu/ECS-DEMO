@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8491756151840566674}
-  - component: {fileID: 3826275118434858516}
   - component: {fileID: 5629998291250588953}
+  - component: {fileID: 3826275118434858516}
+  - component: {fileID: -3746614289780352688}
   m_Layer: 10
   m_Name: House
   m_TagString: Untagged
@@ -33,20 +34,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3826275118434858516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6544274273311614958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46bb6484700ade24898de8b2f9038d4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpawnRadius: 3
-  SpawningPrefabs: {fileID: 11400000, guid: fd3be93eab4d0d44faeb5b4085636bf6, type: 2}
 --- !u!65 &5629998291250588953
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -68,3 +55,29 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 4, z: 4}
   m_Center: {x: 0, y: 2, z: 0}
+--- !u!114 &3826275118434858516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544274273311614958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46bb6484700ade24898de8b2f9038d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpawnRadius: 3
+  SpawningPrefabs: {fileID: 11400000, guid: fd3be93eab4d0d44faeb5b4085636bf6, type: 2}
+--- !u!114 &-3746614289780352688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544274273311614958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0194cf0668bad4946b4f0af8dd4730fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

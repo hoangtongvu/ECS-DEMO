@@ -5,6 +5,7 @@ using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.GameResource;
+using Components.Unit.Misc;
 using Core.GameResource;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel;
@@ -52,6 +53,8 @@ namespace Systems.Simulation.Unit.InteractableActions
                     , RefRO<PrimaryPrefabEntityHolder>
                     , EnabledRefRO<CanShowActionsContainerUITag>
                     , EnabledRefRO<ActionsContainerUIShownTag>>()
+                .WithAll<
+                    CanBeRecruitedTag>()
                 .WithEntityAccess()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {

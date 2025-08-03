@@ -33,7 +33,7 @@ MonoBehaviour:
         HpData:
           MaxHp: 50
         UnitType: 1
-        SpawnDurationSeconds: 5
+        SpawnDurationSeconds: 30
         UnitReactionConfigs:
           UnitWalkSpeed: 2
           UnitRunSpeed: 4
