@@ -6,6 +6,7 @@ using Components.Misc;
 using Core.Misc;
 using Components.GameEntity.Misc;
 using Components.Player;
+using UnityEngine;
 
 namespace Systems.Simulation.Unit
 {
@@ -35,8 +36,7 @@ namespace Systems.Simulation.Unit
         {
             this.ClearNewlyTags(ref state);
 
-            var inputData = SystemAPI.GetSingleton<InputData>();
-            if (inputData.BackspaceButtonDown)
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 this.DisableUnitSelectedTag(ref state);
                 return;
