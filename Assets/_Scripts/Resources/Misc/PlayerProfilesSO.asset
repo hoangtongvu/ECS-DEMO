@@ -29,7 +29,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 200
+          MaxHp: 150
         PlayerReactionConfigs:
           WalkSpeed: 3
           RunSpeed: 8

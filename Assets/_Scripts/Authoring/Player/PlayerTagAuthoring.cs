@@ -44,7 +44,7 @@ namespace Authoring.Player
 
                 AddComponent(entity, new BaseDmg
                 {
-                    Value = 30,
+                    Value = 18,
                 });
 
                 AddComponent<NearestInteractableEntity>(entity);

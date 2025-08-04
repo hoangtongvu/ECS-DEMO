@@ -30,12 +30,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 100
+          MaxHp: 1080
         HarvesteeType: 1
         ResourceDropInfo:
           ResourceType: 1
-          QuantityPerDrop: 5
-          HpAmountPerDrop: 25
+          QuantityPerDrop: 1
+          HpAmountPerDrop: 30
         PresenterVariances:
         - {fileID: 919132149155446097, guid: 1bc86c6577f22d545a388e43100ed5cf, type: 3}
         - {fileID: 919132149155446097, guid: 40c25546c81d745428c788e6610dc2c0, type: 3}
@@ -58,12 +58,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 200
+          MaxHp: 2160
         HarvesteeType: 1
         ResourceDropInfo:
           ResourceType: 1
-          QuantityPerDrop: 5
-          HpAmountPerDrop: 25
+          QuantityPerDrop: 2
+          HpAmountPerDrop: 42
         PresenterVariances:
         - {fileID: 919132149155446097, guid: 36bb24e2ff316a648ac65cc0389f34e9, type: 3}
         - {fileID: 919132149155446097, guid: 3df7b035d9748d74087653b0fb97ab9d, type: 3}
@@ -86,12 +86,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 150
+          MaxHp: 2160
         HarvesteeType: 2
         ResourceDropInfo:
           ResourceType: 3
-          QuantityPerDrop: 5
-          HpAmountPerDrop: 25
+          QuantityPerDrop: 1
+          HpAmountPerDrop: 42
         PresenterVariances:
         - {fileID: 919132149155446097, guid: 138fe9a636efaf544a60f671074abf16, type: 3}
         - {fileID: 919132149155446097, guid: 91b386f7b0b53b844a5be761e76d30d1, type: 3}
@@ -116,12 +116,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 300
+          MaxHp: 4320
         HarvesteeType: 2
         ResourceDropInfo:
           ResourceType: 3
-          QuantityPerDrop: 5
-          HpAmountPerDrop: 25
+          QuantityPerDrop: 2
+          HpAmountPerDrop: 60
         PresenterVariances:
         - {fileID: 919132149155446097, guid: a9aa7e5fe1b08184cba3a195f26c8ce4, type: 3}
         - {fileID: 919132149155446097, guid: 8a349ebee1bb79345affba35d546e9f9, type: 3}
@@ -146,12 +146,12 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 100
+          MaxHp: 3600
         HarvesteeType: 3
         ResourceDropInfo:
           ResourceType: 2
-          QuantityPerDrop: 5
-          HpAmountPerDrop: 25
+          QuantityPerDrop: 1
+          HpAmountPerDrop: 30
         PresenterVariances:
         - {fileID: 525647612135561435, guid: cdd4c87a888346a4093fff72dd5cee78, type: 3}
         - {fileID: 6502534516247326416, guid: 7ab9afe6af2dbf64b99b9f9f9f7555ac, type: 3}

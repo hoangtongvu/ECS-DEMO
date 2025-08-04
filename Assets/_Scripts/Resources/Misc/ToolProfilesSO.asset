@@ -175,7 +175,7 @@ MonoBehaviour:
         ToolType: 6
         IsWeapon: 0
         ToolStatsInSO:
-          BaseDmg: 3
+          BaseDmg: 1
           BaseWorkSpeed: 1
         SpawnDurationSeconds: 3
         BaseSpawningCosts:

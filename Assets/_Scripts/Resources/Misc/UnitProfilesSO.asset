@@ -31,7 +31,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 50
+          MaxHp: 21
         UnitType: 1
         SpawnDurationSeconds: 30
         UnitReactionConfigs:
@@ -66,7 +66,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 100
+          MaxHp: 42
         UnitType: 2
         SpawnDurationSeconds: 3
         UnitReactionConfigs:
@@ -102,7 +102,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 50
+          MaxHp: 21
         UnitType: 3
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
@@ -136,7 +136,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 50
+          MaxHp: 30
         UnitType: 4
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
@@ -168,7 +168,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 70
+          MaxHp: 35
         UnitType: 5
         SpawnDurationSeconds: 5
         UnitReactionConfigs:
@@ -201,7 +201,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 100
+          MaxHp: 42
         UnitType: 2
         SpawnDurationSeconds: 1
         UnitReactionConfigs:
@@ -234,7 +234,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 50
+          MaxHp: 30
         UnitType: 2
         SpawnDurationSeconds: 0
         UnitReactionConfigs:
@@ -249,9 +249,7 @@ MonoBehaviour:
           MinAttackDistance: 0
           MaxAttackDistance: 2
         BaseSpawningCosts:
-          _serializedList:
-          - Key: 2
-            Value: 5
+          _serializedList: []
     - Key:
         UnitType: 2
         VariantIndex: 12
@@ -269,7 +267,7 @@ MonoBehaviour:
           ObjectHeight: 0
         HasHpComponents: 1
         HpData:
-          MaxHp: 170
+          MaxHp: 100
         UnitType: 2
         SpawnDurationSeconds: 0
         UnitReactionConfigs:
@@ -284,9 +282,7 @@ MonoBehaviour:
           MinAttackDistance: 0
           MaxAttackDistance: 2
         BaseSpawningCosts:
-          _serializedList:
-          - Key: 2
-            Value: 5
+          _serializedList: []
   UnitGlobalConfigs:
     MoveSpeedScale: 1
     UnarmedUnitFleeTotalSeconds: 2
