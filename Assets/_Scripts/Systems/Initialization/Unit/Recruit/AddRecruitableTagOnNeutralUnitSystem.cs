@@ -1,13 +1,14 @@
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
 using Components.Unit.Misc;
+using Components.Unit.Recruit;
 using Systems.Initialization.GameEntity.Misc;
 using Systems.Initialization.Misc;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems.Initialization.Unit.Misc
+namespace Systems.Initialization.Unit.Recruit
 {
     [UpdateInGroup(typeof(NewlySpawnedTagProcessSystemGroup))]
     [UpdateAfter(typeof(SetSpawnerFactionToSpawnedEntitySystem))]
@@ -49,6 +50,8 @@ namespace Systems.Initialization.Unit.Misc
                 if (factionIndex.Value != 0) continue;
 
                 em.AddComponent<CanBeRecruitedTag>(entity);
+                em.AddComponent<NewlyRecruitedTag>(entity);
+                em.SetComponentEnabled<NewlyRecruitedTag>(entity, false);
             }
 
         }

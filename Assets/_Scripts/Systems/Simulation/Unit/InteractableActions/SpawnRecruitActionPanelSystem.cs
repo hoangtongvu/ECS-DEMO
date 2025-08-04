@@ -5,7 +5,7 @@ using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.GameResource;
-using Components.Unit.Misc;
+using Components.Unit.Recruit;
 using Core.GameResource;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel;
