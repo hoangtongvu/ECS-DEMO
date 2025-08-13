@@ -20,7 +20,7 @@ namespace Utilities.Extensions
             int mapIndex = WorldMapHelper.GridPosToMapIndex(map.Width, in map.Offset, x, y);
             return ref map.Value.ElementAt(mapIndex);
         }
-                
+
         [BurstCompile]
         public static void GetCellAt(in this WorldTileCostMap map, in int2 pos, out Cell cell) =>
             map.GetCellAt(pos.x, pos.y, out cell);
@@ -30,6 +30,23 @@ namespace Utilities.Extensions
         {
             int mapIndex = WorldMapHelper.GridPosToMapIndex(map.Width, in map.Offset, x, y);
             cell = map.Value[mapIndex];
+        }
+
+        [BurstCompile]
+        public static bool TryGetCellAt(in this WorldTileCostMap map, in int2 pos, out Cell cell) =>
+            map.TryGetCellAt(pos.x, pos.y, out cell);
+
+        [BurstCompile]
+        public static bool TryGetCellAt(in this WorldTileCostMap map, int x, int y, out Cell cell)
+        {
+            cell = default;
+            int mapIndex = WorldMapHelper.GridPosToMapIndex(map.Width, in map.Offset, x, y);
+
+            bool isValidMapIndex = mapIndex >= 0 && mapIndex < map.Value.Length;
+            if (!isValidMapIndex) return false;
+
+            cell = map.Value[mapIndex];
+            return true;
         }
 
         public static void LogCostMap(in this WorldTileCostMap map)

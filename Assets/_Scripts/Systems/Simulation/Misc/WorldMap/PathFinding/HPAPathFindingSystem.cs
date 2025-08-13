@@ -130,8 +130,11 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
         {
             NativeList<int2> path = new(10, allocator);
 
-            costMap.GetCellAt(startPos, out Cell startCell);
-            costMap.GetCellAt(endPos, out Cell endCell);
+            if (!costMap.TryGetCellAt(startPos, out Cell startCell) ||
+                !costMap.TryGetCellAt(endPos, out Cell endCell))
+            {
+                return path;
+            }
 
             if (!startCell.IsPassable())
                 WorldMapHelper.GetPassableCellAroundObstacle(in costMap, ref startPos, out startCell);
