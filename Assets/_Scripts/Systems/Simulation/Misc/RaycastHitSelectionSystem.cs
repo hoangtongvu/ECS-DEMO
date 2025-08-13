@@ -4,10 +4,10 @@ using UnityEngine;
 using Utilities;
 using Unity.Mathematics;
 using Components.Unit;
-using Components.Camera;
 using Components.GameEntity.Interaction;
 using Components.Misc;
 using Core.Misc;
+using Components.MyCamera;
 
 namespace Systems.Simulation.Misc
 {

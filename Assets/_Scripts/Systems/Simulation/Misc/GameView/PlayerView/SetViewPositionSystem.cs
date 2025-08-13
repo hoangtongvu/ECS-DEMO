@@ -1,11 +1,11 @@
 using Unity.Entities;
 using Components.Misc.GameView;
 using Core.Misc.GameView;
-using Components.Camera;
 using Unity.Mathematics;
 using Unity.Burst;
 using Utilities.Tweeners.Camera;
 using TweenLib.Utilities;
+using Components.MyCamera;
 
 namespace Systems.Simulation.Misc.GameView.PlayerView
 {

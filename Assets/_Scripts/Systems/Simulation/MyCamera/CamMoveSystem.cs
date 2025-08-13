@@ -1,5 +1,5 @@
-using Components.Camera;
 using Components.CustomIdentification;
+using Components.MyCamera;
 using Components.Player;
 using Core.CustomIdentification;
 using Unity.Burst;
@@ -7,7 +7,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Systems.Simulation
+namespace Systems.Simulation.MyCamera
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]

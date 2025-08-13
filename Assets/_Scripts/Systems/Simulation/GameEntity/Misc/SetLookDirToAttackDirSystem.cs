@@ -1,7 +1,7 @@
-using Components.Camera;
 using Components.GameEntity.Damage;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
+using Components.MyCamera;
 using Core.Misc;
 using Unity.Entities;
 using Unity.Mathematics;

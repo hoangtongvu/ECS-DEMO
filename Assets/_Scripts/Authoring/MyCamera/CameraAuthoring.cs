@@ -1,10 +1,10 @@
-﻿using Components.Camera;
+﻿using Components.MyCamera;
 using TweenLib.StandardTweeners;
 using Unity.Entities;
 using UnityEngine;
 using Utilities.Tweeners.Camera;
 
-namespace Authoring.Camera
+namespace Authoring.MyCamera
 {
     public class CameraAuthoring : MonoBehaviour
     {

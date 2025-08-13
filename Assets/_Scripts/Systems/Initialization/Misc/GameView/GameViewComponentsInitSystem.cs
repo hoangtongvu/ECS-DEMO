@@ -1,5 +1,5 @@
-using Components.Camera;
 using Components.Misc.GameView;
+using Components.MyCamera;
 using Core.Misc.GameView;
 using System;
 using Unity.Burst;

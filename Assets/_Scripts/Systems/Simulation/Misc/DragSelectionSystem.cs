@@ -5,9 +5,9 @@ using Utilities;
 using Unity.Mathematics;
 using Unity.Collections;
 using Components.Unit;
-using Components.Camera;
 using Components.Misc;
 using Core.Misc;
+using Components.MyCamera;
 
 namespace Systems.Simulation.Misc
 {

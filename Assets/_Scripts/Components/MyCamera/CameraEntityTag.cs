@@ -1,9 +1,8 @@
 using Unity.Entities;
 
-namespace Components.Camera
+namespace Components.MyCamera
 {
     public struct CameraEntityTag : IComponentData
     {
     }
-    
 }

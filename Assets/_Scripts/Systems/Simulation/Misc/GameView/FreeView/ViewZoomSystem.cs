@@ -1,9 +1,9 @@
 using Unity.Entities;
 using UnityEngine;
 using Components.Misc.GameView;
-using Components.Camera;
 using Utilities.Tweeners.Camera;
 using TweenLib.Utilities;
+using Components.MyCamera;
 
 namespace Systems.Simulation.Misc.GameView.FreeView
 {

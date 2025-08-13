@@ -1,4 +1,4 @@
-using Components.Camera;
+using Components.MyCamera;
 using TweenLib;
 using TweenLib.Utilities;
 using TweenLib.Utilities.Helpers;
