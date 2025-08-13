@@ -4,7 +4,7 @@ using TweenLib.Utilities;
 using TweenLib.Utilities.Helpers;
 using Unity.Burst;
 
-namespace Utilities.Tweeners.Camera
+namespace Utilities.Tweeners.MyCamera
 {
     [BurstCompile]
     public partial struct AddPosYTweener : ITweener<AddPos, float>

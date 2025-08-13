@@ -2,7 +2,7 @@
 using TweenLib.StandardTweeners;
 using Unity.Entities;
 using UnityEngine;
-using Utilities.Tweeners.Camera;
+using Utilities.Tweeners.MyCamera;
 
 namespace Authoring.MyCamera
 {
