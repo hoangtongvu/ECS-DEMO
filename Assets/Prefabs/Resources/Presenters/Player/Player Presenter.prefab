@@ -2037,11 +2037,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8284627289445197274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f520e7af1b45b8142a9fbf83c203796c, type: 3}
+  m_Script: {fileID: 11500000, guid: dee3502393ab249479d0a174c5f7777e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
   baseAnimator: {fileID: 0}
+  animationName: Idle
   transitionDuration: 0.2
 --- !u!114 &1434096435103587551
 MonoBehaviour:
@@ -2052,11 +2053,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8284627289445197274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9ab7854c23de354cb3cce54443aebb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 085d2898de848b14b8f45af2ea6e0b4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
   baseAnimator: {fileID: 0}
+  animationName: Walking
   transitionDuration: 0.2
 --- !u!114 &7241777563370842606
 MonoBehaviour:
@@ -2067,11 +2069,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8284627289445197274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b1af613d6b946c45b5683131c769741, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e3830d2c0e05bd468e2c1a5a6164109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
   baseAnimator: {fileID: 0}
+  animationName: Running
   transitionDuration: 0.2
 --- !u!114 &4463229414207029664
 MonoBehaviour:
@@ -2082,11 +2085,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8284627289445197274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9aee07c2e71e22a48bede07257a6e518, type: 3}
+  m_Script: {fileID: 11500000, guid: 192f156c42711a04694310dfe072fc6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
   baseAnimator: {fileID: 0}
+  animationName: 2H_Melee_Attack_Slice
   transitionDuration: 0.2
 --- !u!114 &8290110953721160210
 MonoBehaviour:

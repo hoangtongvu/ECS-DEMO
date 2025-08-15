@@ -1,12 +1,8 @@
-using Core.GameEntity.Presenter;
 using Core.GameEntity.Reaction;
 
-namespace Core.Player.Presenter
+namespace Core.GameEntity.Presenter
 {
     public class AnimationPlayerOnRunStarted : AnimationPlayerOnReactionStarted<OnRunStartedMessage>
     {
-        protected override string GetAnimName() => "Running";
-
     }
-
 }
