@@ -12,6 +12,7 @@ namespace Core.GameEntity.Presenter
         private ISubscription subscription;
         [SerializeField] private BasePresenter basePresenter;
         [SerializeField] private BaseAnimator baseAnimator;
+        [SerializeField] private string animationName;
         [SerializeField] private float transitionDuration = 0.2f;
 
         protected override void Awake()
@@ -30,7 +31,7 @@ namespace Core.GameEntity.Presenter
             subscription = basePresenter.Messenger.MessageSubscriber
                 .Subscribe((TMessage message) =>
                 {
-                    baseAnimator.WaitPlay(GetAnimName(), transitionDuration);
+                    baseAnimator.WaitPlay(animationName, transitionDuration);
                 });
         }
 
@@ -38,8 +39,6 @@ namespace Core.GameEntity.Presenter
         {
             subscription.Dispose();
         }
-
-        protected abstract string GetAnimName();
 
     }
 

@@ -54,7 +54,7 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
                 .WithAll<IsBuilderUnitTag>()
                 .WithEntityAccess())
             {
-                if (interactionTypeICDRef.ValueRO.Value != InteractionType.WorkOn) continue;
+                if (interactionTypeICDRef.ValueRO.Value != InteractionType.ConstructBuilding) continue;
                 var interactingEntity = interactingEntityRef.ValueRO.Value;
 
                 bool buildingInConstruction = SystemAPI.HasComponent<ConstructionRemaining>(interactingEntity);

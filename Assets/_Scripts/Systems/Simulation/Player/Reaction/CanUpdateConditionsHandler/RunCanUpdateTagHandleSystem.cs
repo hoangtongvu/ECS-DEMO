@@ -3,7 +3,7 @@ using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
 using Components.Player;
 using Components.Player.Misc;
-using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
+using DReaction;
 using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
-    [UpdateAfter(typeof(CanUpdateConditionsHandler.AttackCanUpdateTagHandleSystem))]
+    [UpdateAfter(typeof(AttackCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct RunCanUpdateTagHandleSystem : ISystem
     {

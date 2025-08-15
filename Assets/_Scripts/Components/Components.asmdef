@@ -3,12 +3,15 @@
     "rootNamespace": "Components",
     "references": [
         "GUID:734d92eba21c94caba915361bd5ac177",
+        "GUID:8819f35a0fc84499b990e90a4ca1911f",
         "GUID:d8b63aba1907145bea998dd612889d6b",
         "GUID:63afb046c8423dd448ae7aba042ea63d",
         "GUID:3f4db2bc49cbd8d4b89bc688e9cc1a5e",
         "GUID:e0cd26848372d4e5c891c569017e11f1",
         "GUID:5be0b45410919194da97d9a58ee2e143",
-        "GUID:4307f53044263cf4b835bd812fc161a4"
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:e22a1594916059043b5ad0f0698ff9ea",
+        "GUID:2665a8d13d1b3f18800f46e256720795"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

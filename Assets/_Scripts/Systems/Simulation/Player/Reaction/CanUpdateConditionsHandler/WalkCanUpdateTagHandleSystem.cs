@@ -3,15 +3,15 @@ using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
 using Components.Player;
 using Components.Player.Misc;
-using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
+using DReaction;
 using Unity.Burst;
 using Unity.Entities;
 
 namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
-    [UpdateAfter(typeof(CanUpdateConditionsHandler.RunCanUpdateTagHandleSystem))]
-    [UpdateAfter(typeof(CanUpdateConditionsHandler.AttackCanUpdateTagHandleSystem))]
+    [UpdateAfter(typeof(RunCanUpdateTagHandleSystem))]
+    [UpdateAfter(typeof(AttackCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct WalkCanUpdateTagHandleSystem : ISystem
     {

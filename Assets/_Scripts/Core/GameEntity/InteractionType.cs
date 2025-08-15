@@ -5,7 +5,7 @@ namespace Core.GameEntity
         None = 0,
         Attack = 1,
         Harvest = 2,
-        WorkOn = 3,
+        ConstructBuilding = 3,
     }
 
 }
