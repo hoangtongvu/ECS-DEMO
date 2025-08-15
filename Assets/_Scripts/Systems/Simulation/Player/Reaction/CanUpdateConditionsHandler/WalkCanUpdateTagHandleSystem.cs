@@ -3,7 +3,7 @@ using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
 using Components.Player;
 using Components.Player.Misc;
-using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
+using DReaction;
 using Unity.Burst;
 using Unity.Entities;
 

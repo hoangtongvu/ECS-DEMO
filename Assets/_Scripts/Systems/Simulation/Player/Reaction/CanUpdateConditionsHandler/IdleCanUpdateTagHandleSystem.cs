@@ -4,7 +4,7 @@ using Components.GameEntity.Movement;
 using Components.GameEntity.Damage;
 using Components.Player;
 using Components.GameEntity.Reaction;
-using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
+using DReaction;
 
 namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {

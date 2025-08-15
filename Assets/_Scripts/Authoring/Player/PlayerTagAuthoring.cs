@@ -65,25 +65,13 @@ namespace Authoring.Player
                 AddComponent<CurrentMoveSpeed>(entity);
                 AddComponent<TargetMoveSpeed>(entity);
 
-                this.AddAndDisableComponent<IdleReaction.StartedTag>(entity);
-                this.AddAndDisableComponent<IdleReaction.CanUpdateTag>(entity);
-                this.AddAndDisableComponent<IdleReaction.UpdatingTag>(entity);
-                this.AddAndDisableComponent<IdleReaction.EndedTag>(entity);
+                IdleReaction.BakingHelper.BakeTags(this, in entity);
 
-                this.AddAndDisableComponent<WalkReaction.StartedTag>(entity);
-                this.AddAndDisableComponent<WalkReaction.CanUpdateTag>(entity);
-                this.AddAndDisableComponent<WalkReaction.UpdatingTag>(entity);
-                this.AddAndDisableComponent<WalkReaction.EndedTag>(entity);
+                WalkReaction.BakingHelper.BakeTags(this, in entity);
 
-                this.AddAndDisableComponent<RunReaction.StartedTag>(entity);
-                this.AddAndDisableComponent<RunReaction.CanUpdateTag>(entity);
-                this.AddAndDisableComponent<RunReaction.UpdatingTag>(entity);
-                this.AddAndDisableComponent<RunReaction.EndedTag>(entity);
+                RunReaction.BakingHelper.BakeTags(this, in entity);
 
-                this.AddAndDisableComponent<AttackReaction.StartedTag>(entity);
-                this.AddAndDisableComponent<AttackReaction.CanUpdateTag>(entity);
-                this.AddAndDisableComponent<AttackReaction.UpdatingTag>(entity);
-                this.AddAndDisableComponent<AttackReaction.EndedTag>(entity);
+                AttackReaction.BakingHelper.BakeTags(this, in entity);
                 AddComponent<AttackReaction.TimerSeconds>(entity);
 
                 // Note: These are magic numbers taken from the attack animation

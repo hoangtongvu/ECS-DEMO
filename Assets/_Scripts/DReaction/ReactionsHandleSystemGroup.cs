@@ -1,7 +1,6 @@
-﻿using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
-using Unity.Entities;
+﻿using Unity.Entities;
 
-namespace Systems.Simulation.GameEntity.Reaction.ReactionsHandler
+namespace DReaction
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [UpdateAfter(typeof(CanUpdateConditionsHandleSystemGroup))]

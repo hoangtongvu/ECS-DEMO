@@ -4,7 +4,7 @@ using Components.GameEntity.Reaction;
 using Components.Misc;
 using Components.Misc.WorldMap.WorldBuilding.PlacementPreview;
 using Components.Player;
-using Systems.Simulation.GameEntity.Reaction.CanUpdateConditionsHandler;
+using DReaction;
 using Unity.Burst;
 using Unity.Entities;
 
