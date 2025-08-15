@@ -9,7 +9,7 @@ using DReaction;
 namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
-    [UpdateAfter(typeof(CanUpdateConditionsHandler.AttackCanUpdateTagHandleSystem))]
+    [UpdateAfter(typeof(AttackCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct IdleCanUpdateTagHandleSystem : ISystem
     {

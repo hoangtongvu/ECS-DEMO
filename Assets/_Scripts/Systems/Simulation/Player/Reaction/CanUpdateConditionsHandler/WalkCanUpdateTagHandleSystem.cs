@@ -10,8 +10,8 @@ using Unity.Entities;
 namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
-    [UpdateAfter(typeof(CanUpdateConditionsHandler.RunCanUpdateTagHandleSystem))]
-    [UpdateAfter(typeof(CanUpdateConditionsHandler.AttackCanUpdateTagHandleSystem))]
+    [UpdateAfter(typeof(RunCanUpdateTagHandleSystem))]
+    [UpdateAfter(typeof(AttackCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct WalkCanUpdateTagHandleSystem : ISystem
     {
