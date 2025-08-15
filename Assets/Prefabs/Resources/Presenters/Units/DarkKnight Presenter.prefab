@@ -1422,7 +1422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
   baseAnimator: {fileID: 0}
-  animationName: 1H_Melee_Attack_Chop
+  animationName: 2H_Melee_Attack_Chop
   transitionDuration: 0.2
 --- !u!1 &4092607222320878081
 GameObject:

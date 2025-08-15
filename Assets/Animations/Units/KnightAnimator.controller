@@ -16,11 +16,11 @@ AnimatorStateMachine:
     m_State: {fileID: -2711047749503025851}
     m_Position: {x: 390, y: 180, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 7756306949145215144}
-    m_Position: {x: 390, y: 240, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: 1494365920538342769}
     m_Position: {x: 390, y: 300, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 7683867891893431933}
+    m_Position: {x: 390, y: 240, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -105,15 +105,15 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &7756306949145215144
+--- !u!1102 &7683867891893431933
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 1H_Melee_Attack_Chop
-  m_Speed: 1
+  m_Name: 2H_Melee_Attack_Chop
+  m_Speed: 1.53
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -125,7 +125,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: f821108a7bef8db46ba5c18ecb16ded1, type: 2}
+  m_Motion: {fileID: 7400000, guid: ce2947e60b4389042a08032468f47174, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
