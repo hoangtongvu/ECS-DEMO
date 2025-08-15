@@ -14,7 +14,6 @@ using Unity.Entities;
 namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
-    [UpdateAfter(typeof(WorkCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct PatrolCanUpdateTagHandleSystem : ISystem
     {
@@ -56,17 +55,19 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<PatrolReaction.CanUpdateTag> reactionCanUpdateTag
-                , EnabledRefRO<WorkReaction.CanUpdateTag> workCanUpdateTag
                 , EnabledRefRO<IsAliveTag> isAliveTag
                 , in IdleReaction.TimerSeconds idleTimerSeconds
-                , in UnitProfileIdHolder unitProfileIdHolder)
+                , in UnitProfileIdHolder unitProfileIdHolder
+                , in InteractingEntity interactingEntity)
             {
+                bool isInteracting = interactingEntity.Value != Entity.Null;
+
                 if (!this.UnitReactionConfigsMap.Value.TryGetValue(unitProfileIdHolder.Value, out var unitReactionConfigs))
                     throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolder.Value}");
 
                 bool idleTimeExceeded = idleTimerSeconds.Value >= unitReactionConfigs.UnitIdleMaxDuration;
 
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !workCanUpdateTag.ValueRO && idleTimeExceeded;
+                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !isInteracting && idleTimeExceeded;
             }
 
         }

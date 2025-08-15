@@ -1,4 +1,5 @@
 using Components.GameEntity.Damage;
+using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
 using Components.Unit;
@@ -13,7 +14,6 @@ using Unity.Entities;
 namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
-    [UpdateAfter(typeof(WorkCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct RunCanUpdateTagHandleSystem : ISystem
     {
@@ -24,7 +24,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
                 .WithAll<
                     RunReaction.CanUpdateTag>()
                 .WithAll<
-                    WorkReaction.CanUpdateTag
+                    InteractingEntity
                     , IsAliveTag
                     , CanMoveEntityTag
                     , UnitProfileIdHolder
@@ -58,19 +58,21 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<RunReaction.CanUpdateTag> reactionCanUpdateTag
-                , EnabledRefRO<WorkReaction.CanUpdateTag> workCanUpdateTag
                 , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
                 , in UnitProfileIdHolder unitProfileIdHolder
-                , in MoveSpeedLinear moveSpeedLinear)
+                , in MoveSpeedLinear moveSpeedLinear
+                , in InteractingEntity interactingEntity)
             {
+                bool isInteracting = interactingEntity.Value != Entity.Null;
+
                 if (!this.UnitReactionConfigsMap.Value.TryGetValue(unitProfileIdHolder.Value, out var unitReactionConfigs))
                     throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolder.Value}");
 
                 bool currentSpeedIsRunSpeed = moveSpeedLinear.Value == unitReactionConfigs.UnitRunSpeed;
                 reactionCanUpdateTag.ValueRW =
                     isAliveTag.ValueRO && canMoveEntityTag.ValueRO &&
-                    !workCanUpdateTag.ValueRO && currentSpeedIsRunSpeed;
+                    !isInteracting && currentSpeedIsRunSpeed;
             }
 
         }

@@ -3,6 +3,7 @@ using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
 using Components.Unit.Misc;
+using Core.GameEntity;
 using DReaction;
 using Unity.Burst;
 using Unity.Entities;
@@ -11,18 +12,19 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
     [BurstCompile]
-    public partial struct IdleCanUpdateTagHandleSystem : ISystem
+    public partial struct HarvestCanUpdateTagHandleSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    IdleReaction.CanUpdateTag>()
+                    HarvestReaction.CanUpdateTag>()
                 .WithAll<
                     InteractingEntity
                     , IsAliveTag
-                    , CanMoveEntityTag>()
+                    , CanMoveEntityTag
+                    , InteractionTypeICD>()
                 .WithAll<
                     UnitTag>()
                 .Build();
@@ -43,13 +45,15 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
         {
             [BurstCompile]
             void Execute(
-                EnabledRefRW<IdleReaction.CanUpdateTag> reactionCanUpdateTag
+                EnabledRefRW<HarvestReaction.CanUpdateTag> reactionCanUpdateTag
                 , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
-                , in InteractingEntity interactingEntity)
+                , in InteractingEntity interactingEntity
+                , in InteractionTypeICD interactionTypeICD)
             {
-                bool isInteracting = interactingEntity.Value != Entity.Null;
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !canMoveEntityTag.ValueRO && !isInteracting;
+                bool isInteractingEntityValid = interactingEntity.Value != Entity.Null;
+                bool isInteractionTypeHarvest = interactionTypeICD.Value == InteractionType.Harvest;
+                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !canMoveEntityTag.ValueRO && isInteractingEntityValid && isInteractionTypeHarvest;
             }
 
         }

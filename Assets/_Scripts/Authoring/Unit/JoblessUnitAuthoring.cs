@@ -50,7 +50,13 @@ namespace Authoring.Unit
 
                 RunReaction.BakingHelper.BakeTags(this, in entity);
 
-                WorkReaction.BakingHelper.BakeTags(this, in entity);
+                InteractReaction.BakingHelper.BakeTags(this, in entity);
+
+                HarvestReaction.BakingHelper.BakeTags(this, in entity);
+
+                AttackReaction.BakingHelper.BakeTags(this, in entity);
+
+                ConstructBuildingReaction.BakingHelper.BakeTags(this, in entity);
 
                 PatrolReaction.BakingHelper.BakeTags(this, in entity);
 

@@ -1,22 +1,25 @@
 using Unity.Entities;
 using Components.Misc.Presenter;
 using ZBase.Foundation.PubSub;
-using Components.Unit.Reaction;
-using Core.Unit.Reaction;
 using Components.Unit.Misc;
+using Components.GameEntity.Reaction;
+using Core.Harvest.Messages;
+using Components.Unit;
+using Core.Harvest;
 
 namespace Systems.Simulation.Unit.Reaction.PresenterMessagesPublisher
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public partial class WorkOnStartedMessagePublishSystem : SystemBase
+    public partial class MineOnStartedMessagePublishSystem : SystemBase
     {
         protected override void OnCreate()
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    PresenterHolder>()
+                    PresenterHolder
+                    , HarvesteeTypeHolder>()
                 .WithAll<
-                    WorkReaction.StartedTag>()
+                    HarvestReaction.StartedTag>()
                 .WithAll<
                     UnitTag>()
                 .Build();
@@ -26,18 +29,21 @@ namespace Systems.Simulation.Unit.Reaction.PresenterMessagesPublisher
 
         protected override void OnUpdate()
         {
-            foreach (var presenterHolderRef in SystemAPI
+            foreach (var (presenterHolderRef, harvesteeTypeHolderRef) in SystemAPI
                 .Query<
-                    RefRO<PresenterHolder>>()
+                    RefRO<PresenterHolder>
+                    , RefRO<HarvesteeTypeHolder>>()
                 .WithAll<
-                    WorkReaction.StartedTag>()
+                    HarvestReaction.StartedTag>()
                 .WithAll<
                     UnitTag>())
             {
+                if (harvesteeTypeHolderRef.ValueRO.Value != HarvesteeType.ResourcePit) continue;
+
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
 
                 basePresenter.Messenger.MessagePublisher
-                    .Publish(new OnWorkStartedMessage());
+                    .Publish(new OnMineStartedMessage());
             }
 
         }

@@ -11,14 +11,14 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
     [BurstCompile]
-    public partial struct WorkCanUpdateTagHandleSystem : ISystem
+    public partial struct InteractCanUpdateTagHandleSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    WorkReaction.CanUpdateTag>()
+                    InteractReaction.CanUpdateTag>()
                 .WithAll<
                     InteractingEntity
                     , IsAliveTag
@@ -43,13 +43,13 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
         {
             [BurstCompile]
             void Execute(
-                EnabledRefRW<WorkReaction.CanUpdateTag> reactionCanUpdateTag
+                EnabledRefRW<InteractReaction.CanUpdateTag> reactionCanUpdateTag
                 , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
                 , in InteractingEntity interactingEntity)
             {
-                bool workTargetValid = interactingEntity.Value != Entity.Null;
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !canMoveEntityTag.ValueRO && workTargetValid;
+                bool isInteractingEntityValid = interactingEntity.Value != Entity.Null;
+                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !canMoveEntityTag.ValueRO && isInteractingEntityValid;
             }
 
         }

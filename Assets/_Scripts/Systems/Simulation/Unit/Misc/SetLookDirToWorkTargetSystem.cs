@@ -21,7 +21,7 @@ namespace Systems.Simulation.Unit.Misc
                     LocalTransform
                     , MoveCommandElement
                     , LookDirectionXZ
-                    , WorkReaction.StartedTag>()
+                    , InteractReaction.StartedTag>()
                 .WithAll<
                     UnitTag>()
                 .Build();

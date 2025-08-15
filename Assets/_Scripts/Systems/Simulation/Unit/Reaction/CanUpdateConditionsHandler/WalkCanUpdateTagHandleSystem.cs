@@ -1,4 +1,5 @@
 using Components.GameEntity.Damage;
+using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
 using Components.Unit;
@@ -14,7 +15,6 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
 {
     [UpdateInGroup(typeof(CanUpdateConditionsHandleSystemGroup))]
     [UpdateAfter(typeof(RunCanUpdateTagHandleSystem))]
-    [UpdateAfter(typeof(WorkCanUpdateTagHandleSystem))]
     [BurstCompile]
     public partial struct WalkCanUpdateTagHandleSystem : ISystem
     {
@@ -25,7 +25,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
                 .WithAll<
                     WalkReaction.CanUpdateTag>()
                 .WithAll<
-                    WorkReaction.CanUpdateTag
+                    InteractingEntity
                     , IsAliveTag
                     , CanMoveEntityTag
                     , UnitProfileIdHolder
@@ -59,19 +59,21 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<WalkReaction.CanUpdateTag> reactionCanUpdateTag
-                , EnabledRefRO<WorkReaction.CanUpdateTag> workCanUpdateTag
                 , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
                 , in UnitProfileIdHolder unitProfileIdHolder
-                , in MoveSpeedLinear moveSpeedLinear)
+                , in MoveSpeedLinear moveSpeedLinear
+                , in InteractingEntity interactingEntity)
             {
+                bool isInteracting = interactingEntity.Value != Entity.Null;
+
                 if (!this.UnitReactionConfigsMap.Value.TryGetValue(unitProfileIdHolder.Value, out var unitReactionConfigs))
                     throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolder.Value}");
 
                 bool currentSpeedIsWalkSpeed = moveSpeedLinear.Value == unitReactionConfigs.UnitWalkSpeed;
                 reactionCanUpdateTag.ValueRW =
                     isAliveTag.ValueRO && canMoveEntityTag.ValueRO &&
-                    !workCanUpdateTag.ValueRO && currentSpeedIsWalkSpeed;
+                    !isInteracting && currentSpeedIsWalkSpeed;
             }
 
         }

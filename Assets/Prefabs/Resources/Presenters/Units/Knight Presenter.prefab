@@ -918,7 +918,7 @@ GameObject:
   - component: {fileID: 6929555240655019693}
   - component: {fileID: 3403841896049850773}
   - component: {fileID: 4068374918131655163}
-  - component: {fileID: 1742117226605794530}
+  - component: {fileID: 5928832249676460459}
   m_Layer: 0
   m_Name: AnimationPlayer
   m_TagString: Untagged
@@ -989,7 +989,7 @@ MonoBehaviour:
   baseAnimator: {fileID: 0}
   animationName: Running_A
   transitionDuration: 0.2
---- !u!114 &1742117226605794530
+--- !u!114 &5928832249676460459
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -998,7 +998,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3756388395372008341}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7fa1a4820c623347abb7b8f443912d6, type: 3}
+  m_Script: {fileID: 11500000, guid: 192f156c42711a04694310dfe072fc6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   basePresenter: {fileID: 0}
