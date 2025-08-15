@@ -7,6 +7,7 @@ using Components.GameEntity.Interaction;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Movement.MoveCommand;
+using Components.GameEntity.Reaction;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;
@@ -39,12 +40,19 @@ namespace Authoring.Unit
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
-                this.AddAndDisableComponent<IdleStartedTag>(entity);
-                this.AddAndDisableComponent<WorkStartedTag>(entity);
-                this.AddAndDisableComponent<WalkStartedTag>(entity);
-                this.AddAndDisableComponent<RunStartedTag>(entity);
                 this.AddAndDisableComponent<NewlyTakeHitTag>(entity);
                 this.AddAndDisableComponent<NewlyDeadTag>(entity);
+
+                IdleReaction.BakingHelper.BakeTags(this, in entity);
+                AddComponent<IdleReaction.TimerSeconds>(entity);
+
+                WalkReaction.BakingHelper.BakeTags(this, in entity);
+
+                RunReaction.BakingHelper.BakeTags(this, in entity);
+
+                WorkReaction.BakingHelper.BakeTags(this, in entity);
+
+                PatrolReaction.BakingHelper.BakeTags(this, in entity);
 
                 AddComponent<SelectableUnitTag>(entity);
                 this.AddAndDisableComponent<UnitSelectedTag>(entity);
@@ -68,13 +76,6 @@ namespace Authoring.Unit
                     Float3 = float3.zero,
                     TargetEntity = Entity.Null,
                 });
-
-                AddComponent(entity, new UnitIdleTimeCounter
-                {
-                    Value = 0,
-                });
-
-                this.AddAndDisableComponent<NeedInitWalkTag>(entity);
 
                 AddComponent(entity, new UnitToolHolder
                 {

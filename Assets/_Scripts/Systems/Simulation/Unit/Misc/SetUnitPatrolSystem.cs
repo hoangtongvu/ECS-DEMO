@@ -16,13 +16,14 @@ using Components.GameEntity.Interaction;
 using Components.GameEntity.Movement.MoveCommand;
 using Core.GameEntity.Movement.MoveCommand;
 using Utilities.Helpers.GameEntity.Movement.MoveCommand;
-using Components.GameEntity.Damage;
+using Components.Unit.Misc;
+using Components.GameEntity.Reaction;
 
-namespace Systems.Simulation.Unit
+namespace Systems.Simulation.Unit.Misc
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct UnitPatrolSystem : ISystem
+    public partial struct SetUnitPatrolSystem : ISystem
     {
         private Random rand;
         private EntityQuery entityQuery;
@@ -34,7 +35,6 @@ namespace Systems.Simulation.Unit
             this.CreatePatrolRandomValuesMap(ref state);
 
             this.entityQuery = SystemAPI.QueryBuilder()
-                .WithAll<NeedInitWalkTag>()
                 .WithAll<
                     UnitProfileIdHolder
                     , MoveCommandElement
@@ -46,16 +46,8 @@ namespace Systems.Simulation.Unit
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)
                 .Build();
 
-            var query0 = SystemAPI.QueryBuilder()
-                .WithAll<
-                    IsAliveTag
-                    , IsUnitWorkingTag
-                    , UnitIdleTimeCounter
-                    , NeedInitWalkTag>()
-                .Build();
-
-            state.RequireForUpdate(query0);
             state.RequireForUpdate<MoveCommandPrioritiesMap>();
+            state.RequireForUpdate<UnitReactionConfigsMap>();
 
         }
 
@@ -68,24 +60,16 @@ namespace Systems.Simulation.Unit
 
             randomValuesMap.Value.Clear();
 
-            foreach (var (unitProfileIdHolderRef, idleTimeCounterRef, needInitWalkTag, entity) in
+            foreach (var (unitProfileIdHolderRef, entity) in
                 SystemAPI.Query<
-                    RefRO<UnitProfileIdHolder>
-                    , RefRW<UnitIdleTimeCounter>
-                    , EnabledRefRW<NeedInitWalkTag>>()
-                    .WithAll<IsAliveTag>()
-                    .WithDisabled<IsUnitWorkingTag>()
+                    RefRO<UnitProfileIdHolder>>()
+                    .WithAll<PatrolReaction.StartedTag>()
+                    .WithAll<UnitTag>()
                     .WithEntityAccess()
                     .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 if (!unitReactionConfigsMap.TryGetValue(unitProfileIdHolderRef.ValueRO.Value, out var unitReactionConfigs))
                     throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolderRef.ValueRO.Value}");
-
-                bool idleTimeExceeded = idleTimeCounterRef.ValueRO.Value >= unitReactionConfigs.UnitIdleMaxDuration;
-                if (!idleTimeExceeded) continue;
-
-                idleTimeCounterRef.ValueRW.Value = 0;
-                needInitWalkTag.ValueRW = true;
 
                 this.AddRandomValuesIntoMap(
                     in randomValuesMap
@@ -155,7 +139,7 @@ namespace Systems.Simulation.Unit
 
             [BurstCompile]
             void Execute(
-                EnabledRefRW<NeedInitWalkTag> needInitWalkTag
+                EnabledRefRO<PatrolReaction.StartedTag> patrolStartedTag
                 , in UnitProfileIdHolder unitProfileIdHolder
                 , ref MoveCommandElement moveCommandElement
                 , ref InteractingEntity interactingEntity
@@ -165,7 +149,7 @@ namespace Systems.Simulation.Unit
                 , EnabledRefRW<CanFindPathTag> canFindPathTag
                 , [EntityIndexInQuery] int entityIndex)
             {
-                if (!needInitWalkTag.ValueRO) return;
+                if (!patrolStartedTag.ValueRO) return;
 
                 if (!this.UnitReactionConfigsMap.TryGetValue(unitProfileIdHolder.Value, out var unitReactionConfigs))
                     throw new KeyNotFoundException($"{nameof(UnitReactionConfigsMap)} does not contains key: {unitProfileIdHolder.Value}");
@@ -189,7 +173,7 @@ namespace Systems.Simulation.Unit
 
             [BurstCompile]
             void Execute(
-                EnabledRefRW<NeedInitWalkTag> needInitWalkTag
+                EnabledRefRO<PatrolReaction.StartedTag> patrolStartedTag
                 , in ArmedStateHolder armedStateHolder
                 , ref MoveCommandElement moveCommandElement
                 , ref InteractingEntity interactingEntity
@@ -200,8 +184,7 @@ namespace Systems.Simulation.Unit
                 , Entity entity
                 , [EntityIndexInQuery] int entityIndex)
             {
-                if (!needInitWalkTag.ValueRO) return;
-                needInitWalkTag.ValueRW = false;
+                if (!patrolStartedTag.ValueRO) return;
 
                 bool canOverrideCommand =
                     MoveCommandPrioritiesHelper.TryOverrideMoveCommand(
