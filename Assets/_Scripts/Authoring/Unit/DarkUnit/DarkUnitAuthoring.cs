@@ -119,8 +119,6 @@ namespace Authoring.Unit.DarkUnit
                     Value = 0f,
                 });
 
-                this.AddAndDisableComponent<IsUnitWorkingTag>(entity);
-
                 ResourceWalletHelper.AddResourceWalletToEntity(this, entity);
                 this.AddAndDisableComponent<WalletChangedTag>(entity);
 

@@ -133,8 +133,6 @@ namespace Authoring.Unit
                     Value = 0f,
                 });
 
-                this.AddAndDisableComponent<IsUnitWorkingTag>(entity);
-
                 ResourceWalletHelper.AddResourceWalletToEntity(this, entity);
                 this.AddAndDisableComponent<WalletChangedTag>(entity);
 

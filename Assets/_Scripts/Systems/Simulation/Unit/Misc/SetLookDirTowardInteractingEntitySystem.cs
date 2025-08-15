@@ -11,7 +11,7 @@ namespace Systems.Simulation.Unit.Misc
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
-    public partial struct SetLookDirToWorkTargetSystem : ISystem
+    public partial struct SetLookDirTowardInteractingEntitySystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -35,6 +35,7 @@ namespace Systems.Simulation.Unit.Misc
             new RotateJob().ScheduleParallel();
         }
 
+        [WithAll(typeof(InteractReaction.StartedTag))]
         [WithAll(typeof(UnitTag))]
         [BurstCompile]
         private partial struct RotateJob : IJobEntity
