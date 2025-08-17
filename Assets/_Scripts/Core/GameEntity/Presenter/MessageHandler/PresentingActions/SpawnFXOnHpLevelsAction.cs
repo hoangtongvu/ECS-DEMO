@@ -1,15 +1,14 @@
-using Core.Misc;
 using Core.Misc.Presenter;
 using Core.Misc.Presenter.PresenterMessages;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
-using ZBase.Foundation.PubSub;
 
-namespace Core.GameEntity.Presenter
+namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
 {
-    public class FXSpawnerOnHpLevels : SaiMonoBehaviour
+    [Serializable]
+    public class SpawnFXOnHpLevelsAction : OnHitPresentingAction
     {
-        private ISubscription subscription;
-        [SerializeField] private BasePresenter basePresenter;
         [SerializeField] private GameObject currentFX;
         [SerializeField] private float currentThreshold = 1f;
 
@@ -17,27 +16,15 @@ namespace Core.GameEntity.Presenter
         [SerializeField]
         private GameObject[] fxPool;
 
-        protected override void Awake()
+        public override void Initialize([NotNull] BasePresenter basePresenter, [NotNull] GameObject baseGameObj)
         {
-            this.LoadCtrl(ref this.basePresenter);
         }
 
-        private void OnEnable()
-        {
-            this.subscription = this.basePresenter.Messenger.MessageSubscriber
-                .Subscribe<OnHitMessage>(this.HandleFX);
-        }
-
-        private void OnDisable()
-        {
-            this.subscription.Dispose();
-        }
-
-        private void HandleFX(OnHitMessage onHitMessage)
+        public override void Activate([NotNull] BasePresenter basePresenter, [NotNull] GameObject baseGameObj, [NotNull] OnHitMessage message)
         {
             int length = this.fxPool.Length;
             float stepSize = 1f / (length + 1);
-            float hpRatio = onHitMessage.remainingHpRatio;
+            float hpRatio = message.remainingHpRatio;
 
             for (int i = length - 1; i >= 0; i--)
             {
@@ -49,14 +36,14 @@ namespace Core.GameEntity.Presenter
 
                 this.currentThreshold = upperThreshold;
                 if (this.currentFX != null) GameObject.Destroy(this.currentFX.gameObject);
-                this.currentFX = Instantiate(this.fxPool[length - 1 - i], this.transform);
+                this.currentFX = GameObject.Instantiate(this.fxPool[length - 1 - i], baseGameObj.transform);
 
                 break;
-
             }
-
         }
 
+        public override void Dispose([NotNull] BasePresenter basePresenter, [NotNull] GameObject baseGameObj)
+        {
+        }
     }
-
 }

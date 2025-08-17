@@ -7,6 +7,7 @@ namespace Core.Animator.AnimationEvents
     public class AnimationEventStateBehaviour : StateMachineBehaviour
     {
         [SerializeField] private AnimationEventChannel animationEventChannel;
+        [SerializeField] private AnimationEventMessage animationEventMessage;
         [SerializeField] private int lastLoopCount;
 
         [Range(0f, 1f)]
@@ -41,7 +42,7 @@ namespace Core.Animator.AnimationEvents
 
             basePresenter.Messenger.MessagePublisher
                 .Scope(this.animationEventChannel)
-                .Publish<AnimationEventMessage>();
+                .Publish(this.animationEventMessage);
             
         }
 
