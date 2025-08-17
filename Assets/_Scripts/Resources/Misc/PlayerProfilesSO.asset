@@ -19,7 +19,7 @@ MonoBehaviour:
       Value:
         Name: DefaultPlayer
         ProfilePicture: {fileID: 0}
-        PresenterPrefab: {fileID: 6331949679279542157, guid: d4fb7569e5e20574f97d9bb09dfb8d40,
+        PresenterPrefab: {fileID: 6214986621323079952, guid: d4fb7569e5e20574f97d9bb09dfb8d40,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 1335492856152722597, guid: 16fcba7f92a037145a3b9c5e53f2e7ef,
