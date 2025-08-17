@@ -1,3 +1,9 @@
+# ECS Prototype
+
+## Introduction
+
+This is an RTS game prototype inspired by [Kingdom](https://en-m-wikipedia-org.translate.goog/wiki/Kingdom_(video_game)?_x_tr_sl=en&_x_tr_tl=vi&_x_tr_hl=vi&_x_tr_pto=tc) and [Age of Empires](https://vi.wikipedia.org/wiki/Age_of_Empires). The main goal is to learn and practice **Unity ECS**, **game architecture design**, and **pathfinding algorithms**.
+
 ## Credits
 
 <table>
@@ -9,6 +15,10 @@
         <tr>
             <td>ayellowpaper</td>
             <td><a href='https://github.com/ayellowpaper/SerializedDictionary'>Serialized Dictionary</a></td>
+        </tr>
+        <tr>
+            <td>mackysoft</td>
+            <td><a href='https://github.com/mackysoft/Unity-SerializeReferenceExtensions'>SerializeReference Extensions</a></td>
         </tr>
         <tr>
             <td>JoC0de</td>
