@@ -126,7 +126,7 @@ MonoBehaviour:
       Value:
         Name: NormalBuilder
         ProfilePicture: {fileID: 0}
-        PresenterPrefab: {fileID: 1052591493456220867, guid: 7586fbf75355de041a19f46d5f673117,
+        PresenterPrefab: {fileID: 7755926509915813336, guid: 205ab88697d93524696f9beada103b71,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 9010456808328279163, guid: d7dfa3a0662af2947b518a9cce390925,
