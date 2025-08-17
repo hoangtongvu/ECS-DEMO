@@ -1,0 +1,9 @@
+using Core.GameEntity.Presenter.MessageHandler;
+using Core.Harvest.Messages;
+
+namespace Core.Harvest.MessageHandler
+{
+    public class OnHarvestBushStartedMessageHandler : PresenterVoidMessageHandler<OnHarvestBushStartedMessage>
+    {
+    }
+}
