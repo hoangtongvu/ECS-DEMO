@@ -33,6 +33,10 @@ This is an RTS game prototype inspired by [Kingdom](https://en-m-wikipedia-org.t
             <td><a href='https://github.com/jackyyang09/Simple-Unity-Audio-Manager'>Audio Manager solution</a></td>
         </tr>
         <tr>
+            <td>LeiQiaoZhi</td>
+            <td><a href='https://github.com/LeiQiaoZhi/Easy-Text-Effects-for-Unity'>Easy-Text-Effects-for-Unity</a></td>
+        </tr>
+        <tr>
             <td>UVUnify</td>
             <td><a href='https://assetstore.unity.com/packages/tools/utilities/uvunifyatlas-v1-0-1-321314?aid=1100le847'>UVUnifyAtlas</a></td>
         </tr>

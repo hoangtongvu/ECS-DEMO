@@ -1036,10 +1036,7 @@ PrefabInstance:
       value: CanvasesCtrl
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 2172328804437430805, guid: dd111a087f7553c46af7d3f044bda444, type: 3}
-    - {fileID: 6440281910120225070, guid: dd111a087f7553c46af7d3f044bda444, type: 3}
-    - {fileID: 1602603127333002098, guid: dd111a087f7553c46af7d3f044bda444, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd111a087f7553c46af7d3f044bda444, type: 3}
