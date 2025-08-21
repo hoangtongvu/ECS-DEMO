@@ -21,24 +21,7 @@ namespace Systems.Initialization.Misc.TutorialMessage
             su.AddOrSetComponentData(new TutorialMessageTimerSeconds());
             su.AddOrSetComponentData(new TutorialMessageList
             {
-                Value = new(Allocator.Persistent)
-                {
-                    new()
-                    {
-                        String = "Press <b>[F]</b> to pay respect",
-                        TextDuration = new(5f),
-                    },
-                    new()
-                    {
-                        String = "Press <b>[Shift]</b> to run",
-                        TextDuration = new(5f),
-                    },
-                    new()
-                    {
-                        String = "Press <b>[A][W][S][D]</b> to move",
-                        TextDuration = new(5f),
-                    },
-                },
+                Value = new(Allocator.Persistent),
             });
 
             state.Enabled = false;
