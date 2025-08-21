@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Core.Misc.DayNightCycle
 {
     [ExecuteAlways]
-    public class DayNightLightingManager : SaiMonoBehaviour
+    public class DayNightLightingManager : MonoBehaviour
     {
         [SerializeField] private Light directionalLight;
         [SerializeField] private DayNightPresetSO preset;
@@ -22,7 +22,7 @@ namespace Core.Misc.DayNightCycle
             }
         }
 
-        private void OnValidate()
+        private void Start()
         {
             if (this.directionalLight != null) return;
 
