@@ -2,13 +2,13 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Burst;
 using Utilities.Helpers;
-using Components.ComponentMap;
 using Core.UI.Identification;
 using Components.Misc.WorldMap;
 using Core.UI.WorldMapDebug;
-using Core.Utilities.Helpers;
 using Utilities;
 using UnityEngine;
+using Core.UI.Pooling;
+using Components.UI.Pooling;
 
 namespace Systems.Presentation.Misc.WorldMap
 {
@@ -21,12 +21,10 @@ namespace Systems.Presentation.Misc.WorldMap
         {
             this.RequireForUpdate<WorldTileCostMap>();
             this.RequireForUpdate<MapDebugConfig>();
-            this.RequireForUpdate<SpawnedUIMap>();
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
 
             SingletonUtilities.GetInstance(this.EntityManager)
                 .AddComponent<CellPresenterStartIndex>();
-
         }
 
         protected override void OnUpdate()
@@ -39,13 +37,9 @@ namespace Systems.Presentation.Misc.WorldMap
 
             var presenterStartIndexRef = SystemAPI.GetSingletonRW<CellPresenterStartIndex>();
             var debugConfig = SystemAPI.GetSingleton<MapDebugConfig>();
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
 
             this.SpawnNodePresenters(
-                spawnedUIMap
-                , uiPrefabAndPoolMap
-                , in costMap
+                in costMap
                 , costMap.Width /*mapWidth*/
                 , in gridOffset
                 , ref presenterStartIndexRef.ValueRW
@@ -55,9 +49,7 @@ namespace Systems.Presentation.Misc.WorldMap
         }
 
         private void SpawnNodePresenters(
-            SpawnedUIMap spawnedUIMap
-            , UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , in WorldTileCostMap costMap
+            in WorldTileCostMap costMap
             , int mapWidth
             , in int2 gridOffset
             , ref CellPresenterStartIndex presenterStartIndex
@@ -85,12 +77,7 @@ namespace Systems.Presentation.Misc.WorldMap
                         , -(drawCellRadius * 2 * y + drawCellRadius));
 
 
-                var presenterCtrl = (CellPresenterCtrl)
-                    UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap.Value
-                        , spawnedUIMap.Value
-                        , UIType.WorldMapCellPresenter
-                        , center);
+                var presenterCtrl = (CellPresenterCtrl)UICtrlPoolMap.Instance.Rent(UIType.WorldMapCellPresenter);
 
                 WorldMapHelper.SyncValuesToNodePresenter(in debugConfig, presenterCtrl, nodeCost);
 
