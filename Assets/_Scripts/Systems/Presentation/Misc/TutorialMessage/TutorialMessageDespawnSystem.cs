@@ -1,7 +1,8 @@
-using Components.ComponentMap;
 using Components.Misc.TutorialMessage;
+using Components.UI.Pooling;
 using Core.Misc.TutorialMessage;
 using Core.MyEvent.PubSub.Messengers;
+using Core.UI.Pooling;
 using Unity.Collections;
 using Unity.Entities;
 using ZBase.Foundation.PubSub;
@@ -23,8 +24,7 @@ namespace Systems.Presentation.Misc.TutorialMessage
             this.RequireForUpdate<TutorialMessageSpawnedState>();
             this.RequireForUpdate<TutorialMessageCanDespawnState>();
             this.RequireForUpdate<SpawnedTutorialMessageCtrlHolder>();
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnDestroy()
@@ -60,10 +60,7 @@ namespace Systems.Presentation.Misc.TutorialMessage
             ref TutorialMessageSpawnedState tutorialMessageSpawnedState
             , ref SpawnedTutorialMessageCtrlHolder messageCtrlHolder)
         {
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>().Value;
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>().Value;
-
-            messageCtrlHolder.Value.Value.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
+            UICtrlPoolMap.Instance.Return(messageCtrlHolder.Value);
 
             tutorialMessageSpawnedState.Value = false;
             messageCtrlHolder.Value = null;
