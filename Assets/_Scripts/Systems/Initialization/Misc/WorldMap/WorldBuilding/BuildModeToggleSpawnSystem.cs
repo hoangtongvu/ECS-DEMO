@@ -1,7 +1,7 @@
 using Unity.Entities;
-using Components.ComponentMap;
 using Core.UI.Identification;
-using Core.Utilities.Helpers;
+using Core.UI.Pooling;
+using Components.UI.Pooling;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
@@ -10,19 +10,14 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
     {
         protected override void OnCreate()
         {
-            this.RequireForUpdate<SpawnedUIMap>();
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnUpdate()
         {
             this.Enabled = false;
 
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-
-            UISpawningHelper.Spawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value, UIType.BuildModeTrigger);
-
+            UICtrlPoolMap.Instance.Rent(UIType.BuildModeTrigger);
         }
 
     }
