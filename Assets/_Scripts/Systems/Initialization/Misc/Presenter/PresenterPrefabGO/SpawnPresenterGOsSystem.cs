@@ -61,9 +61,9 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                     continue;
                 }
 
-                var newPresenter = GameObject.Instantiate(
-                    basePresenterPrefab.Value
-                    , transformRef.ValueRO.Position
+                var newPresenter = BasePresenterPoolMap.Instance.Rent(basePresenterPrefab.Value.gameObject);
+                newPresenter.transform.SetPositionAndRotation(
+                    transformRef.ValueRO.Position
                     , transformRef.ValueRO.Rotation);
 
                 ecb.AddComponent(entity, new PresenterHolder
