@@ -4,6 +4,7 @@
     "com.annulusgames.lit-motion": "https://github.com/annulusgames/LitMotion.git?path=src/LitMotion/Assets/LitMotion",
     "com.cysharp.unitask": "2.5.4",
     "com.darksun.core.testing": "https://github.com/hoangtongvu/com.darksun.core.testing.git",
+    "com.darksun.ds-pool": "https://github.com/hoangtongvu/DSPool.git?path=/Assets/DSPool",
     "com.darksun.enum-length-generator": "https://github.com/hoangtongvu/EnumLengthGenerator.git?path=/Assets/EnumLengthGenerator",
     "com.darksun.tweenlib": "https://github.com/hoangtongvu/TweenLib.git?path=/Assets/TweenLib",
     "com.darksun.unity-file-debug-logger": "https://github.com/hoangtongvu/UnityFileDebugLogger.git?path=/Assets/UnityFileDebugLogger",

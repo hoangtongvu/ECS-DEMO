@@ -34,6 +34,13 @@
       },
       "hash": "24938d88e1535a5bfbd2d08dc84f7427ccd4c751"
     },
+    "com.darksun.ds-pool": {
+      "version": "https://github.com/hoangtongvu/DSPool.git?path=/Assets/DSPool",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "01c8374efc207fc3892705338328845871b23829"
+    },
     "com.darksun.enum-length-generator": {
       "version": "https://github.com/hoangtongvu/EnumLengthGenerator.git?path=/Assets/EnumLengthGenerator",
       "depth": 0,
