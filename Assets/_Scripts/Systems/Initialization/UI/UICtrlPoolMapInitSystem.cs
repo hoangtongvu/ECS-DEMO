@@ -50,7 +50,7 @@ namespace Systems.Initialization.UI
                     , canvasAnchorPreset
                     , out var defaultHolderTransform);
 
-                poolMap.poolMap.Add(type, new()
+                poolMap.Pools.Add(type, new()
                 {
                     Prefab = uiCtrl.gameObject,
                     DefaultHolderTransform = defaultHolderTransform,

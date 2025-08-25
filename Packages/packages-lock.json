@@ -39,7 +39,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "06e09b65d502a7b45c43281f75ed2ff12a4e6694"
+      "hash": "a81485a344f0d2bce0b92eede2ef5b4570a4f4e1"
     },
     "com.darksun.enum-length-generator": {
       "version": "https://github.com/hoangtongvu/EnumLengthGenerator.git?path=/Assets/EnumLengthGenerator",

@@ -23,7 +23,7 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
             {
                 var basePresenter = kVPair.Value.Value;
 
-                poolMap.poolMap.TryAdd(basePresenter.gameObject, new()
+                poolMap.Pools.TryAdd(basePresenter.gameObject, new()
                 {
                     Prefab = basePresenter.gameObject,
                 });
