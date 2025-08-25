@@ -42,7 +42,7 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
                 // Despawn all existing DisplayPanel
                 foreach (var displayCtrl in displaysHolder.Displays)
                 {
-                    UICtrlPoolMap.Instance.Return(displayCtrl);
+                    displayCtrl.ReturnSelfToPool();
                 }
 
                 displaysHolder.Displays.Clear();

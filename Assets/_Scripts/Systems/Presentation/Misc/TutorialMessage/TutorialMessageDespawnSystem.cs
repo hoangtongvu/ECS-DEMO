@@ -2,7 +2,6 @@ using Components.Misc.TutorialMessage;
 using Components.UI.Pooling;
 using Core.Misc.TutorialMessage;
 using Core.MyEvent.PubSub.Messengers;
-using Core.UI.Pooling;
 using Unity.Collections;
 using Unity.Entities;
 using ZBase.Foundation.PubSub;
@@ -60,7 +59,7 @@ namespace Systems.Presentation.Misc.TutorialMessage
             ref TutorialMessageSpawnedState tutorialMessageSpawnedState
             , ref SpawnedTutorialMessageCtrlHolder messageCtrlHolder)
         {
-            UICtrlPoolMap.Instance.Return(messageCtrlHolder.Value);
+            messageCtrlHolder.Value.Value.ReturnSelfToPool();
 
             tutorialMessageSpawnedState.Value = false;
             messageCtrlHolder.Value = null;
