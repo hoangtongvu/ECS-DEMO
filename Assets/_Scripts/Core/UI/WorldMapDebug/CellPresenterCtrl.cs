@@ -18,6 +18,14 @@ namespace Core.UI.WorldMapDebug
             this.LoadComponentInChildren(ref this.backgroundImage);
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }

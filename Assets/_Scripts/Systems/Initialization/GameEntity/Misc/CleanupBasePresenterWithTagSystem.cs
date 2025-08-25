@@ -1,10 +1,10 @@
 using Components.GameEntity.Misc;
 using Components.GameEntity.Misc.EntityCleanup;
 using Components.Misc.Presenter;
+using Core.Misc.Presenter;
 using Systems.Initialization.GameEntity.Misc.EntityCleanup;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
 namespace Systems.Initialization.GameEntity.Misc
 {
@@ -37,8 +37,8 @@ namespace Systems.Initialization.GameEntity.Misc
                     , NeedCleanupEntityTag>()
                 .WithEntityAccess())
             {
-                var go = presenterHolderRef.ValueRO.Value.Value.gameObject;
-                GameObject.Destroy(go);
+                var toDestroyPresenter = presenterHolderRef.ValueRO.Value.Value;
+                BasePresenterPoolMap.Instance.Return(toDestroyPresenter);
 
                 ecb.RemoveComponent<NeedDestroyBasePresenterTag>(entity);
                 ecb.RemoveComponent<PresenterHolder>(entity);

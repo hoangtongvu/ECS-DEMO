@@ -1,12 +1,12 @@
-using Components.ComponentMap;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.Player;
+using Components.UI.Pooling;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.DestroyEntityActionPanel;
-using Core.Utilities.Helpers;
+using Core.UI.Pooling;
 using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -37,16 +37,12 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 
             this.RequireForUpdate(query0);
             this.RequireForUpdate(this.playerQuery);
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnUpdate()
         {
             byte playerFactionIndex = this.playerQuery.GetSingleton<FactionIndex>().Value;
-
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
 
             foreach (var (factionIndexRef, actionsContainerUIHolderRef, primaryPrefabEntityHolderRef, canShowUITag, uiShownTag, entity) in SystemAPI
                 .Query<
@@ -65,11 +61,9 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 
                 float3 spawnPos = actionsContainerUIHolderRef.ValueRO.Value.Value.transform.position;
 
-                var actionPanelCtrl = (DestroyEntityActionPanelCtrl)UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap.Value
-                        , spawnedUIMap.Value
-                        , UIType.ActionPanel_DestroyEntity
-                        , spawnPos);
+                var actionPanelCtrl = (DestroyEntityActionPanelCtrl)UICtrlPoolMap.Instance
+                    .Rent(UIType.ActionPanel_DestroyEntity);
+                actionPanelCtrl.transform.position = spawnPos;
 
                 actionPanelCtrl.Initialize(in entity, 123, actionsContainerUIHolderRef.ValueRO.Value);
                 actionPanelCtrl.gameObject.SetActive(true);

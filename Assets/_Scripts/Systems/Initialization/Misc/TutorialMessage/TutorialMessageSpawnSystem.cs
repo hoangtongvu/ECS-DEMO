@@ -1,8 +1,8 @@
-using Components.ComponentMap;
 using Components.Misc.TutorialMessage;
+using Components.UI.Pooling;
 using Core.UI.Identification;
+using Core.UI.Pooling;
 using Core.UI.TutorialMessage;
-using Core.Utilities.Helpers;
 using Unity.Entities;
 
 namespace Systems.Initialization.Misc.TutorialMessage
@@ -15,8 +15,7 @@ namespace Systems.Initialization.Misc.TutorialMessage
             this.RequireForUpdate<TutorialMessageSpawnedState>();
             this.RequireForUpdate<SpawnedTutorialMessageCtrlHolder>();
             this.RequireForUpdate<TutorialMessageList>();
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnUpdate()
@@ -43,12 +42,10 @@ namespace Systems.Initialization.Misc.TutorialMessage
             , ref SpawnedTutorialMessageCtrlHolder messageCtrlHolder
             , string message)
         {
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>().Value;
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>().Value;
-
             tutorialMessageSpawnedState.Value = true;
-            var tutorialMessageCtrl = (TutorialMessageCtrl)UISpawningHelper
-                .Spawn(uiPrefabAndPoolMap, spawnedUIMap, UIType.TutorialMessage);
+
+            var tutorialMessageCtrl = (TutorialMessageCtrl)UICtrlPoolMap.Instance
+                .Rent(UIType.TutorialMessage);
 
             messageCtrlHolder.Value = tutorialMessageCtrl;
             tutorialMessageCtrl.TextMeshPro.text = message;

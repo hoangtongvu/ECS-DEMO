@@ -20,6 +20,14 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel.Recrui
             this.LoadComponentInChildren(ref this.costText);
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }

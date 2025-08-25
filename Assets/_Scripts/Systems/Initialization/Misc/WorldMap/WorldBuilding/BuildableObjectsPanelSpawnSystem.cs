@@ -1,9 +1,10 @@
 using Unity.Entities;
-using Components.ComponentMap;
 using Core.UI.Identification;
-using Core.Utilities.Helpers;
 using Components.Misc.WorldMap.WorldBuilding;
 using Utilities;
+using Core.UI.Pooling;
+using Components.UI.Pooling;
+using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel;
 
 namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
 {
@@ -12,24 +13,20 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding
     {
         protected override void OnCreate()
         {
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
 
             SingletonUtilities.GetInstance(this.EntityManager)
-                .AddComponent<BuildableObjectsPanelRuntimeUIID>();
-
+                .AddComponent<BuildableObjectsPanelHolder>();
         }
 
         protected override void OnUpdate()
         {
             this.Enabled = false;
 
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-            var runtimeUIIDRef = SystemAPI.GetSingletonRW<BuildableObjectsPanelRuntimeUIID>();
+            var buildableObjectsPanelHolderRef = SystemAPI.GetSingletonRW<BuildableObjectsPanelHolder>();
 
-            runtimeUIIDRef.ValueRW.Value =
-                UISpawningHelper.Spawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value, UIType.BuildableObjectsPanel).RuntimeUIID;
+            buildableObjectsPanelHolderRef.ValueRW.Value =
+                (BuildableObjectsPanelCtrl)UICtrlPoolMap.Instance.Rent(UIType.BuildableObjectsPanel);
 
         }
 

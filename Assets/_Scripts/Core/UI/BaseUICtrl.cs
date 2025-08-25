@@ -1,12 +1,12 @@
 using Core.Misc;
 using Core.UI.Identification;
 using Core.UI.MyCanvas;
-using Core.Utilities.Helpers;
-using System.Collections.Generic;
+using Core.UI.Pooling;
+using DSPool;
 
 namespace Core.UI
 {
-    public abstract class BaseUICtrl : SaiMonoBehaviour
+    public abstract class BaseUICtrl : SaiMonoBehaviour, IPoolElement
     {
         public UIID RuntimeUIID;
         public CanvasType CanvasType;
@@ -14,12 +14,10 @@ namespace Core.UI
 
         public abstract UIType GetUIType();
 
-        public virtual void Despawn(
-            Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap
-            , Dictionary<UIID, BaseUICtrl> spawnedUIMap)
-        {
-            UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, this);
-        }
+        public void ReturnSelfToPool() => UICtrlPoolMap.Instance.Return(this);
+
+        public abstract void OnRent();
+        public abstract void OnReturn();
 
     }
 

@@ -13,6 +13,14 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.DestroyEntityActionPanel
                 .Publish(new DestroyEntityMessage(this.BaseEntity));
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }

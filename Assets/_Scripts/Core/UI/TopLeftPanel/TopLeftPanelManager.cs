@@ -27,6 +27,14 @@ namespace Core.UI.TopLeftPanel
 
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }

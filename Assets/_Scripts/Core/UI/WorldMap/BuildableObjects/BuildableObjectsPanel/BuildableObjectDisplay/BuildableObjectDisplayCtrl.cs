@@ -21,6 +21,14 @@ namespace Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjec
             this.LoadComponentInChildren(ref this.buildNameText);
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }

@@ -80,7 +80,7 @@ MonoBehaviour:
         Name: PickaxeSpawner
         ProfilePicture: {fileID: 21300000, guid: d0462d85729ce134887063bb9cfe9c33,
           type: 3}
-        PresenterPrefab: {fileID: 8630936706501201892, guid: 49dbbfc1879d64645ad04d2538ab0dbe,
+        PresenterPrefab: {fileID: 4319015349846666284, guid: f22df7b7b3ac9db468dc725f563c1aea,
           type: 3}
         IsPresenterEntity: 0
         PrimaryEntityPrefab: {fileID: 9115495792767966074, guid: a492c0a594144a84084624c553eac045,

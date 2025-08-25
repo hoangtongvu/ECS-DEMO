@@ -8,7 +8,6 @@ using Core.Misc.Presenter;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Systems.Initialization.UnitAndTool.RoleUpdated
@@ -50,16 +49,16 @@ namespace Systems.Initialization.UnitAndTool.RoleUpdated
             {
                 var prefabToSpawn = presenterPrefabGOMap[primaryPrefabEntityHolderRef.ValueRO].Value;
 
-                var newPresenter = GameObject.Instantiate(
-                    prefabToSpawn
-                    , transformRef.ValueRO.Position
+                var newPresenter = BasePresenterPoolMap.Instance.Rent(prefabToSpawn.gameObject);
+                newPresenter.transform.SetPositionAndRotation(
+                    transformRef.ValueRO.Position
                     , transformRef.ValueRO.Rotation);
 
                 presentersTransformAccessArrayGO.TransformAccessArray[transformAccessArrayIndexRef.ValueRO.Value] =
                     newPresenter.transform;
 
                 var oldPresenter = presenterHolderRef.ValueRO.Value.Value;
-                GameObject.Destroy(oldPresenter.gameObject);
+                BasePresenterPoolMap.Instance.Return(oldPresenter);
 
                 presenterHolderRef.ValueRW.Value = newPresenter;
 
