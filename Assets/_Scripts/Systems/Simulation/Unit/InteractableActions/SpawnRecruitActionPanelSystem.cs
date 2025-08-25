@@ -1,16 +1,16 @@
-using Components.ComponentMap;
 using Components.GameEntity;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.GameResource;
+using Components.UI.Pooling;
 using Components.Unit.Recruit;
 using Core.GameResource;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel;
 using Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel.RecruitActionCostView;
-using Core.Utilities.Helpers;
+using Core.UI.Pooling;
 using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -31,17 +31,14 @@ namespace Systems.Simulation.Unit.InteractableActions
                 .Build();
 
             this.RequireForUpdate(query0);
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
             this.RequireForUpdate<EntityToContainerIndexMap>();
             this.RequireForUpdate<EntitySpawningCostsContainer>();
             this.RequireForUpdate<ResourceProfilesSOHolder>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnUpdate()
         {
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
             var resourceProfiles = SystemAPI.GetSingleton<ResourceProfilesSOHolder>().Value.Value.Profiles;
@@ -64,11 +61,9 @@ namespace Systems.Simulation.Unit.InteractableActions
 
                 float3 spawnPos = actionsContainerUIHolderRef.ValueRO.Value.Value.transform.position;
 
-                var actionPanelCtrl = (RecruitActionPanelCtrl)UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap.Value
-                        , spawnedUIMap.Value
-                        , UIType.ActionPanel_Recruit
-                        , spawnPos);
+                var actionPanelCtrl = (RecruitActionPanelCtrl)UICtrlPoolMap.Instance
+                        .Rent(UIType.ActionPanel_Recruit);
+                actionPanelCtrl.transform.position = spawnPos;
 
                 int containerIndex = entityToContainerIndexMap.Value[primaryPrefabEntityHolderRef.ValueRO];
                 int lowerBound = containerIndex * ResourceType_Length.Value;
@@ -81,11 +76,9 @@ namespace Systems.Simulation.Unit.InteractableActions
 
                     ResourceType resourceType = (ResourceType)(i - containerIndex * ResourceType_Length.Value);
 
-                    var costViewCtrl = (RecruitActionCostViewCtrl)UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap.Value
-                        , spawnedUIMap.Value
-                        , UIType.RecruitActionCostView
-                        , spawnPos);
+                    var costViewCtrl = (RecruitActionCostViewCtrl)UICtrlPoolMap.Instance
+                        .Rent(UIType.RecruitActionCostView);
+                    costViewCtrl.transform.position = spawnPos;
 
                     costViewCtrl.CostText.TextMeshProUGUI.text = $"{cost}";
 

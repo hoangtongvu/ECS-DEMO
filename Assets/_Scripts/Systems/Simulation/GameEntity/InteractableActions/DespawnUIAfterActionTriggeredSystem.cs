@@ -1,5 +1,5 @@
-using Components.ComponentMap;
 using Components.GameEntity.InteractableActions;
+using Components.UI.Pooling;
 using Unity.Entities;
 
 namespace Systems.Simulation.GameEntity.InteractableActions
@@ -18,15 +18,11 @@ namespace Systems.Simulation.GameEntity.InteractableActions
                 .Build();
 
             this.RequireForUpdate(query0);
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnUpdate()
         {
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
-
             foreach (var (actionsContainerUIHolderRef, uiShownTag) in SystemAPI
                 .Query<
                     RefRW<ActionsContainerUIHolder>
@@ -34,9 +30,7 @@ namespace Systems.Simulation.GameEntity.InteractableActions
                 .WithAll<NewlyActionTriggeredTag>())
             {
                 this.DespawnActionsContainerAndAllActionPanels(
-                    uiPrefabAndPoolMap
-                    , spawnedUIMap
-                    , ref actionsContainerUIHolderRef.ValueRW);
+                    ref actionsContainerUIHolderRef.ValueRW);
 
                 uiShownTag.ValueRW = false;
 
@@ -45,12 +39,10 @@ namespace Systems.Simulation.GameEntity.InteractableActions
         }
 
         private void DespawnActionsContainerAndAllActionPanels(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
-            , ref ActionsContainerUIHolder actionsContainerUIHolder)
+            ref ActionsContainerUIHolder actionsContainerUIHolder)
         {
             var actionsContainerUICtrl = actionsContainerUIHolder.Value.Value;
-            actionsContainerUICtrl.Despawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value);
+            actionsContainerUICtrl.ReturnSelfToPool();
             actionsContainerUIHolder.Value = null;
         }
 

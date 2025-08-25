@@ -1,7 +1,5 @@
 using Core.MyEvent.PubSub.Messengers;
-using Core.UI.Identification;
 using Core.Unit.Misc;
-using System.Collections.Generic;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
 
@@ -21,23 +19,22 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel
             this.LoadComponentInChildren(ref this.recruitActionCostViewsHolder);
         }
 
-        public override void Despawn(Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap, Dictionary<UIID, BaseUICtrl> spawnedUIMap)
-        {
-            base.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
-
-            foreach (var recruitActionCostView in this.recruitActionCostViewsHolder.Value)
-            {
-                recruitActionCostView.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
-            }
-
-            this.recruitActionCostViewsHolder.Value.Clear();
-
-        }
-
         public override void Activate()
         {
             GameplayMessenger.MessagePublisher
                 .Publish(new RecruitUnitMessage(this.BaseEntity));
+        }
+
+        public override void OnRent() { }
+
+        public override void OnReturn()
+        {
+            foreach (var recruitActionCostView in this.recruitActionCostViewsHolder.Value)
+            {
+                recruitActionCostView.ReturnSelfToPool();
+            }
+
+            this.recruitActionCostViewsHolder.Value.Clear();
         }
 
     }

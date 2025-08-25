@@ -21,6 +21,14 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
             this.LoadComponentInChildren(ref this.quantityText);
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }

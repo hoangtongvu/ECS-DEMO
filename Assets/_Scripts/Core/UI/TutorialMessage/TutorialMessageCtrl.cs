@@ -22,5 +22,13 @@ namespace Core.UI.TutorialMessage
             this.LoadComponentInCtrl(ref this.textMeshPro);
             this.LoadComponentInCtrl(ref this.tutorialMessageTextEffectHandler);
         }
+
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
     }
 }

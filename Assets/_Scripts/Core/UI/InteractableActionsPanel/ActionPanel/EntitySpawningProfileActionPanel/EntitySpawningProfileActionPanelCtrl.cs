@@ -44,6 +44,14 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActi
                 .Publish(new SpawnUnitMessage(this.BaseEntity, this.SpawningProfileElementIndex));
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }

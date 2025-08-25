@@ -19,9 +19,16 @@ public class UICtrlPool : ComponentPool<BaseUICtrl>
         return baseUICtrl;
     }
 
+    protected override void OnRent(BaseUICtrl element)
+    {
+        base.OnRent(element);
+        element.OnRent();
+    }
+
     protected override void OnReturn(BaseUICtrl element)
     {
         base.OnReturn(element);
+        element.OnReturn();
         element.transform
             .SetParent(this.DefaultHolderTransform);
     }

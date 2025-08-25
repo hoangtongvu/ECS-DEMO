@@ -1,9 +1,9 @@
-using Components.ComponentMap;
 using Components.GameEntity.InteractableActions;
+using Components.UI.Pooling;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel;
+using Core.UI.Pooling;
 using Core.Utilities.Extensions;
-using Core.Utilities.Helpers;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -24,16 +24,13 @@ namespace Systems.Simulation.GameEntity.InteractableActions
                 .Build();
 
             this.RequireForUpdate(query0);
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
             this.RequireForUpdate<ActionsContainerUIOffsetY>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnUpdate()
         {
             half offsetY = SystemAPI.GetSingleton<ActionsContainerUIOffsetY>().Value;
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
 
             foreach (var (unitTransform, actionsContainerUIHolderRef, canShowUITag, uiShownTag) in SystemAPI
                 .Query<
@@ -48,9 +45,7 @@ namespace Systems.Simulation.GameEntity.InteractableActions
                     if (uiShownTag.ValueRO)
                     {
                         this.DespawnActionsContainerAndAllActionPanels(
-                            uiPrefabAndPoolMap
-                            , spawnedUIMap
-                            , ref actionsContainerUIHolderRef.ValueRW);
+                            ref actionsContainerUIHolderRef.ValueRW);
                     }
 
                     continue;
@@ -59,9 +54,7 @@ namespace Systems.Simulation.GameEntity.InteractableActions
                 if (uiShownTag.ValueRO) continue;
 
                 this.SpawnActionsContainerUI(
-                    uiPrefabAndPoolMap
-                    , spawnedUIMap
-                    , unitTransform.ValueRO.Position.Add(y: offsetY)
+                    unitTransform.ValueRO.Position.Add(y: offsetY)
                     , ref actionsContainerUIHolderRef.ValueRW);
 
             }
@@ -69,28 +62,22 @@ namespace Systems.Simulation.GameEntity.InteractableActions
         }
 
         private void SpawnActionsContainerUI(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
-            , in float3 spawnPos
+            in float3 spawnPos
             , ref ActionsContainerUIHolder actionsContainerUIHolder)
         {
-            var baseUICtrl = UISpawningHelper.Spawn(
-                uiPrefabAndPoolMap.Value
-                , spawnedUIMap.Value
-                , UIType.ActionsContainerUI
-                , spawnPos);
+            var baseUICtrl = UICtrlPoolMap.Instance.Rent(UIType.ActionsContainerUI);
+            baseUICtrl.transform.position = spawnPos;
 
             baseUICtrl.gameObject.SetActive(true);
             actionsContainerUIHolder.Value = (ActionsContainerUICtrl)baseUICtrl;
         }
 
         private void DespawnActionsContainerAndAllActionPanels(
-            UIPrefabAndPoolMap uiPrefabAndPoolMap
-            , SpawnedUIMap spawnedUIMap
-            , ref ActionsContainerUIHolder actionsContainerUIHolder)
+            ref ActionsContainerUIHolder actionsContainerUIHolder)
         {
             var actionsContainerUICtrl = actionsContainerUIHolder.Value.Value;
-            actionsContainerUICtrl.Despawn(uiPrefabAndPoolMap.Value, spawnedUIMap.Value);
+            actionsContainerUICtrl.ReturnSelfToPool();
+
             actionsContainerUIHolder.Value = null;
         }
 

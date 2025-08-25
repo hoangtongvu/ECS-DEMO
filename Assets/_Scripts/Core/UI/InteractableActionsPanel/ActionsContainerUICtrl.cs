@@ -1,6 +1,4 @@
-using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.UI.InteractableActionsPanel
@@ -30,18 +28,17 @@ namespace Core.UI.InteractableActionsPanel
             this.LoadComponentInChildren(ref this.actionPanelsHolder);
         }
 
-        public override void Despawn(Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap, Dictionary<UIID, BaseUICtrl> spawnedUIMap)
-        {
-            base.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
+        public override void OnRent() { }
 
+        public override void OnReturn()
+        {
             foreach (var actionPanel in this.actionPanelsHolder.Value)
             {
-                actionPanel.Despawn(uiPrefabAndPoolMap, spawnedUIMap);
+                actionPanel.ReturnSelfToPool();
             }
 
             this.actionPanelsHolder.Value.Clear();
             this.chosenActionPanelCtrl = null;
-
         }
 
     }

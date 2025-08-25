@@ -1,4 +1,3 @@
-using Components.ComponentMap;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
@@ -6,9 +5,10 @@ using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.Misc.WorldMap.WorldBuilding.BuildingConstruction;
 using Components.Player;
+using Components.UI.Pooling;
 using Core.UI.Identification;
 using Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActionPanel;
-using Core.Utilities.Helpers;
+using Core.UI.Pooling;
 using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -40,16 +40,13 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 
             this.RequireForUpdate(query0);
             this.RequireForUpdate(this.playerQuery);
-            this.RequireForUpdate<UIPrefabAndPoolMap>();
-            this.RequireForUpdate<SpawnedUIMap>();
+            this.RequireForUpdate<UIPoolMapInitializedTag>();
         }
 
         protected override void OnUpdate()
         {
             byte playerFactionIndex = this.playerQuery.GetSingleton<FactionIndex>().Value;
 
-            var uiPrefabAndPoolMap = SystemAPI.ManagedAPI.GetSingleton<UIPrefabAndPoolMap>();
-            var spawnedUIMap = SystemAPI.ManagedAPI.GetSingleton<SpawnedUIMap>();
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var spritesContainer = SystemAPI.GetSingleton<EntitySpawningSpritesContainer>();
 
@@ -77,11 +74,9 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
                     var profile = spawningProfiles[i];
                     var entityToSpawn = profile.PrefabToSpawn;
 
-                    var actionPanelCtrl = (EntitySpawningProfileActionPanelCtrl)UISpawningHelper.Spawn(
-                        uiPrefabAndPoolMap.Value
-                        , spawnedUIMap.Value
-                        , UIType.ActionPanel_EntitySpawningProfile
-                        , spawnPos);
+                    var actionPanelCtrl = (EntitySpawningProfileActionPanelCtrl)UICtrlPoolMap.Instance
+                        .Rent(UIType.ActionPanel_EntitySpawningProfile);
+                    actionPanelCtrl.transform.position = spawnPos;
 
                     actionPanelCtrl.ProfilePic.Image.sprite = spritesContainer.Value[entityToContainerIndexMap.Value[entityToSpawn]];
                     actionPanelCtrl.SpawnCountText.TrySetSpawnCount(profile.SpawnCount.Value);

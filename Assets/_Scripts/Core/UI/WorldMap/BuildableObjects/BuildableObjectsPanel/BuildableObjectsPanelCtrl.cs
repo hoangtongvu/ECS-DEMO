@@ -34,6 +34,14 @@ namespace Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel
             this.gameObject.SetActive(!this.gameObject.activeSelf);
         }
 
+        public override void OnRent()
+        {
+        }
+
+        public override void OnReturn()
+        {
+        }
+
     }
 
 }
