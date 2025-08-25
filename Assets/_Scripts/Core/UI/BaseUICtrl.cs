@@ -2,9 +2,7 @@ using Core.Misc;
 using Core.UI.Identification;
 using Core.UI.MyCanvas;
 using Core.UI.Pooling;
-using Core.Utilities.Helpers;
 using DSPool;
-using System.Collections.Generic;
 
 namespace Core.UI
 {
@@ -15,13 +13,6 @@ namespace Core.UI
         public CanvasAnchorPreset CanvasAnchorPreset;
 
         public abstract UIType GetUIType();
-
-        public virtual void Despawn(
-            Dictionary<UIType, UIPrefabAndPool> uiPrefabAndPoolMap
-            , Dictionary<UIID, BaseUICtrl> spawnedUIMap)
-        {
-            UISpawningHelper.Despawn(uiPrefabAndPoolMap, spawnedUIMap, this);
-        }
 
         public void ReturnSelfToPool() => UICtrlPoolMap.Instance.Return(this);
 
