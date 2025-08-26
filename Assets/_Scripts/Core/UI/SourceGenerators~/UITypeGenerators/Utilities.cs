@@ -76,7 +76,7 @@ namespace UITypeGenerators
                     string attributeName = attribute.Name.ToString();
 
                     if (!genertateUITypeAttributeIdentifiers.Contains(attributeName)
-                        && attribute.ArgumentList?.Arguments.Count == 1) continue;
+                        || attribute.ArgumentList?.Arguments.Count != 1) continue;
 
                     if (attribute.ArgumentList.Arguments[0].Expression is not LiteralExpressionSyntax literalExpression)
                         return null;
