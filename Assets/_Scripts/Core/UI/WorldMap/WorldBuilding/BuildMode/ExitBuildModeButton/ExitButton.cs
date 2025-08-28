@@ -2,17 +2,14 @@
 using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
 
-namespace Core.UI.WorldMap.BuildableObjects.BuildModeTrigger
+namespace Core.UI.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
 {
-    public class ToggleButton : BaseButton
+    public class ExitButton : BaseButton
     {
         protected override void OnClick()
         {
             GameplayMessenger.MessagePublisher
-                .Publish<BuildModeToggleMessage>();
-
+                .Publish(new ToggleBuildModeMessage(false));
         }
-
     }
-
 }

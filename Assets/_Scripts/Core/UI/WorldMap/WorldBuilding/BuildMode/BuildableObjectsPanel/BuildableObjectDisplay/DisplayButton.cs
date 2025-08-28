@@ -1,9 +1,10 @@
 ﻿using Core.MyEvent.PubSub.Messages.WorldBuilding;
 using Core.MyEvent.PubSub.Messengers;
+using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjectDisplay;
 using UnityEngine;
 using ZBase.Foundation.PubSub;
 
-namespace Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjectDisplay
+namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.BuildableObjectDisplay
 {
     public class DisplayButton : BaseButton
     {

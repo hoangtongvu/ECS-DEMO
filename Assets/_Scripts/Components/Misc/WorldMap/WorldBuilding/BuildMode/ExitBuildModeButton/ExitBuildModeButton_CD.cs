@@ -1,4 +1,4 @@
-﻿using Core.UI.WorldMap.BuildableObjects.ExitBuildModeButton;
+﻿using Core.UI.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton;
 using Unity.Entities;
 
 namespace Components.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton

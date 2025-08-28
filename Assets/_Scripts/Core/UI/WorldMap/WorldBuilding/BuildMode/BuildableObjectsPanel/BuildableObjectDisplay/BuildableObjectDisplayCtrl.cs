@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.BuildableObjectDisplay;
+using UnityEngine;
 
 namespace Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjectDisplay
 {

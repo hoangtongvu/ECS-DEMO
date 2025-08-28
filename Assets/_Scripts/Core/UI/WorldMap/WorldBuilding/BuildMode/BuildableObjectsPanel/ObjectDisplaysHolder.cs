@@ -3,7 +3,7 @@ using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjectDis
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel
+namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
 {
     public class ObjectDisplaysHolder : SaiMonoBehaviour
     {

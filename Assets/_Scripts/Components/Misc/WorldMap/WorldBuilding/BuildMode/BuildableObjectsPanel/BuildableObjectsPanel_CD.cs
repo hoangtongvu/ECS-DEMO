@@ -1,4 +1,4 @@
-﻿using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel;
+﻿using Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel;
 using Unity.Entities;
 
 namespace Components.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
