@@ -5,7 +5,7 @@ using Core.UI.Pooling;
 using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjectDisplay;
 using Unity.Entities;
 
-namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
+namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class BuildableObjectsPanel_UpdateSystem : SystemBase

@@ -4,7 +4,7 @@ using Core.UI.Pooling;
 using Components.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton;
 using Core.UI.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton;
 
-namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
+namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class ExitBuildModeButton_ShowSystem : SystemBase

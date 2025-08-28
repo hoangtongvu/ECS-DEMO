@@ -5,7 +5,7 @@ using Unity.Collections;
 using Unity.Entities;
 using ZBase.Foundation.PubSub;
 
-namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
+namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class ExitBuildModeButton_CanShowTagsHandleSystem : SystemBase

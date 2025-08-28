@@ -2,7 +2,7 @@ using Components.Misc.WorldMap.WorldBuilding;
 using Components.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel;
 using Unity.Entities;
 
-namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
+namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class BuildableObjectsPanel_HideSystem : SystemBase

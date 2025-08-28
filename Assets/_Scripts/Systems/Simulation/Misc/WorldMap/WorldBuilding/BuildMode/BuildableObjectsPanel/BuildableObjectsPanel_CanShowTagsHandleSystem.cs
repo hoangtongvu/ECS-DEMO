@@ -5,7 +5,7 @@ using Unity.Collections;
 using Unity.Entities;
 using ZBase.Foundation.PubSub;
 
-namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
+namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class BuildableObjectsPanel_CanShowTagsHandleSystem : SystemBase
