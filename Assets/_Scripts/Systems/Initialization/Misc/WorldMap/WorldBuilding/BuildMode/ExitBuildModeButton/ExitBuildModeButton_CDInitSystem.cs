@@ -24,8 +24,8 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuild
             su.AddComponent<ExitBuildModeButton_CD.Holder>();
             su.AddComponent<ExitBuildModeButton_CD.CanShow>();
             su.SetComponentEnabled<ExitBuildModeButton_CD.CanShow>(false);
-            su.AddComponent<ExitBuildModeButton_CD.IsVisible>();
-            su.SetComponentEnabled<ExitBuildModeButton_CD.IsVisible>(false);
+            su.AddComponent<ExitBuildModeButton_CD.IsActive>();
+            su.SetComponentEnabled<ExitBuildModeButton_CD.IsActive>(false);
         }
 
     }

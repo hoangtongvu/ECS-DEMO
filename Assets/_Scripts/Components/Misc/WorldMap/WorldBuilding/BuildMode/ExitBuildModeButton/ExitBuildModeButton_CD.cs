@@ -18,7 +18,7 @@ namespace Components.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
         {
         }
 
-        public struct IsVisible : IComponentData, IEnableableComponent
+        public struct IsActive : IComponentData, IEnableableComponent
         {
         }
     }

@@ -1,4 +1,5 @@
 using Components.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton;
+using Core.UI;
 using Unity.Entities;
 
 namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
@@ -12,7 +13,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildMode
                 .WithAll<
                     ExitBuildModeButton_CD.Holder
                     , ExitBuildModeButton_CD.CanShow
-                    , ExitBuildModeButton_CD.IsVisible>()
+                    , ExitBuildModeButton_CD.IsActive>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -20,19 +21,19 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ExitBuildMode
 
         protected override void OnUpdate()
         {
-            foreach (var (uiHolderRef, entity) in SystemAPI
+            foreach (var uiHolderRef in SystemAPI
                 .Query<
                     RefRW<ExitBuildModeButton_CD.Holder>>()
                 .WithDisabled<
                     ExitBuildModeButton_CD.CanShow>()
-                .WithAll<
-                    ExitBuildModeButton_CD.IsVisible>()
-                .WithEntityAccess())
+                .WithDisabled<
+                    ExitBuildModeButton_CD.IsActive>())
             {
-                uiHolderRef.ValueRO.Value.Value.ReturnSelfToPool();
-                uiHolderRef.ValueRW.Value = null;
+                var uiCtrl = uiHolderRef.ValueRO.Value.Value;
+                if (uiCtrl == null) continue;
 
-                SystemAPI.SetComponentEnabled<ExitBuildModeButton_CD.IsVisible>(entity, false);
+                if (uiCtrl.State != UIState.Hidden) continue;
+                uiHolderRef.ValueRW.Value = null;
             }
 
         }

@@ -316,6 +316,7 @@ MonoBehaviour:
     LocalId: 0
   CanvasType: 2
   CanvasAnchorPreset: 8
+  State: 0
   image: {fileID: 5955391480615443892}
   originalImageAlpha: 0.3882353
   tweenDurationSeconds: 0.5
