@@ -1,11 +1,11 @@
+using Components.Misc.WorldMap.WorldBuilding;
 using Components.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel;
-using Core.UI;
 using Unity.Entities;
 
 namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public partial class BuildableObjectsPanel_HideSystem : SystemBase
+    public partial class BuildableObjectsPanel_DeactivateSystem : SystemBase
     {
         protected override void OnCreate()
         {
@@ -21,19 +21,21 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
 
         protected override void OnUpdate()
         {
-            foreach (var uiHolderRef in SystemAPI
+            foreach (var (uiHolderRef, choiceIndexRef, entity) in SystemAPI
                 .Query<
-                    RefRW<BuildableObjectsPanel_CD.Holder>>()
+                    RefRO<BuildableObjectsPanel_CD.Holder>
+                    , RefRW<BuildableObjectChoiceIndex>>()
                 .WithDisabled<
                     BuildableObjectsPanel_CD.CanShow>()
-                .WithDisabled<
-                    BuildableObjectsPanel_CD.IsActive>())
+                .WithAll<
+                    BuildableObjectsPanel_CD.IsActive>()
+                .WithEntityAccess())
             {
                 var uiCtrl = uiHolderRef.ValueRO.Value.Value;
-                if (uiCtrl == null) continue;
 
-                if (uiCtrl.State != UIState.Hidden) continue;
-                uiHolderRef.ValueRW.Value = null;
+                uiCtrl.TriggerHiding();
+                choiceIndexRef.ValueRW.Value = BuildableObjectChoiceIndex.NoChoice;
+                SystemAPI.SetComponentEnabled<BuildableObjectsPanel_CD.IsActive>(entity, false);
             }
 
         }

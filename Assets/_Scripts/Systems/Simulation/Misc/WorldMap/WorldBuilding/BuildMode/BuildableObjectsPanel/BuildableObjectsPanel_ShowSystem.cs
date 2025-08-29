@@ -16,7 +16,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
                 .WithAll<
                     BuildableObjectsPanel_CD.Holder
                     , BuildableObjectsPanel_CD.CanShow
-                    , BuildableObjectsPanel_CD.IsVisible>()
+                    , BuildableObjectsPanel_CD.IsActive>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -31,18 +31,27 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
                 .WithAll<
                     BuildableObjectsPanel_CD.CanShow>()
                 .WithDisabled<
-                    BuildableObjectsPanel_CD.IsVisible>()
+                    BuildableObjectsPanel_CD.IsActive>()
                 .WithEntityAccess())
             {
-                var objectsPanelCtrl = (BuildableObjectsPanelCtrl)UICtrlPoolMap.Instance
-                    .Rent(UIType.BuildableObjectsPanel);
+                var objectsPanelCtrl = uiHolderRef.ValueRO.Value.Value;
+                bool isUIHidden = objectsPanelCtrl == null;
 
-                uiHolderRef.ValueRW.Value = objectsPanelCtrl;
-                objectsPanelCtrl.gameObject.SetActive(true);
+                if (isUIHidden)
+                {
+                    objectsPanelCtrl = (BuildableObjectsPanelCtrl)UICtrlPoolMap.Instance
+                        .Rent(UIType.BuildableObjectsPanel);
 
+                    uiHolderRef.ValueRW.Value = objectsPanelCtrl;
+                    objectsPanelCtrl.gameObject.SetActive(true);
+                }
+                else
+                {
+                    objectsPanelCtrl.Reuse();
+                }
+
+                SystemAPI.SetComponentEnabled<BuildableObjectsPanel_CD.IsActive>(entity, true);
                 choiceIndexRef.ValueRW.Value = BuildableObjectChoiceIndex.NoChoice;
-
-                SystemAPI.SetComponentEnabled<BuildableObjectsPanel_CD.IsVisible>(entity, true);
 
                 if (!SystemAPI.HasComponent<BuildableObjectsPanel_CD.CanUpdate>(entity)) continue;
                 SystemAPI.SetComponentEnabled<BuildableObjectsPanel_CD.CanUpdate>(entity, true);

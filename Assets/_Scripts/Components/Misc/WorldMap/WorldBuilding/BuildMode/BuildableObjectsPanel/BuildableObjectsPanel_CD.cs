@@ -18,7 +18,7 @@ namespace Components.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
         {
         }
 
-        public struct IsVisible : IComponentData, IEnableableComponent
+        public struct IsActive : IComponentData, IEnableableComponent
         {
         }
     }

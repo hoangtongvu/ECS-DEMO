@@ -26,8 +26,8 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildMode.Buildable
             su.SetComponentEnabled<BuildableObjectsPanel_CD.CanShow>(false);
             su.AddComponent<BuildableObjectsPanel_CD.CanUpdate>();
             su.SetComponentEnabled<BuildableObjectsPanel_CD.CanUpdate>(false);
-            su.AddComponent<BuildableObjectsPanel_CD.IsVisible>();
-            su.SetComponentEnabled<BuildableObjectsPanel_CD.IsVisible>(false);
+            su.AddComponent<BuildableObjectsPanel_CD.IsActive>();
+            su.SetComponentEnabled<BuildableObjectsPanel_CD.IsActive>(false);
         }
 
     }

@@ -18,7 +18,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
                 .WithAll<
                     BuildableObjectsPanel_CD.Holder
                     , BuildableObjectsPanel_CD.CanUpdate
-                    , BuildableObjectsPanel_CD.IsVisible>()
+                    , BuildableObjectsPanel_CD.IsActive>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -33,7 +33,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
                 .WithAll<
                     BuildableObjectsPanel_CD.CanUpdate>()
                 .WithAll<
-                    BuildableObjectsPanel_CD.IsVisible>()
+                    BuildableObjectsPanel_CD.IsActive>()
                 .WithEntityAccess())
             {
                 SystemAPI.SetComponentEnabled<BuildableObjectsPanel_CD.CanUpdate>(entity, false);

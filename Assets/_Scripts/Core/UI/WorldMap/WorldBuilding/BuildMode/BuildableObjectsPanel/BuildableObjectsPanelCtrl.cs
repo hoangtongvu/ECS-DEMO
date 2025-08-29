@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
 {
     [GenerateUIType("BuildableObjectsPanel")]
-    public partial class BuildableObjectsPanelCtrl : BaseUICtrl
+    public partial class BuildableObjectsPanelCtrl : BaseUICtrl, IReusableUI
     {
         [Header("Components")]
         [SerializeField] private RectTransform selfRectTransform;
@@ -34,18 +34,58 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
             this.originalY = this.selfRectTransform.anchoredPosition.y;
         }
 
-        public override void OnRent()
+        public override void TriggerHiding() => this.TriggerPanelTweenOnDisappear();
+
+        public void Reuse()
         {
-            this.motionHandle = LMotion.Create(this.selfRectTransform.anchoredPosition.y, this.toOffsetY, this.tweenDurationSeconds)
-                .WithEase(this.easeType)
-                .Bind(tempOffsetY => selfRectTransform.anchoredPosition = selfRectTransform.anchoredPosition.With(y: originalY + tempOffsetY));
+            this.ClearChildren();
+            this.TriggerPanelTweenOnAppear();
         }
 
-        public override void OnReturn()
+        public override void OnRent()
+        {
+            this.SetPanelY(this.originalY + this.startOffsetY);
+            this.TriggerPanelTweenOnAppear();
+        }
+
+        public override void OnReturn() => this.ClearChildren();
+
+        private void SetPanelY(float yValue)
+        {
+            this.selfRectTransform.anchoredPosition =
+                this.selfRectTransform.anchoredPosition.With(y: yValue);
+        }
+
+        private void TriggerPanelTweenOnAppear()
         {
             this.motionHandle.TryCancel();
-            this.selfRectTransform.anchoredPosition = this.selfRectTransform.anchoredPosition.With(y: this.originalY + this.startOffsetY);
 
+            float startY = this.selfRectTransform.anchoredPosition.y;
+            float endY = this.originalY + this.toOffsetY;
+
+            this.motionHandle = LMotion.Create(startY, endY, this.tweenDurationSeconds)
+                .WithEase(this.easeType)
+                .Bind(tempY => this.SetPanelY(tempY));
+        }
+
+        private void TriggerPanelTweenOnDisappear()
+        {
+            this.motionHandle.TryCancel();
+
+            float startY = this.selfRectTransform.anchoredPosition.y;
+            float endY = this.originalY + this.startOffsetY;
+
+            this.motionHandle = LMotion.Create(startY, endY, this.tweenDurationSeconds)
+                .WithEase(this.easeType)
+                .WithOnComplete(() =>
+                {
+                    this.ReturnSelfToPool();
+                })
+                .Bind(tempY => this.SetPanelY(tempY));
+        }
+
+        private void ClearChildren()
+        {
             foreach (var displayCtrl in this.objectDisplaysHolder.Displays)
             {
                 displayCtrl.ReturnSelfToPool();
