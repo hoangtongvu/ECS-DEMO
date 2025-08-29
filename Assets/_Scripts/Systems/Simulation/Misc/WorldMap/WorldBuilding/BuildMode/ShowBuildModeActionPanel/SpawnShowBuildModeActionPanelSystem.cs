@@ -28,6 +28,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildMode
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitTag
+                    , IsBuilderUnitTag
                     , ActionsContainerUIHolder
                     , CanShowActionsContainerUITag
                     , ActionsContainerUIShownTag>()
@@ -49,6 +50,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildMode
                     , EnabledRefRO<CanShowActionsContainerUITag>
                     , EnabledRefRO<ActionsContainerUIShownTag>>()
                 .WithAll<UnitTag>()
+                .WithAll<IsBuilderUnitTag>()
                 .WithEntityAccess()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {

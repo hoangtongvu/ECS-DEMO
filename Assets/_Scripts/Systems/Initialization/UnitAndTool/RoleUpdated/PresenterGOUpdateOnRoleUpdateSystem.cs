@@ -57,6 +57,8 @@ namespace Systems.Initialization.UnitAndTool.RoleUpdated
                 presentersTransformAccessArrayGO.TransformAccessArray[transformAccessArrayIndexRef.ValueRO.Value] =
                     newPresenter.transform;
 
+                newPresenter.gameObject.SetActive(true);
+
                 var oldPresenter = presenterHolderRef.ValueRO.Value.Value;
                 BasePresenterPoolMap.Instance.Return(oldPresenter);
 
