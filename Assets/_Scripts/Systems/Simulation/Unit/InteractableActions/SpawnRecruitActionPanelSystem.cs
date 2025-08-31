@@ -78,8 +78,8 @@ namespace Systems.Simulation.Unit.InteractableActions
 
                     var costViewCtrl = (RecruitActionCostViewCtrl)UICtrlPoolMap.Instance
                         .Rent(UIType.RecruitActionCostView);
-                    costViewCtrl.transform.position = spawnPos;
 
+                    costViewCtrl.transform.position = spawnPos;
                     costViewCtrl.CostText.TextMeshProUGUI.text = $"{cost}";
 
                     var resourceProfileId = new ResourceProfileId
@@ -88,7 +88,7 @@ namespace Systems.Simulation.Unit.InteractableActions
                         VariantIndex = 0,
                     };
 
-                    costViewCtrl.ResourceIcon.Image.sprite = resourceProfiles[resourceProfileId].ProfilePicture;
+                    costViewCtrl.ResourceBGImage.Image.color = resourceProfiles[resourceProfileId].ResourceMainColor;
 
                     costViewCtrl.gameObject.SetActive(true);
                     actionPanelCtrl.RecruitActionCostViewsHolder.Add(costViewCtrl);

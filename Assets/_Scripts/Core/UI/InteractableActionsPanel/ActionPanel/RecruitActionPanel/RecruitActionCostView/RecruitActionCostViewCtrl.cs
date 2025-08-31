@@ -7,16 +7,16 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel.Recrui
     [GenerateUIType("RecruitActionCostView")]
     public partial class RecruitActionCostViewCtrl : BaseUICtrl
     {
-        [SerializeField] private BaseImage resourceIcon;
+        [SerializeField] private BaseImage resourceBGImage;
         [SerializeField] private BaseTextMeshProUGUI costText;
 
-        public BaseImage ResourceIcon => resourceIcon;
+        public BaseImage ResourceBGImage => resourceBGImage;
         public BaseTextMeshProUGUI CostText => costText;
 
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.resourceIcon);
+            this.LoadComponentInChildren(ref this.resourceBGImage);
             this.LoadComponentInChildren(ref this.costText);
         }
 
