@@ -1,5 +1,6 @@
 using Components.GameEntity.EntitySpawning.SpawningProfiles;
 using Components.GameEntity.EntitySpawning.SpawningProfiles.Containers;
+using Components.GameResource;
 using Components.Misc.WorldMap.WorldBuilding;
 using Components.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel;
 using Core.GameResource;
@@ -9,19 +10,15 @@ using Core.UI.WorldMap.BuildableObjects.BuildableObjectsPanel.BuildableObjectDis
 using Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.BuildableObjectDisplay.Previews.CostStack;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
+using UnityEngine;
 
 namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial class BuildableObjectsPanel_UpdateSystem : SystemBase
     {
-        private Unity.Mathematics.Random rand;
-
         protected override void OnCreate()
         {
-            this.rand = new(47);
-
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerBuildableObjectElement>()
@@ -34,12 +31,14 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
             this.RequireForUpdate(query0);
             this.RequireForUpdate<EntityToContainerIndexMap>();
             this.RequireForUpdate<EntitySpawningCostsContainer>();
+            this.RequireForUpdate<ResourceProfilesSOHolder>();
         }
 
         protected override void OnUpdate()
         {
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var costsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
+            var resourceProfiles = SystemAPI.GetSingleton<ResourceProfilesSOHolder>().Value.Value;
 
             foreach (var (uiHolderRef, buildableObjects, entity) in SystemAPI
                 .Query<
@@ -85,7 +84,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
                         uint cost = costSlice[i];
                         if (cost == 0) continue;
 
-                        float3 randomColor = this.rand.NextFloat3();
+                        var resourceType = (ResourceType)i;
                         var costStack = (CostStackCtrl)UICtrlPoolMap.Instance
                             .Rent(UIType.CostStack);
 
@@ -93,13 +92,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
                         costStack.ContainerLength = costCount;
                         costStack.IndexInContainer = costStackIndex;
                         costStack.CostTMP.text = $"{cost}";
-                        costStack.Image.color = new()
-                        {
-                            r = randomColor.x,
-                            g = randomColor.y,
-                            b = randomColor.z,
-                            a = 255f,
-                        };
+                        costStack.Image.color = this.GetResourceColor(resourceProfiles, resourceType);
 
                         costStack.gameObject.SetActive(true);
                         costStacksHolder.Value.Add(costStack);
@@ -137,6 +130,14 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
             }
 
             return costCount;
+        }
+
+        private Color GetResourceColor(ResourceProfilesSO resourceProfiles, ResourceType resourceType)
+        {
+            return resourceProfiles.Profiles[new()
+            {
+                ResourceType = resourceType,
+            }].ResourceMainColor;
         }
 
     }
