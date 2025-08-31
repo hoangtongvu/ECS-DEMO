@@ -1,5 +1,6 @@
 ﻿using Core.Utilities.Extensions;
 using LitMotion;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.Buildab
     public partial class CostStackCtrl : BaseUICtrl
     {
         [SerializeField] private Image image;
+        [SerializeField] private TextMeshProUGUI costTMP;
         public int ContainerLength;
         public int IndexInContainer;
 
@@ -22,12 +24,14 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.Buildab
         [SerializeField] private float2 originalPos;
 
         public Image Image => image;
+        public TextMeshProUGUI CostTMP => costTMP;
 
         protected override void LoadComponents()
         {
             base.LoadComponents();
             this.LoadComponentInCtrl(ref this.image);
             this.LoadComponentInCtrl(ref this.rectTransform);
+            this.LoadComponentInChildren(ref this.costTMP);
         }
 
         public override void OnRent()

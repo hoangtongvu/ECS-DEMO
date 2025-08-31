@@ -78,16 +78,21 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
 
                     var costStacksHolder = objectDisplayCtrl.PreviewsCtrl.CostStacksHolder;
                     int costCount = this.GetNonZeroCostCount(in costSlice);
+                    int costStackIndex = 0;
 
-                    for (int i = 0; i < costCount; i++)
+                    for (int i = 0; i < ResourceType_Length.Value; i++)
                     {
+                        uint cost = costSlice[i];
+                        if (cost == 0) continue;
+
                         float3 randomColor = this.rand.NextFloat3();
                         var costStack = (CostStackCtrl)UICtrlPoolMap.Instance
                             .Rent(UIType.CostStack);
 
                         costStack.transform.SetParent(costStacksHolder.transform, false);
                         costStack.ContainerLength = costCount;
-                        costStack.IndexInContainer = i;
+                        costStack.IndexInContainer = costStackIndex;
+                        costStack.CostTMP.text = $"{cost}";
                         costStack.Image.color = new()
                         {
                             r = randomColor.x,
@@ -98,6 +103,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.BuildableObje
 
                         costStack.gameObject.SetActive(true);
                         costStacksHolder.Value.Add(costStack);
+                        costStackIndex++;
                     }
 
                     index++;
