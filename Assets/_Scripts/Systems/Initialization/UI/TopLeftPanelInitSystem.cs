@@ -88,7 +88,7 @@ namespace Systems.Initialization.UI
                     continue;
                 }
 
-                resourceDisplay.ResourceImage.Image.sprite = resourceProfile.ProfilePicture;
+                resourceDisplay.BackGroundImage.color = resourceProfile.ResourceMainColor;
             }
 
         }
