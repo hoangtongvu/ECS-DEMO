@@ -40,8 +40,10 @@ MonoBehaviour:
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
-          - Key: 0
-            Value: 2
+          - Key: 1
+            Value: 5
+          - Key: 3
+            Value: 3
     - Key:
         ToolType: 2
         VariantIndex: 0
@@ -68,8 +70,10 @@ MonoBehaviour:
         SpawnDurationSeconds: 4
         BaseSpawningCosts:
           _serializedList:
-          - Key: 0
-            Value: 3
+          - Key: 1
+            Value: 5
+          - Key: 3
+            Value: 5
     - Key:
         ToolType: 3
         VariantIndex: 0
@@ -96,8 +100,10 @@ MonoBehaviour:
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
-          - Key: 0
-            Value: 3
+          - Key: 1
+            Value: 4
+          - Key: 3
+            Value: 6
     - Key:
         ToolType: 4
         VariantIndex: 0
@@ -124,8 +130,10 @@ MonoBehaviour:
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
-          - Key: 0
+          - Key: 1
             Value: 3
+          - Key: 3
+            Value: 8
     - Key:
         ToolType: 5
         VariantIndex: 0
@@ -152,8 +160,10 @@ MonoBehaviour:
         SpawnDurationSeconds: 2
         BaseSpawningCosts:
           _serializedList:
-          - Key: 0
-            Value: 2
+          - Key: 1
+            Value: 7
+          - Key: 3
+            Value: 3
     - Key:
         ToolType: 6
         VariantIndex: 0
@@ -181,4 +191,4 @@ MonoBehaviour:
         BaseSpawningCosts:
           _serializedList:
           - Key: 1
-            Value: 2
+            Value: 7

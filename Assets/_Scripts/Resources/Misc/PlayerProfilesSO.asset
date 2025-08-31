@@ -38,9 +38,6 @@ MonoBehaviour:
         PlayerBuildingIds:
           _serializedList:
           - Key:
-              VariantIndex: 6
-            Value: 0
-          - Key:
               VariantIndex: 2
             Value: 0
           - Key:
@@ -51,6 +48,9 @@ MonoBehaviour:
             Value: 0
           - Key:
               VariantIndex: 5
+            Value: 0
+          - Key:
+              VariantIndex: 6
             Value: 0
           - Key:
               VariantIndex: 7

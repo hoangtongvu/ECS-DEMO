@@ -73,7 +73,11 @@ MonoBehaviour:
           MaxHp: 180
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
-          _serializedList: []
+          _serializedList:
+          - Key: 1
+            Value: 10
+          - Key: 3
+            Value: 5
     - Key:
         VariantIndex: 4
       Value:
@@ -94,10 +98,10 @@ MonoBehaviour:
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
           _serializedList:
-          - Key: 0
-            Value: 2
+          - Key: 1
+            Value: 10
           - Key: 3
-            Value: 2
+            Value: 10
     - Key:
         VariantIndex: 3
       Value:
@@ -139,7 +143,9 @@ MonoBehaviour:
           MaxHp: 180
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
-          _serializedList: []
+          _serializedList:
+          - Key: 1
+            Value: 13
     - Key:
         VariantIndex: 6
       Value:
@@ -157,9 +163,13 @@ MonoBehaviour:
         HasHpComponents: 1
         HpData:
           MaxHp: 180
-        SpawnDurationSeconds: 0
+        SpawnDurationSeconds: 3
         BaseSpawningCosts:
-          _serializedList: []
+          _serializedList:
+          - Key: 1
+            Value: 10
+          - Key: 3
+            Value: 20
     - Key:
         VariantIndex: 7
       Value:
@@ -179,7 +189,11 @@ MonoBehaviour:
           MaxHp: 180
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
-          _serializedList: []
+          _serializedList:
+          - Key: 1
+            Value: 10
+          - Key: 3
+            Value: 15
     - Key:
         VariantIndex: 8
       Value:
@@ -199,6 +213,10 @@ MonoBehaviour:
           MaxHp: 180
         SpawnDurationSeconds: 3
         BaseSpawningCosts:
-          _serializedList: []
+          _serializedList:
+          - Key: 1
+            Value: 10
+          - Key: 3
+            Value: 15
   GameBuildingGlobalConfigs:
     BlueprintMaterial: {fileID: 2100000, guid: 0755802db9fa1b541b14d4639bdb8f70, type: 2}

@@ -138,7 +138,7 @@ MonoBehaviour:
         HpData:
           MaxHp: 30
         UnitType: 4
-        SpawnDurationSeconds: 5
+        SpawnDurationSeconds: 40
         UnitReactionConfigs:
           UnitWalkSpeed: 2
           UnitRunSpeed: 4
@@ -151,7 +151,13 @@ MonoBehaviour:
           MinAttackDistance: 0
           MaxAttackDistance: 2
         BaseSpawningCosts:
-          _serializedList: []
+          _serializedList:
+          - Key: 1
+            Value: 5
+          - Key: 2
+            Value: 5
+          - Key: 3
+            Value: 5
     - Key:
         UnitType: 5
         VariantIndex: 0
