@@ -33,7 +33,7 @@ MonoBehaviour:
           MaxHp: 100
         ResourceType: 0
         MaxQuantityPerStack: 1
-        ResourceMainColor: {r: 1, g: 0.9930078, b: 0.40566033, a: 1}
+        ResourceMainColor: {r: 0.7584905, g: 0.75485235, b: 0.45652542, a: 1}
     - Key:
         ResourceType: 1
         VariantIndex: 0
