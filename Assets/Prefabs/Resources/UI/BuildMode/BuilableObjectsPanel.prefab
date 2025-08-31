@@ -201,4 +201,11 @@ MonoBehaviour:
     LocalId: 0
   CanvasType: 2
   CanvasAnchorPreset: 7
+  State: 0
+  selfRectTransform: {fileID: 2243075333614078245}
   objectDisplaysHolder: {fileID: 5725746980163320883}
+  originalY: 0
+  startOffsetY: -200
+  toOffsetY: -11
+  tweenDurationSeconds: 0.5
+  easeType: 26

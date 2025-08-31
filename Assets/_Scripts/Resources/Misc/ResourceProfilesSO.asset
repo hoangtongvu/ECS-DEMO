@@ -33,6 +33,7 @@ MonoBehaviour:
           MaxHp: 100
         ResourceType: 0
         MaxQuantityPerStack: 1
+        ResourceMainColor: {r: 1, g: 0.9930078, b: 0.40566033, a: 1}
     - Key:
         ResourceType: 1
         VariantIndex: 0
@@ -52,6 +53,7 @@ MonoBehaviour:
           MaxHp: 100
         ResourceType: 1
         MaxQuantityPerStack: 10
+        ResourceMainColor: {r: 0.5999999, g: 0.4780283, b: 0.3475471, a: 1}
     - Key:
         ResourceType: 2
         VariantIndex: 0
@@ -71,6 +73,7 @@ MonoBehaviour:
           MaxHp: 100
         ResourceType: 2
         MaxQuantityPerStack: 10
+        ResourceMainColor: {r: 1, g: 0.3226415, b: 0.3226415, a: 1}
     - Key:
         ResourceType: 3
         VariantIndex: 0
@@ -90,3 +93,4 @@ MonoBehaviour:
           MaxHp: 100
         ResourceType: 3
         MaxQuantityPerStack: 10
+        ResourceMainColor: {r: 0.7207546, g: 0.7207546, b: 0.7207546, a: 1}

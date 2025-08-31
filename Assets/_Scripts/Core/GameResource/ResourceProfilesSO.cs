@@ -9,7 +9,7 @@ namespace Core.GameResource
         [Header("Resource ProfileElement")]
         public ResourceType ResourceType;
         public uint MaxQuantityPerStack;
-
+        public Color ResourceMainColor;
     }
 
     [CreateAssetMenu(fileName = "ResourceProfilesSO", menuName = "SO/GameEntity/ResourceProfilesSO")]
