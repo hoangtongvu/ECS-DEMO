@@ -11,8 +11,7 @@ namespace Authoring.GameEntity.EntitySpawning
 {
     public class EntitySpawningAuthoring : MonoBehaviour
     {
-        public float SpawnRadius = 3f;
-        public EntitySpawningPrefabsSO SpawningPrefabs;
+        public EntitySpawningProfilesSO SpawningProfiles;
 
         private class Baker : Baker<EntitySpawningAuthoring>
         {
@@ -32,16 +31,20 @@ namespace Authoring.GameEntity.EntitySpawning
                 this.AddAndDisableComponent<JustBeginSpawningProcessTag>(entity);
                 this.AddAndDisableComponent<JustEndSpawningProcessTag>(entity);
 
-                var buffer = AddBuffer<EntitySpawningProfileElement>(entity);
+                var buffer = AddBuffer<Components.GameEntity.EntitySpawning.EntitySpawningProfileElement>(entity);
 
-                if (authoring.SpawningPrefabs == null)
-                    throw new NullReferenceException($"{nameof(authoring.SpawningPrefabs)} is null");
+                if (authoring.SpawningProfiles == null)
+                    throw new NullReferenceException($"{nameof(authoring.SpawningProfiles)} is null");
 
-                foreach (var prefab in authoring.SpawningPrefabs.Prefabs)
+                if (authoring.SpawningProfiles.UseAutoSpawnChances)
+                    this.CheckAutoSpawnChances(authoring.SpawningProfiles);
+
+                foreach (var profile in authoring.SpawningProfiles.Profiles)
                 {
                     buffer.Add(new()
                     {
-                        PrefabToSpawn = GetEntity(prefab.Value, TransformUsageFlags.Dynamic),
+                        PrefabToSpawn = GetEntity(profile.PrefabToSpawn, TransformUsageFlags.Dynamic),
+                        AutoSpawnChancePerTenThousand = profile.AutoSpawnChancePerTenThousand,
                         CanSpawnState = false,
                         SpawnCount = new()
                         {
@@ -49,18 +52,27 @@ namespace Authoring.GameEntity.EntitySpawning
                             ValueChanged = false,
                         },
                         DurationCounterSeconds = 0f,
-
                     });
 
                 }
 
             }
 
-        }
+            private void CheckAutoSpawnChances(EntitySpawningProfilesSO SpawningProfiles)
+            {
+                const ushort targetChance = 10000;
+                ushort totalChance = 0;
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawWireSphere(transform.position, this.SpawnRadius);
+                foreach (var profile in SpawningProfiles.Profiles)
+                {
+                    totalChance += profile.AutoSpawnChancePerTenThousand;
+                }
+
+                if (totalChance == targetChance) return;
+
+                Debug.LogError($"The totalChance: {totalChance} in {nameof(EntitySpawningProfilesSO)} is not 100%", SpawningProfiles);
+            }
+
         }
 
     }

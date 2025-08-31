@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4738483173147056165}
   - component: {fileID: 3524788378104135634}
   m_Layer: 10
-  m_Name: ToolSpawner
+  m_Name: AllToolsSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,8 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bb6484700ade24898de8b2f9038d4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnRadius: 3
-  SpawningPrefabs: {fileID: 11400000, guid: 086761ecf558c954d9bc07651336fdf3, type: 2}
+  SpawningProfiles: {fileID: 11400000, guid: 67bc4ca87c58b5a458d6a6ecb71d9a93, type: 2}
 --- !u!114 &4738483173147056165
 MonoBehaviour:
   m_ObjectHideFlags: 0

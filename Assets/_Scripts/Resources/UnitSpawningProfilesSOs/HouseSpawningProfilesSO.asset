@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96e7376575c0445498955d09aa60c311, type: 3}
-  m_Name: SwordSpawningPrefabsSO
+  m_Name: HouseSpawningProfilesSO
   m_EditorClassIdentifier: 
-  UseAutoSpawnChances: 0
+  UseAutoSpawnChances: 1
   Profiles:
-  - PrefabToSpawn: {fileID: 8250307934144521707, guid: f096a5bae6aa8d648ae63b507a2a8e4b,
+  - PrefabToSpawn: {fileID: 9010456808328279163, guid: 0c1e1657d2ad0794488880ebc03ed100,
       type: 3}
-    AutoSpawnChancePerTenThousand: 0
+    AutoSpawnChancePerTenThousand: 7000
+  - PrefabToSpawn: {fileID: 9010456808328279163, guid: d7dfa3a0662af2947b518a9cce390925,
+      type: 3}
+    AutoSpawnChancePerTenThousand: 3000

@@ -67,8 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bb6484700ade24898de8b2f9038d4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnRadius: 3
-  SpawningPrefabs: {fileID: 11400000, guid: fd3be93eab4d0d44faeb5b4085636bf6, type: 2}
+  SpawningProfiles: {fileID: 11400000, guid: fd3be93eab4d0d44faeb5b4085636bf6, type: 2}
 --- !u!114 &-3746614289780352688
 MonoBehaviour:
   m_ObjectHideFlags: 0

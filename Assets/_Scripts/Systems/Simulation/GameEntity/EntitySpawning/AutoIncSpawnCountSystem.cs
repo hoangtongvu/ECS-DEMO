@@ -1,6 +1,7 @@
 using Components.GameEntity.EntitySpawning;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Mathematics;
 using Utilities.Extensions;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning
@@ -9,9 +10,13 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial struct AutoIncSpawnCountSystem : ISystem
     {
+        private Random rand;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            this.rand = new(47);
+
             var entityQuery0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     EntitySpawningProfileElement
@@ -19,41 +24,55 @@ namespace Systems.Simulation.GameEntity.EntitySpawning
                     , SpawnedEntityCountLimit
                     , SpawnerAutoSpawnTag>()
                     .Build();
-            
-            state.RequireForUpdate(entityQuery0);
 
+            state.RequireForUpdate(entityQuery0);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (spawningProfiles, spawnedEntityCounterRef, spawnedEntityCountLimitRef) in
-                SystemAPI.Query<
+            foreach (var (spawningProfiles, spawnedEntityCounterRef, spawnedEntityCountLimitRef) in SystemAPI
+                .Query<
                     DynamicBuffer<EntitySpawningProfileElement>
                     , RefRW<SpawnedEntityCounter>
                     , RefRO<SpawnedEntityCountLimit>>()
-                    .WithAll<SpawnerAutoSpawnTag>())
+                .WithAll<SpawnerAutoSpawnTag>())
             {
                 int spawnCountLeft = spawnedEntityCountLimitRef.ValueRO.Value - spawnedEntityCounterRef.ValueRO.Value;
-                int length = spawningProfiles.Length;
-                int tempCounter = 0;
 
                 while (spawnCountLeft > 0)
                 {
-                    ref var profile = ref spawningProfiles.ElementAt(tempCounter);
+                    int randomIndex = this.DrawRandomIndexFromProfiles(in spawningProfiles);
+                    ref var profile = ref spawningProfiles.ElementAt(randomIndex);
 
                     profile.SpawnCount.ChangeValue(profile.SpawnCount.Value + 1);
                     spawnedEntityCounterRef.ValueRW.Value++;
 
                     spawnCountLeft--;
-                    tempCounter++;
-
-                    if (tempCounter == length) tempCounter = 0;
-
                 }
 
             }
 
+        }
+
+        [BurstCompile]
+        private int DrawRandomIndexFromProfiles(in DynamicBuffer<EntitySpawningProfileElement> profiles)
+        {
+            const ushort maxChance = 10000;
+            uint drawnValue = this.rand.NextUInt(0, maxChance);
+
+            ushort cumulative = 0;
+            int profileCount = profiles.Length;
+
+            for (int i = 0; i < profileCount; i++)
+            {
+                cumulative += profiles[i].AutoSpawnChancePerTenThousand;
+
+                if (drawnValue >= cumulative) continue;
+                return i;
+            }
+
+            return -1;
         }
 
     }
