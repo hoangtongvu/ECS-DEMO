@@ -169,10 +169,16 @@ MonoBehaviour:
   basePresenter: {fileID: 0}
   paramPresentingActions:
   - rid: 4351601338390675469
-  voidPresentingActions: []
+  voidPresentingActions:
+  - rid: 1716329002492231685
   references:
     version: 2
     RefIds:
+    - rid: 1716329002492231685
+      type: {class: BuildingPlaySFXAction, ns: Core.GameBuilding.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        sfx: 0
     - rid: 4351601338390675469
       type: {class: SpawnFXOnHpLevelsAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
         asm: Core}
