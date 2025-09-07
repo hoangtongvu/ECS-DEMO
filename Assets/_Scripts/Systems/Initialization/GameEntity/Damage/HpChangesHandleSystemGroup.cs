@@ -6,5 +6,4 @@ namespace Systems.Initialization.GameEntity.Damage
     public partial class HpChangesHandleSystemGroup : ComponentSystemGroup
     {
     }
-
 }

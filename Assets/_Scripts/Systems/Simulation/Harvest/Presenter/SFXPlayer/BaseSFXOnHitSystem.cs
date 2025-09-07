@@ -19,7 +19,7 @@ namespace Systems.Simulation.Harvest.Presenter.SFXPlayer
                     , HarvesteeProfileIdHolder
                     , LocalTransform>()
                 .WithAll<
-                    NewlyTakeHitTag>()
+                    TakeHitEvent>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -37,7 +37,7 @@ namespace Systems.Simulation.Harvest.Presenter.SFXPlayer
                 .WithAll<
                     HarvesteeTag>()
                 .WithAll<
-                    NewlyTakeHitTag>())
+                    TakeHitEvent>())
             {
                 if (harvesteeProfileIdHolderRef.ValueRO.Value.HarvesteeType != harvesteeType) continue;
                 AudioManager.PlaySound(soundType, transformRef.ValueRO.Position);

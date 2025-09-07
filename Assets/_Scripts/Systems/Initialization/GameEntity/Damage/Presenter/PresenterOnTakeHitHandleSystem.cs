@@ -18,7 +18,7 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
                     , CurrentHp
                     , HpDataHolder>()
                 .WithAll<
-                    NewlyTakeHitTag>()
+                    TakeHitEvent>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -33,7 +33,7 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
                     , RefRO<CurrentHp>
                     , HpDataHolder>()
                 .WithAll<
-                    NewlyTakeHitTag>())
+                    TakeHitEvent>())
             {
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
 
@@ -42,7 +42,6 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
 
                 basePresenter.Messenger.MessagePublisher
                     .Publish(new OnHitMessage(hitDmgValue, remainingHpRatio));
-
             }
 
         }

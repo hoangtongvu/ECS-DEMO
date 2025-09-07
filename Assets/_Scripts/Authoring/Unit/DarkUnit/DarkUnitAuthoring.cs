@@ -40,8 +40,8 @@ namespace Authoring.Unit.DarkUnit
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<ItemPickerTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
-                this.AddAndDisableComponent<NewlyTakeHitTag>(entity);
-                this.AddAndDisableComponent<NewlyDeadTag>(entity);
+                this.AddAndDisableComponent<TakeHitEvent>(entity);
+                this.AddAndDisableComponent<DeadEvent>(entity);
 
                 IdleReaction.BakingHelper.BakeTags(this, in entity);
                 AddComponent<IdleReaction.TimerSeconds>(entity);

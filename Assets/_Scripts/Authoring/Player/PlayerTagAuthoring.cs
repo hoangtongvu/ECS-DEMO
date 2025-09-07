@@ -31,8 +31,8 @@ namespace Authoring.Player
                 AddBuffer<NearbyUnitDropItemTimerElement>(entity);
 
                 AddComponent<NeedSpawnPresenterTag>(entity);
-                this.AddAndDisableComponent<NewlyTakeHitTag>(entity);
-                this.AddAndDisableComponent<NewlyDeadTag>(entity);
+                this.AddAndDisableComponent<TakeHitEvent>(entity);
+                this.AddAndDisableComponent<DeadEvent>(entity);
 
                 AddComponent<InteractableEntityTag>(entity);
                 AddComponent(entity, new ArmedStateHolder

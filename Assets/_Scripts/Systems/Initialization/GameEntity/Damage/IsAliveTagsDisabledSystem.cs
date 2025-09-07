@@ -36,7 +36,6 @@ namespace Systems.Initialization.GameEntity.Damage
             {
                 if (currentHp.Value != 0) return;
                 isAliveTag.ValueRW = false;
-
             }
 
         }

@@ -6,8 +6,7 @@ using ZBase.Foundation.PubSub;
 
 namespace Systems.Initialization.GameEntity.Damage.Presenter
 {
-    [UpdateInGroup(typeof(HpChangesHandleSystemGroup), OrderFirst = true)]
-    [UpdateBefore(typeof(HpChangesHandleSystem))]
+    [UpdateInGroup(typeof(HpChangesHandleSystemGroup))]
     public partial class PresenterOnDeadHandleSystem : SystemBase
     {
         protected override void OnCreate()
@@ -15,8 +14,8 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     PresenterHolder>()
-                .WithDisabled<
-                    IsAliveTag>()
+                .WithAll<
+                    DeadEvent>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -28,13 +27,12 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
                 .Query<
                     RefRO<PresenterHolder>>()
                 .WithAll<
-                    NewlyDeadTag>())
+                    DeadEvent>())
             {
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
 
                 basePresenter.Messenger.MessagePublisher
                     .Publish(new OnDeadMessage());
-
             }
 
         }

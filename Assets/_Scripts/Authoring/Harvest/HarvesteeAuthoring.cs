@@ -22,7 +22,7 @@ namespace Authoring.Harvest
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
                 AddComponent<InteractableEntityTag>(entity);
-                this.AddAndDisableComponent<NewlyTakeHitTag>(entity);
+                this.AddAndDisableComponent<TakeHitEvent>(entity);
 
                 AddComponent<HarvesteeTag>(entity);
 

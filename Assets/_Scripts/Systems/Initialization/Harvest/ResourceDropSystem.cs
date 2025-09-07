@@ -38,13 +38,14 @@ namespace Systems.Initialization.Harvest
             var itemSpawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
             var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourceDropInfoMap>().Value;
 
-            foreach (var (currentHpRef, dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef) in
-                SystemAPI.Query<
+            foreach (var (currentHpRef, dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef) in SystemAPI
+                .Query<
                     RefRO<CurrentHp>
                     , RefRW<DropResourceHpThreshold>
                     , RefRO<LocalTransform>
                     , RefRO<PrimaryPrefabEntityHolder>>()
-                    .WithAll<IsAliveTag>())
+                .WithAll<
+                    IsAliveTag>())
             {
                 var resourceDropInfo = resourceDropInfoMap[primaryPrefabEntityHolderRef.ValueRO];
 
@@ -66,7 +67,6 @@ namespace Systems.Initialization.Harvest
                         break;
 
                     hpThreshold = math.max(0, hpThreshold - deductAmount);
-
                 }
 
                 dropResourceHpThresholdRef.ValueRW.Value = hpThreshold;

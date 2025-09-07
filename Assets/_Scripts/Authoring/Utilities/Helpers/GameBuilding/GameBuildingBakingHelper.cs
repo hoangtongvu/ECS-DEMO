@@ -17,8 +17,8 @@ namespace Authoring.Utilities.Helpers.GameBuilding
         {
             baker.AddComponent<GameBuildingTag>(entity);
             baker.AddComponent<NewlySpawnedTag>(entity);
-            baker.AddAndDisableComponent<NewlyTakeHitTag>(entity);
-            baker.AddAndDisableComponent<NewlyDeadTag>(entity);
+            baker.AddAndDisableComponent<TakeHitEvent>(entity);
+            baker.AddAndDisableComponent<DeadEvent>(entity);
             baker.AddComponent<NeedSpawnPresenterTag>(entity);
             baker.AddAndDisableComponent<WithinPlayerAutoInteractRadiusTag>(entity);
 

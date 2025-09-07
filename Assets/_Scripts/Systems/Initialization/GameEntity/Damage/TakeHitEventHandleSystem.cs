@@ -7,8 +7,10 @@ namespace Systems.Initialization.GameEntity.Damage
     [UpdateInGroup(typeof(HpChangesHandleSystemGroup), OrderFirst = true)]
     [UpdateAfter(typeof(HpChangesHandleSystem))]
     [BurstCompile]
-    public partial struct NewlyTakeHitTagHandleSystem : ISystem
+    public partial struct TakeHitEventHandleSystem : ISystem
     {
+        private EntityQuery takeHitEventQuery;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -16,9 +18,14 @@ namespace Systems.Initialization.GameEntity.Damage
                 .WithAll<
                     HpChangeRecordElement>()
                 .WithAll<
-                    NewlyTakeHitTag>()
+                    TakeHitEvent>()
                 .WithAll<
                     IsAliveTag>()
+                .Build();
+
+            this.takeHitEventQuery = SystemAPI.QueryBuilder()
+                .WithAll<
+                    TakeHitEvent>()
                 .Build();
 
             state.RequireForUpdate(query);
@@ -27,12 +34,7 @@ namespace Systems.Initialization.GameEntity.Damage
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var newlyTakeHitTag in SystemAPI
-                .Query<
-                    EnabledRefRW<NewlyTakeHitTag>>())
-            {
-                newlyTakeHitTag.ValueRW = false;
-            }
+            state.EntityManager.SetComponentEnabled<TakeHitEvent>(this.takeHitEventQuery, false);
 
             foreach (var (hpChangeRecords, entity) in SystemAPI
                 .Query<
@@ -42,7 +44,7 @@ namespace Systems.Initialization.GameEntity.Damage
                 .WithEntityAccess())
             {
                 if (hpChangeRecords.Length == 0) continue;
-                SystemAPI.SetComponentEnabled<NewlyTakeHitTag>(entity, true);
+                SystemAPI.SetComponentEnabled<TakeHitEvent>(entity, true);
             }
 
         }

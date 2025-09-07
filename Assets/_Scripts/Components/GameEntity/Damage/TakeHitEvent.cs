@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace Components.GameEntity.Damage
 {
-    public struct NewlyTakeHitTag : IComponentData, IEnableableComponent
+    public struct TakeHitEvent : IComponentData, IEnableableComponent
     {
     }
 }
