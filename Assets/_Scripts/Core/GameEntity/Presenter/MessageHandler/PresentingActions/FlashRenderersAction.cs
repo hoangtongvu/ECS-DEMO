@@ -24,7 +24,7 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
 
         public override void Activate([NotNull] BasePresenter basePresenter, [NotNull] GameObject baseGameObj)
         {
-            this.Flash();
+            this.Flash().Forget();
         }
 
         public override void Dispose([NotNull] BasePresenter basePresenter, [NotNull] GameObject baseGameObj)
@@ -46,25 +46,19 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
             }
         }
 
-        public void Flash()
+        public async UniTaskVoid Flash()
         {
             this.flashCts?.Cancel();
             this.flashCts?.Dispose();
-
             this.flashCts = new CancellationTokenSource();
 
-            this.DoFlash(this.flashCts.Token).Forget();
-        }
-
-        private async UniTaskVoid DoFlash(CancellationToken token)
-        {
             this.SwapSharedMaterials(this.flashMaterial);
 
             try
             {
                 await UniTask.Delay(
                     (int)(this.flashDurationSeconds * 1000),
-                    cancellationToken: token
+                    cancellationToken: this.flashCts.Token
                 );
             }
             catch (OperationCanceledException)
