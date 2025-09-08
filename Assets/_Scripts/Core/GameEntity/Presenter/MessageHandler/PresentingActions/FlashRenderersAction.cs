@@ -14,15 +14,12 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
 
         [SerializeField] private float flashDurationSeconds = 0.2f;
         [SerializeField] private Material flashMaterial;
-        [SerializeField] private Material originalSharedMaterial;
         [SerializeField] private Renderer[] renderers;
+        [SerializeField] private Material[] originalMaterials;
 
         public override void Initialize([NotNull] BasePresenter basePresenter, [NotNull] GameObject baseGameObj)
         {
-            this.renderers = basePresenter.GetComponentsInChildren<Renderer>();
-
-            // NOTE: We take the material from the first body part, assume that all body parts use the same material
-            this.originalSharedMaterial = this.renderers[0].sharedMaterial;
+            this.LoadRendersAndOriginalMaterials(basePresenter);
         }
 
         public override void Activate([NotNull] BasePresenter basePresenter, [NotNull] GameObject baseGameObj)
@@ -37,6 +34,18 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
             this.flashCts = null;
         }
 
+        private void LoadRendersAndOriginalMaterials(BasePresenter basePresenter)
+        {
+            this.renderers = basePresenter.GetComponentsInChildren<Renderer>();
+            int length = this.renderers.Length;
+            this.originalMaterials = new Material[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                this.originalMaterials[i] = this.renderers[i].sharedMaterial;
+            }
+        }
+
         public void Flash()
         {
             this.flashCts?.Cancel();
@@ -49,7 +58,7 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
 
         private async UniTaskVoid DoFlash(CancellationToken token)
         {
-            this.SwapSharedMaterial(this.flashMaterial);
+            this.SwapSharedMaterials(this.flashMaterial);
 
             try
             {
@@ -63,20 +72,20 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
                 return;
             }
 
-            this.ResetOriginalSharedMaterial();
+            this.ResetOriginalSharedMaterials();
         }
 
-        public void ResetOriginalSharedMaterial()
+        public void ResetOriginalSharedMaterials()
         {
-            int length = renderers.Length;
+            int length = this.renderers.Length;
 
             for (int i = 0; i < length; i++)
             {
-                renderers[i].sharedMaterial = this.originalSharedMaterial;
+                this.renderers[i].sharedMaterial = this.originalMaterials[i];
             }
         }
 
-        public void SwapSharedMaterial(Material newMaterial)
+        public void SwapSharedMaterials(Material newMaterial)
         {
             int length = renderers.Length;
 
@@ -85,7 +94,7 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
                 renderers[i].sharedMaterial = newMaterial;
             }
         }
-        
+
     }
 
 }
