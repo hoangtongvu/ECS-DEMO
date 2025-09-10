@@ -16,6 +16,7 @@ namespace Systems.Initialization.GameEntity.Damage
                     CurrentHp
                     , HpDataHolder
                     , HpChangeRecordElement
+                    , FrameHpChange
                     , IsAliveTag>()
                 .Build();
 
@@ -36,14 +37,18 @@ namespace Systems.Initialization.GameEntity.Damage
             void Execute(
                 ref CurrentHp currentHp
                 , in HpDataHolder hpDataHolder
-                , ref DynamicBuffer<HpChangeRecordElement> hpChangeRecords)
+                , ref DynamicBuffer<HpChangeRecordElement> hpChangeRecords
+                , ref FrameHpChange frameHpChange)
             {
+                frameHpChange.Value = 0;
+
                 int length = hpChangeRecords.Length;
                 if (length == 0) return;
 
                 for (int i = 0; i < length; i++)
                 {
                     var hpChangeRecord = hpChangeRecords[i];
+                    frameHpChange.Value += hpChangeRecord.Value;
 
                     int rawCurrentHp = currentHp.Value;
                     rawCurrentHp += hpChangeRecord.Value;

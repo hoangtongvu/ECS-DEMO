@@ -32,6 +32,8 @@ namespace Core.GameEntity.Presenter.MessageHandler.PresentingActions
             this.flashCts?.Cancel();
             this.flashCts?.Dispose();
             this.flashCts = null;
+
+            this.ResetOriginalSharedMaterials();
         }
 
         private void LoadRendersAndOriginalMaterials(BasePresenter basePresenter)

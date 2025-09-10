@@ -54,6 +54,8 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
                     transformRef.ValueRO.Position
                     , transformRef.ValueRO.Rotation);
 
+                newPresenter.gameObject.SetActive(true);
+
                 presentersTransformAccessArrayGO.TransformAccessArray[transformAccessArrayIndexRef.ValueRO.Value] =
                     newPresenter.transform;
 

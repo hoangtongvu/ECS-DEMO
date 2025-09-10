@@ -18,7 +18,8 @@ namespace Systems.Initialization.GameEntity.Damage
                 .WithAll<
                     HpChangeRecordElement>()
                 .WithAll<
-                    TakeHitEvent>()
+                    TakeHitEvent
+                    , FrameHpChange>()
                 .WithAll<
                     IsAliveTag>()
                 .Build();
@@ -36,14 +37,14 @@ namespace Systems.Initialization.GameEntity.Damage
         {
             state.EntityManager.SetComponentEnabled<TakeHitEvent>(this.takeHitEventQuery, false);
 
-            foreach (var (hpChangeRecords, entity) in SystemAPI
+            foreach (var (frameHpChangeRef, entity) in SystemAPI
                 .Query<
-                    DynamicBuffer<HpChangeRecordElement>>()
+                    RefRO<FrameHpChange>>()
                 .WithAll<
                     IsAliveTag>()
                 .WithEntityAccess())
             {
-                if (hpChangeRecords.Length == 0) continue;
+                if (frameHpChangeRef.ValueRO.Value >= 0) continue;
                 SystemAPI.SetComponentEnabled<TakeHitEvent>(entity, true);
             }
 
