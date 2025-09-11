@@ -25,7 +25,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
                     PatrolReaction.CanUpdateTag>()
                 .WithAll<
                     InteractingEntity
-                    , IsAliveTag
+                    , IsAlive
                     , CanMoveEntityTag>()
                 .WithAll<
                     UnitTag>()
@@ -46,7 +46,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
         }
 
         [WithAll(typeof(UnitTag))]
-        [WithAll(typeof(IsAliveTag))]
+        [WithAll(typeof(IsAlive))]
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct TagHandleJob : IJobEntity

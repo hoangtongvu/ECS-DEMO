@@ -38,7 +38,7 @@ namespace Systems.Simulation.Unit.Misc
                     , TargetEntityWorldSquareRadius
                     , CanCheckInteractionRepeatTag>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -60,7 +60,7 @@ namespace Systems.Simulation.Unit.Misc
                     , RefRO<TargetEntityWorldSquareRadius>
                     , EnabledRefRW<CanCheckInteractionRepeatTag>>()
                     .WithAll<
-                        IsAliveTag>())
+                        IsAlive>())
             {
                 canCheckInteractionRepeatTag.ValueRW = false;
 

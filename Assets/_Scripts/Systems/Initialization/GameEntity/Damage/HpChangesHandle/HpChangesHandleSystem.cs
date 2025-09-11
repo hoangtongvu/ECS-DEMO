@@ -17,7 +17,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                     , HpDataHolder
                     , HpChangeRecordElement
                     , FrameHpChange
-                    , IsAliveTag>()
+                    , IsAlive>()
                 .Build();
 
             state.RequireForUpdate(query);
@@ -30,7 +30,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                 .ScheduleParallel();
         }
 
-        [WithAll(typeof(IsAliveTag))]
+        [WithAll(typeof(IsAlive))]
         [BurstCompile]
         private partial struct HpChangesHandleJob : IJobEntity
         {

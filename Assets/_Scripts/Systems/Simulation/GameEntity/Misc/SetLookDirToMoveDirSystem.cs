@@ -21,7 +21,7 @@ namespace Systems.Simulation.GameEntity.Misc
                 .WithAll<
                     CanMoveEntityTag>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -37,7 +37,7 @@ namespace Systems.Simulation.GameEntity.Misc
                 .WithAll<
                     CanMoveEntityTag>()
                 .WithAll<
-                    IsAliveTag>())
+                    IsAlive>())
             {
                 lookDirXZRef.ValueRW.Value = moveDirRef.ValueRO.Value;
             }

@@ -22,7 +22,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
                     HarvestReaction.CanUpdateTag>()
                 .WithAll<
                     InteractingEntity
-                    , IsAliveTag
+                    , IsAlive
                     , CanMoveEntityTag
                     , InteractionTypeICD>()
                 .WithAll<
@@ -39,7 +39,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
         }
 
         [WithAll(typeof(UnitTag))]
-        [WithAll(typeof(IsAliveTag))]
+        [WithAll(typeof(IsAlive))]
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct TagHandleJob : IJobEntity

@@ -19,7 +19,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                     TakeHitEvent
                     , FrameHpChange>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .Build();
 
             this.takeHitEventQuery = SystemAPI.QueryBuilder()
@@ -39,7 +39,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                 .Query<
                     RefRO<FrameHpChange>>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .WithEntityAccess())
             {
                 if (frameHpChangeRef.ValueRO.Value >= 0) continue;

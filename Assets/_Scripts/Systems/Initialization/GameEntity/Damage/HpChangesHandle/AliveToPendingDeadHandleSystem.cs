@@ -17,7 +17,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
             this.query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     CurrentHp
-                    , IsAliveTag>()
+                    , IsAlive>()
                 .Build();
 
             state.RequireForUpdate(this.query0);
@@ -41,7 +41,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
 
                 if (currentHp != 0) continue;
 
-                em.RemoveComponent<IsAliveTag>(entity);
+                em.RemoveComponent<IsAlive>(entity);
                 em.AddComponent<PendingDead>(entity);
             }
         }

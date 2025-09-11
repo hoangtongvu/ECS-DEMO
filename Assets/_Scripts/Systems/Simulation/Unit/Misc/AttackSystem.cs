@@ -49,14 +49,14 @@ namespace Systems.Simulation.Unit.Misc
                     , RefRO<BaseWorkSpeed>
                     , RefRW<WorkTimeCounterSecond>>()
                 .WithDisabled<CanMoveEntityTag>()
-                .WithAll<IsAliveTag>()
+                .WithAll<IsAlive>()
                 .WithEntityAccess())
             {
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Attack) continue;
 
                 var interactingEntity = interactingEntityRef.ValueRO.Value;
 
-                bool isValidAndAliveTarget = SystemAPI.HasComponent<IsAliveTag>(interactingEntity);
+                bool isValidAndAliveTarget = SystemAPI.HasComponent<IsAlive>(interactingEntity);
 
                 if (!isValidAndAliveTarget)
                 {

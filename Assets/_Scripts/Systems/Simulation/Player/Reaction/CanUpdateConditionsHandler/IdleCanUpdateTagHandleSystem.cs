@@ -21,7 +21,7 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                     IdleReaction.CanUpdateTag>()
                 .WithAll<
                     AttackReaction.CanUpdateTag
-                    , IsAliveTag
+                    , IsAlive
                     , CanMoveEntityTag>()
                 .WithAll<
                     PlayerTag>()
@@ -37,7 +37,7 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
         }
 
         [WithAll(typeof(PlayerTag))]
-        [WithAll(typeof(IsAliveTag))]
+        [WithAll(typeof(IsAlive))]
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct TagHandleJob : IJobEntity

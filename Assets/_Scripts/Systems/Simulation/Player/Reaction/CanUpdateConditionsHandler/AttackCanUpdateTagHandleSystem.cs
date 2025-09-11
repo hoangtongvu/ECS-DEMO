@@ -23,7 +23,7 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                     , AttackReaction.UpdatingTag
                     , AttackReaction.TimerSeconds>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .WithAll<
                     PlayerTag>()
                 .Build();
@@ -48,7 +48,7 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                     , RefRO<AttackReaction.TimerSeconds>
                     , RefRO<AttackDurationSeconds>>()
                 .WithAll<PlayerTag>()
-                .WithAll<IsAliveTag>()
+                .WithAll<IsAlive>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 bool isInBuildMode = placementPreviewData.CanPlacementPreview;

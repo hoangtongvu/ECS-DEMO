@@ -51,7 +51,7 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
                     Value = hpData,
                 });
 
-                ecb.AddComponent<IsAliveTag>(entity);
+                ecb.AddComponent<IsAlive>(entity);
                 ecb.RemoveComponent<PendingDead>(entity);
             }
 

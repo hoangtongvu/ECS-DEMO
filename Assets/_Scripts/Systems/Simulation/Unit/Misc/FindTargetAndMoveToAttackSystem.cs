@@ -115,7 +115,7 @@ namespace Systems.Simulation.Unit.Misc
                 PhysicsWorld = physicsWorld,
                 DetectionRadiusMap = detectionRadiusMap,
                 FactionIndexLookup = SystemAPI.GetComponentLookup<FactionIndex>(),
-                IsAliveTagLookup = SystemAPI.GetComponentLookup<IsAliveTag>(),
+                IsAliveTagLookup = SystemAPI.GetComponentLookup<IsAlive>(),
                 TargetEntityArray = targetEntityArray,
                 TargetPosArray = targetPosArray,
             }.ScheduleParallel(this.entityQuery, state.Dependency);
@@ -176,7 +176,7 @@ namespace Systems.Simulation.Unit.Misc
             public ComponentLookup<FactionIndex> FactionIndexLookup;
 
             [ReadOnly]
-            public ComponentLookup<IsAliveTag> IsAliveTagLookup;
+            public ComponentLookup<IsAlive> IsAliveTagLookup;
 
             public NativeArray<Entity> TargetEntityArray;
             public NativeArray<float3> TargetPosArray;
