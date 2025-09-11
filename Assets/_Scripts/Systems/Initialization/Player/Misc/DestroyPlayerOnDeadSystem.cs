@@ -2,6 +2,7 @@ using Components.GameEntity.Damage;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Misc.EntityCleanup;
 using Components.Player;
+using Systems.Initialization.GameEntity.Damage.DeadResolve;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,7 +10,7 @@ using Utilities.Extensions;
 
 namespace Systems.Initialization.Player.Misc
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(DeadResolveSystemGroup))]
     [BurstCompile]
     public partial struct DestroyPlayerOnDeadSystem : ISystem
     {
@@ -21,8 +22,8 @@ namespace Systems.Initialization.Player.Misc
             this.query = SystemAPI.QueryBuilder()
                 .WithAll<
                     PlayerTag>()
-                .WithDisabled<
-                    IsAliveTag>()
+                .WithAll<
+                    IsDead>()
                 .Build();
 
             state.RequireForUpdate(this.query);
@@ -44,7 +45,6 @@ namespace Systems.Initialization.Player.Misc
                 TimeStamp = SystemAPI.Time.ElapsedTime,
                 DurationSeconds = new(5.5f),
             });
-
         }
 
     }

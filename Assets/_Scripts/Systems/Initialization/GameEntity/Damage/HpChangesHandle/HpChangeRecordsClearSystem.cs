@@ -2,11 +2,12 @@ using Components.GameEntity.Damage;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Initialization.GameEntity.Damage
+namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
 {
     [UpdateInGroup(typeof(HpChangesHandleSystemGroup), OrderLast = true)]
+    [UpdateBefore(typeof(AliveToPendingDeadHandleSystem))]
     [BurstCompile]
-    public partial struct IsAliveTagsDisabledSystem : ISystem
+    public partial struct HpChangeRecordsClearSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -14,6 +15,8 @@ namespace Systems.Initialization.GameEntity.Damage
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     CurrentHp
+                    , HpDataHolder
+                    , HpChangeRecordElement
                     , IsAliveTag>()
                 .Build();
 
@@ -23,19 +26,18 @@ namespace Systems.Initialization.GameEntity.Damage
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new DisableTagsJob()
+            new RecordsClearJob()
                 .ScheduleParallel();
         }
 
+        [WithAll(typeof(IsAliveTag))]
         [BurstCompile]
-        private partial struct DisableTagsJob : IJobEntity
+        private partial struct RecordsClearJob : IJobEntity
         {
             void Execute(
-                in CurrentHp currentHp
-                , EnabledRefRW<IsAliveTag> isAliveTag)
+                ref DynamicBuffer<HpChangeRecordElement> hpChangeRecords)
             {
-                if (currentHp.Value != 0) return;
-                isAliveTag.ValueRW = false;
+                hpChangeRecords.Clear();
             }
 
         }

@@ -7,8 +7,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Components.GameEntity;
 using Components.Harvest.HarvesteeHp;
-using Systems.Initialization.GameEntity.Damage;
 using Components.GameEntity.Damage;
+using Systems.Initialization.GameEntity.Damage.HpChangesHandle;
 
 namespace Systems.Initialization.Harvest
 {
@@ -26,7 +26,7 @@ namespace Systems.Initialization.Harvest
                     , LocalTransform
                     , PrimaryPrefabEntityHolder>()
                 .WithAll<
-                    IsAliveTag>()
+                    TakeHitEvent>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -44,8 +44,7 @@ namespace Systems.Initialization.Harvest
                     , RefRW<DropResourceHpThreshold>
                     , RefRO<LocalTransform>
                     , RefRO<PrimaryPrefabEntityHolder>>()
-                .WithAll<
-                    IsAliveTag>())
+                .WithAll<TakeHitEvent>())
             {
                 var resourceDropInfo = resourceDropInfoMap[primaryPrefabEntityHolderRef.ValueRO];
 
@@ -70,7 +69,6 @@ namespace Systems.Initialization.Harvest
                 }
 
                 dropResourceHpThresholdRef.ValueRW.Value = hpThreshold;
-
             }
 
         }
@@ -88,7 +86,6 @@ namespace Systems.Initialization.Harvest
                 ResourceType = dropType,
                 Quantity = quantityPerDrop,
             });
-
         }
 
     }

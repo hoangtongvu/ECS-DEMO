@@ -35,7 +35,6 @@ namespace Systems.Simulation.Harvest
                 .Build();
 
             state.RequireForUpdate(query0);
-            
         }
 
         [BurstCompile]
@@ -60,17 +59,15 @@ namespace Systems.Simulation.Harvest
                     , RefRW<WorkTimeCounterSecond>
                     , RefRO<ToolProfileIdHolder>
                     , RefRO<HarvesteeTypeHolder>>()
-                    .WithDisabled<CanMoveEntityTag>()
-                    .WithEntityAccess())
+                .WithDisabled<CanMoveEntityTag>()
+                .WithEntityAccess())
             {
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Harvest) continue;
 
                 var harvestEntity = interactingEntityRef.ValueRO.Value;
 
                 // NOTE: harvestEntity has Child Buffer (ICleanupBuffer) -> harvestEntity destruction will be delayed -> can't check using Exists().
-                bool isValidAndAliveTarget =
-                    SystemAPI.HasComponent<IsAliveTag>(harvestEntity) &&
-                    SystemAPI.IsComponentEnabled<IsAliveTag>(harvestEntity);
+                bool isValidAndAliveTarget = SystemAPI.HasComponent<IsAliveTag>(harvestEntity);
 
                 if (!isValidAndAliveTarget)
                 {

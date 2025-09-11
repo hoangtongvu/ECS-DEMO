@@ -2,7 +2,7 @@ using Components.GameEntity.Damage;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Initialization.GameEntity.Damage
+namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
 {
     [UpdateInGroup(typeof(HpChangesHandleSystemGroup), OrderFirst = true)]
     [BurstCompile]

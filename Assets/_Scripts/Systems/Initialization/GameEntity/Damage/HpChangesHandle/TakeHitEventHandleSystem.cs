@@ -2,7 +2,7 @@ using Components.GameEntity.Damage;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Initialization.GameEntity.Damage
+namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
 {
     [UpdateInGroup(typeof(HpChangesHandleSystemGroup), OrderFirst = true)]
     [UpdateAfter(typeof(HpChangesHandleSystem))]
@@ -15,8 +15,6 @@ namespace Systems.Initialization.GameEntity.Damage
         public void OnCreate(ref SystemState state)
         {
             var query = SystemAPI.QueryBuilder()
-                .WithAll<
-                    HpChangeRecordElement>()
                 .WithAll<
                     TakeHitEvent
                     , FrameHpChange>()

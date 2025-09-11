@@ -39,6 +39,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
         }
 
         [WithAll(typeof(UnitTag))]
+        [WithAll(typeof(IsAliveTag))]
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct TagHandleJob : IJobEntity
@@ -46,14 +47,13 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<AttackReaction.CanUpdateTag> reactionCanUpdateTag
-                , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
                 , in InteractingEntity interactingEntity
                 , in InteractionTypeICD interactionTypeICD)
             {
                 bool isInteractingEntityValid = interactingEntity.Value != Entity.Null;
                 bool isInteractionTypeAttack = interactionTypeICD.Value == InteractionType.Attack;
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !canMoveEntityTag.ValueRO && isInteractingEntityValid && isInteractionTypeAttack;
+                reactionCanUpdateTag.ValueRW = !canMoveEntityTag.ValueRO && isInteractingEntityValid && isInteractionTypeAttack;
             }
 
         }

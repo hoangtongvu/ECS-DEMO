@@ -31,14 +31,13 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
         public void OnUpdate(ref SystemState state)
         {
             var hpDataMap = SystemAPI.GetSingleton<HpDataMap>().Value;
-
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (primaryPrefabEntityHolderRef, entity) in
-                SystemAPI.Query<
+            foreach (var (primaryPrefabEntityHolderRef, entity) in SystemAPI
+                .Query<
                     RefRO<PrimaryPrefabEntityHolder>>()
-                    .WithAll<NeedRevertToBaseUnitTag>()
-                    .WithEntityAccess())
+                .WithAll<NeedRevertToBaseUnitTag>()
+                .WithEntityAccess())
             {
                 var hpData = hpDataMap[primaryPrefabEntityHolderRef.ValueRO];
 
@@ -52,7 +51,8 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
                     Value = hpData,
                 });
 
-                SystemAPI.SetComponentEnabled<IsAliveTag>(entity, true);
+                ecb.AddComponent<IsAliveTag>(entity);
+                ecb.RemoveComponent<PendingDead>(entity);
             }
 
             ecb.Playback(state.EntityManager);

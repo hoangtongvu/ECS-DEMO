@@ -15,38 +15,29 @@ namespace Systems.Initialization.Harvest
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    HpChangeRecordElement
-                    , LocalTransform
-                    , ShakePositionXZTweener_TweenData
-                    , Can_ShakePositionXZTweener_TweenTag>()
-                .WithAll<IsAliveTag>()
+                    ShakePositionXZTweener_TweenData
+                    , Can_ShakePositionXZTweener_TweenTag
+                    , TakeHitEvent>()
                 .Build();
 
             state.RequireForUpdate(query0);
-
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (hpChangeRecords, transformRef, tweenDataRef, canTweenTag, isAliveTag) in
-                SystemAPI.Query<
-                    DynamicBuffer<HpChangeRecordElement>
-                    , RefRO<LocalTransform>
-                    , RefRW<ShakePositionXZTweener_TweenData>
+            foreach (var (tweenDataRef, canTweenTag, takeHitEventRef) in SystemAPI
+                .Query<
+                    RefRW<ShakePositionXZTweener_TweenData>
                     , EnabledRefRW<Can_ShakePositionXZTweener_TweenTag>
-                    , EnabledRefRO<IsAliveTag>>()
-                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
-
+                    , EnabledRefRO<TakeHitEvent>>()
+                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                if (!isAliveTag.ValueRO) continue;
-                if (hpChangeRecords.IsEmpty) continue;
+                if (!takeHitEventRef.ValueRO) continue;
 
                 ShakePositionXZTweener.TweenBuilder.Create(0.4f, new(15f, 0.4f, 0f))
                     .Build(ref tweenDataRef.ValueRW, canTweenTag);
-
             }
-
         }
 
     }

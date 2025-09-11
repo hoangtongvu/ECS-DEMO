@@ -3,7 +3,6 @@ using Components.Unit;
 using Components.Unit.Misc;
 using Components.Unit.RevertToBaseUnit;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 
 namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
@@ -22,8 +21,8 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
                     UnitTag>()
                 .WithNone<
                     JoblessUnitTag>()
-                .WithDisabled<
-                    IsAliveTag>()
+                .WithAll<
+                    PendingDead>()
                 .Build();
 
             state.RequireForUpdate(this.query);
@@ -32,8 +31,7 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var entities = this.query.ToEntityArray(Allocator.Temp);
-            state.EntityManager.AddComponent<NeedRevertToBaseUnitTag>(entities);
+            state.EntityManager.AddComponent<NeedRevertToBaseUnitTag>(this.query);
         }
 
     }

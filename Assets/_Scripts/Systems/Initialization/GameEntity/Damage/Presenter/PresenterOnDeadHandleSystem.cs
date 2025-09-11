@@ -1,12 +1,13 @@
 using Components.GameEntity.Damage;
 using Components.Misc.Presenter;
 using Core.Misc.Presenter.PresenterMessages;
+using Systems.Initialization.GameEntity.Damage.DeadResolve;
 using Unity.Entities;
 using ZBase.Foundation.PubSub;
 
 namespace Systems.Initialization.GameEntity.Damage.Presenter
 {
-    [UpdateInGroup(typeof(HpChangesHandleSystemGroup))]
+    [UpdateInGroup(typeof(DeadResolveSystemGroup))]
     public partial class PresenterOnDeadHandleSystem : SystemBase
     {
         protected override void OnCreate()

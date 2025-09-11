@@ -221,7 +221,6 @@ namespace Systems.Simulation.Unit.Misc
                     var hit = hitList[i];
 
                     if (!this.IsAliveTagLookup.HasComponent(hit.Entity)) continue;
-                    if (!this.IsAliveTagLookup.IsComponentEnabled(hit.Entity)) continue;
 
                     if (!this.FactionIndexLookup.TryGetComponent(hit.Entity, out var targetFactionIndex)) continue;
                     if (targetFactionIndex == FactionIndex.Neutral) continue;

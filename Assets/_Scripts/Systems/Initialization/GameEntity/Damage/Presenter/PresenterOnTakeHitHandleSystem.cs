@@ -1,6 +1,7 @@
 using Components.GameEntity.Damage;
 using Components.Misc.Presenter;
 using Core.Misc.Presenter.PresenterMessages;
+using Systems.Initialization.GameEntity.Damage.HpChangesHandle;
 using Unity.Entities;
 using ZBase.Foundation.PubSub;
 
@@ -13,8 +14,7 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
         {
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
-                    HpChangeRecordElement
-                    , PresenterHolder
+                    PresenterHolder
                     , CurrentHp
                     , HpDataHolder>()
                 .WithAll<
@@ -26,18 +26,18 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
 
         protected override void OnUpdate()
         {
-            foreach (var (hpChangeRecords, presenterHolderRef, currentHpRef, hpDataHolder) in SystemAPI
+            foreach (var (presenterHolderRef, currentHpRef, frameHpChangeRef, hpDataHolder) in SystemAPI
                 .Query<
-                    DynamicBuffer<HpChangeRecordElement>
-                    , RefRO<PresenterHolder>
+                    RefRO<PresenterHolder>
                     , RefRO<CurrentHp>
+                    , RefRO<FrameHpChange>
                     , HpDataHolder>()
                 .WithAll<
                     TakeHitEvent>())
             {
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
 
-                int hitDmgValue = hpChangeRecords[0].Value;
+                int hitDmgValue = frameHpChangeRef.ValueRO.Value;
                 float remainingHpRatio = (float)currentHpRef.ValueRO.Value / hpDataHolder.Value.MaxHp;
 
                 basePresenter.Messenger.MessagePublisher
