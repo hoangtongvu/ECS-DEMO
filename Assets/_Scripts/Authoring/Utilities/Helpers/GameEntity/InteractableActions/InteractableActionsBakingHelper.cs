@@ -8,13 +8,9 @@ namespace Authoring.Utilities.Helpers.GameEntity.InteractableActions
     {
         public static void AddComponents(IBaker baker, in Entity entity)
         {
-            baker.AddComponent<ActionsContainerUIHolder>(entity);
-            baker.AddAndDisableComponent<CanShowActionsContainerUITag>(entity);
-            baker.AddAndDisableComponent<ActionsContainerUIShownTag>(entity);
-            baker.AddAndDisableComponent<NewlyActionTriggeredTag>(entity);
-
+            baker.AddComponent<EntitySupportsShowActionsContainerUI>(entity);
+            baker.AddAndDisableComponent<IsTargetForActionsContainerUI>(entity);
         }
-
     }
 
 }

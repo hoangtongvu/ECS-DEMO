@@ -6,5 +6,4 @@ namespace Components.GameEntity.InteractableActions
     {
         public Entity Value;
     }
-
 }

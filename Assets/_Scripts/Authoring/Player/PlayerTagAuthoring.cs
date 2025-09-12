@@ -47,8 +47,6 @@ namespace Authoring.Player
                     Value = 18,
                 });
 
-                AddComponent<NearestInteractableEntity>(entity);
-
                 AddComponent(entity, new PlayerInteractRadius
                 {
                     Value = new(3f),

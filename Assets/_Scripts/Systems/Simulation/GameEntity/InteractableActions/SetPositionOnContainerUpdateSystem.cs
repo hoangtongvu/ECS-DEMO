@@ -1,11 +1,13 @@
 using Components.GameEntity.InteractableActions;
+using Core.Utilities.Extensions;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Systems.Simulation.GameEntity.InteractableActions
 {
-    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup), OrderLast = true)]
-    [UpdateBefore(typeof(ActionsContainerCanUpdateTagClearSystem))]
-    public partial class SetFirstActionWhenActionsFilledSystem : SystemBase
+    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
+    public partial class SetPositionOnContainerUpdateSystem : SystemBase
     {
         protected override void OnCreate()
         {
@@ -23,11 +25,11 @@ namespace Systems.Simulation.GameEntity.InteractableActions
             if (!this.CanActionsContainerUpdate()) return;
 
             var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
-            var actionPanelsHolder = actionsContainerUICtrl.ActionPanelsHolder;
+            var nearestInteractableEntity = SystemAPI.GetSingleton<NearestInteractableEntity>().Value;
+            half offsetY = SystemAPI.GetSingleton<ActionsContainerUIOffsetY>().Value;
 
-            actionsContainerUICtrl.ChosenActionPanelCtrl = actionPanelsHolder.Value.Count == 0
-                ? null
-                : actionPanelsHolder.Value[0];
+            var targetTransform = SystemAPI.GetComponent<LocalTransform>(nearestInteractableEntity);
+            actionsContainerUICtrl.transform.position = targetTransform.Position.Add(y: offsetY);
         }
 
         private bool CanActionsContainerUpdate()

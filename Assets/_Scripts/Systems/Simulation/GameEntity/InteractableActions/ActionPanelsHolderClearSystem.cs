@@ -3,19 +3,12 @@ using Unity.Entities;
 
 namespace Systems.Simulation.GameEntity.InteractableActions
 {
-    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup), OrderLast = true)]
-    [UpdateBefore(typeof(ActionsContainerCanUpdateTagClearSystem))]
-    public partial class SetFirstActionWhenActionsFilledSystem : SystemBase
+    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup), OrderFirst = true)]
+    public partial class ActionPanelsHolderClearSystem : SystemBase
     {
         protected override void OnCreate()
         {
-            var query0 = SystemAPI.QueryBuilder()
-                .WithAll<
-                    ActionsContainerUI_CD.Holder
-                    , ActionsContainerUI_CD.CanUpdate>()
-                .Build();
-
-            this.RequireForUpdate(query0);
+            this.RequireForUpdate<ActionsContainerUI_CD.Holder>();
         }
 
         protected override void OnUpdate()
@@ -23,11 +16,13 @@ namespace Systems.Simulation.GameEntity.InteractableActions
             if (!this.CanActionsContainerUpdate()) return;
 
             var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
-            var actionPanelsHolder = actionsContainerUICtrl.ActionPanelsHolder;
 
-            actionsContainerUICtrl.ChosenActionPanelCtrl = actionPanelsHolder.Value.Count == 0
-                ? null
-                : actionPanelsHolder.Value[0];
+            foreach (var actionPanel in actionsContainerUICtrl.ActionPanelsHolder.Value)
+            {
+                actionPanel.ReturnSelfToPool();
+            }
+
+            actionsContainerUICtrl.ActionPanelsHolder.Value.Clear();
         }
 
         private bool CanActionsContainerUpdate()

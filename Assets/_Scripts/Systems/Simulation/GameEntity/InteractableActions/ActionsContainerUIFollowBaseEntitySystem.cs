@@ -7,8 +7,7 @@ using Unity.Transforms;
 
 namespace Systems.Simulation.GameEntity.InteractableActions
 {
-    [UpdateInGroup(typeof(ActionUIsHandleSystemGroup), OrderLast = true)]
-    [UpdateAfter(typeof(ActionsContainerUIShownTagHandleSystem))]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial class ActionsContainerUIFollowBaseEntitySystem : SystemBase
     {
         protected override void OnCreate()
@@ -16,29 +15,29 @@ namespace Systems.Simulation.GameEntity.InteractableActions
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     LocalTransform
-                    , ActionsContainerUIHolder
-                    , ActionsContainerUIShownTag
                     , CanMoveEntityTag>()
                 .Build();
 
             this.RequireForUpdate(query0);
+            this.RequireForUpdate<ActionsContainerUI_CD.Holder>();
             this.RequireForUpdate<ActionsContainerUIOffsetY>();
         }
 
         protected override void OnUpdate()
         {
+            var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
+            if (!actionsContainerUICtrl) return;
+
             half offsetY = SystemAPI.GetSingleton<ActionsContainerUIOffsetY>().Value;
 
-            foreach (var (unitTransform, actionsContainerUIHolderRef) in SystemAPI
+            foreach (var transformRef in SystemAPI
                 .Query<
-                    RefRO<LocalTransform>
-                    , RefRW<ActionsContainerUIHolder>>()
-                .WithAll<
-                    ActionsContainerUIShownTag
-                    , CanMoveEntityTag>())
+                    RefRO<LocalTransform>>()
+                .WithAll<CanMoveEntityTag>()
+                .WithAll<IsTargetForActionsContainerUI>())
             {
-                var uiTransform = actionsContainerUIHolderRef.ValueRO.Value.Value.transform;
-                uiTransform.position = unitTransform.ValueRO.Position.Add(y: offsetY);
+                var uiTransform = actionsContainerUICtrl.transform;
+                uiTransform.position = transformRef.ValueRO.Position.Add(y: offsetY);
             }
 
         }

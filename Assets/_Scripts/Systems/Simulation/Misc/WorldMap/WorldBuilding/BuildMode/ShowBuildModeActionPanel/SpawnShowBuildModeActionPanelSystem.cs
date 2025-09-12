@@ -12,7 +12,7 @@ using Unity.Mathematics;
 
 namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildModeActionPanel
 {
-    [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
+    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
     public partial class SpawnShowBuildModeActionPanelSystem : SystemBase
     {
         private EntityQuery playerQuery;
@@ -28,10 +28,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildMode
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     UnitTag
-                    , IsBuilderUnitTag
-                    , ActionsContainerUIHolder
-                    , CanShowActionsContainerUITag
-                    , ActionsContainerUIShownTag>()
+                    , IsBuilderUnitTag>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -41,36 +38,43 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildMode
 
         protected override void OnUpdate()
         {
+            if (!this.CanActionsContainerUpdate()) return;
+
+            var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
             byte playerFactionIndex = this.playerQuery.GetSingleton<FactionIndex>().Value;
 
-            foreach (var (factionIndexRef, actionsContainerUIHolderRef, canShowUITag, uiShownTag, entity) in SystemAPI
+            foreach (var (factionIndexRef, entity) in SystemAPI
                 .Query<
-                    RefRO<FactionIndex>
-                    , RefRO<ActionsContainerUIHolder>
-                    , EnabledRefRO<CanShowActionsContainerUITag>
-                    , EnabledRefRO<ActionsContainerUIShownTag>>()
+                    RefRO<FactionIndex>>()
                 .WithAll<UnitTag>()
                 .WithAll<IsBuilderUnitTag>()
-                .WithEntityAccess()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+                .WithAll<IsTargetForActionsContainerUI>()
+                .WithEntityAccess())
             {
-                if (!canShowUITag.ValueRO) continue;
-                if (uiShownTag.ValueRO) continue;
                 if (factionIndexRef.ValueRO.Value != playerFactionIndex) continue;
 
-                var actionContainer = actionsContainerUIHolderRef.ValueRO.Value.Value;
-                float3 spawnPos = actionContainer.transform.position;
+                float3 spawnPos = actionsContainerUICtrl.transform.position;
 
                 var actionPanelCtrl = (ShowBuildModeActionPanelCtrl)UICtrlPoolMap.Instance
                     .Rent(UIType.ActionPanel_ShowBuildMode);
                 actionPanelCtrl.transform.position = spawnPos;
 
-                actionPanelCtrl.Initialize(in entity, 0, actionContainer);
+                actionPanelCtrl.Initialize(in entity, 0, actionsContainerUICtrl);
                 actionPanelCtrl.gameObject.SetActive(true);
-                actionContainer.ActionPanelsHolder.Add(actionPanelCtrl);
-
+                actionsContainerUICtrl.ActionPanelsHolder.Add(actionPanelCtrl);
             }
 
+        }
+
+        private bool CanActionsContainerUpdate()
+        {
+            foreach (var canUpdateTag in SystemAPI
+                .Query<EnabledRefRO<ActionsContainerUI_CD.CanUpdate>>())
+            {
+                return true;
+            }
+
+            return false;
         }
 
     }

@@ -28,7 +28,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
             var query = SystemAPI.QueryBuilder()
                 .WithAll<
                     EntitySpawningProfileElement
-                    , ActionsContainerUIShownTag>()
+                    , IsTargetForActionsContainerUI>()
                 .Build();
 
             this.RequireForUpdate(query);
@@ -48,7 +48,7 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
                 .Query<
                     RefRO<FactionIndex>
                     , DynamicBuffer<EntitySpawningProfileElement>>()
-                .WithAll<ActionsContainerUIShownTag>()
+                .WithAll<IsTargetForActionsContainerUI>()
                 .WithEntityAccess())
             {
                 if (factionIndexRef.ValueRO.Value != playerFactionIndex.Value) continue;

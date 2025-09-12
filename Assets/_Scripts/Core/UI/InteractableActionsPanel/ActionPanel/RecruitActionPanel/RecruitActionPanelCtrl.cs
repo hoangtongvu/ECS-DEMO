@@ -21,6 +21,7 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel
 
         public override void Activate()
         {
+            base.Activate();
             GameplayMessenger.MessagePublisher
                 .Publish(new RecruitUnitMessage(this.BaseEntity));
         }

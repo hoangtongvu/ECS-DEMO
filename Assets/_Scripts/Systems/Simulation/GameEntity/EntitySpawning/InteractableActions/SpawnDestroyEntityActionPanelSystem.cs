@@ -1,4 +1,3 @@
-using Components.GameEntity;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
@@ -13,7 +12,7 @@ using Unity.Mathematics;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 {
-    [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
+    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
     public partial class SpawnDestroyEntityActionPanelSystem : SystemBase
     {
         private EntityQuery playerQuery;
@@ -28,11 +27,8 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    EntitySpawningProfileElement
-                    , ActionsContainerUIHolder
-                    , PrimaryPrefabEntityHolder
-                    , CanShowActionsContainerUITag
-                    , ActionsContainerUIShownTag>()
+                    EntitySpawningProfileElement>()
+                .WithAll<IsTargetForActionsContainerUI>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -42,35 +38,42 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 
         protected override void OnUpdate()
         {
+            if (!this.CanActionsContainerUpdate()) return;
+
+            var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
             byte playerFactionIndex = this.playerQuery.GetSingleton<FactionIndex>().Value;
 
-            foreach (var (factionIndexRef, actionsContainerUIHolderRef, primaryPrefabEntityHolderRef, canShowUITag, uiShownTag, entity) in SystemAPI
+            foreach (var (factionIndexRef, entity) in SystemAPI
                 .Query<
-                    RefRO<FactionIndex>
-                    , RefRO<ActionsContainerUIHolder>
-                    , RefRO<PrimaryPrefabEntityHolder>
-                    , EnabledRefRO<CanShowActionsContainerUITag>
-                    , EnabledRefRO<ActionsContainerUIShownTag>>()
+                    RefRO<FactionIndex>>()
                 .WithAll<EntitySpawningProfileElement>()
-                .WithEntityAccess()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+                .WithAll<IsTargetForActionsContainerUI>()
+                .WithEntityAccess())
             {
-                if (!canShowUITag.ValueRO) continue;
-                if (uiShownTag.ValueRO) continue;
                 if (factionIndexRef.ValueRO.Value != playerFactionIndex) continue;
 
-                float3 spawnPos = actionsContainerUIHolderRef.ValueRO.Value.Value.transform.position;
+                float3 spawnPos = actionsContainerUICtrl.transform.position;
 
                 var actionPanelCtrl = (DestroyEntityActionPanelCtrl)UICtrlPoolMap.Instance
                     .Rent(UIType.ActionPanel_DestroyEntity);
                 actionPanelCtrl.transform.position = spawnPos;
 
-                actionPanelCtrl.Initialize(in entity, 123, actionsContainerUIHolderRef.ValueRO.Value);
+                actionPanelCtrl.Initialize(in entity, 123, actionsContainerUICtrl);
                 actionPanelCtrl.gameObject.SetActive(true);
-                actionsContainerUIHolderRef.ValueRO.Value.Value.ActionPanelsHolder.Add(actionPanelCtrl);
-
+                actionsContainerUICtrl.ActionPanelsHolder.Add(actionPanelCtrl);
             }
 
+        }
+
+        private bool CanActionsContainerUpdate()
+        {
+            foreach (var canUpdateTag in SystemAPI
+                .Query<EnabledRefRO<ActionsContainerUI_CD.CanUpdate>>())
+            {
+                return true;
+            }
+
+            return false;
         }
 
     }

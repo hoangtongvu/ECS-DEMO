@@ -15,7 +15,7 @@ using Unity.Mathematics;
 
 namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 {
-    [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
+    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
     public partial class SpawnEntitySpawningProfileActionPanelSystem : SystemBase
     {
         private EntityQuery playerQuery;
@@ -31,11 +31,9 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     FactionIndex
-                    , EntitySpawningProfileElement
-                    , ActionsContainerUIHolder
-                    , CanShowActionsContainerUITag
-                    , ActionsContainerUIShownTag>()
+                    , EntitySpawningProfileElement>()
                 .WithNone<ConstructionRemaining>()
+                .WithAll<IsTargetForActionsContainerUI>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -45,27 +43,25 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 
         protected override void OnUpdate()
         {
+            if (!this.CanActionsContainerUpdate()) return;
+
+            var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
             byte playerFactionIndex = this.playerQuery.GetSingleton<FactionIndex>().Value;
 
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var spritesContainer = SystemAPI.GetSingleton<EntitySpawningSpritesContainer>();
 
-            foreach (var (factionIndexRef, spawningProfiles, actionsContainerUIHolderRef, canShowUITag, uiShownTag, entity) in SystemAPI
+            foreach (var (factionIndexRef, spawningProfiles, entity) in SystemAPI
                 .Query<
                     RefRO<FactionIndex>
-                    , DynamicBuffer<EntitySpawningProfileElement>
-                    , RefRO<ActionsContainerUIHolder>
-                    , EnabledRefRO<CanShowActionsContainerUITag>
-                    , EnabledRefRO<ActionsContainerUIShownTag>>()
+                    , DynamicBuffer<EntitySpawningProfileElement>>()
                 .WithNone<ConstructionRemaining>()
-                .WithEntityAccess()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+                .WithAll<IsTargetForActionsContainerUI>()
+                .WithEntityAccess())
             {
-                if (!canShowUITag.ValueRO) continue;
-                if (uiShownTag.ValueRO) continue;
                 if (factionIndexRef.ValueRO.Value != playerFactionIndex) continue;
 
-                float3 spawnPos = actionsContainerUIHolderRef.ValueRO.Value.Value.transform.position;
+                float3 spawnPos = actionsContainerUICtrl.transform.position;
 
                 int count = spawningProfiles.Length;
 
@@ -82,13 +78,24 @@ namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
                     actionPanelCtrl.SpawnCountText.TrySetSpawnCount(profile.SpawnCount.Value);
                     actionPanelCtrl.ProgressBar.ClearProgress();
 
-                    actionPanelCtrl.Initialize(in entity, (sbyte)i, actionsContainerUIHolderRef.ValueRO.Value, i);
+                    actionPanelCtrl.Initialize(in entity, (sbyte)i, actionsContainerUICtrl, i);
                     actionPanelCtrl.gameObject.SetActive(true);
-                    actionsContainerUIHolderRef.ValueRO.Value.Value.ActionPanelsHolder.Add(actionPanelCtrl);
+                    actionsContainerUICtrl.ActionPanelsHolder.Add(actionPanelCtrl);
                 }
 
             }
 
+        }
+
+        private bool CanActionsContainerUpdate()
+        {
+            foreach (var canUpdateTag in SystemAPI
+                .Query<EnabledRefRO<ActionsContainerUI_CD.CanUpdate>>())
+            {
+                return true;
+            }
+
+            return false;
         }
 
     }

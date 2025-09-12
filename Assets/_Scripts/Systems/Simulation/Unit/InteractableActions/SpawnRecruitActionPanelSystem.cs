@@ -17,17 +17,14 @@ using Unity.Mathematics;
 
 namespace Systems.Simulation.Unit.InteractableActions
 {
-    [UpdateInGroup(typeof(ActionUIsHandleSystemGroup))]
+    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
     public partial class SpawnRecruitActionPanelSystem : SystemBase
     {
         protected override void OnCreate()
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    ActionsContainerUIHolder
-                    , PrimaryPrefabEntityHolder
-                    , CanShowActionsContainerUITag
-                    , ActionsContainerUIShownTag>()
+                    PrimaryPrefabEntityHolder>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -39,27 +36,24 @@ namespace Systems.Simulation.Unit.InteractableActions
 
         protected override void OnUpdate()
         {
+            if (!this.CanActionsContainerUpdate()) return;
+
+            var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
             var entityToContainerIndexMap = SystemAPI.GetSingleton<EntityToContainerIndexMap>();
             var entitySpawningCostsContainer = SystemAPI.GetSingleton<EntitySpawningCostsContainer>();
             var resourceProfiles = SystemAPI.GetSingleton<ResourceProfilesSOHolder>().Value.Value.Profiles;
 
-            foreach (var (factionIndexRef, actionsContainerUIHolderRef, primaryPrefabEntityHolderRef, canShowUITag, uiShownTag, entity) in SystemAPI
+            foreach (var (factionIndexRef, primaryPrefabEntityHolderRef, entity) in SystemAPI
                 .Query<
                     RefRO<FactionIndex>
-                    , RefRO<ActionsContainerUIHolder>
-                    , RefRO<PrimaryPrefabEntityHolder>
-                    , EnabledRefRO<CanShowActionsContainerUITag>
-                    , EnabledRefRO<ActionsContainerUIShownTag>>()
-                .WithAll<
-                    CanBeRecruitedTag>()
-                .WithEntityAccess()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+                    , RefRO<PrimaryPrefabEntityHolder>>()
+                .WithAll<CanBeRecruitedTag>()
+                .WithAll<IsTargetForActionsContainerUI>()
+                .WithEntityAccess())
             {
-                if (!canShowUITag.ValueRO) continue;
-                if (uiShownTag.ValueRO) continue;
                 if (factionIndexRef.ValueRO != FactionIndex.Neutral) continue;
 
-                float3 spawnPos = actionsContainerUIHolderRef.ValueRO.Value.Value.transform.position;
+                float3 spawnPos = actionsContainerUICtrl.transform.position;
 
                 var actionPanelCtrl = (RecruitActionPanelCtrl)UICtrlPoolMap.Instance
                         .Rent(UIType.ActionPanel_Recruit);
@@ -95,12 +89,22 @@ namespace Systems.Simulation.Unit.InteractableActions
 
                 }
 
-                actionPanelCtrl.Initialize(in entity, 0, actionsContainerUIHolderRef.ValueRO.Value);
+                actionPanelCtrl.Initialize(in entity, 0, actionsContainerUICtrl);
                 actionPanelCtrl.gameObject.SetActive(true);
-                actionsContainerUIHolderRef.ValueRO.Value.Value.ActionPanelsHolder.Add(actionPanelCtrl);
-
+                actionsContainerUICtrl.ActionPanelsHolder.Add(actionPanelCtrl);
             }
 
+        }
+
+        private bool CanActionsContainerUpdate()
+        {
+            foreach (var canUpdateTag in SystemAPI
+                .Query<EnabledRefRO<ActionsContainerUI_CD.CanUpdate>>())
+            {
+                return true;
+            }
+
+            return false;
         }
 
     }

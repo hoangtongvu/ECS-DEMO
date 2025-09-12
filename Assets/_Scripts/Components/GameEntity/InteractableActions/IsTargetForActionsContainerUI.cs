@@ -2,8 +2,7 @@ using Unity.Entities;
 
 namespace Components.GameEntity.InteractableActions
 {
-    public struct ActionsContainerUIShownTag : IComponentData, IEnableableComponent
+    public struct IsTargetForActionsContainerUI : IComponentData, IEnableableComponent
     {
     }
-
 }

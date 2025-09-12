@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Core.UI.InteractableActionsPanel
 {
     [GenerateUIType("ActionsContainerUI")]
-    public partial class ActionsContainerUICtrl : BaseUICtrl
+    public partial class ActionsContainerUICtrl : BaseUICtrl, IReusableUI
     {
         [SerializeField] private ActionPanelsHolder actionPanelsHolder;
         [SerializeField] private ActionPanelCtrl chosenActionPanelCtrl;
@@ -39,6 +39,10 @@ namespace Core.UI.InteractableActionsPanel
 
             this.actionPanelsHolder.Value.Clear();
             this.chosenActionPanelCtrl = null;
+        }
+
+        public void Reuse()
+        {
         }
 
     }
