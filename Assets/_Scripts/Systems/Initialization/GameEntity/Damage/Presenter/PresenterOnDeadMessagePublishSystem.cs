@@ -8,7 +8,7 @@ using ZBase.Foundation.PubSub;
 namespace Systems.Initialization.GameEntity.Damage.Presenter
 {
     [UpdateInGroup(typeof(DeadResolveSystemGroup))]
-    public partial class PresenterOnDeadHandleSystem : SystemBase
+    public partial class PresenterOnDeadMessagePublishSystem : SystemBase
     {
         protected override void OnCreate()
         {

@@ -8,7 +8,7 @@ using ZBase.Foundation.PubSub;
 namespace Systems.Initialization.GameEntity.Damage.Presenter
 {
     [UpdateInGroup(typeof(HpChangesHandleSystemGroup))]
-    public partial class PresenterOnTakeHitHandleSystem : SystemBase
+    public partial class PresenterOnTakeHitMessagePublishSystem : SystemBase
     {
         protected override void OnCreate()
         {
