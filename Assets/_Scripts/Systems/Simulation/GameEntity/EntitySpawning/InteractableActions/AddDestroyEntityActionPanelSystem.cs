@@ -1,19 +1,19 @@
+using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Misc;
 using Components.Player;
 using Components.UI.Pooling;
-using Components.Unit.Misc;
 using Core.UI.Identification;
-using Core.UI.InteractableActionsPanel.ActionPanel.ShowBuildModeActionPanel;
+using Core.UI.InteractableActionsPanel.ActionPanel.DestroyEntityActionPanel;
 using Core.UI.Pooling;
 using Systems.Simulation.GameEntity.InteractableActions;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildModeActionPanel
+namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 {
     [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
-    public partial class SpawnShowBuildModeActionPanelSystem : SystemBase
+    public partial class AddDestroyEntityActionPanelSystem : SystemBase
     {
         private EntityQuery playerQuery;
 
@@ -27,8 +27,8 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildMode
 
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    UnitTag
-                    , IsBuilderUnitTag>()
+                    EntitySpawningProfileElement>()
+                .WithAll<IsTargetForActionsContainerUI>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -46,8 +46,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildMode
             foreach (var (factionIndexRef, entity) in SystemAPI
                 .Query<
                     RefRO<FactionIndex>>()
-                .WithAll<UnitTag>()
-                .WithAll<IsBuilderUnitTag>()
+                .WithAll<EntitySpawningProfileElement>()
                 .WithAll<IsTargetForActionsContainerUI>()
                 .WithEntityAccess())
             {
@@ -55,11 +54,11 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildMode.ShowBuildMode
 
                 float3 spawnPos = actionsContainerUICtrl.transform.position;
 
-                var actionPanelCtrl = (ShowBuildModeActionPanelCtrl)UICtrlPoolMap.Instance
-                    .Rent(UIType.ActionPanel_ShowBuildMode);
+                var actionPanelCtrl = (DestroyEntityActionPanelCtrl)UICtrlPoolMap.Instance
+                    .Rent(UIType.ActionPanel_DestroyEntity);
                 actionPanelCtrl.transform.position = spawnPos;
 
-                actionPanelCtrl.Initialize(in entity, 0, actionsContainerUICtrl);
+                actionPanelCtrl.Initialize(in entity, 123, actionsContainerUICtrl);
                 actionPanelCtrl.gameObject.SetActive(true);
                 actionsContainerUICtrl.ActionPanelsHolder.Add(actionPanelCtrl);
             }

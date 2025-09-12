@@ -16,7 +16,7 @@ using Unity.Mathematics;
 namespace Systems.Simulation.GameEntity.EntitySpawning.InteractableActions
 {
     [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
-    public partial class SpawnEntitySpawningProfileActionPanelSystem : SystemBase
+    public partial class AddEntitySpawningProfileActionPanelSystem : SystemBase
     {
         private EntityQuery playerQuery;
 

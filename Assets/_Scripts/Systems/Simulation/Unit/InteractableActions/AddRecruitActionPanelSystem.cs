@@ -18,7 +18,7 @@ using Unity.Mathematics;
 namespace Systems.Simulation.Unit.InteractableActions
 {
     [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup))]
-    public partial class SpawnRecruitActionPanelSystem : SystemBase
+    public partial class AddRecruitActionPanelSystem : SystemBase
     {
         protected override void OnCreate()
         {
