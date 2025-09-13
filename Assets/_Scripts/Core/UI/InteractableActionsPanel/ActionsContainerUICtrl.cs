@@ -8,7 +8,10 @@ namespace Core.UI.InteractableActionsPanel
     {
         [SerializeField] private ActionPanelsHolder actionPanelsHolder;
         [SerializeField] private ActionPanelCtrl chosenActionPanelCtrl;
+        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private ActionsContainerUITweener tweener;
 
+        public CanvasGroup CanvasGroup => canvasGroup;
         public ActionPanelCtrl ChosenActionPanelCtrl
         {
             get => chosenActionPanelCtrl;
@@ -26,11 +29,30 @@ namespace Core.UI.InteractableActionsPanel
         {
             base.LoadComponents();
             this.LoadComponentInChildren(ref this.actionPanelsHolder);
+            this.LoadComponentInCtrl(ref this.canvasGroup);
+            this.tweener = new() { ctrl = this };
         }
 
-        public override void OnRent() { }
+        public override void OnRent()
+        {
+            this.tweener.TriggerTweenOnAppear();
+            this.chosenActionPanelCtrl = null;
+        }
+
+        public override void TriggerHiding() => this.tweener.TriggerTweenOnDisappear();
 
         public override void OnReturn()
+        {
+            this.ClearChildren();
+        }
+
+        public void Reuse()
+        {
+            this.tweener.TriggerTweenOnAppear();
+            this.chosenActionPanelCtrl = null;
+        }
+
+        private void ClearChildren()
         {
             foreach (var actionPanel in this.actionPanelsHolder.Value)
             {
@@ -38,11 +60,6 @@ namespace Core.UI.InteractableActionsPanel
             }
 
             this.actionPanelsHolder.Value.Clear();
-            this.chosenActionPanelCtrl = null;
-        }
-
-        public void Reuse()
-        {
         }
 
     }
