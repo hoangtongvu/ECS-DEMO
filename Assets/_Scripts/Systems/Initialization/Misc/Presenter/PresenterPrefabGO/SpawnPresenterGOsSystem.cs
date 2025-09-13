@@ -66,6 +66,8 @@ namespace Systems.Initialization.Misc.Presenter.PresenterPrefabGO
                     transformRef.ValueRO.Position
                     , transformRef.ValueRO.Rotation);
 
+                newPresenter.gameObject.SetActive(true);
+
                 ecb.AddComponent(entity, new PresenterHolder
                 {
                     Value = newPresenter,
