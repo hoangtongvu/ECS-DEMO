@@ -40,6 +40,7 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActi
 
         public override void Activate()
         {
+            base.Activate();
             GameplayMessenger.MessagePublisher
                 .Publish(new SpawnUnitMessage(this.BaseEntity, this.SpawningProfileElementIndex));
         }

@@ -9,6 +9,7 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.DestroyEntityActionPanel
     {
         public override void Activate()
         {
+            base.Activate();
             GameplayMessenger.MessagePublisher
                 .Publish(new DestroyEntityMessage(this.BaseEntity));
         }

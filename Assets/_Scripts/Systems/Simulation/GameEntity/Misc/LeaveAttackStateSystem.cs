@@ -17,7 +17,7 @@ namespace Systems.Simulation.GameEntity.Misc
                     InAttackStateTimeStamp
                     , InAttackStateTag>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .Build();
 
             state.RequireForUpdate(query0);
@@ -31,7 +31,7 @@ namespace Systems.Simulation.GameEntity.Misc
                     RefRO<InAttackStateTimeStamp>
                     , EnabledRefRW<InAttackStateTag>>()
                 .WithAll<
-                    IsAliveTag>())
+                    IsAlive>())
             {
                 var elapsedSeconds = SystemAPI.Time.ElapsedTime - inAttackStateTimeStamp.ValueRO.Value;
                 const float timeLimitSeconds = 3f;

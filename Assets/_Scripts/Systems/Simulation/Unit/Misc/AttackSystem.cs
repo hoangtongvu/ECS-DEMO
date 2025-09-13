@@ -41,24 +41,22 @@ namespace Systems.Simulation.Unit.Misc
                 workTimeCounterSecondRef.ValueRW.Value = 0;
             }
 
-            foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, entity) in
-                SystemAPI.Query<
+            foreach (var (interactionTypeICDRef, interactingEntityRef, baseDmgRef, baseWorkSpeedRef, workTimeCounterSecondRef, entity) in SystemAPI
+                .Query<
                     RefRW<InteractionTypeICD>
                     , RefRW<InteractingEntity>
                     , RefRO<BaseDmg>
                     , RefRO<BaseWorkSpeed>
                     , RefRW<WorkTimeCounterSecond>>()
-                    .WithDisabled<CanMoveEntityTag>()
-                    .WithAll<IsAliveTag>()
-                    .WithEntityAccess())
+                .WithDisabled<CanMoveEntityTag>()
+                .WithAll<IsAlive>()
+                .WithEntityAccess())
             {
                 if (interactionTypeICDRef.ValueRO.Value != InteractionType.Attack) continue;
 
                 var interactingEntity = interactingEntityRef.ValueRO.Value;
 
-                bool isValidAndAliveTarget =
-                    SystemAPI.HasComponent<IsAliveTag>(interactingEntity) &&
-                    SystemAPI.IsComponentEnabled<IsAliveTag>(interactingEntity);
+                bool isValidAndAliveTarget = SystemAPI.HasComponent<IsAlive>(interactingEntity);
 
                 if (!isValidAndAliveTarget)
                 {

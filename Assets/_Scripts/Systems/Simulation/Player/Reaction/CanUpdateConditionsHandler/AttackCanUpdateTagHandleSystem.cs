@@ -23,7 +23,7 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                     , AttackReaction.UpdatingTag
                     , AttackReaction.TimerSeconds>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .WithAll<
                     PlayerTag>()
                 .Build();
@@ -41,21 +41,20 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
 
             bool hardwareInputState = inputData.LeftMouseData.Down && ! inputData.IsPointerOverGameObject;
 
-            foreach (var (reactionCanUpdateTag, reactionUpdatingTag, reactionTimerSecondsRef, attackDurationSecondsRef, isAliveTag) in SystemAPI
+            foreach (var (reactionCanUpdateTag, reactionUpdatingTag, reactionTimerSecondsRef, attackDurationSecondsRef) in SystemAPI
                 .Query<
                     EnabledRefRW<AttackReaction.CanUpdateTag>
                     , EnabledRefRO<AttackReaction.UpdatingTag>
                     , RefRO<AttackReaction.TimerSeconds>
-                    , RefRO<AttackDurationSeconds>
-                    , EnabledRefRO<IsAliveTag>>()
-                .WithAll<
-                    PlayerTag>()
+                    , RefRO<AttackDurationSeconds>>()
+                .WithAll<PlayerTag>()
+                .WithAll<IsAlive>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
                 bool isInBuildMode = placementPreviewData.CanPlacementPreview;
                 bool timedOut = reactionTimerSecondsRef.ValueRO.Value >= attackDurationSecondsRef.ValueRO.Value;
 
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !isInBuildMode
+                reactionCanUpdateTag.ValueRW = !isInBuildMode
                     && (hardwareInputState || (reactionUpdatingTag.ValueRO && !timedOut));
             }
 

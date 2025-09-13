@@ -3,17 +3,16 @@ using Unity.Entities;
 
 namespace Systems.Simulation.GameEntity.InteractableActions
 {
-    [UpdateInGroup(typeof(ActionUIsHandleSystemGroup), OrderLast = true)]
-    [UpdateBefore(typeof(ActionsContainerUIShownTagHandleSystem))]
+    [UpdateInGroup(typeof(ActionsContainerUpdateSystemGroup), OrderLast = true)]
+    [UpdateBefore(typeof(ActionsContainerCanUpdateTagClearSystem))]
     public partial class SetFirstActionWhenActionsFilledSystem : SystemBase
     {
         protected override void OnCreate()
         {
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
-                    ActionsContainerUIHolder
-                    , CanShowActionsContainerUITag
-                    , ActionsContainerUIShownTag>()
+                    ActionsContainerUI_CD.Holder
+                    , ActionsContainerUI_CD.CanUpdate>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -21,25 +20,25 @@ namespace Systems.Simulation.GameEntity.InteractableActions
 
         protected override void OnUpdate()
         {
-            foreach (var (actionsContainerUIHolderRef, canShowUITag, uiShownTag) in SystemAPI
-                .Query<
-                    RefRO<ActionsContainerUIHolder>
-                    , EnabledRefRO<CanShowActionsContainerUITag>
-                    , EnabledRefRO<ActionsContainerUIShownTag>>()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+            if (!this.CanActionsContainerUpdate()) return;
+
+            var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
+            var actionPanelsHolder = actionsContainerUICtrl.ActionPanelsHolder;
+
+            actionsContainerUICtrl.ChosenActionPanelCtrl = actionPanelsHolder.Value.Count == 0
+                ? null
+                : actionPanelsHolder.Value[0];
+        }
+
+        private bool CanActionsContainerUpdate()
+        {
+            foreach (var canUpdateTag in SystemAPI
+                .Query<EnabledRefRO<ActionsContainerUI_CD.CanUpdate>>())
             {
-                if (!canShowUITag.ValueRO) continue;
-                if (uiShownTag.ValueRO) continue;
-
-                var actionsContainerUICtrl = actionsContainerUIHolderRef.ValueRO.Value.Value;
-                var actionPanelsHolder = actionsContainerUICtrl.ActionPanelsHolder;
-
-                actionsContainerUICtrl.ChosenActionPanelCtrl = actionPanelsHolder.Value.Count == 0
-                    ? null
-                    : actionPanelsHolder.Value[0];
-
+                return true;
             }
 
+            return false;
         }
 
     }

@@ -1,7 +1,6 @@
 ﻿using Components.Unit.Misc;
 using Components.Unit.RevertToBaseUnit;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 
 namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
@@ -27,8 +26,7 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var entities = this.query.ToEntityArray(Allocator.Temp);
-            state.EntityManager.RemoveComponent<NeedRevertToBaseUnitTag>(entities);
+            state.EntityManager.RemoveComponent<NeedRevertToBaseUnitTag>(this.query);
         }
 
     }

@@ -9,25 +9,15 @@ namespace Systems.Simulation.GameEntity.InteractableActions
     {
         protected override void OnCreate()
         {
-            var query0 = SystemAPI.QueryBuilder()
-                .WithAll<
-                    ActionsContainerUIHolder>()
-                .Build();
-
-            this.RequireForUpdate(query0);
+            this.RequireForUpdate<ActionsContainerUI_CD.Holder>();
         }
 
         protected override void OnUpdate()
         {
             if (!Input.GetKeyDown(KeyCode.E)) return;
 
-            foreach (var actionsContainerUIHolderRef in SystemAPI
-                .Query<
-                    RefRO<ActionsContainerUIHolder>>())
-            {
-                actionsContainerUIHolderRef.ValueRO.Value.Value?.ChosenActionPanelCtrl?.Activate();
-            }
-
+            var actionsContainerUICtrl = SystemAPI.GetSingleton<ActionsContainerUI_CD.Holder>().Value.Value;
+            actionsContainerUICtrl?.ChosenActionPanelCtrl?.Activate();
         }
 
     }

@@ -25,7 +25,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
                     PatrolReaction.CanUpdateTag>()
                 .WithAll<
                     InteractingEntity
-                    , IsAliveTag
+                    , IsAlive
                     , CanMoveEntityTag>()
                 .WithAll<
                     UnitTag>()
@@ -46,6 +46,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
         }
 
         [WithAll(typeof(UnitTag))]
+        [WithAll(typeof(IsAlive))]
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct TagHandleJob : IJobEntity
@@ -55,7 +56,6 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<PatrolReaction.CanUpdateTag> reactionCanUpdateTag
-                , EnabledRefRO<IsAliveTag> isAliveTag
                 , in IdleReaction.TimerSeconds idleTimerSeconds
                 , in UnitProfileIdHolder unitProfileIdHolder
                 , in InteractingEntity interactingEntity)
@@ -67,7 +67,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
 
                 bool idleTimeExceeded = idleTimerSeconds.Value >= unitReactionConfigs.UnitIdleMaxDuration;
 
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && !isInteracting && idleTimeExceeded;
+                reactionCanUpdateTag.ValueRW = !isInteracting && idleTimeExceeded;
             }
 
         }

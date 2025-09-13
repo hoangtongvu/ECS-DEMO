@@ -23,7 +23,7 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
                     WalkReaction.CanUpdateTag>()
                 .WithAll<
                     AttackReaction.CanUpdateTag
-                    , IsAliveTag
+                    , IsAlive
                     , CanMoveEntityTag
                     , CurrentMoveSpeed
                     , PlayerReactionConfigsHolder>()
@@ -39,17 +39,16 @@ namespace Systems.Simulation.Player.Reaction.CanUpdateConditionsHandler
         {
             bool playerInput = Input.GetKey(KeyCode.LeftShift);
 
-            foreach (var (reactionCanUpdateTag, attackCanUpdateTag, isAliveTag, canMoveEntityTag) in SystemAPI
+            foreach (var (reactionCanUpdateTag, attackCanUpdateTag, canMoveEntityTag) in SystemAPI
                 .Query<
                     EnabledRefRW<RunReaction.CanUpdateTag>
                     , EnabledRefRO<AttackReaction.CanUpdateTag>
-                    , EnabledRefRO<IsAliveTag>
                     , EnabledRefRO<CanMoveEntityTag>>()
-                .WithAll<
-                    PlayerTag>()
+                .WithAll<PlayerTag>()
+                .WithAll<IsAlive>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
             {
-                reactionCanUpdateTag.ValueRW = isAliveTag.ValueRO && canMoveEntityTag.ValueRO && !attackCanUpdateTag.ValueRO && playerInput;
+                reactionCanUpdateTag.ValueRW = canMoveEntityTag.ValueRO && !attackCanUpdateTag.ValueRO && playerInput;
             }
 
         }

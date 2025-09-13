@@ -26,7 +26,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
                     WalkReaction.CanUpdateTag>()
                 .WithAll<
                     InteractingEntity
-                    , IsAliveTag
+                    , IsAlive
                     , CanMoveEntityTag
                     , UnitProfileIdHolder
                     , MoveSpeedLinear>()
@@ -50,6 +50,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
         }
 
         [WithAll(typeof(UnitTag))]
+        [WithAll(typeof(IsAlive))]
         [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
         [BurstCompile]
         private partial struct TagHandleJob : IJobEntity
@@ -59,7 +60,6 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
             [BurstCompile]
             void Execute(
                 EnabledRefRW<WalkReaction.CanUpdateTag> reactionCanUpdateTag
-                , EnabledRefRO<IsAliveTag> isAliveTag
                 , EnabledRefRO<CanMoveEntityTag> canMoveEntityTag
                 , in UnitProfileIdHolder unitProfileIdHolder
                 , in MoveSpeedLinear moveSpeedLinear
@@ -72,7 +72,7 @@ namespace Systems.Simulation.Unit.Reaction.CanUpdateConditionsHandler
 
                 bool currentSpeedIsWalkSpeed = moveSpeedLinear.Value == unitReactionConfigs.UnitWalkSpeed;
                 reactionCanUpdateTag.ValueRW =
-                    isAliveTag.ValueRO && canMoveEntityTag.ValueRO &&
+                    canMoveEntityTag.ValueRO &&
                     !isInteracting && currentSpeedIsWalkSpeed;
             }
 

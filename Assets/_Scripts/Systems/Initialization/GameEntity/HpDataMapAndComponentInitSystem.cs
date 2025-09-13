@@ -73,7 +73,8 @@ namespace Systems.Initialization.GameEntity
                     });
 
                     ecb.AddBuffer<HpChangeRecordElement>(primaryEntity);
-                    ecb.AddComponent<IsAliveTag>(primaryEntity);
+                    ecb.AddComponent<FrameHpChange>(primaryEntity);
+                    ecb.AddComponent<IsAlive>(primaryEntity);
 
                     fileDebugLogger.Log($"Added [{this.EntityManager.GetName(primaryEntity)} - {primaryEntity}] - [{bakedProfile.HpData}]");
 

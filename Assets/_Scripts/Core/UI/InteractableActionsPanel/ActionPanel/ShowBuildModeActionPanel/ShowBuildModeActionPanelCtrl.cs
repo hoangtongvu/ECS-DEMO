@@ -9,6 +9,7 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.ShowBuildModeActionPanel
     {
         public override void Activate()
         {
+            base.Activate();
             GameplayMessenger.MessagePublisher
                 .Publish(new ToggleBuildModeMessage(true));
         }

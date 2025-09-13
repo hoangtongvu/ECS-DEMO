@@ -27,7 +27,7 @@ namespace Systems.Simulation.GameEntity.Misc
                 .WithAll<
                     CanMoveEntityTag>()
                 .WithAll<
-                    IsAliveTag>()
+                    IsAlive>()
                 .Build();
 
             this.RequireForUpdate(query0);
@@ -50,7 +50,7 @@ namespace Systems.Simulation.GameEntity.Misc
                 .WithAll<
                     InAttackStateTag>()
                 .WithAll<
-                    IsAliveTag>())
+                    IsAlive>())
             {
                 this.CastRay(in physicsWorld, out var raycastHit);
 

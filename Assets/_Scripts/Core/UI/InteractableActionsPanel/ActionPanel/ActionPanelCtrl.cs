@@ -1,7 +1,9 @@
 using Core.Misc;
+using Core.MyEvent.PubSub.Messengers;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using ZBase.Foundation.PubSub;
 
 namespace Core.UI.InteractableActionsPanel.ActionPanel
 {
@@ -34,7 +36,11 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel
 
         public virtual void OnBeingUnchosen() => this.transformScaler.ScaleDown();
 
-        public abstract void Activate();
+        public virtual void Activate()
+        {
+            GameplayMessenger.MessagePublisher
+                .Publish<OnAnyActionPanelActivatedMessage>();
+        }
 
         public void OnPointerEnter(PointerEventData eventData)
         {

@@ -1,4 +1,5 @@
 using Components.GameEntity.InteractableActions;
+using Components.GameEntity.Reaction;
 using Components.Player;
 using Core.Misc;
 using System.Collections.Generic;
@@ -39,11 +40,12 @@ namespace Systems.Simulation.Player
                     PlayerTag
                     , LocalTransform
                     , PlayerInteractRadius>()
-                .WithAllRW<NearestInteractableEntity>()
+                .WithDisabled<
+                    RunReaction.UpdatingTag>()
                 .Build();
 
             state.RequireForUpdate(this.playerQuery);
-
+            state.RequireForUpdate<NearestInteractableEntity>();
         }
 
         [BurstCompile]
@@ -52,49 +54,49 @@ namespace Systems.Simulation.Player
             state.EntityManager.CompleteDependencyBeforeRW<PhysicsWorldSingleton>();
 
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-            var playerTransform = this.playerQuery.GetSingleton<LocalTransform>();
-            var nearestInteractableEntityRef = this.playerQuery.GetSingletonRW<NearestInteractableEntity>();
-            half playerInteractRadius = this.playerQuery.GetSingleton<PlayerInteractRadius>().Value;
-
-            var hitList = new NativeList<DistanceHit>(5, Allocator.Temp);
-            this.OverlapSphere(in physicsWorld, in playerTransform.Position, in playerInteractRadius, ref hitList);
+            var nearestInteractableEntityRef = SystemAPI.GetSingletonRW<NearestInteractableEntity>();
 
             var currentNearestEntity = nearestInteractableEntityRef.ValueRO.Value;
+            bool canFindPlayer = this.playerQuery.CalculateEntityCount() != 0;
 
-            if (hitList.IsEmpty)
+            if (canFindPlayer)
             {
-                if (currentNearestEntity == Entity.Null) return;
-                if (!SystemAPI.HasComponent<CanShowActionsContainerUITag>(currentNearestEntity)) return;
+                var playerTransform = this.playerQuery.GetSingleton<LocalTransform>();
+                half playerInteractRadius = this.playerQuery.GetSingleton<PlayerInteractRadius>().Value;
 
-                SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(currentNearestEntity, false);
-                nearestInteractableEntityRef.ValueRW.Value = Entity.Null;
-                return;
+                var hitList = new NativeList<DistanceHit>(5, Allocator.Temp);
+                this.OverlapSphere(in physicsWorld, in playerTransform.Position, in playerInteractRadius, ref hitList);
 
-            }
-
-            hitList.Sort(new DistanceHitComparer
-            {
-                BasePos = playerTransform.Position,
-            });
-
-            var newNearestEntity = hitList[0].Entity;
-
-            if (currentNearestEntity != Entity.Null)
-            {
-                if (currentNearestEntity == newNearestEntity) return;
-
-                if (SystemAPI.HasComponent<CanShowActionsContainerUITag>(currentNearestEntity))
+                hitList.Sort(new DistanceHitComparer
                 {
-                    SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(currentNearestEntity, false);
+                    BasePos = playerTransform.Position,
+                });
+
+                foreach (var hit in hitList)
+                {
+                    var newNearestEntity = hit.Entity;
+                    if (!SystemAPI.HasComponent<EntitySupportsShowActionsContainerUI>(newNearestEntity)) continue;
+
+                    if (currentNearestEntity != Entity.Null)
+                    {
+                        if (currentNearestEntity == newNearestEntity) return;
+
+                        bool isValidEntity = SystemAPI.HasComponent<IsTargetForActionsContainerUI>(currentNearestEntity);
+                        if (isValidEntity)
+                        {
+                            SystemAPI.SetComponentEnabled<IsTargetForActionsContainerUI>(currentNearestEntity, false);
+                        }
+                    }
+
+                    SystemAPI.SetComponentEnabled<IsTargetForActionsContainerUI>(newNearestEntity, true);
+                    nearestInteractableEntityRef.ValueRW.Value = newNearestEntity;
+                    this.SetEnabledActionsContainerUI(ref state, true);
+
+                    return;
                 }
             }
 
-            if (SystemAPI.HasComponent<CanShowActionsContainerUITag>(newNearestEntity))
-            {
-                SystemAPI.SetComponentEnabled<CanShowActionsContainerUITag>(newNearestEntity, true);
-            }
-            nearestInteractableEntityRef.ValueRW.Value = newNearestEntity;
-
+            this.HandleOldInvalidTargetEntity(ref state, ref nearestInteractableEntityRef.ValueRW);
         }
 
         [BurstCompile]
@@ -111,6 +113,38 @@ namespace Systems.Simulation.Player
             };
 
             physicsWorld.OverlapSphere(centerPos, radius, ref hitList, collisionFilter);
+        }
+
+        [BurstCompile]
+        private void SetEnabledActionsContainerUI(ref SystemState state, bool enabledState)
+        {
+            foreach (var (canShowTag, canUpdateTag) in SystemAPI
+                    .Query<
+                        EnabledRefRW<ActionsContainerUI_CD.CanShow>
+                        , EnabledRefRW<ActionsContainerUI_CD.CanUpdate>>()
+                    .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+            {
+                canShowTag.ValueRW = enabledState;
+                canUpdateTag.ValueRW = enabledState;
+            }
+        }
+
+        [BurstCompile]
+        private void HandleOldInvalidTargetEntity(
+            ref SystemState state
+            , ref NearestInteractableEntity nearestInteractableEntity)
+        {
+            var currentNearestEntity = nearestInteractableEntity.Value;
+            if (currentNearestEntity == Entity.Null) return;
+
+            bool isValidEntity = SystemAPI.HasComponent<IsTargetForActionsContainerUI>(currentNearestEntity);
+            if (isValidEntity)
+            {
+                SystemAPI.SetComponentEnabled<IsTargetForActionsContainerUI>(currentNearestEntity, false);
+            }
+
+            nearestInteractableEntity.Value = Entity.Null;
+            this.SetEnabledActionsContainerUI(ref state, false);
         }
 
     }
