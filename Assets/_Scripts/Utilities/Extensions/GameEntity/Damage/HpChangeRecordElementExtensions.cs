@@ -12,10 +12,7 @@ namespace Utilities.Extensions.GameEntity.Damage
             ref this DynamicBuffer<HpChangeRecordElement> hpChangeRecords
             , int value)
         {
-            hpChangeRecords.Add(new HpChangeRecordElement
-            {
-                Value = value
-            });
+            hpChangeRecords.Add(new(value));
         }
 
         [BurstCompile]
@@ -23,10 +20,7 @@ namespace Utilities.Extensions.GameEntity.Damage
             ref this DynamicBuffer<HpChangeRecordElement> hpChangeRecords
             , int value)
         {
-            hpChangeRecords.Add(new HpChangeRecordElement
-            {
-                Value = -value
-            });
+            hpChangeRecords.Add(new(-value));
         }
 
     }

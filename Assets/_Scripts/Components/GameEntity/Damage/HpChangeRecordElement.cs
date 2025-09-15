@@ -1,12 +1,12 @@
 using Unity.Entities;
+using UnitGenerator;
 
-namespace Components.GameEntity.Damage
+namespace Components.GameEntity.Damage;
+
+/// <summary>
+/// Positive number -> healing, negative number -> taking damage.
+/// </summary>
+[UnitOf(typeof(int), UnitGenerateOptions.ImplicitOperator | UnitGenerateOptions.ValueArithmeticOperator)]
+public partial struct HpChangeRecordElement : IBufferElementData
 {
-    /// <summary>
-    /// Positive number -> healing, negative number -> taking damage.
-    /// </summary>
-    public struct HpChangeRecordElement : IBufferElementData
-    {
-        public int Value;
-    }
 }

@@ -48,10 +48,10 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                 for (int i = 0; i < length; i++)
                 {
                     var hpChangeRecord = hpChangeRecords[i];
-                    frameHpChange += hpChangeRecord.Value;
+                    frameHpChange += hpChangeRecord;
 
                     int rawCurrentHp = currentHp;
-                    rawCurrentHp += hpChangeRecord.Value;
+                    rawCurrentHp += hpChangeRecord;
 
                     if (rawCurrentHp > hpDataHolder.Value.MaxHp)
                         currentHp = hpDataHolder.Value.MaxHp;
