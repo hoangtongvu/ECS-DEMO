@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UnitFeedingConfigs:
     FeedingEventConfigs:
-      FeedingIntervalMinutes: 0.1
+      FeedingIntervalMinutes: 1.4
       FoodPerUnitPerFeedingEvent: 1
     HungerBarConfigs:
-      HungerDrainSpeed: 1
-      HungerValuePerFood: 10
+      HungerDrainSpeed: 0.5
+      HungerValuePerFood: 50
       HungerBarCap: 100
       StarvingThresholdConfigs:
         ThresholdUpperBound: 15
-        StarvingTakeDmgIntervalMinutes: 0.1
+        StarvingTakeDmgIntervalMinutes: 1
         BaseDmgTakenPerInterval: 5
         QuadraticCoefficientDmgTakenPerInterval: 10
       NormalThresholdConfigs:

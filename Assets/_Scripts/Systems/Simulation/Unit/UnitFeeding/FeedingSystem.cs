@@ -8,6 +8,7 @@ using Core.GameResource;
 using Core.Unit.UnitFeeding;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Mathematics;
 using Utilities;
 using Utilities.Helpers;
 
@@ -51,6 +52,8 @@ namespace Systems.Simulation.Unit.UnitFeeding
 
             timerSecondsRef.ValueRW = 0;
             this.GetPlayerComponents(ref state, out var resourceWallet, out var walletChangedTag, out var playerFactionIndex);
+
+            float barCap = configs.HungerBarConfigs.HungerBarCap;
             uint foodPerUnitPerFeedingEvent = configs.FeedingEventConfigs.FoodPerUnitPerFeedingEvent;
             float hungerValuePerFood = configs.HungerBarConfigs.HungerValuePerFood;
             float barGainPerFeedingEvent = foodPerUnitPerFeedingEvent * hungerValuePerFood;
@@ -74,7 +77,7 @@ namespace Systems.Simulation.Unit.UnitFeeding
 
                 if (!hasEnoughFood) break;
 
-                hungerBarValueRef.ValueRW += barGainPerFeedingEvent;
+                hungerBarValueRef.ValueRW = math.min(barCap, hungerBarValueRef.ValueRO + barGainPerFeedingEvent);
             }
 
         }
