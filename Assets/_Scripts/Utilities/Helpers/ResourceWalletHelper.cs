@@ -77,6 +77,24 @@ namespace Utilities.Helpers
         }
 
         [BurstCompile]
+        public static bool TrySpendResourceOfType(
+            ref DynamicBuffer<ResourceWalletElement> resourceWallet
+            , ref EnabledRefRW<WalletChangedTag> walletChangedTag
+            , ResourceType resourceType
+            , in uint spendAmount)
+        {
+            ref var walletElement = ref resourceWallet.ElementAt((int)resourceType);
+            uint currentAmount = walletElement.Quantity;
+
+            if (spendAmount > currentAmount) return false;
+
+            walletElement.Quantity = currentAmount - spendAmount;
+            walletChangedTag.ValueRW = true;
+
+            return true;
+        }
+
+        [BurstCompile]
         public static bool TrySpendResources(
             ref DynamicBuffer<ResourceWalletElement> resourceWallet
             , ref EnabledRefRW<WalletChangedTag> walletChangedTag
