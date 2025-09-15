@@ -43,7 +43,7 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
 
                 ecb.SetComponent(entity, new CurrentHp
                 {
-                    Value = hpData.MaxHp,
+                    value = hpData.MaxHp,
                 });
 
                 ecb.SetSharedComponent(entity, new HpDataHolder
