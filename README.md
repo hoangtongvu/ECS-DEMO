@@ -41,6 +41,10 @@ This is an RTS game prototype inspired by [Kingdom](https://en-m-wikipedia-org.t
             <td><a href='https://assetstore.unity.com/packages/tools/utilities/uvunifyatlas-v1-0-1-321314?aid=1100le847'>UVUnifyAtlas</a></td>
         </tr>
         <tr>
+            <td>Cysharp</td>
+            <td><a href='https://github.com/Cysharp/UnitGenerator'>UnitGenerator</a></td>
+        </tr>
+        <tr>
             <td>quaternius</td>
             <td><a href='https://quaternius.itch.io/150-lowpoly-nature-models'>Ultimate Nature Pack by Quaternius</a></td>
         </tr>
