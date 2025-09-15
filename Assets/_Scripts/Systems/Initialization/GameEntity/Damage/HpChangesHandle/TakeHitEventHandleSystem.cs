@@ -42,7 +42,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                     IsAlive>()
                 .WithEntityAccess())
             {
-                if (frameHpChangeRef.ValueRO.Value >= 0) continue;
+                if (frameHpChangeRef.ValueRO >= 0) continue;
                 SystemAPI.SetComponentEnabled<TakeHitEvent>(entity, true);
             }
 

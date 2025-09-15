@@ -37,7 +37,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
             for (int i = 0; i < length; i++)
             {
                 var entity = entities[i];
-                var currentHp = currentHpArray[i].Value;
+                int currentHp = currentHpArray[i];
 
                 if (currentHp != 0) continue;
 

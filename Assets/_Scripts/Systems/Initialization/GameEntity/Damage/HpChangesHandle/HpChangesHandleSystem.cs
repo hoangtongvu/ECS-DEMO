@@ -40,7 +40,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                 , ref DynamicBuffer<HpChangeRecordElement> hpChangeRecords
                 , ref FrameHpChange frameHpChange)
             {
-                frameHpChange.Value = 0;
+                frameHpChange = 0;
 
                 int length = hpChangeRecords.Length;
                 if (length == 0) return;
@@ -48,20 +48,20 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                 for (int i = 0; i < length; i++)
                 {
                     var hpChangeRecord = hpChangeRecords[i];
-                    frameHpChange.Value += hpChangeRecord.Value;
+                    frameHpChange += hpChangeRecord;
 
-                    int rawCurrentHp = currentHp.Value;
-                    rawCurrentHp += hpChangeRecord.Value;
+                    int rawCurrentHp = currentHp;
+                    rawCurrentHp += hpChangeRecord;
 
-                    if (rawCurrentHp > hpDataHolder.Value.MaxHp)
-                        currentHp.Value = hpDataHolder.Value.MaxHp;
+                    if (rawCurrentHp > hpDataHolder.value.MaxHp)
+                        currentHp = hpDataHolder.value.MaxHp;
                     else if (rawCurrentHp <= 0)
                     {
-                        currentHp.Value = 0;
+                        currentHp = 0;
                         break;
                     }
                     else
-                        currentHp.Value = rawCurrentHp;
+                        currentHp = rawCurrentHp;
 
                 }
 

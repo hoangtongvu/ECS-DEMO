@@ -44,13 +44,10 @@ namespace Systems.Initialization.UnitAndTool.RoleUpdated
 
                 ecb.SetComponent(entity, new CurrentHp
                 {
-                    Value = hpData.MaxHp,
+                    value = hpData.MaxHp,
                 });
 
-                ecb.SetSharedComponent(entity, new HpDataHolder
-                {
-                    Value = hpData,
-                });
+                ecb.SetSharedComponent(entity, new HpDataHolder(hpData));
 
             }
 
