@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07a66f95db1a22428fcc02b134c1383, type: 3}
+  m_Name: UnitFeedingConfigsSO
+  m_EditorClassIdentifier: 
+  UnitFeedingConfigs:
+    FeedingEventConfigs:
+      FeedingIntervalMinutes: 0.1
+      FoodPerUnitPerFeedingEvent: 1
+    HungerBarConfigs:
+      HungerDrainSpeed: 1
+      HungerValuePerFood: 10
+      HungerBarCap: 100
+      StarvingThresholdConfigs:
+        ThresholdUpperBound: 15
+        StarvingTakeDmgIntervalMinutes: 0.1
+        BaseDmgTakenPerInterval: 5
+        QuadraticCoefficientDmgTakenPerInterval: 10
+      NormalThresholdConfigs:
+        ThresholdUpperBound: 75
+      FullThresholdConfigs:
+        HpRegenIntervalSeconds: 5
+        HpRegenValuePerInterval: 3
