@@ -16,10 +16,12 @@ using Components.Tool.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
 using Components.Unit.Reaction;
+using Components.Unit.UnitFeeding;
 using Components.Unit.UnitSelection;
 using Core.GameEntity;
 using Core.GameEntity.Misc;
 using Core.GameEntity.Movement.MoveCommand;
+using Core.Unit.UnitFeeding;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -42,6 +44,13 @@ namespace Authoring.Unit
                 AddComponent<NeedSpawnPresenterTag>(entity);
                 this.AddAndDisableComponent<TakeHitEvent>(entity);
                 this.AddAndDisableComponent<DeadEvent>(entity);
+
+                AddComponent<HungerBarValue>(entity);
+                AddComponent(entity, new CurrentHungerThreshold
+                {
+                    value = HungerThreshold.Full,
+                });
+                AddComponent<HungerThresholdChanged>(entity);
 
                 IdleReaction.BakingHelper.BakeTags(this, in entity);
                 AddComponent<IdleReaction.TimerSeconds>(entity);
