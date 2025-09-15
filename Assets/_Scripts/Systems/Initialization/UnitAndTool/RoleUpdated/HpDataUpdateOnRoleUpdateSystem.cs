@@ -47,10 +47,7 @@ namespace Systems.Initialization.UnitAndTool.RoleUpdated
                     value = hpData.MaxHp,
                 });
 
-                ecb.SetSharedComponent(entity, new HpDataHolder
-                {
-                    Value = hpData,
-                });
+                ecb.SetSharedComponent(entity, new HpDataHolder(hpData));
 
             }
 

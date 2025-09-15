@@ -67,10 +67,7 @@ namespace Systems.Initialization.GameEntity
                         value = bakedProfile.HpData.MaxHp,
                     });
 
-                    ecb.AddSharedComponent(primaryEntity, new HpDataHolder
-                    {
-                        Value = bakedProfile.HpData,
-                    });
+                    ecb.AddSharedComponent(primaryEntity, new HpDataHolder(bakedProfile.HpData));
 
                     ecb.AddBuffer<HpChangeRecordElement>(primaryEntity);
                     ecb.AddComponent<FrameHpChange>(primaryEntity);

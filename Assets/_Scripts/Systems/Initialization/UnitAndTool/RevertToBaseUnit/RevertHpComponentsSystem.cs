@@ -46,10 +46,7 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
                     value = hpData.MaxHp,
                 });
 
-                ecb.SetSharedComponent(entity, new HpDataHolder
-                {
-                    Value = hpData,
-                });
+                ecb.SetSharedComponent(entity, new HpDataHolder(hpData));
 
                 ecb.AddComponent<IsAlive>(entity);
                 ecb.RemoveComponent<PendingDead>(entity);

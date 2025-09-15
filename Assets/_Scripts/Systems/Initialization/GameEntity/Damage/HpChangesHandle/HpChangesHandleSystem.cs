@@ -53,8 +53,8 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                     int rawCurrentHp = currentHp;
                     rawCurrentHp += hpChangeRecord;
 
-                    if (rawCurrentHp > hpDataHolder.Value.MaxHp)
-                        currentHp = hpDataHolder.Value.MaxHp;
+                    if (rawCurrentHp > hpDataHolder.value.MaxHp)
+                        currentHp = hpDataHolder.value.MaxHp;
                     else if (rawCurrentHp <= 0)
                     {
                         currentHp = 0;
