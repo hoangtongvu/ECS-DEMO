@@ -45,6 +45,10 @@ This is an RTS game prototype inspired by [Kingdom](https://en-m-wikipedia-org.t
             <td><a href='https://github.com/Cysharp/UnitGenerator'>UnitGenerator</a></td>
         </tr>
         <tr>
+            <td>laicasaane</td>
+            <td><a href='https://github.com/laicasaane/tower_of_encosy/tree/main/Packages/com.laicasaane.encosy-tower'>TypeWraps</a></td>
+        </tr>
+        <tr>
             <td>quaternius</td>
             <td><a href='https://quaternius.itch.io/150-lowpoly-nature-models'>Ultimate Nature Pack by Quaternius</a></td>
         </tr>
