@@ -1,9 +1,9 @@
+using EncosyTower.TypeWraps;
 using Unity.Entities;
-using UnitGenerator;
 
 namespace Components.Unit.UnitFeeding;
 
-[UnitOf(typeof(float), UnitGenerateOptions.ImplicitOperator | UnitGenerateOptions.ValueArithmeticOperator)]
+[WrapType(typeof(float))]
 public partial struct HungerBarValue : IComponentData
 {
 }

@@ -1,12 +1,12 @@
+using EncosyTower.TypeWraps;
 using Unity.Entities;
-using UnitGenerator;
 
 namespace Components.GameEntity.Damage;
 
 /// <summary>
 /// Positive number -> healing, negative number -> taking damage.
 /// </summary>
-[UnitOf(typeof(int), UnitGenerateOptions.ImplicitOperator | UnitGenerateOptions.ValueArithmeticOperator)]
+[WrapType(typeof(int))]
 public partial struct HpChangeRecordElement : IBufferElementData
 {
 }

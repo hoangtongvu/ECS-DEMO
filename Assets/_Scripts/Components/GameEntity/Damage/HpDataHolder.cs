@@ -1,11 +1,11 @@
 using Core.GameEntity.Damage;
+using EncosyTower.TypeWraps;
 using System;
 using Unity.Entities;
-using UnitGenerator;
 
 namespace Components.GameEntity.Damage;
 
-[UnitOf(typeof(HpData))]
+[WrapType(typeof(HpData))]
 public partial struct HpDataHolder : ISharedComponentData, IEquatable<HpDataHolder>
 {
 }
