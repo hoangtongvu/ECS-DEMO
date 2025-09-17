@@ -1,10 +1,10 @@
 using Core.Unit.UnitFeeding;
+using EncosyTower.TypeWraps;
 using Unity.Entities;
-using UnitGenerator;
 
 namespace Components.Unit.UnitFeeding;
 
-[UnitOf(typeof(HungerThreshold), UnitGenerateOptions.ImplicitOperator)]
+[WrapType(typeof(HungerThreshold))]
 public partial struct CurrentHungerThreshold : IComponentData
 {
 }

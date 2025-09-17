@@ -1,0 +1,14 @@
+{
+    "name": "EncosyTower.TypeWraps",
+    "rootNamespace": "EncosyTower.TypeWraps",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

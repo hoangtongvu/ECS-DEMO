@@ -1,9 +1,9 @@
-using UnitGenerator;
+using EncosyTower.TypeWraps;
 using Unity.Entities;
 
 namespace Components.GameEntity.Damage;
 
-[UnitOf(typeof(int), UnitGenerateOptions.ImplicitOperator | UnitGenerateOptions.ValueArithmeticOperator | UnitGenerateOptions.MinMaxMethod_UnityMathematics)]
+[WrapType(typeof(int))]
 public partial struct CurrentHp : IComponentData
 {
 }
