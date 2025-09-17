@@ -28,4 +28,8 @@ namespace EncosyTower.TypeWraps
     {
         public bool ExcludeConverter { get; set; }
     }
+
+    public interface IWrapper { }
+
+    public interface IWrap<T> : IWrapper { }
 }
