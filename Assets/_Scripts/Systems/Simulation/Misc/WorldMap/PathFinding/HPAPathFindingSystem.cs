@@ -212,12 +212,20 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
 
             int exitIndexCount = exitIndexes.Length;
 
-            FinalCostComputer finalCostComputer = new()
+            PathCostComputer costComputer = new()
             {
                 CostMap = costMap,
-                CellPosRangeMap = cellPosRangeMap,
-                CellPositionsContainer = cellPositionsContainer,
+                InputCellPosRangeMap = cellPosRangeMap,
+                InputCellPositionsContainer = cellPositionsContainer,
                 Pos0 = startPos,
+                LocalCellPosRangeMap = new()
+                {
+                    Value = new(10, Allocator.Temp),
+                },
+                LocalCellPositionsContainer = new()
+                {
+                    Value = new(30, Allocator.Temp),
+                },
             };
 
             for (int i = 0; i < exitIndexCount; i++)
@@ -237,9 +245,9 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 int2 innerCellPos = WorldMapHelper.MapIndexToGridPos(costMap.Width, in costMap.Offset, innerCellMapIndex);
                 int2 outerCellPos = WorldMapHelper.MapIndexToGridPos(costMap.Width, in costMap.Offset, outerCellMapIndex);
 
-                finalCostComputer.Pos1 = innerCellPos;
+                costComputer.Pos1 = innerCellPos;
 
-                float gCost = finalCostComputer.GetCost();
+                float gCost = costComputer.GetCost();
                 float heuristic = this.GetHeuristic(in outerCellPos, in endPos);
                 float fCost = gCost + heuristic;
 
