@@ -23,14 +23,14 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             int2 originalDelta = this.Pos1 - this.Pos0;
             bool2 isZeroDelta = originalDelta == int2.zero;
 
-            if (this.IsSingleCell(in isZeroDelta)) return 0;
+            if (IsSingleCell(in isZeroDelta)) return 0;
 
-            if (this.IsStraightLine(in isZeroDelta))
+            if (IsStraightLine(in isZeroDelta))
                 return this.GetStraightLineCost(in originalDelta, in isZeroDelta);
 
             // Diagonal line
             int2 tempDelta = math.abs(originalDelta);
-            bool canSwap = this.TrySwapTempDelta(ref tempDelta);
+            bool canSwap = TrySwapTempDelta(ref tempDelta);
 
             var lineCacheKey = new LineCacheKey
             {
@@ -54,18 +54,16 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
 
                 this.CostMap.GetCellAt(in cellPos, out var cell);
                 totalCost += cell.Cost;
-
             }
 
             line.Dispose();
 
             float avgCost = (float)totalCost / lineLength;
             return avgCost * math.distance(this.Pos0, this.Pos1);
-
         }
 
         [BurstCompile]
-        private bool TrySwapTempDelta(ref int2 tempDelta)
+        private static bool TrySwapTempDelta(ref int2 tempDelta)
         {
             if (tempDelta.x > tempDelta.y)
             {
@@ -74,14 +72,13 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             }
 
             return false;
-
         }
 
         [BurstCompile]
-        private bool IsSingleCell(in bool2 isZeroDelta) => isZeroDelta.x && isZeroDelta.y;
-        
+        private static bool IsSingleCell(in bool2 isZeroDelta) => isZeroDelta.x && isZeroDelta.y;
+
         [BurstCompile]
-        private bool IsStraightLine(in bool2 isZeroDelta) => isZeroDelta.x || isZeroDelta.y;
+        private static bool IsStraightLine(in bool2 isZeroDelta) => isZeroDelta.x || isZeroDelta.y;
 
         [BurstCompile]
         private int GetStraightLineCost(
@@ -104,7 +101,6 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
                 }
 
                 return totalCost;
-
             }
 
             int startX, endX;
@@ -119,7 +115,6 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             }
 
             return totalCost;
-
         }
 
         [BurstCompile]
@@ -149,7 +144,6 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             });
 
             return newLine;
-
         }
 
         [BurstCompile]
@@ -176,7 +170,6 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             }
 
             return true;
-
         }
 
         /// <summary>
@@ -208,11 +201,9 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
 
                 y++;
                 cellIndex++;
-
             }
 
             return bresenhamLine;
-
         }
 
         [BurstCompile]
@@ -232,7 +223,6 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             lineCellPos.y *= canSwap
                 ? originalDelta.y / tempDelta.x
                 : originalDelta.y / tempDelta.y;
-
         }
 
     }
