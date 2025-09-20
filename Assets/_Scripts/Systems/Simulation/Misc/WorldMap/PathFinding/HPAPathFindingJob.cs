@@ -1,5 +1,4 @@
 using Components.GameEntity.Movement;
-using Components.GameEntity.Movement.MoveCommand;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.ChunkInnerPathCost;
 using Components.Misc.WorldMap.LineCaching;
@@ -40,7 +39,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
 
         void Execute(
             in LocalTransform transform
-            , in MoveCommandElement moveCommandElement
+            , in TargetPosForPathFinding targetPosForPathFinding
             , ref CurrentWorldWaypoint currentWaypoint
             , ref DistanceToCurrentWaypoint distanceToCurrentWaypoint
             , ref DynamicBuffer<WaypointElement> waypoints)
@@ -51,7 +50,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             distanceToCurrentWaypoint.Value = this.DefaultStopMoveWorldRadius;
 
             WorldMapHelper.WorldPosToGridPos(in this.CellRadius, in transform.Position, out int2 startPos);
-            WorldMapHelper.WorldPosToGridPos(in this.CellRadius, in moveCommandElement.Float3, out int2 endPos);
+            WorldMapHelper.WorldPosToGridPos(in this.CellRadius, in targetPosForPathFinding.Value, out int2 endPos);
 
             NativeList<int2> path = this.GetPath(
                 startPos
