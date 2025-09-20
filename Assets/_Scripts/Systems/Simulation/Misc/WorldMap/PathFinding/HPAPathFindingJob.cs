@@ -16,13 +16,12 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Utilities.Extensions;
 using Utilities.Helpers;
-using Utilities.Helpers.GameEntity.Movement;
 using Utilities.Helpers.Misc.WorldMap;
 using Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {
-    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
+    [WithAll(typeof(CanFindPathTag))]
     [BurstCompile]
     public partial struct HPAPathFindingJob : IJobEntity
     {
@@ -42,27 +41,14 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
         void Execute(
             in LocalTransform transform
             , in MoveCommandElement moveCommandElement
-            , ref AbsoluteDistanceXZToTarget absDistanceXZToTarget
             , ref CurrentWorldWaypoint currentWaypoint
             , ref DistanceToCurrentWaypoint distanceToCurrentWaypoint
-            , ref DynamicBuffer<WaypointElement> waypoints
-            , EnabledRefRW<CanMoveEntityTag> canMoveEntityTag
-            , EnabledRefRW<CanFindPathTag> canFindPathTag)
+            , ref DynamicBuffer<WaypointElement> waypoints)
         {
-            if (!canFindPathTag.ValueRO) return;
-            canFindPathTag.ValueRW = false;
-            canMoveEntityTag.ValueRW = true;
-
             waypoints.Clear();
 
-            // Note: Init targetPos && distanceToTarget, make sure targetPos != transform.pos to prevent NaN at MoveDirectionFloat2 due to unsafe normalization.
             currentWaypoint.Value = transform.Position.Add(x: this.DefaultStopMoveWorldRadius);
             distanceToCurrentWaypoint.Value = this.DefaultStopMoveWorldRadius;
-
-            AbsoluteDistanceXZToTargetHelper.SetDistance(
-                ref absDistanceXZToTarget
-                , in transform.Position
-                , in moveCommandElement.Float3);
 
             WorldMapHelper.WorldPosToGridPos(in this.CellRadius, in transform.Position, out int2 startPos);
             WorldMapHelper.WorldPosToGridPos(in this.CellRadius, in moveCommandElement.Float3, out int2 endPos);
@@ -127,7 +113,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             if (path.Length == 0 || !path[^1].Equals(endPos)) path.Add(endPos);
 
             return path;
-
         }
 
         [BurstCompile]
@@ -209,7 +194,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                     GCost = gCost,
                     FCost = fCost,
                 });
-
             }
 
             bool pathFound = false;
@@ -286,7 +270,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 }
 
                 neighborNodes.Dispose();
-
             }
 
             if (pathFound) this.ReconstructPath(
@@ -298,7 +281,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             openList.Dispose();
             closedList.Dispose();
             nodeList.Dispose();
-
         }
 
         [BurstCompile]

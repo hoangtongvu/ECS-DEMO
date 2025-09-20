@@ -8,7 +8,7 @@ using Components.Misc;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(PathFindingSystemGroup))]
     [BurstCompile]
     public partial struct HPAPathFindingSystem : ISystem
     {
