@@ -9,11 +9,11 @@ using Utilities.Extensions;
 namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
 {
     [BurstCompile]
-    public struct FinalCostComputer : ICostComputer
+    public struct PathCostComputer
     {
         public WorldTileCostMap CostMap;
-        public CellPosRangeMap CellPosRangeMap;
-        public CellPositionsContainer CellPositionsContainer;
+        public CachedLines GlobalCachedLines;
+        public CachedLines LocalCachedLines;
         public int2 Pos0;
         public int2 Pos1;
 
@@ -23,21 +23,21 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             int2 originalDelta = this.Pos1 - this.Pos0;
             bool2 isZeroDelta = originalDelta == int2.zero;
 
-            if (this.IsSingleCell(in isZeroDelta)) return 0;
+            if (IsSingleCell(in isZeroDelta)) return 0;
 
-            if (this.IsStraightLine(in isZeroDelta))
+            if (IsStraightLine(in isZeroDelta))
                 return this.GetStraightLineCost(in originalDelta, in isZeroDelta);
 
             // Diagonal line
             int2 tempDelta = math.abs(originalDelta);
-            bool canSwap = this.TrySwapTempDelta(ref tempDelta);
+            bool canSwap = TrySwapTempDelta(ref tempDelta);
 
             var lineCacheKey = new LineCacheKey
             {
                 Delta = tempDelta,
             };
 
-            var line = this.GetOrCreateLineFromCache(
+            var line = this.GetFromCacheOrCreateNewLine(
                 in lineCacheKey
                 , Allocator.Temp);
 
@@ -54,18 +54,16 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
 
                 this.CostMap.GetCellAt(in cellPos, out var cell);
                 totalCost += cell.Cost;
-
             }
 
             line.Dispose();
 
             float avgCost = (float)totalCost / lineLength;
             return avgCost * math.distance(this.Pos0, this.Pos1);
-
         }
 
         [BurstCompile]
-        private bool TrySwapTempDelta(ref int2 tempDelta)
+        private static bool TrySwapTempDelta(ref int2 tempDelta)
         {
             if (tempDelta.x > tempDelta.y)
             {
@@ -74,14 +72,13 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             }
 
             return false;
-
         }
 
         [BurstCompile]
-        private bool IsSingleCell(in bool2 isZeroDelta) => isZeroDelta.x && isZeroDelta.y;
-        
+        private static bool IsSingleCell(in bool2 isZeroDelta) => isZeroDelta.x && isZeroDelta.y;
+
         [BurstCompile]
-        private bool IsStraightLine(in bool2 isZeroDelta) => isZeroDelta.x || isZeroDelta.y;
+        private static bool IsStraightLine(in bool2 isZeroDelta) => isZeroDelta.x || isZeroDelta.y;
 
         [BurstCompile]
         private int GetStraightLineCost(
@@ -104,7 +101,6 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
                 }
 
                 return totalCost;
-
             }
 
             int startX, endX;
@@ -119,11 +115,10 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             }
 
             return totalCost;
-
         }
 
         [BurstCompile]
-        private NativeArray<int2> GetOrCreateLineFromCache(
+        private NativeArray<int2> GetFromCacheOrCreateNewLine(
             in LineCacheKey lineCacheKey
             , Allocator allocator)
         {
@@ -134,22 +129,15 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
 
             if (canGetLineFromCache) return line;
 
-            var newLine = this.CreateBresenhamLine(
+            CreateBresenhamLine(
                 lineCacheKey.Delta.x
                 , lineCacheKey.Delta.y
-                , allocator);
+                , allocator
+                , out var newLine);
 
-            int startIndex = CellPositionsContainer.Value.Length;
-
-            this.CellPositionsContainer.Value.AddRange(newLine);
-            this.CellPosRangeMap.Value.Add(lineCacheKey, new CellPosRange
-            {
-                StartIndex = startIndex,
-                Amount = newLine.Length,
-            });
+            this.AddNewLineToLocalCache(in lineCacheKey, in newLine);
 
             return newLine;
-
         }
 
         [BurstCompile]
@@ -158,32 +146,49 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             , Allocator allocator
             , out NativeArray<int2> line)
         {
-            if (!this.CellPosRangeMap.Value.TryGetValue(lineCacheKey, out var cellPosRange))
+            if (this.GlobalCachedLines.Value.ContainsKey(lineCacheKey))
             {
-                line = default;
-                return false;
+                this.GetLineFromCache(in this.GlobalCachedLines, in lineCacheKey, allocator, out line);
+                return true;
             }
 
-            line = new(cellPosRange.Amount, allocator);
-
-            int upperBound = cellPosRange.StartIndex + cellPosRange.Amount;
-            int lineIndex = 0;
-
-            for (int i = cellPosRange.StartIndex; i < upperBound; i++)
+            if (this.LocalCachedLines.Value.ContainsKey(lineCacheKey))
             {
-                line[lineIndex] = this.CellPositionsContainer.Value[i];
+                this.GetLineFromCache(in this.LocalCachedLines, in lineCacheKey, allocator, out line);
+                return true;
+            }
+
+            line = default;
+            return false;
+        }
+
+        [BurstCompile]
+        private void GetLineFromCache(
+            in CachedLines cachedLines
+            , in LineCacheKey lineCacheKey
+            , Allocator allocator
+            , out NativeArray<int2> line)
+        {
+            int lineIndex = 0;
+            int lineLength = cachedLines.Value.CountValuesForKey(lineCacheKey);
+            line = new(lineLength, allocator);
+
+            foreach (var pos2 in cachedLines.Value.GetValuesForKey(lineCacheKey))
+            {
+                line[lineIndex] = pos2;
                 lineIndex++;
             }
-
-            return true;
-
         }
 
         /// <summary>
         /// 0 < deltaX < deltaY
         /// </summary>
         [BurstCompile]
-        private NativeArray<int2> CreateBresenhamLine(int deltaX, int deltaY, Allocator allocator)
+        public static void CreateBresenhamLine(
+            int deltaX
+            , int deltaY
+            , Allocator allocator
+            , out NativeArray<int2> bresenhamLine)
         {
             int e = 2 * deltaX - deltaY;
             int x = 0;
@@ -191,7 +196,7 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
 
             int y1 = y + deltaY;
 
-            NativeArray<int2> bresenhamLine = new(deltaY + 1, allocator);
+            bresenhamLine = new(deltaY + 1, allocator);
             int cellIndex = 0;
 
             while (y <= y1)
@@ -208,11 +213,17 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
 
                 y++;
                 cellIndex++;
-
             }
+        }
 
-            return bresenhamLine;
-
+        [BurstCompile]
+        private void AddNewLineToLocalCache(in LineCacheKey lineCacheKey, in NativeArray<int2> newLine)
+        {
+            int length = newLine.Length;
+            for (int i = 0; i < length; i++)
+            {
+                this.LocalCachedLines.Value.Add(lineCacheKey, newLine[i]);
+            }
         }
 
         [BurstCompile]
@@ -232,7 +243,6 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
             lineCellPos.y *= canSwap
                 ? originalDelta.y / tempDelta.x
                 : originalDelta.y / tempDelta.y;
-
         }
 
     }

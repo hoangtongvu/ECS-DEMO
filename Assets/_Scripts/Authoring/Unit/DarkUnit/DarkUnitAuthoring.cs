@@ -68,6 +68,7 @@ namespace Authoring.Unit.DarkUnit
                 AddComponent<CurrentWorldWaypoint>(entity);
                 this.AddAndDisableComponent<TargetPosChangedTag>(entity);
                 AddComponent<DistanceToCurrentWaypoint>(entity);
+                AddComponent<TargetPosForPathFinding>(entity);
                 AddComponent(entity, AbsoluteDistanceXZToTarget.MaxDistance);
                 AddComponent(entity, new MoveCommandElement
                 {
