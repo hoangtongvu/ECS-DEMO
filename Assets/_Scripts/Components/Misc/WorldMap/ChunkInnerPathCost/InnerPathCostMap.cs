@@ -6,8 +6,6 @@ namespace Components.Misc.WorldMap.ChunkInnerPathCost
 {
     public struct InnerPathCostMap : IComponentData
     {
-        public NativeHashMap<InnerPathKey, float> Value;
-
+        public NativeParallelHashMap<InnerPathKey, float> Value;
     }
-
 }

@@ -58,7 +58,7 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
             var chunkExitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
             var chunkExitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
-            var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
+            var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>().Value;
             var highestExitCount = SystemAPI.GetSingleton<HighestExitCount>().Value;
 
             // TODO: Find another way to get this value
@@ -66,8 +66,10 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             const int capRatio = 3;
             int innerPathCostMapCap = chunkExitsContainer.Value.Length * capRatio;
 
-            var localPathCostMap = new NativeParallelHashMap<InnerPathKey, float>(innerPathCostMapCap, Allocator.TempJob);
-            innerPathCostMap.Value.Clear();
+            if (innerPathCostMap.Capacity < innerPathCostMapCap)
+                innerPathCostMap.Capacity = innerPathCostMapCap;
+
+            innerPathCostMap.Clear();
 
             state.Dependency = new PathCostsBakingJob
             {
@@ -78,16 +80,9 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
                 ChunkExitsContainer = chunkExitsContainer,
                 ChunkIndexToExitIndexesMap = chunkIndexToExitIndexesMap,
                 HighestExitCount = highestExitCount,
-                LocalPathCostMap = localPathCostMap.AsParallelWriter(),
+                InnerPathCostMap = innerPathCostMap.AsParallelWriter(),
             }.ScheduleParallel(chunkList.Value.Length, 64, state.Dependency);
 
-            state.Dependency = new SyncLocalToGlobalInnerPathCostMap
-            {
-                LocalPathCostMap = localPathCostMap,
-                InnerPathCostMap = innerPathCostMap,
-            }.Schedule(state.Dependency);
-
-            state.Dependency = localPathCostMap.Dispose(state.Dependency);
         }
 
         [BurstCompile]
@@ -102,7 +97,7 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             [ReadOnly] public CellPosRangeMap CellPosRangeMap;
             [ReadOnly] public CellPositionsContainer CellPositionsContainer;
 
-            public NativeParallelHashMap<InnerPathKey, float>.ParallelWriter LocalPathCostMap;
+            public NativeParallelHashMap<InnerPathKey, float>.ParallelWriter InnerPathCostMap;
 
             [BurstCompile]
             public void Execute(int startIndex, int count)
@@ -164,28 +159,12 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
                         int firstCellMapIndex = cell0MapIndex;
                         int secondCellMapIndex = cell1MapIndex;
 
-                        this.LocalPathCostMap.TryAdd(new InnerPathKey(firstCellMapIndex, secondCellMapIndex), finalCost);
+                        this.InnerPathCostMap.TryAdd(new InnerPathKey(firstCellMapIndex, secondCellMapIndex), finalCost);
                     }
                 }
 
             }
 
-        }
-
-        [BurstCompile]
-        private struct SyncLocalToGlobalInnerPathCostMap : IJob
-        {
-            [ReadOnly] public NativeParallelHashMap<InnerPathKey, float> LocalPathCostMap;
-            [WriteOnly] public InnerPathCostMap InnerPathCostMap;
-
-            [BurstCompile]
-            public void Execute()
-            {
-                foreach (var keyValue in this.LocalPathCostMap)
-                {
-                    this.InnerPathCostMap.Value.TryAdd(keyValue.Key, keyValue.Value);
-                }
-            }
         }
 
     }
