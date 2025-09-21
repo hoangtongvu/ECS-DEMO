@@ -4,7 +4,6 @@ using Unity.Mathematics;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.LineCaching;
 using Components.Misc.WorldMap.ChunkInnerPathCost;
-using Components.Misc;
 
 namespace Systems.Simulation.Misc.WorldMap.PathFinding
 {
@@ -16,8 +15,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<WorldTileCostMap>();
-            state.RequireForUpdate<CellPosRangeMap>();
-            state.RequireForUpdate<CellPositionsContainer>();
+            state.RequireForUpdate<CachedLines>();
             state.RequireForUpdate<ChunkIndexToExitIndexesMap>();
             state.RequireForUpdate<ChunkExitIndexesContainer>();
             state.RequireForUpdate<ChunkExitsContainer>();
@@ -28,8 +26,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
         public void OnUpdate(ref SystemState state)
         {
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
-            var cellPosRangeMap = SystemAPI.GetSingleton<CellPosRangeMap>();
-            var cellPositionsContainer = SystemAPI.GetSingleton<CellPositionsContainer>();
+            var cachedLines = SystemAPI.GetSingleton<CachedLines>();
             var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
             var exitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
             var exitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
@@ -39,8 +36,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             state.Dependency = new HPAPathFindingJob
             {
                 CostMap = costMap,
-                CellPosRangeMap = cellPosRangeMap,
-                CellPositionsContainer = cellPositionsContainer,
+                CachedLines = cachedLines,
                 ChunkIndexToExitIndexesMap = chunkIndexToExitIndexesMap,
                 ChunkExitIndexesContainer = exitIndexesContainer,
                 ChunkExitsContainer = exitsContainer,

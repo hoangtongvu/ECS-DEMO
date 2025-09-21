@@ -1,17 +1,18 @@
 using Components.Misc.WorldMap;
-using Unity.Burst;
-using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Collections;
-using Utilities;
-using Components.Misc.WorldMap.LineCaching;
 using Components.Misc.WorldMap.ChunkInnerPathCost;
-using Core.Misc.WorldMap.ChunkInnerPathCost;
-using Utilities.Helpers;
-using Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost;
+using Components.Misc.WorldMap.LineCaching;
 using Core.Misc.WorldMap;
-using Utilities.Helpers.Misc.WorldMap;
+using Core.Misc.WorldMap.ChunkInnerPathCost;
+using Core.Misc.WorldMap.LineCaching;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
+using Utilities;
+using Utilities.Helpers;
+using Utilities.Helpers.Misc.WorldMap;
+using Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost;
 
 namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 {
@@ -26,23 +27,17 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             state.RequireForUpdate<WorldMapChangedTag>();
             state.RequireForUpdate<ChunkList>();
 
-            SingletonUtilities.GetInstance(state.EntityManager)
-                .AddOrSetComponentData(new CellPosRangeMap
-                {
-                    Value = new(100, Allocator.Persistent),
-                });
+            var su = SingletonUtilities.GetInstance(state.EntityManager);
 
-            SingletonUtilities.GetInstance(state.EntityManager)
-                .AddOrSetComponentData(new CellPositionsContainer
-                {
-                    Value = new(500, Allocator.Persistent),
-                });
+            su.AddOrSetComponentData(new CachedLines
+            {
+                Value = new(200, Allocator.Persistent),
+            });
 
-            SingletonUtilities.GetInstance(state.EntityManager)
-                .AddOrSetComponentData(new InnerPathCostMap
-                {
-                    Value = new(500, Allocator.Persistent),
-                });
+            su.AddOrSetComponentData(new InnerPathCostMap
+            {
+                Value = new(500, Allocator.Persistent),
+            });
         }
 
         [BurstCompile]
@@ -52,8 +47,7 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
             if (!worldMapChanged) return;
 
             var costMap = SystemAPI.GetSingleton<WorldTileCostMap>();
-            var cellPosRangeMap = SystemAPI.GetSingleton<CellPosRangeMap>();
-            var cellPositionsContainer = SystemAPI.GetSingleton<CellPositionsContainer>();
+            var cachedLines = SystemAPI.GetSingleton<CachedLines>();
             var chunkList = SystemAPI.GetSingleton<ChunkList>();
             var chunkIndexToExitIndexesMap = SystemAPI.GetSingleton<ChunkIndexToExitIndexesMap>();
             var chunkExitIndexesContainer = SystemAPI.GetSingleton<ChunkExitIndexesContainer>();
@@ -71,33 +65,41 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 
             innerPathCostMap.Clear();
 
+            var newLineRequests = new NativeQueue<LineCacheKey>(Allocator.TempJob);
+
             state.Dependency = new PathCostsBakingJob
             {
                 CostMap = costMap,
-                CellPosRangeMap = cellPosRangeMap,
-                CellPositionsContainer = cellPositionsContainer,
+                CachedLines = cachedLines,
                 ChunkExitIndexesContainer = chunkExitIndexesContainer,
                 ChunkExitsContainer = chunkExitsContainer,
                 ChunkIndexToExitIndexesMap = chunkIndexToExitIndexesMap,
                 HighestExitCount = highestExitCount,
                 InnerPathCostMap = innerPathCostMap.AsParallelWriter(),
+                NewLineRequests = newLineRequests.AsParallelWriter(),
             }.ScheduleParallel(chunkList.Value.Length, 64, state.Dependency);
 
+            state.Dependency = new HandleRequestedLinesJob
+            {
+                NewLineRequests = newLineRequests,
+                CachedLines = cachedLines,
+            }.Schedule(state.Dependency);
+
+            state.Dependency = newLineRequests.Dispose(state.Dependency);
         }
 
         [BurstCompile]
         private struct PathCostsBakingJob : IJobParallelForBatch
         {
             [ReadOnly] public WorldTileCostMap CostMap;
+            [ReadOnly] public CachedLines CachedLines;
             [ReadOnly] public ChunkIndexToExitIndexesMap ChunkIndexToExitIndexesMap;
             [ReadOnly] public ChunkExitIndexesContainer ChunkExitIndexesContainer;
             [ReadOnly] public ChunkExitsContainer ChunkExitsContainer;
             [ReadOnly] public int HighestExitCount;
 
-            [ReadOnly] public CellPosRangeMap CellPosRangeMap;
-            [ReadOnly] public CellPositionsContainer CellPositionsContainer;
-
             public NativeParallelHashMap<InnerPathKey, float>.ParallelWriter InnerPathCostMap;
+            public NativeQueue<LineCacheKey>.ParallelWriter NewLineRequests;
 
             [BurstCompile]
             public void Execute(int startIndex, int count)
@@ -107,9 +109,11 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
                 PathCostComputer costComputer = new()
                 {
                     CostMap = this.CostMap,
-                    InputCellPosRangeMap = this.CellPosRangeMap,
-                    InputCellPositionsContainer = this.CellPositionsContainer,
-                    LocalCachedLines = new(20, Allocator.Temp),
+                    GlobalCachedLines = this.CachedLines,
+                    LocalCachedLines = new()
+                    {
+                        Value = new(20, Allocator.Temp),
+                    },
                 };
 
                 var exits = new NativeList<ChunkExit>(this.HighestExitCount, Allocator.Temp);
@@ -128,6 +132,7 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
                     this.BakeChunkInnerPathCosts(ref costComputer, chunkIndex, in exits, exitCount);
                 }
 
+                this.PushLocalCacheToRequestsQueue(in costComputer);
             }
 
             [BurstCompile]
@@ -165,6 +170,44 @@ namespace Systems.Initialization.Misc.WorldMap.ChunkInnerPathCost
 
             }
 
+            [BurstCompile]
+            private void PushLocalCacheToRequestsQueue(in PathCostComputer costComputer)
+            {
+                var keys = costComputer.LocalCachedLines.Value.GetKeyArray(Allocator.Temp);
+                foreach (var key in keys)
+                {
+                    this.NewLineRequests.Enqueue(key);
+                }
+            }
+
+        }
+
+        [BurstCompile]
+        private struct HandleRequestedLinesJob : IJob
+        {
+            public NativeQueue<LineCacheKey> NewLineRequests;
+            public CachedLines CachedLines;
+
+            [BurstCompile]
+            public void Execute()
+            {
+                while (this.NewLineRequests.TryDequeue(out var key))
+                {
+                    if (this.CachedLines.Value.ContainsKey(key)) continue;
+
+                    PathCostComputer.CreateBresenhamLine(
+                        key.Delta.x
+                        , key.Delta.y
+                        , Allocator.Temp
+                        , out var newLine);
+
+                    int length = newLine.Length;
+                    for (int i = 0; i < length; i++)
+                    {
+                        this.CachedLines.Value.Add(key, newLine[i]);
+                    }
+                }
+            }
         }
 
     }

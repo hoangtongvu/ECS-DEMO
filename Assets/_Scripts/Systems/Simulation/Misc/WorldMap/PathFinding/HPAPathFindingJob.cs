@@ -27,8 +27,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
         const int nullNodeIndex = -2;
 
         [ReadOnly] public WorldTileCostMap CostMap;
-        [ReadOnly] public CellPosRangeMap CellPosRangeMap;
-        [ReadOnly] public CellPositionsContainer CellPositionsContainer;
+        [ReadOnly] public CachedLines CachedLines;
         [ReadOnly] public ChunkIndexToExitIndexesMap ChunkIndexToExitIndexesMap;
         [ReadOnly] public ChunkExitIndexesContainer ChunkExitIndexesContainer;
         [ReadOnly] public ChunkExitsContainer ChunkExitsContainer;
@@ -141,10 +140,12 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             PathCostComputer costComputer = new()
             {
                 CostMap = this.CostMap,
-                InputCellPosRangeMap = this.CellPosRangeMap,
-                InputCellPositionsContainer = this.CellPositionsContainer,
+                GlobalCachedLines = this.CachedLines,
+                LocalCachedLines = new()
+                {
+                    Value = new(20, Allocator.Temp),
+                },
                 Pos0 = startPos,
-                LocalCachedLines = new(20, Allocator.Temp),
             };
 
             for (int i = 0; i < exitIndexCount; i++)
