@@ -35,7 +35,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
             var exitsContainer = SystemAPI.GetSingleton<ChunkExitsContainer>();
             var innerPathCostMap = SystemAPI.GetSingleton<InnerPathCostMap>();
             half cellRadius = SystemAPI.GetSingleton<CellRadius>().Value;
-            half defaultStopMoveWorldRadius = SystemAPI.GetSingleton<DefaultStopMoveWorldRadius>().Value;
 
             state.Dependency = new HPAPathFindingJob
             {
@@ -47,7 +46,6 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 ChunkExitsContainer = exitsContainer,
                 InnerPathCostMap = innerPathCostMap,
                 CellRadius = cellRadius,
-                DefaultStopMoveWorldRadius = defaultStopMoveWorldRadius,
             }.ScheduleParallel(state.Dependency);
         }
 

@@ -4,7 +4,7 @@ using Systems.Simulation.Misc.WorldMap.PathFinding;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace Systems.Simulation.Unit.Movement
+namespace Systems.Simulation.GameEntity.Movement
 {
     [UpdateInGroup(typeof(PathFindingSystemGroup))]
     [UpdateBefore(typeof(HPAPathFindingSystem))]

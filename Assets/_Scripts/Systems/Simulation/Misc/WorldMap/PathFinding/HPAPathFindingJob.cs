@@ -1,4 +1,3 @@
-using Components.GameEntity.Movement;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.ChunkInnerPathCost;
 using Components.Misc.WorldMap.LineCaching;
@@ -35,19 +34,13 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
         [ReadOnly] public ChunkExitsContainer ChunkExitsContainer;
         [ReadOnly] public InnerPathCostMap InnerPathCostMap;
         [ReadOnly] public half CellRadius;
-        [ReadOnly] public half DefaultStopMoveWorldRadius;
 
         void Execute(
             in LocalTransform transform
             , in TargetPosForPathFinding targetPosForPathFinding
-            , ref CurrentWorldWaypoint currentWaypoint
-            , ref DistanceToCurrentWaypoint distanceToCurrentWaypoint
             , ref DynamicBuffer<WaypointElement> waypoints)
         {
             waypoints.Clear();
-
-            currentWaypoint.Value = transform.Position.Add(x: this.DefaultStopMoveWorldRadius);
-            distanceToCurrentWaypoint.Value = this.DefaultStopMoveWorldRadius;
 
             WorldMapHelper.WorldPosToGridPos(in this.CellRadius, in transform.Position, out int2 startPos);
             WorldMapHelper.WorldPosToGridPos(in this.CellRadius, in targetPosForPathFinding.Value, out int2 endPos);
