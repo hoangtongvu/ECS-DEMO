@@ -17,8 +17,7 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
         public int2 Pos0;
         public int2 Pos1;
 
-        public CellPosRangeMap LocalCellPosRangeMap;
-        public CellPositionsContainer LocalCellPositionsContainer;
+        public NativeParallelMultiHashMap<LineCacheKey, int2> LocalCachedLines;
 
         [BurstCompile]
         public float GetCost()
@@ -205,14 +204,13 @@ namespace Utilities.Helpers.Misc.WorldMap.ChunkInnerPathCost
         [BurstCompile]
         private void AddNewLineToLocalCache(in LineCacheKey lineCacheKey, in NativeArray<int2> newLine)
         {
-            int startIndex = this.LocalCellPositionsContainer.Value.Length;
+            if (this.LocalCachedLines.ContainsKey(lineCacheKey)) return;
 
-            this.LocalCellPositionsContainer.Value.AddRange(newLine);
-            this.LocalCellPosRangeMap.Value.Add(lineCacheKey, new()
+            int length = newLine.Length;
+            for (int i = 0; i < length; i++)
             {
-                StartIndex = startIndex,
-                Amount = newLine.Length,
-            });
+                this.LocalCachedLines.Add(lineCacheKey, newLine[i]);
+            }
         }
 
         [BurstCompile]

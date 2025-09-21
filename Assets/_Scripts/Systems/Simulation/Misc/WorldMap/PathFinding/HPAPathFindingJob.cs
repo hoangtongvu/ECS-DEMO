@@ -144,14 +144,7 @@ namespace Systems.Simulation.Misc.WorldMap.PathFinding
                 InputCellPosRangeMap = this.CellPosRangeMap,
                 InputCellPositionsContainer = this.CellPositionsContainer,
                 Pos0 = startPos,
-                LocalCellPosRangeMap = new()
-                {
-                    Value = new(10, Allocator.Temp),
-                },
-                LocalCellPositionsContainer = new()
-                {
-                    Value = new(30, Allocator.Temp),
-                },
+                LocalCachedLines = new(20, Allocator.Temp),
             };
 
             for (int i = 0; i < exitIndexCount; i++)
