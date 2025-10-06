@@ -37,6 +37,31 @@ namespace Utilities.Helpers
             return false;
         }
 
+        [BurstCompile]
+        public static bool TryAddResourceOfType(
+            in DynamicBuffer<ResourceWalletElement> resourceWallet
+            , EnabledRefRW<WalletChangedTag> walletChangedTag
+            , ResourceType resourceType
+            , uint addQuantity)
+        {
+            int walletLength = resourceWallet.Length;
+
+            for (int i = 0; i < walletLength; i++)
+            {
+                ref var walletElement = ref resourceWallet.ElementAt(i);
+
+                bool matchType = walletElement.Type == resourceType;
+                if (!matchType) continue;
+
+                walletElement.Quantity += addQuantity;
+                walletChangedTag.ValueRW = true;
+
+                return true;
+            }
+
+            return false;
+        }
+
         public static DynamicBuffer<ResourceWalletElement> AddResourceWalletToEntity(
             IBaker baker
             , Entity entity
