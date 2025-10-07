@@ -1,4 +1,4 @@
-using Components.GameResource.ItemPicking;
+using Components.GameResource.ItemPicking.Pickee;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;

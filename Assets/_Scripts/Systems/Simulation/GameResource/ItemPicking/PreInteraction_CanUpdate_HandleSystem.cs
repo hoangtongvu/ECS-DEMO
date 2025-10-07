@@ -1,8 +1,8 @@
 using Unity.Entities;
 using Unity.Burst;
 using Components.GameEntity.Interaction.InteractionPhases;
-using Components.GameResource.ItemPicking;
 using DInteraction.Common;
+using Components.GameResource.ItemPicking.Picker;
 
 namespace Systems.Simulation.GameResource.ItemPicking
 {

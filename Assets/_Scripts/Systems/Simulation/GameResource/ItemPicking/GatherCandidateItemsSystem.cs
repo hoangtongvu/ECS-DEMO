@@ -4,7 +4,8 @@ using Unity.Collections;
 using Unity.Transforms;
 using Unity.Physics;
 using Core.Misc;
-using Components.GameResource.ItemPicking;
+using Components.GameResource.ItemPicking.Pickee;
+using Components.GameResource.ItemPicking.Picker;
 
 namespace Systems.Simulation.GameResource.ItemPicking
 {

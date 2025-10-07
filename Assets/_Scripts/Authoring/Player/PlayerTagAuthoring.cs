@@ -6,7 +6,7 @@ using Components.GameEntity.Interaction.InteractionPhases;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
-using Components.GameResource.ItemPicking;
+using Components.GameResource.ItemPicking.Picker;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Player;

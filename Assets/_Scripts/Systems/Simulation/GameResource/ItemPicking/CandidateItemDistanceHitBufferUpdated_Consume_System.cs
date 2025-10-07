@@ -1,6 +1,6 @@
 using Unity.Entities;
 using Unity.Burst;
-using Components.GameResource.ItemPicking;
+using Components.GameResource.ItemPicking.Picker;
 
 namespace Systems.Simulation.GameResource.ItemPicking
 {

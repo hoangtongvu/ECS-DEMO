@@ -1,6 +1,6 @@
 using Authoring.Utilities.Extensions;
 using Components.GameResource;
-using Components.GameResource.ItemPicking;
+using Components.GameResource.ItemPicking.Pickee;
 using Components.Misc.Presenter;
 using Unity.Entities;
 using UnityEngine;

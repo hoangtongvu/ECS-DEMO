@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components.GameResource.ItemPicking;
+namespace Components.GameResource.ItemPicking.Pickee;
 
 public struct PickerPos : IComponentData
 {

@@ -1,6 +1,6 @@
 using Components.GameEntity.Interaction.InteractionPhases;
 using Components.GameResource;
-using Components.GameResource.ItemPicking;
+using Components.GameResource.ItemPicking.Picker;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
