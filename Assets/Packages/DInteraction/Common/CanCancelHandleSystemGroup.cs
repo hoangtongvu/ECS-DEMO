@@ -1,6 +1,6 @@
 ﻿using Unity.Entities;
 
-namespace Systems.Simulation.GameEntity.Interaction.Common
+namespace DInteraction.Common
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class CanCancelHandleSystemGroup : ComponentSystemGroup

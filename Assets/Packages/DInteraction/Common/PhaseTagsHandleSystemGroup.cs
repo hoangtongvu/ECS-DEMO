@@ -1,7 +1,6 @@
-﻿using Systems.Simulation.GameEntity.Interaction.Common;
-using Unity.Entities;
+﻿using Unity.Entities;
 
-namespace Systems.Simulation.GameEntity.Interaction.InteractionPhases
+namespace DInteraction.Common
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [UpdateAfter(typeof(CanUpdateHandleSystemGroup))]

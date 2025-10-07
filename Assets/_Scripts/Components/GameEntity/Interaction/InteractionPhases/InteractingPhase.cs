@@ -1,30 +1,8 @@
-using Unity.Entities;
+using DInteraction.Common;
 
 namespace Components.GameEntity.Interaction.InteractionPhases;
 
-public struct InteractingPhase
+[InteractionPhase]
+public partial struct InteractingPhase
 {
-	public struct StartedEvent : IComponentData, IEnableableComponent
-	{
-	}
-
-	public struct CanUpdate : IComponentData, IEnableableComponent
-    {
-	}
-
-	public struct Updating : IComponentData, IEnableableComponent
-	{
-	}
-
-	public struct EndedEvent : IComponentData, IEnableableComponent
-	{
-	}
-
-	public struct CanCancel : IComponentData, IEnableableComponent
-	{
-	}
-
-	public struct CanceledEvent : IComponentData, IEnableableComponent
-	{
-	}
 }
