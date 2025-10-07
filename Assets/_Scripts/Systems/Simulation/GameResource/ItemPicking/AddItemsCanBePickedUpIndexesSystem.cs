@@ -8,7 +8,7 @@ namespace Systems.Simulation.GameResource.ItemPicking
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(GatherCandidateItemsSystem))]
     [BurstCompile]
-    public partial struct ItemsCanBePickedUpIndexesAddSystem : ISystem
+    public partial struct AddItemsCanBePickedUpIndexesSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -26,7 +26,7 @@ namespace Systems.Simulation.GameResource.ItemPicking
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            const float interactRadius = 1f;
+            const float interactRadius = 0.5f;
 
             new IndexesAddJob
             {
