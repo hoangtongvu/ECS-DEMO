@@ -80,7 +80,7 @@ namespace Systems.Initialization.UI
                     VariantIndex = 0,
                 };
 
-                resourceDisplay.ResourceType = type;
+                resourceDisplay.ResourceDisplayData.ResourceType = type;
 
                 if (!profiles.TryGetValue(resourceProfileId, out var resourceProfile))
                 {

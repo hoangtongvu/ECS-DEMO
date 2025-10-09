@@ -150,6 +150,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 8008078297175088888}
   resourceDisplayCtrl: {fileID: 6232853626714012701}
+  quantityTextTweener:
+    OriginalTextColor: {r: 0, g: 0, b: 0, a: 0}
+    TextColorOnQuantityAdded: {r: 0, g: 1, b: 0, a: 1}
+    TextColorOnQuantityDeducted: {r: 1, g: 0, b: 0, a: 1}
+    Duration: 1
+    ForwardEase: 26
+    BackwardEase: 1
 --- !u!1 &1994307027593093857
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,7 +215,13 @@ MonoBehaviour:
   State: 0
   backGroundImage: {fileID: 2896631591211700676}
   quantityText: {fileID: 4612936890779925955}
-  ResourceType: 0
+  resourceDisplayTweener:
+    Duration: 1
+    ShakeStrength: 5
+    <ResourceDisplayCtrl>k__BackingField: {fileID: 0}
+  ResourceDisplayData:
+    ResourceType: 0
+    ResourceQuantity: 0
 --- !u!1 &7146816278328062762
 GameObject:
   m_ObjectHideFlags: 0

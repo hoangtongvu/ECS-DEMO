@@ -1,17 +1,15 @@
 using Unity.Entities;
 using Core.MyEvent.PubSub.Messengers;
 using ZBase.Foundation.PubSub;
-using Core.MyEvent.PubSub.Messages;
 using Components.GameResource;
 using Components.Player;
+using Core.GameResource;
 
 namespace Systems.Presentation.GameResource
 {
-
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial class UpdateWalletUISystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             var query = SystemAPI.QueryBuilder()
@@ -27,10 +25,10 @@ namespace Systems.Presentation.GameResource
         protected override void OnStartRunning()
         {
             // Update first time.
-            foreach (var resourceWallet in
-                SystemAPI.Query<
+            foreach (var resourceWallet in SystemAPI
+                .Query<
                     DynamicBuffer<ResourceWalletElement>>()
-                    .WithAll<PlayerTag>())
+                .WithAll<PlayerTag>())
             {
                 this.UpdateUI(resourceWallet);
             }
@@ -38,23 +36,21 @@ namespace Systems.Presentation.GameResource
 
         protected override void OnUpdate()
         {
-
-            foreach (var resourceWallet in
-                SystemAPI.Query<
+            foreach (var resourceWallet in SystemAPI
+                .Query<
                     DynamicBuffer<ResourceWalletElement>>()
-                    .WithAll<WalletChangedTag>()
-                    .WithAll<PlayerTag>())
+                .WithAll<WalletChangedTag>()
+                .WithAll<PlayerTag>())
             {
                 this.UpdateUI(resourceWallet);
             }
-
         }
-        
+
         private void UpdateUI(DynamicBuffer<ResourceWalletElement> resourceWallet)
         {
             foreach (var walletElement in resourceWallet)
             {
-                GameplayMessenger.MessagePublisher.Publish(new ResourceDisplayMessage
+                GameplayMessenger.MessagePublisher.Publish(new UpdateResourceQuantityMessage
                 {
                     ResourceType = walletElement.Type,
                     Quantity = walletElement.Quantity,
@@ -62,6 +58,6 @@ namespace Systems.Presentation.GameResource
             }
         }
 
-
     }
+
 }

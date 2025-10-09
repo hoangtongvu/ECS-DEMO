@@ -1,15 +1,19 @@
-using Core.MyEvent.PubSub.Messages;
-using Core.MyEvent.PubSub.Messengers;
 using Core.UI.TextMeshProUGUIs;
 using UnityEngine;
-using ZBase.Foundation.PubSub;
 
 namespace Core.UI.TopLeftPanel.ResourceDisplay
 {
     public class QuantityText : BaseTextMeshProUGUI
     {
         [SerializeField] private ResourceDisplayCtrl resourceDisplayCtrl;
-        private ISubscription subscription;
+        [SerializeField] private QuantityTextTweener quantityTextTweener = new();
+
+        protected override void Awake()
+        {
+            base.Awake();
+            this.quantityTextTweener.QuantityText = this;
+            this.quantityTextTweener.OriginalTextColor = this.text.color;
+        }
 
         protected override void LoadComponents()
         {
@@ -19,18 +23,25 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
 
         private void OnEnable()
         {
-            this.subscription = GameplayMessenger.MessageSubscriber
-                .Subscribe<ResourceDisplayMessage>(this.SetQuantity);
+            this.resourceDisplayCtrl.ResourceDisplayEventHandler.OnQuantityChanged += this.UpdateQuantityFromDataPool;
+            this.resourceDisplayCtrl.ResourceDisplayEventHandler.OnQuantityAdded += this.quantityTextTweener.TriggerOnQuantityAddedTweens;
+            this.resourceDisplayCtrl.ResourceDisplayEventHandler.OnQuantityDeducted += this.quantityTextTweener.TriggerOnQuantityDeductedTweens;
         }
 
-        private void OnDisable() => this.subscription.Unsubscribe();
-
-        private void SetQuantity(ResourceDisplayMessage message)
+        private void OnDisable()
         {
-            if (this.resourceDisplayCtrl.ResourceType != message.ResourceType) return;
-            this.SetQuantity(message.Quantity);
+            this.resourceDisplayCtrl.ResourceDisplayEventHandler.OnQuantityChanged -= this.UpdateQuantityFromDataPool;
+            this.resourceDisplayCtrl.ResourceDisplayEventHandler.OnQuantityAdded -= this.quantityTextTweener.TriggerOnQuantityAddedTweens;
+            this.resourceDisplayCtrl.ResourceDisplayEventHandler.OnQuantityDeducted -= this.quantityTextTweener.TriggerOnQuantityDeductedTweens;
         }
 
-        public void SetQuantity(uint quantity) => this.text.text = $"{quantity}";
+        private void UpdateQuantityFromDataPool()
+        {
+            uint quantity = this.resourceDisplayCtrl.ResourceDisplayData.ResourceQuantity;
+            this.SetQuantity(quantity);
+        }
+
+        private void SetQuantity(uint quantity) => this.text.text = $"{quantity}";
+
     }
 }
