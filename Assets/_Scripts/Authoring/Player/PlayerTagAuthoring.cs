@@ -1,11 +1,12 @@
 ﻿using Authoring.Utilities.Extensions;
 using Components.GameEntity.Attack;
 using Components.GameEntity.Damage;
-using Components.GameEntity.InteractableActions;
 using Components.GameEntity.Interaction;
+using Components.GameEntity.Interaction.InteractionPhases;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Reaction;
+using Components.GameResource.ItemPicking.Picker;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Player;
@@ -25,7 +26,6 @@ namespace Authoring.Player
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<PlayerTag>(entity);
-                AddComponent<ItemPickerTag>(entity);
                 AddComponent<RotationFreezer>(entity);
 
                 AddBuffer<NearbyUnitDropItemTimerElement>(entity);
@@ -85,6 +85,14 @@ namespace Authoring.Player
                 });
 
                 AddComponent(entity, MoveSpeedScale.DefaultValue);
+
+                AddBuffer<CandidateItemDistanceHit>(entity);
+                this.AddAndDisableComponent<CandidateItemDistanceHitBufferUpdated>(entity);
+                AddBuffer<ItemCanBePickedUpIndex>(entity);
+
+                PreInteractionPhase.BakingHelper.BakeTags(this, entity);
+                InteractingPhase.BakingHelper.BakeTags(this, entity);
+                PostInteractionPhase.BakingHelper.BakeTags(this, entity);
 
             }
 

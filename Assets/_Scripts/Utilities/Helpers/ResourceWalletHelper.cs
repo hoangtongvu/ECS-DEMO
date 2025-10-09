@@ -12,11 +12,10 @@ namespace Utilities.Helpers
     public static class ResourceWalletHelper
     {
         [BurstCompile]
-        public static bool TryAddResources(
-            in ComponentLookup<WalletChangedTag> walletChangedTagLookup
-            , in Entity walletOwnerEntity
-            , in DynamicBuffer<ResourceWalletElement> resourceWallet
-            , ResourceType addType
+        public static bool TryAddResourceOfType(
+            in DynamicBuffer<ResourceWalletElement> resourceWallet
+            , EnabledRefRW<WalletChangedTag> walletChangedTag
+            , ResourceType resourceType
             , uint addQuantity)
         {
             int walletLength = resourceWallet.Length;
@@ -25,11 +24,11 @@ namespace Utilities.Helpers
             {
                 ref var walletElement = ref resourceWallet.ElementAt(i);
 
-                bool matchType = walletElement.Type == addType;
+                bool matchType = walletElement.Type == resourceType;
                 if (!matchType) continue;
 
                 walletElement.Quantity += addQuantity;
-                walletChangedTagLookup.SetComponentEnabled(walletOwnerEntity, true);
+                walletChangedTag.ValueRW = true;
 
                 return true;
             }

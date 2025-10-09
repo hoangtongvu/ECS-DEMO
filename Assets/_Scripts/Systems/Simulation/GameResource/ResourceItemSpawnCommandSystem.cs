@@ -9,6 +9,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Physics;
 using Core.Utilities.Extensions;
+using Components.GameResource.ItemPicking.Pickee.RePickUpCoolDown;
 
 namespace Systems.Simulation.GameResource
 {
@@ -51,6 +52,7 @@ namespace Systems.Simulation.GameResource
                 TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
                 PhysicsVelocityLookup = SystemAPI.GetComponentLookup<PhysicsVelocity>(),
                 ResourceItemICDLookup = SystemAPI.GetComponentLookup<ResourceItemICD>(),
+                PreviousPickerEntityLookup = SystemAPI.GetComponentLookup<PreviousPickerEntity>(),
             }.ScheduleParallel(spawnCount, 20, state.Dependency);
 
             commandList.Value.Clear();
@@ -98,6 +100,9 @@ namespace Systems.Simulation.GameResource
         [NativeDisableParallelForRestriction]
         public ComponentLookup<ResourceItemICD> ResourceItemICDLookup;
 
+        [NativeDisableParallelForRestriction]
+        public ComponentLookup<PreviousPickerEntity> PreviousPickerEntityLookup;
+
         [BurstCompile]
         public void Execute(int startIndex, int count)
         {
@@ -117,12 +122,15 @@ namespace Systems.Simulation.GameResource
                 var transformRef = this.TransformLookup.GetRefRWOptional(entity);
                 var velocityRef = this.PhysicsVelocityLookup.GetRefRWOptional(entity);
                 var resourceItemICDRef = this.ResourceItemICDLookup.GetRefRWOptional(entity);
+                var prevPickerEntityRef = this.PreviousPickerEntityLookup.GetRefRWOptional(entity);
 
                 transformRef.ValueRW.Position = spawnCommand.SpawnPos.Add(y: offsetY);
                 velocityRef.ValueRW.Linear = velocityDir3 * speed;
 
                 resourceItemICDRef.ValueRW.ResourceType = spawnCommand.ResourceType;
                 resourceItemICDRef.ValueRW.Quantity = spawnCommand.Quantity;
+
+                prevPickerEntityRef.ValueRW.Value = spawnCommand.SpawnerEntity;
             }
 
         }

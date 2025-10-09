@@ -38,13 +38,14 @@ namespace Systems.Initialization.Harvest
             var itemSpawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
             var resourceDropInfoMap = SystemAPI.GetSingleton<HarvesteeResourceDropInfoMap>().Value;
 
-            foreach (var (currentHpRef, dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef) in SystemAPI
+            foreach (var (currentHpRef, dropResourceHpThresholdRef, transformRef, primaryPrefabEntityHolderRef, entity) in SystemAPI
                 .Query<
                     RefRO<CurrentHp>
                     , RefRW<DropResourceHpThreshold>
                     , RefRO<LocalTransform>
                     , RefRO<PrimaryPrefabEntityHolder>>()
-                .WithAll<TakeHitEvent>())
+                .WithAll<TakeHitEvent>()
+                .WithEntityAccess())
             {
                 var resourceDropInfo = resourceDropInfoMap[primaryPrefabEntityHolderRef.ValueRO];
 
@@ -60,7 +61,8 @@ namespace Systems.Initialization.Harvest
                         in itemSpawnCommandList
                         , transformRef.ValueRO.Position
                         , resourceDropInfo.ResourceType
-                        , quantityPerDrop);
+                        , quantityPerDrop
+                        , in entity);
 
                     if (hpThreshold == 0)
                         break;
@@ -78,10 +80,12 @@ namespace Systems.Initialization.Harvest
             in ResourceItemSpawnCommandList spawnCommandList
             , float3 centerPos
             , ResourceType dropType
-            , uint quantityPerDrop)
+            , uint quantityPerDrop
+            , in Entity dropper)
         {
             spawnCommandList.Value.Add(new ResourceItemSpawnCommand
             {
+                SpawnerEntity = dropper,
                 SpawnPos = centerPos,
                 ResourceType = dropType,
                 Quantity = quantityPerDrop,

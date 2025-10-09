@@ -7,12 +7,10 @@ using Utilities;
 
 namespace Systems.Simulation.Unit.NearUnitDropItems
 {
-
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [BurstCompile]
     public partial struct TimeUpSetUnitDropItemsSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -22,7 +20,6 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
                     Value = 4f,
                 });
 
-
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     NearbyUnitDropItemTimerElement>()
@@ -30,9 +27,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
             state.RequireForUpdate(query0);
             state.RequireForUpdate<NearbyUnitDropItemTimeLimit>();
-
         }
-
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
@@ -40,11 +35,10 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
             var spawnCommandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
             float timeLimitSecond = SystemAPI.GetSingleton<NearbyUnitDropItemTimeLimit>().Value;
 
-            foreach (var timerList in
-                SystemAPI.Query<
+            foreach (var timerList in SystemAPI
+                .Query<
                     DynamicBuffer<NearbyUnitDropItemTimerElement>>())
             {
-
                 int length = timerList.Length;
 
                 for (int i = 0; i < length; i++)
@@ -55,16 +49,11 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
                     if (!timeUp) continue;
 
                     timer.CounterSecond = 0;
-
                     this.SetUnitDropItems(ref state, in timer.UnitEntity, in spawnCommandList);
-
                 }
-
             }
 
-
         }
-
 
         [BurstCompile]
         private void SetUnitDropItems(
@@ -84,6 +73,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
                 spawnCommandList.Value.Add(new()
                 {
+                    SpawnerEntity = unitEntity,
                     SpawnPos = unitTransformRef.ValueRO.Position,
                     ResourceType = walletElement.Type,
                     Quantity = walletElement.Quantity,
@@ -91,10 +81,7 @@ namespace Systems.Simulation.Unit.NearUnitDropItems
 
                 walletElement.Quantity = 0;
             }
-
         }
-
-
 
     }
 
