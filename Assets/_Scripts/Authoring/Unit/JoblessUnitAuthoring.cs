@@ -4,11 +4,13 @@ using Components.GameEntity;
 using Components.GameEntity.Damage;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Interaction;
+using Components.GameEntity.Interaction.InteractionPhases;
 using Components.GameEntity.Misc;
 using Components.GameEntity.Movement;
 using Components.GameEntity.Movement.MoveCommand;
 using Components.GameEntity.Reaction;
 using Components.GameResource;
+using Components.GameResource.ItemPicking.Picker;
 using Components.Misc;
 using Components.Misc.Presenter;
 using Components.Misc.WorldMap.PathFinding;
@@ -40,7 +42,6 @@ namespace Authoring.Unit
                 AddComponent<UnitTag>(entity);
                 AddComponent<JoblessUnitTag>(entity);
                 AddComponent<NewlySpawnedTag>(entity);
-                AddComponent<ItemPickerTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
                 this.AddAndDisableComponent<TakeHitEvent>(entity);
                 this.AddAndDisableComponent<DeadEvent>(entity);
@@ -186,6 +187,14 @@ namespace Authoring.Unit
                 InteractableActionsBakingHelper.AddComponents(this, entity);
 
                 AddComponent<NeedInitPosAroundSpawnerTag>(entity);
+
+                AddBuffer<CandidateItemDistanceHit>(entity);
+                this.AddAndDisableComponent<CandidateItemDistanceHitBufferUpdated>(entity);
+                AddBuffer<ItemCanBePickedUpIndex>(entity);
+
+                PreInteractionPhase.BakingHelper.BakeTags(this, entity);
+                InteractingPhase.BakingHelper.BakeTags(this, entity);
+                PostInteractionPhase.BakingHelper.BakeTags(this, entity);
 
             }
 

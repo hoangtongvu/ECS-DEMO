@@ -38,7 +38,6 @@ namespace Authoring.Unit.DarkUnit
                 AddComponent<DarkUnitTag>(entity);
                 AddComponent<JoblessUnitTag>(entity);
                 AddComponent<NewlySpawnedTag>(entity);
-                AddComponent<ItemPickerTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
                 this.AddAndDisableComponent<TakeHitEvent>(entity);
                 this.AddAndDisableComponent<DeadEvent>(entity);

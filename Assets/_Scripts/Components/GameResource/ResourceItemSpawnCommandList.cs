@@ -8,5 +8,4 @@ namespace Components.GameResource
     {
         public NativeList<ResourceItemSpawnCommand> Value;
     }
-
 }

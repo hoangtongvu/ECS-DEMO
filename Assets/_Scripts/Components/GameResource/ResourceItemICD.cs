@@ -8,25 +8,9 @@ namespace Components.GameResource
         public Entity Value;
     }
 
-
     public struct ResourceItemICD : IComponentData
     {
         public ResourceType ResourceType;
         public uint Quantity;
     }
-
-    public struct UnitCannotPickUpTag : IComponentData, IEnableableComponent
-    {
-    }
-
-    public struct UnitCannotPickUpTimeCounter : IComponentData
-    {
-        public float CounterSecond;
-    }
-
-    public struct UnitCannotPickUpTimeLimit : IComponentData
-    {
-        public float Value;
-    }
-
 }

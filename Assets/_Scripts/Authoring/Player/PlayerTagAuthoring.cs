@@ -26,7 +26,6 @@ namespace Authoring.Player
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<PlayerTag>(entity);
-                AddComponent<ItemPickerTag>(entity);
                 AddComponent<RotationFreezer>(entity);
 
                 AddBuffer<NearbyUnitDropItemTimerElement>(entity);

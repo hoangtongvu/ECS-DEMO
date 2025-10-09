@@ -6,6 +6,7 @@ using Unity.Physics;
 using Core.Misc;
 using Components.GameResource.ItemPicking.Pickee;
 using Components.GameResource.ItemPicking.Picker;
+using Components.GameResource.ItemPicking.Pickee.RePickUpCoolDown;
 
 namespace Systems.Simulation.GameResource.ItemPicking
 {
@@ -54,8 +55,13 @@ namespace Systems.Simulation.GameResource.ItemPicking
                 foreach (var hit in hitList)
                 {
                     bool isPickableItem = SystemAPI.HasComponent<PickableItem>(hit.Entity) && SystemAPI.IsComponentEnabled<PickableItem>(hit.Entity);
-
                     if (!isPickableItem) continue;
+
+                    bool isInPickUpCoolDownWithThisPicker =
+                        SystemAPI.IsComponentEnabled<IsInRePickUpCoolDown>(hit.Entity) &&
+                        SystemAPI.GetComponent<PreviousPickerEntity>(hit.Entity).Value == pickerEntity;
+
+                    if (isInPickUpCoolDownWithThisPicker) continue;
 
                     candidateItemDistanceHits.Add(hit);
                 }
