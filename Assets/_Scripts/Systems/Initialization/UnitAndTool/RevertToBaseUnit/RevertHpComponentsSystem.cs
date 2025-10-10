@@ -41,10 +41,7 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
             {
                 var hpData = hpDataMap[primaryPrefabEntityHolderRef.ValueRO];
 
-                ecb.SetComponent(entity, new CurrentHp
-                {
-                    value = hpData.MaxHp,
-                });
+                ecb.SetComponent(entity, new CurrentHp(hpData.MaxHp));
 
                 ecb.SetSharedComponent(entity, new HpDataHolder(hpData));
 

@@ -21,10 +21,7 @@ namespace Systems.Initialization.GameResource.ItemPicking.RePickUpCoolDown
 
             var su = SingletonUtilities.GetInstance(state.EntityManager);
 
-            su.AddOrSetComponentData(new PreviousPickerPickupMaxCoolDownSeconds
-            {
-                value = 4f,
-            });
+            su.AddOrSetComponentData(new PreviousPickerPickupMaxCoolDownSeconds(4f));
         }
 
     }

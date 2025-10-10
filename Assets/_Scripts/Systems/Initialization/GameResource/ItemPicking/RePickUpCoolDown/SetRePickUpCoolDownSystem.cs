@@ -29,7 +29,7 @@ namespace Systems.Initialization.GameResource.ItemPicking.RePickUpCoolDown
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            float maxCoolDownSeconds = SystemAPI.GetSingleton<PreviousPickerPickupMaxCoolDownSeconds>().value;
+            float maxCoolDownSeconds = SystemAPI.GetSingleton<PreviousPickerPickupMaxCoolDownSeconds>();
 
             new SetCoolDownJob
             {

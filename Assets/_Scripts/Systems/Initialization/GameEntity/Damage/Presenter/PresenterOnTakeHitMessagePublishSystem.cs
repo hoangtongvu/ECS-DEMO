@@ -38,7 +38,7 @@ namespace Systems.Initialization.GameEntity.Damage.Presenter
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
 
                 int hitDmgValue = frameHpChangeRef.ValueRO;
-                float remainingHpRatio = (float)currentHpRef.ValueRO / hpDataHolder.value.MaxHp;
+                float remainingHpRatio = (float)currentHpRef.ValueRO / hpDataHolder.valueOfHpData.MaxHp;
 
                 basePresenter.Messenger.MessagePublisher
                     .Publish(new OnHitMessage(hitDmgValue, remainingHpRatio));

@@ -49,7 +49,7 @@ namespace Systems.Initialization.Harvest
             {
                 var resourceDropInfo = resourceDropInfoMap[primaryPrefabEntityHolderRef.ValueRO];
 
-                uint currentHp = (uint)currentHpRef.ValueRO.value;
+                uint currentHp = (uint)currentHpRef.ValueRO.valueOfInt32;
 
                 uint hpThreshold = dropResourceHpThresholdRef.ValueRO.Value;
                 uint deductAmount = resourceDropInfo.HpAmountPerDrop;

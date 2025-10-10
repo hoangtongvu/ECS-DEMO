@@ -1,5 +1,5 @@
 using Core.Unit.UnitFeeding;
-using EncosyTower.TypeWraps;
+using TypeWrap;
 using Unity.Entities;
 
 namespace Components.Unit.UnitFeeding;

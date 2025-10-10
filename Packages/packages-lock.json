@@ -81,6 +81,13 @@
       },
       "url": "https://package.openupm.com"
     },
+    "com.laicasaane.typewrap": {
+      "version": "https://github.com/laicasaane/TypeWrap.git?path=/Packages/com.laicasaane.typewrap",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "6ab06730fdbfeccdbacc9f4dcaffb987e1b0306d"
+    },
     "com.mackysoft.serializereference-extensions": {
       "version": "1.4.0",
       "depth": 0,

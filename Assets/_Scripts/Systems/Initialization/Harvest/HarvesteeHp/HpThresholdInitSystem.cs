@@ -45,7 +45,7 @@ namespace Systems.Initialization.Harvest.HarvesteeHp
 
                 this.InitHpThreshold(
                     ref dropThresholdRef.ValueRW
-                    , (uint)hpDataHolder.value.MaxHp
+                    , (uint)hpDataHolder.valueOfHpData.MaxHp
                     , hpAmountPerDrop);
 
             }

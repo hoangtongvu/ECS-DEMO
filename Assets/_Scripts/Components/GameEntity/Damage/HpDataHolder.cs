@@ -1,6 +1,6 @@
 using Core.GameEntity.Damage;
-using EncosyTower.TypeWraps;
 using System;
+using TypeWrap;
 using Unity.Entities;
 
 namespace Components.GameEntity.Damage;

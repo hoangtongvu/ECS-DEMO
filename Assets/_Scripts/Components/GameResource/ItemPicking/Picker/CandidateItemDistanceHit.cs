@@ -1,4 +1,4 @@
-using EncosyTower.TypeWraps;
+using TypeWrap;
 using Unity.Entities;
 using Unity.Physics;
 

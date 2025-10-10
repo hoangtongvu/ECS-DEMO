@@ -46,7 +46,7 @@ This is an RTS game prototype inspired by [Kingdom](https://en-m-wikipedia-org.t
         </tr>
         <tr>
             <td>laicasaane</td>
-            <td><a href='https://github.com/laicasaane/tower_of_encosy/tree/main/Packages/com.laicasaane.encosy-tower'>TypeWraps</a></td>
+            <td><a href='https://github.com/laicasaane/TypeWrap'>TypeWraps</a></td>
         </tr>
         <tr>
             <td>quaternius</td>
