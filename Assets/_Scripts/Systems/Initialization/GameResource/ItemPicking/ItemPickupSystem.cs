@@ -33,17 +33,14 @@ namespace Systems.Initialization.GameResource.ItemPicking
         {
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (interactingUpdatingTag, distanceHits, pickableItemIndexes, resourceWallet, walletChangedTag) in SystemAPI
+            foreach (var (distanceHits, pickableItemIndexes, resourceWallet, entity) in SystemAPI
                 .Query<
-                    EnabledRefRO<InteractingPhase.Updating>
-                    , DynamicBuffer<CandidateItemDistanceHit>
+                    DynamicBuffer<CandidateItemDistanceHit>
                     , DynamicBuffer<ItemCanBePickedUpIndex>
-                    , DynamicBuffer<ResourceWalletElement>
-                    , EnabledRefRW<WalletChangedTag>>()
-                .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
+                    , DynamicBuffer<ResourceWalletElement>>()
+                .WithAll<InteractingPhase.Updating>()
+                .WithEntityAccess())
             {
-                if (!interactingUpdatingTag.ValueRO) continue;
-
                 foreach (var index in pickableItemIndexes)
                 {
                     var itemEntity = distanceHits[index].Entity;
@@ -51,7 +48,8 @@ namespace Systems.Initialization.GameResource.ItemPicking
 
                     bool canAddResourceToWallet = ResourceWalletHelper.TryAddResourceOfType(
                         in resourceWallet
-                        , walletChangedTag
+                        , SystemAPI.GetComponentLookup<WalletChangedTag>()
+                        , in entity
                         , resourceItemICD.ResourceType
                         , resourceItemICD.Quantity);
 

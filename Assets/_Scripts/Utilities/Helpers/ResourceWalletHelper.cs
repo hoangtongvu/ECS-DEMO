@@ -14,7 +14,8 @@ namespace Utilities.Helpers
         [BurstCompile]
         public static bool TryAddResourceOfType(
             in DynamicBuffer<ResourceWalletElement> resourceWallet
-            , EnabledRefRW<WalletChangedTag> walletChangedTag
+            , in ComponentLookup<WalletChangedTag> walletChangedTagLookup
+            , in Entity walletOwner
             , ResourceType resourceType
             , uint addQuantity)
         {
@@ -28,7 +29,7 @@ namespace Utilities.Helpers
                 if (!matchType) continue;
 
                 walletElement.Quantity += addQuantity;
-                walletChangedTag.ValueRW = true;
+                walletChangedTagLookup.SetComponentEnabled(walletOwner, true);
 
                 return true;
             }
