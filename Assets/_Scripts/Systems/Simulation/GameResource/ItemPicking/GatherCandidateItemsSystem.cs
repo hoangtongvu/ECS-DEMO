@@ -76,7 +76,7 @@ namespace Systems.Simulation.GameResource.ItemPicking
         {
             return new CollisionFilter
             {
-                BelongsTo = (uint)(CollisionLayer.Unit | CollisionLayer.Player),
+                BelongsTo = (uint)(CollisionLayer.Default),
                 CollidesWith = (uint)(CollisionLayer.Item),
             };
         }

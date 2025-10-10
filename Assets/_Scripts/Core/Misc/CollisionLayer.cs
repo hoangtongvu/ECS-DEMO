@@ -12,11 +12,12 @@ namespace Core.Misc
         Item = 1 << 9,
         Building = 1 << 10,
         Tool = 1 << 11,
+        Harvestee = 1 << 12,
     }
 
     public static class CollisionLayerConstants
     {
-        public static readonly CollisionLayer Damagable = CollisionLayer.Player | CollisionLayer.Unit | CollisionLayer.Building;
+        public static readonly CollisionLayer Damagable = CollisionLayer.Player | CollisionLayer.Unit | CollisionLayer.Building | CollisionLayer.Harvestee;
     }
 
 }
