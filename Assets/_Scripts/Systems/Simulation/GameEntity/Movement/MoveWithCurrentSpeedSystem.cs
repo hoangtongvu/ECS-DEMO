@@ -43,8 +43,11 @@ namespace Systems.Simulation.GameEntity.Movement
             {
                 if (speed.Value == 0) return;
 
+                float yLinear = physicsVelocity.Linear.y;
                 float3 float3Dir = new (direction.Value.x, 0f, direction.Value.y);
+
                 physicsVelocity.Linear = float3Dir * speed.Value * moveSpeedScale.Value;
+                physicsVelocity.Linear.y = yLinear;
             }
 
         }

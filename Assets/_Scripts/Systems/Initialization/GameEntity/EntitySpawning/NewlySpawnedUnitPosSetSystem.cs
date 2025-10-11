@@ -1,3 +1,4 @@
+using Components.GameEntity;
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
 using Systems.Initialization.Misc;
@@ -20,22 +21,26 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                     NewlySpawnedTag
                     , NeedInitPosAroundSpawnerTag
                     , LocalTransform
-                    , SpawnerEntityHolder>()
+                    , SpawnerEntityHolder
+                    , PrimaryPrefabEntityHolder>()
                 .Build();
 
             state.RequireForUpdate(entityQuery);
+            state.RequireForUpdate<GameEntitySizeMap>();
             state.RequireForUpdate<SetPosWithinRadiusCommandList>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var commandList = SystemAPI.GetSingleton<SetPosWithinRadiusCommandList>().Value;
             var entities = new NativeList<Entity>(10, Allocator.Temp);
 
-            foreach (var (spawnerEntityHolderRef, entity) in SystemAPI
+            foreach (var (spawnerEntityHolderRef, primaryEntityHolderRef, entity) in SystemAPI
                 .Query<
-                    RefRO<SpawnerEntityHolder>>()
+                    RefRO<SpawnerEntityHolder>
+                    , RefRO<PrimaryPrefabEntityHolder>>()
                 .WithAll<
                     NewlySpawnedTag
                     , NeedInitPosAroundSpawnerTag>()
@@ -45,16 +50,18 @@ namespace Systems.Initialization.GameEntity.EntitySpawning
                 var spawnerEntity = spawnerEntityHolderRef.ValueRO.Value;
                 if (spawnerEntity == Entity.Null) continue;
 
+                var gameEntitySize = gameEntitySizeMap[primaryEntityHolderRef.ValueRO];
+
                 commandList.Add(new()
                 {
                     BaseEntity = entity,
+                    OffsetYFromGround = gameEntitySize.ObjectHeight,
                     CenterPos = SystemAPI.GetComponent<LocalTransform>(spawnerEntity).Position,
                     Radius = 3f,
                 });
             }
 
             state.EntityManager.RemoveComponent<NeedInitPosAroundSpawnerTag>(entities.AsArray());
-
         }
 
     }

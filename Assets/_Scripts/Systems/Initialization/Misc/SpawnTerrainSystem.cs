@@ -30,6 +30,8 @@ namespace Systems.Initialization.Misc
 
             var terrainPresenter = Object.Instantiate(prefab);
             terrainPresenter.transform.position = spawnPos;
+
+            Object.Destroy(terrainPresenter.GetComponent<TerrainCollider>());
         }
 
     }

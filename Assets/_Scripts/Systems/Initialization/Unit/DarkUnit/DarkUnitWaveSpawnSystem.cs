@@ -1,9 +1,11 @@
+using Components.GameEntity;
 using Components.GameEntity.Misc;
 using Components.Player;
 using Components.Tool;
 using Components.Tool.Misc;
 using Components.Unit.DarkUnit;
 using Components.Unit.Misc;
+using Core.GameEntity;
 using Core.Tool;
 using Core.Unit;
 using Unity.Burst;
@@ -41,6 +43,7 @@ namespace Systems.Initialization.Unit.DarkUnit
             state.RequireForUpdate<UnitProfileId2PrimaryPrefabEntityMap>();
             state.RequireForUpdate<ToolProfileId2PrimaryEntityMap>();
             state.RequireForUpdate<SetPosWithinRadiusCommandList>();
+            state.RequireForUpdate<GameEntitySizeMap>();
         }
 
         [BurstCompile]
@@ -52,6 +55,7 @@ namespace Systems.Initialization.Unit.DarkUnit
             var elapsedTimeSeconds = SystemAPI.Time.ElapsedTime - latestDarkUnitSpawnTimestampRef.ValueRO.Value;
             if (elapsedTimeSeconds / 60 < spawnDurationMinutes) return;
 
+            var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var spawnProfileMap = SystemAPI.GetSingleton<DarkUnitProfileMap>().Value;
             half spawnRadius = SystemAPI.GetSingleton<DarkUnitSpawnRadius>().Value;
 
@@ -73,6 +77,7 @@ namespace Systems.Initialization.Unit.DarkUnit
                     ref state
                     , in em
                     , in unitProfileId2PrimaryPrefabEntityMap
+                    , in gameEntitySizeMap
                     , in setPosWithinRadiusCommands
                     , kVPair.Key
                     , in spawnRadius
@@ -101,6 +106,7 @@ namespace Systems.Initialization.Unit.DarkUnit
             ref SystemState state
             , in EntityManager em
             , in NativeHashMap<UnitProfileId, Entity> unitProfileId2PrimaryPrefabEntityMap
+            , in NativeHashMap<Entity, GameEntitySize> gameEntitySizeMap
             , in NativeList<SetPosWithinRadiusCommand> setPosWithinRadiusCommands
             , in UnitProfileId prefabId
             , in half spawnRadius
@@ -111,6 +117,7 @@ namespace Systems.Initialization.Unit.DarkUnit
 
             float3 playerPos = this.playerQuery.GetSingleton<LocalTransform>().Position;
             Entity prefabToSpawn = unitProfileId2PrimaryPrefabEntityMap[prefabId];
+            var gameEntitySize = gameEntitySizeMap[prefabToSpawn];
 
             newUnitEntities = em.Instantiate(prefabToSpawn, spawnCount, Allocator.Temp);
 
@@ -119,11 +126,11 @@ namespace Systems.Initialization.Unit.DarkUnit
                 setPosWithinRadiusCommands.Add(new()
                 {
                     BaseEntity = newUnitEntities[i],
+                    OffsetYFromGround = gameEntitySize.ObjectHeight,
                     CenterPos = playerPos,
                     Radius = spawnRadius,
                 });
             }
-
         }
 
         [BurstCompile]

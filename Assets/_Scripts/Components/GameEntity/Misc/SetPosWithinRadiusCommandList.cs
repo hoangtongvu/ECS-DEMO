@@ -8,6 +8,7 @@ namespace Components.GameEntity.Misc
     public struct SetPosWithinRadiusCommand
     {
         public Entity BaseEntity;
+        public float OffsetYFromGround;
         public float3 CenterPos;
         public float Radius;
     }

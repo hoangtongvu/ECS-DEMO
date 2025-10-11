@@ -3,19 +3,16 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Components.Misc.WorldMap.WorldBuilding
+namespace Components.Misc.WorldMap.WorldBuilding;
+public struct BuildCommand
 {
-    public struct BuildCommand
-    {
-        public Entity Entity;
-        public int2 TopLeftCellGridPos;
-        public GameEntitySize GameEntitySize;
-        public Entity SpawnerEntity;
-    }
+    public Entity Entity;
+    public int2 TopLeftCellGridPos;
+    public GameEntitySize GameEntitySize;
+    public Entity SpawnerEntity;
+}
 
-    public struct BuildCommandList : IComponentData
-    {
-        public NativeList<BuildCommand> Value;
-    }
-
+public struct BuildCommandList : IComponentData
+{
+    public NativeList<BuildCommand> Value;
 }

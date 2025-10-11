@@ -3,6 +3,7 @@ using Components.Harvest;
 using Components.Misc.WorldMap;
 using Components.Misc.WorldMap.WorldBuilding;
 using Components.Player;
+using Components.Player.Misc;
 using Core.GameEntity;
 using Core.Harvest;
 using Core.Misc.WorldMap;
@@ -43,6 +44,7 @@ namespace Systems.Initialization.Misc.WorldMap
             state.RequireForUpdate<HarvesteePrefabEntityMap>();
             state.RequireForUpdate<GameEntitySizeMap>();
             state.RequireForUpdate<BuildCommandList>();
+            state.RequireForUpdate<PlayerSpawnCommandList>();
         }
 
         [BurstCompile]
@@ -55,6 +57,7 @@ namespace Systems.Initialization.Misc.WorldMap
             var harvesteePrefabEntityMap = SystemAPI.GetSingleton<HarvesteePrefabEntityMap>().Value;
             var gameEntitySizeMap = SystemAPI.GetSingleton<GameEntitySizeMap>().Value;
             var buildCommandList = SystemAPI.GetSingleton<BuildCommandList>();
+            var playerSpawnCommandList = SystemAPI.GetSingleton<PlayerSpawnCommandList>().Value;
 
             this.CreateWorldMap(
                 ref state
@@ -65,8 +68,11 @@ namespace Systems.Initialization.Misc.WorldMap
                 , in buildCommandList);
 
             var bakedProfileElements = this.playerQuery.GetSingletonBuffer<BakedGameEntityProfileElement>();
-
-            state.EntityManager.Instantiate(bakedProfileElements[0].PrimaryEntity);
+            playerSpawnCommandList.Add(new()
+            {
+                Entity = bakedProfileElements[0].PrimaryEntity,
+                GameEntitySize = bakedProfileElements[0].GameEntitySize,
+            });
         }
 
         [BurstCompile]
@@ -84,7 +90,6 @@ namespace Systems.Initialization.Misc.WorldMap
             WorldMapHelper.GetGridOffset(mapWidth, mapHeight, out int2 gridOffset);
 
             var su = SingletonUtilities.GetInstance(state.EntityManager);
-            
             var costMap = new NativeArray<Cell>(mapWidth * mapHeight, Allocator.Persistent);
 
             this.GenerateMap(
@@ -110,7 +115,6 @@ namespace Systems.Initialization.Misc.WorldMap
             {
                 Value = true,
             });
-
         }
 
         [BurstCompile]
@@ -463,7 +467,6 @@ namespace Systems.Initialization.Misc.WorldMap
                 GameEntitySize = gameEntitySize,
                 SpawnerEntity = Entity.Null,
             });
-
         }
 
         [BurstCompile]

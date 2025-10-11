@@ -3,7 +3,6 @@ using Components.GameEntity.Misc;
 using Components.Unit;
 using Components.Unit.Misc;
 using Components.Unit.RevertToBaseUnit;
-using Core.Utilities.Extensions;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -54,10 +53,10 @@ namespace Systems.Initialization.UnitAndTool.RevertToBaseUnit
                 commandList.Add(new()
                 {
                     BaseEntity = toolEntity,
-                    CenterPos = SystemAPI.GetComponent<LocalTransform>(unitEntities[i]).Position.Add(y: offetY),
+                    OffsetYFromGround = offetY,
+                    CenterPos = SystemAPI.GetComponent<LocalTransform>(unitEntities[i]).Position,
                     Radius = 3f,
                 });
-
             }
 
         }

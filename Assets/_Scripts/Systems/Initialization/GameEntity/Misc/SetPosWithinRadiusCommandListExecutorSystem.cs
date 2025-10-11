@@ -1,10 +1,12 @@
 using Components.GameEntity.Misc;
+using Core.Misc;
 using Core.Utilities.Extensions;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Transforms;
 using Utilities;
 
@@ -28,6 +30,7 @@ namespace Systems.Initialization.GameEntity.Misc
             this.rand = new Random(1);
 
             state.RequireForUpdate<SetPosWithinRadiusCommandList>();
+            state.RequireForUpdate<PhysicsWorldSingleton>();
         }
 
         [BurstCompile]
@@ -38,6 +41,7 @@ namespace Systems.Initialization.GameEntity.Misc
 
             if (commandCount == 0) return;
 
+            var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             var randomSeeds = new NativeArray<uint>(commandCount, Allocator.TempJob);
 
             for (int i = 0; i < commandCount; i++)
@@ -48,6 +52,7 @@ namespace Systems.Initialization.GameEntity.Misc
             // NOTE: Be sure that entity in each command is distinct
             state.Dependency = new SetPosJob
             {
+                PhysicsWorld = physicsWorld,
                 RandomSeeds = randomSeeds,
                 CommandList = commandList,
                 TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>(),
@@ -57,14 +62,15 @@ namespace Systems.Initialization.GameEntity.Misc
             {
                 CommandList = commandList,
             }.Schedule(state.Dependency);
-
         }
 
         [BurstCompile]
         private struct SetPosJob : IJobParallelForBatch
         {
-            [DeallocateOnJobCompletion]
             [ReadOnly]
+            public PhysicsWorldSingleton PhysicsWorld;
+
+            [ReadOnly] [DeallocateOnJobCompletion]
             public NativeArray<uint> RandomSeeds;
 
             [ReadOnly]
@@ -85,25 +91,56 @@ namespace Systems.Initialization.GameEntity.Misc
                     var setPosCommand = this.CommandList.Value[i];
 
                     var transformRef = this.TransformLookup.GetRefRW(setPosCommand.BaseEntity);
-
-                    transformRef.ValueRW.Position = this.GetRandomPositionInRadius(
+                    float3 posOnGround = this.GetRandomPositionInRadiusOnGround(
                         in rand
                         , in tempVector
                         , in setPosCommand.Radius
                         , in setPosCommand.CenterPos);
-                }
 
+                    transformRef.ValueRW.Position = posOnGround.Add(y: setPosCommand.OffsetYFromGround);
+                }
             }
 
             [BurstCompile]
-            private float3 GetRandomPositionInRadius(
+            private float3 GetRandomPositionInRadiusOnGround(
                 in Random rand
                 , in float2 tempVector
                 , in float radius
                 , in float3 centerPos)
             {
                 float2 distanceVector = math.normalize(rand.NextFloat2(-tempVector, tempVector)) * radius;
-                return centerPos.Add(x: distanceVector.x, z: distanceVector.y);
+                float3 resultPos = centerPos.Add(x: distanceVector.x, z: distanceVector.y);
+                float3 posOnGround = this.GetPosOnGround(resultPos);
+
+                return resultPos.With(y: posOnGround.y);
+            }
+
+            [BurstCompile]
+            private float3 GetPosOnGround(float3 rayStart)
+            {
+                rayStart.y = 100f;
+                float3 rayEnd = rayStart.With(y: -500f);
+
+                RaycastInput raycastInput = new()
+                {
+                    Start = rayStart,
+                    End = rayEnd,
+                    Filter = new()
+                    {
+                        BelongsTo = (uint)CollisionLayer.Default,
+                        CollidesWith = (uint)CollisionLayer.Ground,
+                    }
+                };
+
+                var hit = this.PhysicsWorld.CastRay(raycastInput, out var raycastHit);
+
+                if (!hit)
+                {
+                    UnityEngine.Debug.LogError("SetPosWithinRadiusCommandListExecutorSystem cannot find pos on ground");
+                    return default;
+                }
+
+                return raycastHit.Position;
             }
 
         }
@@ -118,7 +155,6 @@ namespace Systems.Initialization.GameEntity.Misc
             {
                 this.CommandList.Value.Clear();
             }
-
         }
 
     }
