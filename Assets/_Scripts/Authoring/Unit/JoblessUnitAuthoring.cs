@@ -13,6 +13,7 @@ using Components.GameResource;
 using Components.GameResource.ItemPicking.Picker;
 using Components.Misc;
 using Components.Misc.Presenter;
+using Components.Misc.Presenter.TransformSync;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool.Misc;
 using Components.Unit;
@@ -23,6 +24,7 @@ using Components.Unit.UnitSelection;
 using Core.GameEntity;
 using Core.GameEntity.Misc;
 using Core.GameEntity.Movement.MoveCommand;
+using Core.Misc.Presenter.TransformSync;
 using Core.Unit.UnitFeeding;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -78,6 +80,7 @@ namespace Authoring.Unit
                 });
                 AddComponent<MoveableEntityTag>(entity);
                 this.AddAndDisableComponent<CanMoveEntityTag>(entity);
+                AddComponent<TransformSyncTypeHolder>(entity, new(TransformSyncType.Instant));
 
                 AddComponent<CurrentWorldWaypoint>(entity);
                 this.AddAndDisableComponent<TargetPosChangedTag>(entity);

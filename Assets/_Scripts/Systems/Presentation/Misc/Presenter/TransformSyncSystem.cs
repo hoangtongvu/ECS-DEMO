@@ -1,8 +1,11 @@
 using Components.Misc.Presenter;
+using Components.Misc.Presenter.TransformSync;
+using Core.Misc.Presenter.TransformSync;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine.Jobs;
 
@@ -20,7 +23,8 @@ namespace Systems.Presentation.Misc.Presenter
                 .WithAll<
                     LocalTransform
                     , PresenterHolder
-                    , TransformAccessArrayIndex>()
+                    , TransformAccessArrayIndex
+                    , TransformSyncTypeHolder>()
                 .WithNone<NeedSpawnPresenterTag>()
                 .Build();
 
@@ -33,7 +37,6 @@ namespace Systems.Presentation.Misc.Presenter
 
             this.RequireForUpdate(query0);
             this.RequireForUpdate<PresentersHolderScene>();
-
         }
 
         protected override void OnUpdate()
@@ -42,10 +45,10 @@ namespace Systems.Presentation.Misc.Presenter
             var transformAccessArray = presentersTransformAccessArrayGOHolder.Value.Value.TransformAccessArray;
 
             var localTransforms = this.entityQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
+            var syncTypes = this.entityQuery.ToComponentDataArray<TransformSyncTypeHolder>(Allocator.TempJob);
             var transformAccessArrayIndexes = this.entityQuery.ToComponentDataArray<TransformAccessArrayIndex>(Allocator.TempJob);
 
             int count = localTransforms.Length;
-
             var indexToIndexMap = new NativeArray<int>(transformAccessArray.length, Allocator.TempJob);
 
             var firstJob = new IndexesTransformJob()
@@ -58,11 +61,11 @@ namespace Systems.Presentation.Misc.Presenter
             var secondJob = new TransformSyncJob()
             {
                 LocalTransforms = localTransforms,
+                TransformSyncTypes = syncTypes,
                 IndexToIndexMap = firstJob.IndexToIndexMap,
             };
 
             secondJob.Schedule(transformAccessArray, firstJob.Schedule());
-
         }
 
         [BurstCompile]
@@ -70,8 +73,7 @@ namespace Systems.Presentation.Misc.Presenter
         {
             [ReadOnly] public int Count;
 
-            [ReadOnly]
-            [DeallocateOnJobCompletionAttribute]
+            [ReadOnly] [DeallocateOnJobCompletionAttribute]
             public NativeArray<TransformAccessArrayIndex> TransformAccessArrayIndexes;
 
             public NativeArray<int> IndexToIndexMap;
@@ -83,20 +85,19 @@ namespace Systems.Presentation.Misc.Presenter
                 {
                     this.IndexToIndexMap[this.TransformAccessArrayIndexes[i].Value] = i;
                 }
-
             }
-
         }
 
         [BurstCompile]
         private struct TransformSyncJob : IJobParallelForTransform
         {
-            [ReadOnly]
-            [DeallocateOnJobCompletionAttribute]
+            [ReadOnly] [DeallocateOnJobCompletionAttribute]
             public NativeArray<LocalTransform> LocalTransforms;
 
-            [ReadOnly]
-            [DeallocateOnJobCompletionAttribute]
+            [ReadOnly] [DeallocateOnJobCompletionAttribute]
+            public NativeArray<TransformSyncTypeHolder> TransformSyncTypes;
+
+            [ReadOnly] [DeallocateOnJobCompletionAttribute]
             public NativeArray<int> IndexToIndexMap;
 
             [BurstCompile]
@@ -105,9 +106,19 @@ namespace Systems.Presentation.Misc.Presenter
                 if (!transform.isValid) return;
 
                 int localTransformIndex = this.IndexToIndexMap[index];
-                transform.position = this.LocalTransforms[localTransformIndex].Position;
-                transform.rotation = this.LocalTransforms[localTransformIndex].Rotation;
+                var localTransform = this.LocalTransforms[localTransformIndex];
+                var syncType = this.TransformSyncTypes[localTransformIndex].valueOfTransformSyncType;
 
+                switch (syncType)
+                {
+                    case TransformSyncType.Instant:
+                        transform.SetPositionAndRotation(localTransform.Position, localTransform.Rotation);
+                        break;
+                    case TransformSyncType.Smooth:
+                        var position = math.lerp(transform.position, localTransform.Position, 0.5f);
+                        transform.SetPositionAndRotation(position, localTransform.Rotation);
+                        break;
+                }
             }
 
         }

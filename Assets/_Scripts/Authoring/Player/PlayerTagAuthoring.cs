@@ -9,9 +9,11 @@ using Components.GameEntity.Reaction;
 using Components.GameResource.ItemPicking.Picker;
 using Components.Misc;
 using Components.Misc.Presenter;
+using Components.Misc.Presenter.TransformSync;
 using Components.Player;
 using Components.Unit.NearUnitDropItems;
 using Core.GameEntity.Misc;
+using Core.Misc.Presenter.TransformSync;
 using Unity.Entities;
 using UnityEngine;
 
@@ -58,6 +60,7 @@ namespace Authoring.Player
 
                 AddComponent<MoveableEntityTag>(entity);
                 this.AddAndDisableComponent<CanMoveEntityTag>(entity);
+                AddComponent<TransformSyncTypeHolder>(entity, new(TransformSyncType.Smooth));
 
                 AddComponent<MoveDirectionFloat2>(entity);
                 AddComponent<CurrentMoveSpeed>(entity);

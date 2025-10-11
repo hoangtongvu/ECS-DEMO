@@ -10,6 +10,7 @@ using Components.GameEntity.Reaction;
 using Components.GameResource;
 using Components.Misc;
 using Components.Misc.Presenter;
+using Components.Misc.Presenter.TransformSync;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool.Misc;
 using Components.Unit;
@@ -19,6 +20,7 @@ using Components.Unit.Reaction;
 using Core.GameEntity;
 using Core.GameEntity.Misc;
 using Core.GameEntity.Movement.MoveCommand;
+using Core.Misc.Presenter.TransformSync;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -63,6 +65,7 @@ namespace Authoring.Unit.DarkUnit
                 });
                 AddComponent<MoveableEntityTag>(entity);
                 this.AddAndDisableComponent<CanMoveEntityTag>(entity);
+                AddComponent<TransformSyncTypeHolder>(entity, new(TransformSyncType.Instant));
 
                 AddComponent<CurrentWorldWaypoint>(entity);
                 this.AddAndDisableComponent<TargetPosChangedTag>(entity);
