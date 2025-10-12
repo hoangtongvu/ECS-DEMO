@@ -24,11 +24,6 @@ namespace Authoring.Misc
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new TerrainPrefabHolder
-                {
-                    Value = authoring.Terrain,
-                });
-
                 AddComponent(entity, new TerrainPresenterPrefabHolder
                 {
                     Value = authoring.TerainPresenter,
