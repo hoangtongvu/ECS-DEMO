@@ -19,6 +19,10 @@ MonoBehaviour:
   Sounds: []
   Music:
   - {fileID: 11400000, guid: a31b0541d3e709a42ac5961f27ef111b, type: 2}
+  - {fileID: 11400000, guid: 54d4183b21743e14f86ea4723a7f25b9, type: 2}
+  - {fileID: 11400000, guid: e3c9752eddc1ae745a7e73d477a0b04a, type: 2}
+  - {fileID: 11400000, guid: 2412c3c2a6ffb394d8a159b1fe070735, type: 2}
+  - {fileID: 11400000, guid: 0e04568c7f29d3a4f85d57807f5051af, type: 2}
   useCustomNames: 1
   generatedName: BGM_Library
   musicEnum: BGM_LibraryMusic
@@ -37,4 +41,8 @@ MonoBehaviour:
   - name: 
     files:
     - {fileID: 11400000, guid: a31b0541d3e709a42ac5961f27ef111b, type: 2}
+    - {fileID: 11400000, guid: 54d4183b21743e14f86ea4723a7f25b9, type: 2}
+    - {fileID: 11400000, guid: e3c9752eddc1ae745a7e73d477a0b04a, type: 2}
+    - {fileID: 11400000, guid: 2412c3c2a6ffb394d8a159b1fe070735, type: 2}
+    - {fileID: 11400000, guid: 0e04568c7f29d3a4f85d57807f5051af, type: 2}
     foldout: 1

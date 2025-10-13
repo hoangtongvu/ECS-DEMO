@@ -4,6 +4,10 @@ namespace Audio.JSAM {
 }
 namespace Audio.JSAM {
     public enum BGM_LibraryMusic {
-        Forest_BGM
+        Forest_BGM,
+        ambientarp,
+        birdsforestriver,
+        mysticalmusic,
+        relaxintheforest
     }
 }

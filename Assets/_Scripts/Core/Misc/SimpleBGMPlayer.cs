@@ -1,26 +1,47 @@
 using JSAM;
 using Audio.JSAM;
 using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 namespace Core.Misc
 {
     public class SimpleBGMPlayer : SaiMonoBehaviour
     {
-        [SerializeField] private BGM_LibraryMusic musicType;
-        public bool IsPlaying { get; private set; } = false;
+        private HashSet<int> playedBGMs = new();
+        private Unity.Mathematics.Random rand = new(37);
 
-        public void TogglePlayMusic()
+        [SerializeField] private int bgmCount;
+        [SerializeField] private int currentBGMIndex;
+
+        protected override void Awake()
         {
-            if (!this.IsPlaying)
+            this.bgmCount = Enum.GetNames(typeof(BGM_LibraryMusic)).Length;
+        }
+
+        private void FixedUpdate()
+        {
+            bool isCurrentBGMPlaying = AudioManager.IsMusicPlaying(this.GetCurrentMusicType());
+            if (isCurrentBGMPlaying) return;
+
+            this.RollNextMusicIndex(out this.currentBGMIndex);
+            this.playedBGMs.Add(this.currentBGMIndex);
+            AudioManager.PlayMusic(this.GetCurrentMusicType());
+        }
+
+        private BGM_LibraryMusic GetCurrentMusicType()
+        {
+            return (BGM_LibraryMusic)this.currentBGMIndex;
+        }
+
+        private void RollNextMusicIndex(out int newIndex)
+        {
+            if (this.playedBGMs.Count == this.bgmCount) this.playedBGMs.Clear();
+
+            do
             {
-                AudioManager.PlayMusic(this.musicType);
-                this.IsPlaying = true;
-            }
-            else
-            {
-                AudioManager.FadeMusicOut(this.musicType, 5);
-                this.IsPlaying = false;
-            }
+                newIndex = this.rand.NextInt(0, this.bgmCount);
+            } while (this.playedBGMs.Contains(newIndex));
         }
 
     }

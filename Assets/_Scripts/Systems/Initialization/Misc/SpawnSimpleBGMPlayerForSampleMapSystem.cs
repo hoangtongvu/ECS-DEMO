@@ -19,8 +19,6 @@ namespace Systems.Initialization.Misc
 
             var go = new GameObject(nameof(SimpleBGMPlayer));
             var bgmPlayer = go.AddComponent<SimpleBGMPlayer>();
-
-            bgmPlayer.TogglePlayMusic();
         }
 
     }
