@@ -423,7 +423,8 @@ Transform:
   m_LocalPosition: {x: 1.17175564e-29, y: 0.26879656, z: -5.51e-43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2535001502457528205}
   m_Father: {fileID: 1257509714149879557}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1495642020517648892
@@ -2376,6 +2377,7 @@ GameObject:
   - component: {fileID: 255234325921514278}
   - component: {fileID: 179554022470348734}
   - component: {fileID: 5348907424118392932}
+  - component: {fileID: 2995772468489341824}
   - component: {fileID: 733265941586681881}
   - component: {fileID: 3861021636950073734}
   - component: {fileID: 460992888537125931}
@@ -2467,6 +2469,7 @@ MonoBehaviour:
   basePresenter: {fileID: 0}
   presentingActions:
   - rid: 4351601318023659524
+  - rid: 8819220445631610884
   references:
     version: 2
     RefIds:
@@ -2477,6 +2480,34 @@ MonoBehaviour:
         baseAnimator: {fileID: 0}
         animationName: Running
         transitionDuration: 0.2
+    - rid: 8819220445631610884
+      type: {class: EnableTrailEmittingAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        target: {fileID: 5874015791606942104}
+--- !u!114 &2995772468489341824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9194967508519509605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131b21d3ef8f837479072fd95263ff27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  presentingActions:
+  - rid: 8819220445631610885
+  references:
+    version: 2
+    RefIds:
+    - rid: 8819220445631610885
+      type: {class: DisableTrailEmittingAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        target: {fileID: 5874015791606942104}
 --- !u!114 &733265941586681881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2509,8 +2540,8 @@ MonoBehaviour:
         flashDurationSeconds: 0.2
         flashMaterial: {fileID: -876546973899608171, guid: 868a36b1b20f0344982957aa348fdd08,
           type: 3}
-        originalSharedMaterial: {fileID: 0}
         renderers: []
+        originalMaterials: []
 --- !u!114 &3861021636950073734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2539,6 +2570,7 @@ MonoBehaviour:
       data:
         prefab: {fileID: 3906383683275554510, guid: 3bfbee482c769b54d87408827d6c79a6,
           type: 3}
+        spawnedGameObject: {fileID: 0}
     - rid: 4351601327227535360
       type: {class: PlayAnimationAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
         asm: Core}
@@ -2619,3 +2651,88 @@ MonoBehaviour:
         asm: Core}
       data:
         sfx: 1
+--- !u!1001 &4424998348175509991
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1265486091522053206}
+    m_Modifications:
+    - target: {fileID: 1685004468817242013, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerTrailOnRun
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 7.1054274e-15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 5.646419e-23
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 1.7763568e-15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7848774350931312767, guid: 038442deef18f724d8aeb69d013a5ea4,
+        type: 3}
+      propertyPath: m_PreviewTimeScale
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 038442deef18f724d8aeb69d013a5ea4, type: 3}
+--- !u!4 &2535001502457528205 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2181680533719676522, guid: 038442deef18f724d8aeb69d013a5ea4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4424998348175509991}
+  m_PrefabAsset: {fileID: 0}
+--- !u!96 &5874015791606942104 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 7848774350931312767, guid: 038442deef18f724d8aeb69d013a5ea4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4424998348175509991}
+  m_PrefabAsset: {fileID: 0}
