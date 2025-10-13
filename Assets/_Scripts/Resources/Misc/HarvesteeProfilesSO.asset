@@ -37,11 +37,11 @@ MonoBehaviour:
           QuantityPerDrop: 1
           HpAmountPerDrop: 30
         PresenterVariances:
-        - {fileID: 919132149155446097, guid: 1bc86c6577f22d545a388e43100ed5cf, type: 3}
-        - {fileID: 919132149155446097, guid: 40c25546c81d745428c788e6610dc2c0, type: 3}
-        - {fileID: 919132149155446097, guid: 1c39723c305aa274b97b1e738bed4b55, type: 3}
-        - {fileID: 919132149155446097, guid: f0263a3b21c0f434fb2bb5efcf332b87, type: 3}
-        - {fileID: 919132149155446097, guid: 898844255babc064e945ea17d098e211, type: 3}
+        - {fileID: 7373174354924166464, guid: 1f039845c2308394cb00bc83a407b0c8, type: 3}
+        - {fileID: 5063697868565188609, guid: f9ea44c4a2b6c1044b33b51e32d5c21f, type: 3}
+        - {fileID: 7639971160811767074, guid: 3e0dec0acde0c8d4e8b31be3ca313dde, type: 3}
+        - {fileID: 3002395907979649372, guid: 6017e89c9af30b447960dab331d57dda, type: 3}
+        - {fileID: 3662716896493996761, guid: 5b4dade30f1b4ab40a27d45edfc46c1c, type: 3}
     - Key:
         HarvesteeType: 1
         VariantIndex: 1
@@ -65,11 +65,11 @@ MonoBehaviour:
           QuantityPerDrop: 2
           HpAmountPerDrop: 42
         PresenterVariances:
-        - {fileID: 919132149155446097, guid: 36bb24e2ff316a648ac65cc0389f34e9, type: 3}
-        - {fileID: 919132149155446097, guid: 3df7b035d9748d74087653b0fb97ab9d, type: 3}
-        - {fileID: 919132149155446097, guid: d2b52071013ecce40ac88c7312db6fc2, type: 3}
-        - {fileID: 919132149155446097, guid: 2a7211f58371cab46a917eb40aa65576, type: 3}
-        - {fileID: 919132149155446097, guid: 2931a54a549386c41a27586e68a9fc8f, type: 3}
+        - {fileID: 3178585768253750914, guid: f0a01a139957dc847975ca6494f3a27a, type: 3}
+        - {fileID: 3988587473740647831, guid: 85a1d2a8f5cb39a479294a0f5c650891, type: 3}
+        - {fileID: 6512882576032941050, guid: 500b7a06ff8435041a8e7c2efb0c4dfb, type: 3}
+        - {fileID: 1093592394549403209, guid: 94025b0d4106d25419fc94af7f809c19, type: 3}
+        - {fileID: 7452510651839464297, guid: 395c63c0c1b74bf4ba15a56a83d3d9e4, type: 3}
     - Key:
         HarvesteeType: 2
         VariantIndex: 0
