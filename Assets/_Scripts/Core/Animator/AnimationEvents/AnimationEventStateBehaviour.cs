@@ -25,6 +25,8 @@ namespace Core.Animator.AnimationEvents
             int loopCount = Mathf.FloorToInt(rawTime);
             float currentTime = rawTime % 1f;
 
+            if (rawTime >= 1f && !stateInfo.loop) return;
+
             if (loopCount != this.lastLoopCount && currentTime >= this.triggerTime)
             {
                 this.lastLoopCount = loopCount;
@@ -43,7 +45,6 @@ namespace Core.Animator.AnimationEvents
             basePresenter.Messenger.MessagePublisher
                 .Scope(this.animationEventChannel)
                 .Publish(this.animationEventMessage);
-            
         }
 
     }
