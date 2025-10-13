@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationEventChannel:
     Index: 0
+  animationEventMessage:
+    Id: 0
   lastLoopCount: 0
   triggerTime: 0.7083333
 --- !u!114 &-3226255836542957804
@@ -30,6 +32,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationEventChannel:
     Index: 0
+  animationEventMessage:
+    Id: 0
   lastLoopCount: 0
   triggerTime: 0.20833333
 --- !u!114 &-2020504386170330349
@@ -46,8 +50,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationEventChannel:
     Index: 0
+  animationEventMessage:
+    Id: 0
   lastLoopCount: 0
-  triggerTime: 0.625
+  triggerTime: 0.6969697
 --- !u!1107 &-1189695864749355525
 AnimatorStateMachine:
   serializedVersion: 6
@@ -101,6 +107,24 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+--- !u!114 &877667729032848626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ed0412d5a0b3a45900c9be801b42c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationEventChannel:
+    Index: 1
+  animationEventMessage:
+    Id: 1
+  lastLoopCount: 0
+  triggerTime: 0.5
 --- !u!114 &1397421276887703621
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -115,8 +139,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationEventChannel:
     Index: 0
+  animationEventMessage:
+    Id: 0
   lastLoopCount: 0
-  triggerTime: 0.1875
+  triggerTime: 0.33333334
 --- !u!1102 &2529768153521544468
 AnimatorState:
   serializedVersion: 6
@@ -128,7 +154,9 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 6467271884190217649}
+  - {fileID: 877667729032848626}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -171,6 +199,24 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &6467271884190217649
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ed0412d5a0b3a45900c9be801b42c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationEventChannel:
+    Index: 1
+  animationEventMessage:
+    Id: 0
+  lastLoopCount: 0
+  triggerTime: 0.33333334
 --- !u!1102 &7065606294900021872
 AnimatorState:
   serializedVersion: 6
