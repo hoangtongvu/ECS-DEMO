@@ -41,6 +41,7 @@ namespace Systems.Simulation.Misc.WorldMap.WorldBuilding.BuildingConstruction
             var entityArray = entities.AsArray();
 
             em.RemoveComponent<ConstructionRemaining>(entityArray);
+            em.RemoveComponent<ConstructionOccurredEvent>(entityArray);
             em.AddComponent<ConstructionNewlyEndedTag>(entityArray);
         }
 

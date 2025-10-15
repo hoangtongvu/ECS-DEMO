@@ -28,7 +28,6 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
                 .Build();
 
             state.RequireForUpdate(query0);
-            
         }
 
         [BurstCompile]
@@ -68,10 +67,9 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
                 if (workTimeCounterSecondRef.ValueRO.Value < 1f) continue;
                 workTimeCounterSecondRef.ValueRW.Value = 0;
 
-                Construct(ref state, in interactingEntity, baseDmgRef.ValueRO.Value);
+                this.Construct(ref state, in interactingEntity, baseDmgRef.ValueRO.Value);
 
                 SystemAPI.SetComponentEnabled<CanCheckInteractionRepeatTag>(entity, true);
-
             }
 
         }
@@ -82,6 +80,8 @@ namespace Systems.Simulation.UnitAndBuilding.BuildingConstruction
             , in Entity interactingEntity
             , uint dmgValue)
         {
+            SystemAPI.SetComponentEnabled<ConstructionOccurredEvent>(interactingEntity, true);
+
             var constructionRemainingRef = SystemAPI.GetComponentRW<ConstructionRemaining>(interactingEntity);
             constructionRemainingRef.ValueRW.Value = constructionRemainingRef.ValueRO.Value < dmgValue
                 ? 0

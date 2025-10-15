@@ -19,6 +19,7 @@ MonoBehaviour:
   Sounds:
   - {fileID: 11400000, guid: eee8ed6153f059142a688522c08bf0bb, type: 2}
   - {fileID: 11400000, guid: 319a11ea841bade40ad2d93ee4231baa, type: 2}
+  - {fileID: 11400000, guid: 32ce12fc829930047b1d7dc88e5ef1d7, type: 2}
   Music: []
   useCustomNames: 1
   generatedName: BuildingSound_Library
@@ -35,6 +36,7 @@ MonoBehaviour:
     files:
     - {fileID: 11400000, guid: eee8ed6153f059142a688522c08bf0bb, type: 2}
     - {fileID: 11400000, guid: 319a11ea841bade40ad2d93ee4231baa, type: 2}
+    - {fileID: 11400000, guid: 32ce12fc829930047b1d7dc88e5ef1d7, type: 2}
     foldout: 1
   musicCategoriesToList:
   - name: 

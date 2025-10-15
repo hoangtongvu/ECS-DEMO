@@ -4667,6 +4667,7 @@ GameObject:
   - component: {fileID: 869852277160321771}
   - component: {fileID: 3062651991758848925}
   - component: {fileID: 9079107519948366270}
+  - component: {fileID: 2021706706942591063}
   - component: {fileID: 3613303252586649471}
   m_Layer: 0
   m_Name: PresenterMessageHandlers
@@ -4750,6 +4751,29 @@ MonoBehaviour:
         motionDelaySeconds: 4
         motionDurationSeconds: 1
         deltaY: 5
+--- !u!114 &2021706706942591063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337451781390178767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264479928bbeeba4ebd215d0c18eac21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  presentingActions:
+  - rid: 8819220496811556865
+  references:
+    version: 2
+    RefIds:
+    - rid: 8819220496811556865
+      type: {class: BuildingPlaySFXAction, ns: Core.GameBuilding.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        sfx: 2
 --- !u!114 &3613303252586649471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4774,6 +4798,7 @@ MonoBehaviour:
       data:
         prefab: {fileID: 104829970813648393, guid: d3015b7eea383f64d8b81f965cc466e7,
           type: 3}
+        spawnedGameObject: {fileID: 0}
 --- !u!1 &2615190679778038892
 GameObject:
   m_ObjectHideFlags: 0

@@ -71,6 +71,9 @@ namespace Systems.Initialization.Misc.WorldMap.WorldBuilding.BuildingConstructio
                     Value = (uint)math.round(duration * 100),
                 });
 
+                ecb.AddComponent<ConstructionOccurredEvent>(entity);
+                ecb.SetComponentEnabled<ConstructionOccurredEvent>(entity, false);
+
                 var basePresenter = presenterHolderRef.ValueRO.Value.Value;
                 this.HandleBasePresenter(basePresenter, in blueprintMaterialHolder);
             }

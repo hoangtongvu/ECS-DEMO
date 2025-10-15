@@ -1,7 +1,8 @@
 namespace Audio.JSAM {
     public enum BuildingSound_LibrarySounds {
         OnHitSoft,
-        OnHitWood
+        OnHitWood,
+        BuildingConstruction
     }
 }
 namespace Audio.JSAM {
