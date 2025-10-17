@@ -10,6 +10,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Core.Utilities.Extensions;
 using Components.GameResource.ItemPicking.Pickee.RePickUpCoolDown;
+using Components.GameResource.Misc;
 
 namespace Systems.Simulation.GameResource
 {
@@ -27,6 +28,7 @@ namespace Systems.Simulation.GameResource
 
             state.RequireForUpdate<ResourceItemEntityHolder>();
             state.RequireForUpdate<ResourceItemSpawnCommandList>();
+            state.RequireForUpdate<MaxQuantityPerStackMap>();
         }
 
         [BurstCompile]
@@ -35,10 +37,15 @@ namespace Systems.Simulation.GameResource
             var commandList = SystemAPI.GetSingleton<ResourceItemSpawnCommandList>();
             if (commandList.Value.IsEmpty) return;
 
-            int spawnCount = commandList.Value.Length;
+            var maxQuantityPerStackMap = SystemAPI.GetSingleton<MaxQuantityPerStackMap>();
+
+            this.GetProcessedCommandList(in commandList, in maxQuantityPerStackMap, Allocator.Temp, out var processedCommandList);
+            commandList.Value.Clear();
+
+            int spawnCount = processedCommandList.Length;
             Entity prefabEntity = SystemAPI.GetSingleton<ResourceItemEntityHolder>().Value;
 
-            var spawnCommandArray = commandList.Value.ToArray(state.WorldUpdateAllocator);
+            var spawnCommandArray = processedCommandList.ToArray(state.WorldUpdateAllocator);
             var resourceItemEntityArray = state.EntityManager.Instantiate(prefabEntity, spawnCount, state.WorldUpdateAllocator);
             this.GetRandomSeedArray(spawnCount, out var randomSeedArray);
 
@@ -54,8 +61,6 @@ namespace Systems.Simulation.GameResource
                 ResourceItemICDLookup = SystemAPI.GetComponentLookup<ResourceItemICD>(),
                 PreviousPickerEntityLookup = SystemAPI.GetComponentLookup<PreviousPickerEntity>(),
             }.ScheduleParallel(spawnCount, 20, state.Dependency);
-
-            commandList.Value.Clear();
         }
 
         [BurstCompile]
@@ -77,6 +82,54 @@ namespace Systems.Simulation.GameResource
             {
                 randomSeedArray[i] = this.rand.NextUInt() + 1;
             }
+        }
+
+        [BurstCompile]
+        private void GetProcessedCommandList(
+            in ResourceItemSpawnCommandList originalCommandList
+            , in MaxQuantityPerStackMap maxQuantityPerStackMap
+            , Allocator allocator
+            , out NativeList<ResourceItemSpawnCommand> processedCommandList)
+        {
+            int minInitialCap = originalCommandList.Value.Length;
+            processedCommandList = new(minInitialCap, allocator);
+
+            foreach (var command in originalCommandList.Value)
+            {
+                uint quantity = command.Quantity;
+                uint quantityPerStack = this.GetMaxQuantityPerStack(in maxQuantityPerStackMap, in command);
+
+                uint quotient = quantity / quantityPerStack;
+                uint remainder = quantity % quantityPerStack;
+
+                for (int i = 0; i < quotient; i++)
+                {
+                    var newCommand = command;
+                    newCommand.Quantity = quantityPerStack;
+                    processedCommandList.Add(newCommand);
+                }
+
+                if (remainder != 0)
+                {
+                    var newCommand = command;
+                    newCommand.Quantity = remainder;
+                    processedCommandList.Add(newCommand);
+                }
+            }
+        }
+
+        [BurstCompile]
+        private uint GetMaxQuantityPerStack(
+            in MaxQuantityPerStackMap maxQuantityPerStackMap
+            , in ResourceItemSpawnCommand command)
+        {
+            var id = new ResourceProfileId
+            {
+                ResourceType = command.ResourceType,
+                VariantIndex = 0,
+            };
+
+            return maxQuantityPerStackMap.Value[id];
         }
 
     }
