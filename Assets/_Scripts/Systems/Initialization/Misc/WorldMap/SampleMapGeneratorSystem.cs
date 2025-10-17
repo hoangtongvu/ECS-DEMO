@@ -167,7 +167,7 @@ namespace Systems.Initialization.Misc.WorldMap
             , in int2 gridOffset
             , in half cellRadius)
         {
-            const float placementPercentage = 0.0005f;
+            const float placementPercentage = 0.0002f;
 
             const int prefabCount = 1;
             var prefabs = new NativeArray<Entity>(prefabCount, Allocator.Temp);
