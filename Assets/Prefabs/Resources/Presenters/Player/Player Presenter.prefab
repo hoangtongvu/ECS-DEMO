@@ -2602,6 +2602,7 @@ MonoBehaviour:
       data:
         prefab: {fileID: 3906383683275554510, guid: 3bfbee482c769b54d87408827d6c79a6,
           type: 3}
+        setBaseGOAsParent: 0
         spawnedGameObject: {fileID: 0}
     - rid: 4351601327227535360
       type: {class: PlayAnimationAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
