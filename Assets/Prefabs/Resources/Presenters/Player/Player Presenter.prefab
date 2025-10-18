@@ -2527,6 +2527,7 @@ MonoBehaviour:
   voidPresentingActions:
   - rid: 4351601338390675460
   - rid: 4351601338390675480
+  - rid: 8819220558437416986
   references:
     version: 2
     RefIds:
@@ -2544,6 +2545,19 @@ MonoBehaviour:
           type: 3}
         renderers: []
         originalMaterials: []
+    - rid: 8819220558437416986
+      type: {class: PingPongTweenScaleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        target: {fileID: 9008545750025195628}
+        peakScaleMultiplier:
+          x: 1.2
+          y: 0.9
+          z: 1.2
+        forwardDuration: 0.2
+        forwardEase: 17
+        backwardDuration: 0.2
+        backwardEase: 17
 --- !u!114 &3861021636950073734
 MonoBehaviour:
   m_ObjectHideFlags: 0
