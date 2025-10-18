@@ -415,6 +415,7 @@ MonoBehaviour:
   - rid: 4351601338390675466
   - rid: 4351601338390675477
   - rid: 8819220558437416976
+  - rid: 8819220564403027980
   references:
     version: 2
     RefIds:
@@ -445,6 +446,21 @@ MonoBehaviour:
         forwardEase: 17
         backwardDuration: 0.2
         backwardEase: 17
+    - rid: 8819220564403027980
+      type: {class: SpawnAndPlayParticleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        prefab: {fileID: 5062374917579677279, guid: 701ba2fabbbfc3345983542ca88ded01,
+          type: 3}
+        localPosition:
+          x: 0
+          y: 1
+          z: 0
+        localRotation:
+          x: 0
+          y: 0
+          z: 0
+        target: {fileID: 0}
 --- !u!114 &454097457215292769
 MonoBehaviour:
   m_ObjectHideFlags: 0
