@@ -414,6 +414,8 @@ MonoBehaviour:
   voidPresentingActions:
   - rid: 4351601338390675466
   - rid: 4351601338390675477
+  - rid: 8819220558437416976
+  - rid: 8819220564403027980
   references:
     version: 2
     RefIds:
@@ -429,8 +431,36 @@ MonoBehaviour:
         flashDurationSeconds: 0.2
         flashMaterial: {fileID: -876546973899608171, guid: 868a36b1b20f0344982957aa348fdd08,
           type: 3}
-        originalSharedMaterial: {fileID: 0}
         renderers: []
+        originalMaterials: []
+    - rid: 8819220558437416976
+      type: {class: PingPongTweenScaleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        target: {fileID: 3460660619515064423}
+        peakScaleMultiplier:
+          x: 1.2
+          y: 0.9
+          z: 1.2
+        forwardDuration: 0.2
+        forwardEase: 17
+        backwardDuration: 0.2
+        backwardEase: 17
+    - rid: 8819220564403027980
+      type: {class: SpawnAndPlayParticleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        prefab: {fileID: 5062374917579677279, guid: 701ba2fabbbfc3345983542ca88ded01,
+          type: 3}
+        localPosition:
+          x: 0
+          y: 1
+          z: 0
+        localRotation:
+          x: 0
+          y: 0
+          z: 0
+        target: {fileID: 0}
 --- !u!114 &454097457215292769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,6 +489,8 @@ MonoBehaviour:
       data:
         prefab: {fileID: 3906383683275554510, guid: 3bfbee482c769b54d87408827d6c79a6,
           type: 3}
+        setBaseGOAsParent: 0
+        spawnedGameObject: {fileID: 0}
     - rid: 4351601327227535360
       type: {class: PlayAnimationAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
         asm: Core}
