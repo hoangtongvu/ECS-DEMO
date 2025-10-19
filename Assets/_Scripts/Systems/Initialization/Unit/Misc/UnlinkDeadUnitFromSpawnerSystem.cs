@@ -42,8 +42,10 @@ namespace Systems.Initialization.Unit.Misc
 
             for (int i = 0; i < length; i++)
             {
-                var entity = entities[i];
                 var spawnerEntity = spawnerEntityHolders[i].Value;
+                if (spawnerEntity == Entity.Null) continue;
+
+                var entity = entities[i];
 
                 this.UnlinkUnitFromSpawner(
                     ref state

@@ -38,14 +38,17 @@ namespace Systems.Initialization.Unit.Recruit
 
             for (int i = 0; i < length; i++)
             {
-                var entity = entities[i];
                 var spawnerEntity = spawnerEntityHolders[i].Value;
+                if (spawnerEntity == Entity.Null) continue;
+
+                var entity = entities[i];
 
                 this.HandleUnitSpawner(
                     ref state
                     , in spawnerEntity
                     , in entity);
 
+                this.UnlinkSpawnerFromUnit(ref state, in entity);
             }
 
         }
@@ -67,7 +70,17 @@ namespace Systems.Initialization.Unit.Recruit
                 var spawnedEntities = SystemAPI.GetComponent<SpawnedEntityArray>(spawnerEntity);
                 spawnedEntities.Remove(in entity);
             }
-            
+        }
+
+        [BurstCompile]
+        private void UnlinkSpawnerFromUnit(
+            ref SystemState state
+            , in Entity unitEntity)
+        {
+            SystemAPI.SetComponent(unitEntity, new SpawnerEntityHolder
+            {
+                Value = Entity.Null,
+            });
         }
 
     }
