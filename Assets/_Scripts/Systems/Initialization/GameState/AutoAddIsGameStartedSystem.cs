@@ -1,12 +1,11 @@
 using Components.GameState;
-using Systems.Initialization.GameEntity.Damage.DeadResolve;
 using Unity.Burst;
 using Unity.Entities;
 using Utilities;
 
 namespace Systems.Initialization.GameState
 {
-    [UpdateInGroup(typeof(DeadResolveSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     [BurstCompile]
     public partial struct AutoAddIsGameStartedSystem : ISystem
     {
