@@ -3,6 +3,7 @@ using Components.GameState;
 using Components.MyCamera;
 using LitMotion;
 using Unity.Entities;
+using Utilities;
 
 namespace Systems.Simulation.MyCamera
 {
@@ -21,12 +22,13 @@ namespace Systems.Simulation.MyCamera
                 .Build();
 
             this.RequireForUpdate(camQuery);
-            this.RequireForUpdate<IsGameOver>();
+            this.RequireForUpdate<GameOverEvent>();
         }
 
         protected override void OnUpdate()
         {
-            this.Enabled = false;
+            var su = SingletonUtilities.GetInstance(this.EntityManager);
+            if (!su.IsComponentEnabled<GameOverEvent>()) return;
 
             var virtualCamera = SystemAPI.GetSingleton<MainVirtualCamHolder>().Value.Value;
             float originalFOV = SystemAPI.GetSingleton<OriginalCamFOV>().Value;

@@ -81,6 +81,12 @@ public struct SingletonUtilities
         return this.singletonEntity;
     }
 
+    public void AddAndDisableComponent<T>() where T : IComponentData, IEnableableComponent
+    {
+        this.AddComponent<T>();
+        this.SetComponentEnabled<T>(false);
+    }
+
     public bool TryRemoveComponent<T>() where T : IComponentData
     {
         if (!this.HasComponent<T>()) return false;
@@ -99,17 +105,15 @@ public struct SingletonUtilities
         return this.entityManager.HasBuffer<T>(this.singletonEntity);
     }
 
-    /// <summary>
-    /// Should not use this because Unity ECS has bad support GetSingleton IEnableable.
-    /// </summary>
-    public void SetComponentEnabled<T>(bool value) where T : IComponentData, IEnableableComponent
+    public void SetComponentEnabled<T>(bool value) where T : IEnableableComponent
     {
-        if (!this.entityManager.HasComponent<T>(this.singletonEntity))
-            Debug.LogError($"Singleton Entity doesn't have Component {nameof(T)} to enable");
-
         this.entityManager.SetComponentEnabled<T>(this.singletonEntity, value);
     }
 
+    public bool IsComponentEnabled<T>() where T : IEnableableComponent
+    {
+        return this.entityManager.IsComponentEnabled<T>(this.singletonEntity);
+    }
 }
 
 public static class SingletonUtilitiesManagedExtensions
