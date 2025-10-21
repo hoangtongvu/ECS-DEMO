@@ -16,7 +16,7 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActi
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadCtrl(ref this.ctrl);
+            this.LoadCtrl(out this.ctrl);
         }
 
         private void OnEnable()

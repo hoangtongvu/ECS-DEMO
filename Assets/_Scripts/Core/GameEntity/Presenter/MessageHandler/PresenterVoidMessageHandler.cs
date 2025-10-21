@@ -16,9 +16,9 @@ namespace Core.GameEntity.Presenter.MessageHandler
         [SerializeReference, SubclassSelector]
         private List<PresentingAction> presentingActions;
 
-        protected override void Awake()
+        private void Awake()
         {
-            this.LoadCtrl(ref basePresenter);
+            this.LoadCtrl(out this.basePresenter);
             this.presentingActions.ForEach(action => action.Initialize(basePresenter, gameObject));
         }
 

@@ -18,8 +18,8 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.Buildab
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.previewImage);
-            this.LoadComponentInChildren(ref this.costStacksHolder);
+            this.LoadComponentInChildren(out this.previewImage);
+            this.LoadComponentInChildren(out this.costStacksHolder);
         }
 
         public void OnRent()

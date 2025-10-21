@@ -28,8 +28,8 @@ namespace Core.UI.InteractableActionsPanel
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.actionPanelsHolder);
-            this.LoadComponentInCtrl(ref this.canvasGroup);
+            this.LoadComponentInChildren(out this.actionPanelsHolder);
+            this.LoadComponentInCtrl(out this.canvasGroup);
             this.tweener = new() { ctrl = this };
         }
 

@@ -19,8 +19,8 @@ namespace Core.UI.TutorialMessage
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.textMeshPro);
-            this.LoadComponentInCtrl(ref this.tutorialMessageTextEffectHandler);
+            this.LoadComponentInCtrl(out this.textMeshPro);
+            this.LoadComponentInCtrl(out this.tutorialMessageTextEffectHandler);
         }
 
         public override void OnRent()

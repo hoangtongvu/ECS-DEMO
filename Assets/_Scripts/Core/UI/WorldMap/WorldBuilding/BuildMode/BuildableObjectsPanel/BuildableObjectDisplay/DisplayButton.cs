@@ -13,7 +13,7 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.Buildab
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadCtrl(ref this.ctrl);
+            this.LoadCtrl(out this.ctrl);
         }
 
         protected override void OnClick()
@@ -23,7 +23,6 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.Buildab
                 {
                     choiceIndex = ctrl.IndexInDisplaysHolder,
                 });
-
         }
 
     }

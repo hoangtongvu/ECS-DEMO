@@ -16,7 +16,7 @@ namespace Core.Animator
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.animator);
+            this.LoadComponentInCtrl(out this.animator);
             this.LoadAnimationClip();
         }
 
@@ -55,7 +55,7 @@ namespace Core.Animator
             animator.Play(newStateName);
             currentStateName = newStateName;
         }
-        
+
         public virtual void WaitPlay(string newStateName, float transitionDuration)
         {
             if (currentStateName == newStateName) return;

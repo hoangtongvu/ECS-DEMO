@@ -7,7 +7,7 @@ namespace Core.ToolAndBuilding.ToolSpawnerBuilding.Presenter
     {
         [SerializeField] private ParticleSystem benchWorkingParticle;
 
-        protected override void Awake()
+        private void Awake()
         {
             this.benchWorkingParticle.Stop();
         }
@@ -15,7 +15,7 @@ namespace Core.ToolAndBuilding.ToolSpawnerBuilding.Presenter
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.benchWorkingParticle);
+            this.LoadComponentInChildren(out this.benchWorkingParticle);
             this.LoadBenchWorkingParticle();
         }
 

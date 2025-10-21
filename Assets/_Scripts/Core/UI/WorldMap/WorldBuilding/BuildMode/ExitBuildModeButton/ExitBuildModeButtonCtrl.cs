@@ -18,7 +18,7 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.ExitBuildModeButton
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.image);
+            this.LoadComponentInCtrl(out this.image);
             this.LoadOriginalImageAlpha();
         }
 

@@ -25,7 +25,7 @@ namespace Core.UI.MyCanvas
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.overlayCanvasManager);
+            this.LoadComponentInChildren(out this.overlayCanvasManager);
             this.LoadTransformInChildrenByName(out this.worldSpaceCanvasTransform, "WorldSpaceCanvas");
         }
 

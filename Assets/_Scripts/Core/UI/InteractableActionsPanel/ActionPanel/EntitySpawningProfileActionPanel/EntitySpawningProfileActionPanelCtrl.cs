@@ -23,9 +23,9 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActi
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.profilePic);
-            this.LoadComponentInChildren(ref this.spawnCountText);
-            this.LoadComponentInChildren(ref this.progressBar);
+            this.LoadComponentInChildren(out this.profilePic);
+            this.LoadComponentInChildren(out this.spawnCountText);
+            this.LoadComponentInChildren(out this.progressBar);
         }
 
         public void Initialize(

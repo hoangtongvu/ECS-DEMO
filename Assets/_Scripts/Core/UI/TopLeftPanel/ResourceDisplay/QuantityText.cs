@@ -8,9 +8,8 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
         [SerializeField] private ResourceDisplayCtrl resourceDisplayCtrl;
         [SerializeField] private QuantityTextTweener quantityTextTweener = new();
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             this.quantityTextTweener.QuantityText = this;
             this.quantityTextTweener.OriginalTextColor = this.text.color;
         }
@@ -18,7 +17,7 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadCtrl(ref this.resourceDisplayCtrl);
+            this.LoadCtrl(out this.resourceDisplayCtrl);
         }
 
         private void OnEnable()

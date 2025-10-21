@@ -30,8 +30,8 @@ namespace Core.UI.TutorialMessage
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.tutorialMessageCtrl);
-            this.LoadComponentInCtrl(ref this.textEffect);
+            this.LoadComponentInCtrl(out this.tutorialMessageCtrl);
+            this.LoadComponentInCtrl(out this.textEffect);
             this.LoadEffects();
         }
 

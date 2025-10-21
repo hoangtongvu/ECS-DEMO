@@ -14,8 +14,8 @@ namespace Core.UI.WorldMapDebug
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.costText);
-            this.LoadComponentInChildren(ref this.backgroundImage);
+            this.LoadComponentInChildren(out this.costText);
+            this.LoadComponentInChildren(out this.backgroundImage);
         }
 
         public override void OnRent()

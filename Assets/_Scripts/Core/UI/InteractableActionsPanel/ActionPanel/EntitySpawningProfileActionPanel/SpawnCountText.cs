@@ -12,12 +12,12 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.EntitySpawningProfileActi
         private ISubscription subscriptions;
         private int internalSpawnCount;
 
-        protected override void Awake() => this.UpdateUI();
+        private void Awake() => this.UpdateUI();
 
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadCtrl(ref this.ctrl);
+            this.LoadCtrl(out this.ctrl);
         }
 
         private void OnEnable()

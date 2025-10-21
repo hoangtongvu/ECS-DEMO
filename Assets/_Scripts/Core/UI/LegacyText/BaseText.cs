@@ -12,7 +12,7 @@ namespace Core.UI.LegacyText
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.text);
+            this.LoadComponentInCtrl(out this.text);
         }
 
     }

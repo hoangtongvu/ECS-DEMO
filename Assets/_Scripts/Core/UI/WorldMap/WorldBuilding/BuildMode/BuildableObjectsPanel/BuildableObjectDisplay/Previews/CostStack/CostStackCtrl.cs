@@ -29,9 +29,9 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel.Buildab
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.image);
-            this.LoadComponentInCtrl(ref this.rectTransform);
-            this.LoadComponentInChildren(ref this.costTMP);
+            this.LoadComponentInCtrl(out this.image);
+            this.LoadComponentInCtrl(out this.rectTransform);
+            this.LoadComponentInChildren(out this.costTMP);
         }
 
         public override void OnRent()

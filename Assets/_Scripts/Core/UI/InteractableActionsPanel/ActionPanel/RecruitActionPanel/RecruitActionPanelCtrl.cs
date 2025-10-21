@@ -16,7 +16,7 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.recruitActionCostViewsHolder);
+            this.LoadComponentInChildren(out this.recruitActionCostViewsHolder);
         }
 
         public override void Activate()

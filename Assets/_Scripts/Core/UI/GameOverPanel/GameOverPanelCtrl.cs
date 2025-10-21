@@ -14,9 +14,8 @@ namespace Core.UI.GameOverPanel
         public TotalSurvivedTimeElapsedText TotalSurvivedTimeElapsedText => totalSurvivedTimeElapsedText;
         public TotalWaveSurvivedText TotalWaveSurvivedText => totalWaveSurvivedText;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             this.gameOverPanelTweener = new()
             {
                 GameOverPanelCtrl = this,
@@ -26,9 +25,9 @@ namespace Core.UI.GameOverPanel
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.canvasGroup);
-            this.LoadComponentInChildren(ref this.totalSurvivedTimeElapsedText);
-            this.LoadComponentInChildren(ref this.totalWaveSurvivedText);
+            this.LoadComponentInCtrl(out this.canvasGroup);
+            this.LoadComponentInChildren(out this.totalSurvivedTimeElapsedText);
+            this.LoadComponentInChildren(out this.totalWaveSurvivedText);
         }
 
         public override void OnRent()

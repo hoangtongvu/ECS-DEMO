@@ -17,7 +17,7 @@ namespace Core.ToolAndBuilding.ToolSpawnerBuilding.Presenter
 
         public List<ToolHolderSlotMarker> ToolHolderSlotMarkers => toolHolderSlotMarkers;
 
-        protected override void Awake()
+        private void Awake()
         {
             this.originalbenchWorkerEulerY = this.benchWorkerAnimator.transform.rotation.eulerAngles.y;
         }
@@ -26,7 +26,7 @@ namespace Core.ToolAndBuilding.ToolSpawnerBuilding.Presenter
         {
             base.LoadComponents();
             this.LoadToolHolderSlotMarkers();
-            this.LoadComponentInChildren(ref this.workBenchPresenter);
+            this.LoadComponentInChildren(out this.workBenchPresenter);
             this.LoadBenchWorkerAnimator();
         }
 

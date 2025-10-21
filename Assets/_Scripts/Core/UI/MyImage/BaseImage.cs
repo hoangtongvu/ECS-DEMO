@@ -13,7 +13,7 @@ namespace Core.UI.MyImage
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.image);
+            this.LoadComponentInCtrl(out this.image);
         }
 
     }

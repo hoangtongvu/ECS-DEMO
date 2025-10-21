@@ -10,17 +10,14 @@ namespace Core.UI.MyCanvas
     {
         [SerializeField] private CanvasesCtrl Target;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
-
-            if (this.Target == false) this.Target = this.GetComponent<CanvasesCtrl>();
+            if (!this.Target) this.Target = this.GetComponent<CanvasesCtrl>();
 
             MapRegisterMessenger.MessagePublisher.Publish(new RegisterMessage<CanvasesCtrl>
             {
                 TargetRef = this.Target,
             });
-
         }
 
         protected override void LoadComponents()

@@ -14,7 +14,7 @@ namespace Core.Misc
         [SerializeField] private int bgmCount;
         [SerializeField] private int currentBGMIndex;
 
-        protected override void Awake()
+        private void Awake()
         {
             this.bgmCount = Enum.GetNames(typeof(BGM_LibraryMusic)).Length;
         }

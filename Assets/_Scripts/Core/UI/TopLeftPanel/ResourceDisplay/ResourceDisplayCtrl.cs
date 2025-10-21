@@ -17,10 +17,8 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
         public QuantityText QuantityText => quantityText;
         public Image BackGroundImage => backGroundImage;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
-
             this.resourceDisplayTweener.ResourceDisplayCtrl = this;
             this.resourceDisplayEventHandler = new()
             {
@@ -31,8 +29,8 @@ namespace Core.UI.TopLeftPanel.ResourceDisplay
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.quantityText);
-            this.LoadComponentInChildren(ref this.backGroundImage);
+            this.LoadComponentInChildren(out this.quantityText);
+            this.LoadComponentInChildren(out this.backGroundImage);
         }
 
         public override void OnRent()

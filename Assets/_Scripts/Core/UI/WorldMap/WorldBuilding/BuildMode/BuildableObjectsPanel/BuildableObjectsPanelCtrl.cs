@@ -24,8 +24,8 @@ namespace Core.UI.WorldMap.WorldBuilding.BuildMode.BuildableObjectsPanel
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInCtrl(ref this.selfRectTransform);
-            this.LoadComponentInChildren(ref this.objectDisplaysHolder);
+            this.LoadComponentInCtrl(out this.selfRectTransform);
+            this.LoadComponentInChildren(out this.objectDisplaysHolder);
             this.LoadOriginalY();
         }
 

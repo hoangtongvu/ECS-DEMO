@@ -16,8 +16,8 @@ namespace Core.UI.InteractableActionsPanel.ActionPanel.RecruitActionPanel.Recrui
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.resourceBGImage);
-            this.LoadComponentInChildren(ref this.costText);
+            this.LoadComponentInChildren(out this.resourceBGImage);
+            this.LoadComponentInChildren(out this.costText);
         }
 
         public override void OnRent()

@@ -48,7 +48,7 @@ namespace Core.UI.GameOverPanel.QuitGameTimer
         protected override void LoadComponents()
         {
             base.LoadComponents();
-            this.LoadComponentInChildren(ref this.timerText);
+            this.LoadComponentInChildren(out this.timerText);
         }
 
         private void FixedUpdate()
