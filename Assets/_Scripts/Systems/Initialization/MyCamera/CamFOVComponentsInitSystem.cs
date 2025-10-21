@@ -29,6 +29,7 @@ namespace Systems.Initialization.MyCamera
                 Value = 1.1f,
             });
 
+            su.AddOrSetComponentData(new GameOverFOVScale(0.6f));
         }
 
     }

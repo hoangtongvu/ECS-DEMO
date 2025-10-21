@@ -1,5 +1,6 @@
 using Components.GameEntity;
 using Components.GameEntity.Misc;
+using Components.GameState;
 using Components.Player;
 using Components.Tool;
 using Components.Tool.Misc;
@@ -44,6 +45,7 @@ namespace Systems.Initialization.Unit.DarkUnit
             state.RequireForUpdate<ToolProfileId2PrimaryEntityMap>();
             state.RequireForUpdate<SetPosWithinRadiusCommandList>();
             state.RequireForUpdate<GameEntitySizeMap>();
+            state.RequireForUpdate<IsGameStarted>();
         }
 
         [BurstCompile]
