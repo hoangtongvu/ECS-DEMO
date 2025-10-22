@@ -7,7 +7,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Utilities.Extensions;
 
-namespace Systems.Simulation.Unit.UnitFeeding
+namespace Systems.Initialization.Unit.UnitFeeding
 {
     [UpdateInGroup(typeof(NewlySpawnedTagProcessSystemGroup))]
     [BurstCompile]

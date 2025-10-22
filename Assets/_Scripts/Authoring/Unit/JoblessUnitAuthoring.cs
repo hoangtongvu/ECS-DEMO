@@ -52,6 +52,7 @@ namespace Authoring.Unit
                 AddComponent<HungerBarValue>(entity);
                 AddComponent(entity, new CurrentHungerThreshold(HungerThreshold.Full));
                 AddComponent<HungerThresholdChanged>(entity);
+                this.AddAndDisableComponent<StarvingDmgTakenEvent>(entity);
 
                 IdleReaction.BakingHelper.BakeTags(this, in entity);
                 AddComponent<IdleReaction.TimerSeconds>(entity);

@@ -301,6 +301,7 @@ GameObject:
   - component: {fileID: 3042941546235770722}
   - component: {fileID: 2536024891565776633}
   - component: {fileID: 3210825355428037746}
+  - component: {fileID: 9180505569738048400}
   m_Layer: 0
   m_Name: PresenterMessageHandlers
   m_TagString: Untagged
@@ -624,6 +625,45 @@ MonoBehaviour:
         baseAnimator: {fileID: 0}
         animationName: UnarmedWorkingAnimation
         transitionDuration: 0.2
+--- !u!114 &9180505569738048400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 747492285079313881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e82e3c346d284438d6793a7ce17143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  presentingActions:
+  - rid: 8819220659092324352
+  - rid: 8819220659092324353
+  references:
+    version: 2
+    RefIds:
+    - rid: 8819220659092324352
+      type: {class: SpawnAndPlayParticleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        prefab: {fileID: 2530936279557513566, guid: 7c6f4184b5b906740850a6c98c2d724c,
+          type: 3}
+        localPosition:
+          x: 0
+          y: 0
+          z: 0
+        localRotation:
+          x: -90
+          y: 0
+          z: 0
+        target: {fileID: 0}
+    - rid: 8819220659092324353
+      type: {class: UnitPlaySFXAction, ns: Core.Unit.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        sfx: 2
 --- !u!1 &831446450486766879
 GameObject:
   m_ObjectHideFlags: 0

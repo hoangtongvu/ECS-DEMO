@@ -1272,6 +1272,7 @@ GameObject:
   - component: {fileID: 5767814977190816941}
   - component: {fileID: 4800990207423810751}
   - component: {fileID: 8224623827673656688}
+  - component: {fileID: 7276124068984517492}
   m_Layer: 0
   m_Name: PresenterMessageHandlers
   m_TagString: Untagged
@@ -1545,6 +1546,45 @@ MonoBehaviour:
         baseAnimator: {fileID: 0}
         animationName: 2H_Ranged_Shoot
         transitionDuration: 0.2
+--- !u!114 &7276124068984517492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3985195874754680181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e82e3c346d284438d6793a7ce17143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  presentingActions:
+  - rid: 8819220659092324352
+  - rid: 8819220659092324353
+  references:
+    version: 2
+    RefIds:
+    - rid: 8819220659092324352
+      type: {class: SpawnAndPlayParticleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        prefab: {fileID: 2530936279557513566, guid: 7c6f4184b5b906740850a6c98c2d724c,
+          type: 3}
+        localPosition:
+          x: 0
+          y: 0
+          z: 0
+        localRotation:
+          x: -90
+          y: 0
+          z: 0
+        target: {fileID: 0}
+    - rid: 8819220659092324353
+      type: {class: UnitPlaySFXAction, ns: Core.Unit.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        sfx: 2
 --- !u!1 &4127223675019461008
 GameObject:
   m_ObjectHideFlags: 0
