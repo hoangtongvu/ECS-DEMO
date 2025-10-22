@@ -45,10 +45,11 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
                 int length = hpChangeRecords.Length;
                 if (length == 0) return;
 
+                int oldCurrentHp = currentHp;
+
                 for (int i = 0; i < length; i++)
                 {
                     var hpChangeRecord = hpChangeRecords[i];
-                    frameHpChange += hpChangeRecord;
 
                     int rawCurrentHp = currentHp;
                     rawCurrentHp += hpChangeRecord;
@@ -65,6 +66,7 @@ namespace Systems.Initialization.GameEntity.Damage.HpChangesHandle
 
                 }
 
+                frameHpChange = (int)currentHp - oldCurrentHp;
             }
 
         }

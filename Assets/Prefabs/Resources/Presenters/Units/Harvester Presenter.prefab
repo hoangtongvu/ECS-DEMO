@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 7991264223754312501}
   - component: {fileID: 5757954078835390029}
   - component: {fileID: 1630398611148621684}
+  - component: {fileID: 1195240722766508782}
   - component: {fileID: 454097457215292769}
   - component: {fileID: 3042941546235770722}
   - component: {fileID: 2536024891565776633}
@@ -458,6 +459,40 @@ MonoBehaviour:
           z: 0
         localRotation:
           x: 0
+          y: 0
+          z: 0
+        target: {fileID: 0}
+--- !u!114 &1195240722766508782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 747492285079313881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37e48008fb721b0478258c501f71237b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  paramPresentingActions: []
+  voidPresentingActions:
+  - rid: 8819220655150989312
+  references:
+    version: 2
+    RefIds:
+    - rid: 8819220655150989312
+      type: {class: SpawnAndPlayParticleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        prefab: {fileID: 1980354387340020331, guid: 6ac5a6debe5f6344abcdf36cdab553a3,
+          type: 3}
+        localPosition:
+          x: 0
+          y: 0
+          z: 0
+        localRotation:
+          x: -90
           y: 0
           z: 0
         target: {fileID: 0}

@@ -42,6 +42,7 @@ namespace Authoring.Unit.DarkUnit
                 AddComponent<NewlySpawnedTag>(entity);
                 AddComponent<NeedSpawnPresenterTag>(entity);
                 this.AddAndDisableComponent<TakeHitEvent>(entity);
+                this.AddAndDisableComponent<GetHealedEvent>(entity);
                 this.AddAndDisableComponent<DeadEvent>(entity);
 
                 IdleReaction.BakingHelper.BakeTags(this, in entity);

@@ -34,6 +34,7 @@ namespace Authoring.Player
 
                 AddComponent<NeedSpawnPresenterTag>(entity);
                 this.AddAndDisableComponent<TakeHitEvent>(entity);
+                this.AddAndDisableComponent<GetHealedEvent>(entity);
                 this.AddAndDisableComponent<DeadEvent>(entity);
 
                 AddComponent<InteractableEntityTag>(entity);

@@ -1141,6 +1141,7 @@ GameObject:
   - component: {fileID: 780675599772271175}
   - component: {fileID: 1881503389763434089}
   - component: {fileID: 727855463940012466}
+  - component: {fileID: 3116600365736767959}
   - component: {fileID: 1209021685208321998}
   m_Layer: 0
   m_Name: PresenterMessageHandlers
@@ -1300,6 +1301,40 @@ MonoBehaviour:
           z: 0
         localRotation:
           x: 0
+          y: 0
+          z: 0
+        target: {fileID: 0}
+--- !u!114 &3116600365736767959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716267086201396609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37e48008fb721b0478258c501f71237b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePresenter: {fileID: 0}
+  paramPresentingActions: []
+  voidPresentingActions:
+  - rid: 8819220655150989312
+  references:
+    version: 2
+    RefIds:
+    - rid: 8819220655150989312
+      type: {class: SpawnAndPlayParticleAction, ns: Core.GameEntity.Presenter.MessageHandler.PresentingActions,
+        asm: Core}
+      data:
+        prefab: {fileID: 1980354387340020331, guid: 6ac5a6debe5f6344abcdf36cdab553a3,
+          type: 3}
+        localPosition:
+          x: 0
+          y: 0
+          z: 0
+        localRotation:
+          x: -90
           y: 0
           z: 0
         target: {fileID: 0}
