@@ -23,6 +23,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e3c9752eddc1ae745a7e73d477a0b04a, type: 2}
   - {fileID: 11400000, guid: 2412c3c2a6ffb394d8a159b1fe070735, type: 2}
   - {fileID: 11400000, guid: 0e04568c7f29d3a4f85d57807f5051af, type: 2}
+  - {fileID: 11400000, guid: 7bcf962cdab773440a372792e11e55fc, type: 2}
   useCustomNames: 1
   generatedName: BGM_Library
   musicEnum: BGM_LibraryMusic
@@ -45,4 +46,5 @@ MonoBehaviour:
     - {fileID: 11400000, guid: e3c9752eddc1ae745a7e73d477a0b04a, type: 2}
     - {fileID: 11400000, guid: 2412c3c2a6ffb394d8a159b1fe070735, type: 2}
     - {fileID: 11400000, guid: 0e04568c7f29d3a4f85d57807f5051af, type: 2}
+    - {fileID: 11400000, guid: 7bcf962cdab773440a372792e11e55fc, type: 2}
     foldout: 1

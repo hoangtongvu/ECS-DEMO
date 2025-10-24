@@ -8,6 +8,7 @@ namespace Audio.JSAM {
         ambientarp,
         birdsforestriver,
         mysticalmusic,
-        relaxintheforest
+        relaxintheforest,
+        ambientgame
     }
 }
