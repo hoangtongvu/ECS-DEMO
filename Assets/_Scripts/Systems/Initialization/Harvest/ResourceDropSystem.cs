@@ -67,7 +67,7 @@ namespace Systems.Initialization.Harvest
                     if (hpThreshold == 0)
                         break;
 
-                    hpThreshold = math.max(0, hpThreshold - deductAmount);
+                    hpThreshold = (uint)math.max(0, (int)hpThreshold - deductAmount);
                 }
 
                 dropResourceHpThresholdRef.ValueRW.Value = hpThreshold;
