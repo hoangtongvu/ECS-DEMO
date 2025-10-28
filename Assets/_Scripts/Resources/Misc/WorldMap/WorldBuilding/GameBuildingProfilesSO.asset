@@ -119,11 +119,11 @@ MonoBehaviour:
         HasHpComponents: 1
         HpData:
           MaxHp: 1080
-        SpawnDurationSeconds: 3
+        SpawnDurationSeconds: 1.5
         BaseSpawningCosts:
           _serializedList:
           - Key: 1
-            Value: 30
+            Value: 15
     - Key:
         VariantIndex: 5
       Value:
