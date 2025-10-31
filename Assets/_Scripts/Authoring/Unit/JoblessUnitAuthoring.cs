@@ -16,6 +16,7 @@ using Components.Misc.Presenter;
 using Components.Misc.Presenter.TransformSync;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool.Misc;
+using Components.Tool.Picker;
 using Components.Unit;
 using Components.Unit.Misc;
 using Components.Unit.Reaction;
@@ -197,6 +198,9 @@ namespace Authoring.Unit
                 PreInteractionPhase.BakingHelper.BakeTags(this, entity);
                 InteractingPhase.BakingHelper.BakeTags(this, entity);
                 PostInteractionPhase.BakingHelper.BakeTags(this, entity);
+
+                AddComponent<ToolToPick>(entity);
+                this.AddAndDisableComponent<CanPickToolTag>(entity);
 
             }
 

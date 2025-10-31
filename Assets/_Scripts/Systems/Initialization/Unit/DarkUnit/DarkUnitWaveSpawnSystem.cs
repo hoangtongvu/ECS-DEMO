@@ -4,6 +4,7 @@ using Components.GameState;
 using Components.Player;
 using Components.Tool;
 using Components.Tool.Misc;
+using Components.Tool.Picker;
 using Components.Unit.DarkUnit;
 using Components.Unit.Misc;
 using Core.GameEntity;
@@ -97,6 +98,7 @@ namespace Systems.Initialization.Unit.DarkUnit
                 for (int i = 0; i < spawnCount; i++)
                 {
                     this.MarkToolCanBePicked(ref state, newToolEntities[i], newUnitEntities[i]);
+                    this.MarkUnitCanPickTool(ref state, newToolEntities[i], newUnitEntities[i]);
                 }
 
             }
@@ -152,9 +154,17 @@ namespace Systems.Initialization.Unit.DarkUnit
         private void MarkToolCanBePicked(ref SystemState state, in Entity toolEntity, in Entity unitEntity)
         {
             SystemAPI.SetComponentEnabled<CanBePickedTag>(toolEntity, true);
+            SystemAPI.SetComponent(toolEntity, new ToolPickerEntity
+            {
+                Value = unitEntity,
+            });
+        }
 
-            var toolPickerEntityRef = SystemAPI.GetComponentRW<ToolPickerEntity>(toolEntity);
-            toolPickerEntityRef.ValueRW.Value = unitEntity;
+        [BurstCompile]
+        private void MarkUnitCanPickTool(ref SystemState state, in Entity toolEntity, in Entity unitEntity)
+        {
+            SystemAPI.SetComponentEnabled<CanPickToolTag>(unitEntity, true);
+            SystemAPI.SetComponent(unitEntity, new ToolToPick(toolEntity));
         }
 
     }

@@ -1,8 +1,10 @@
-using Unity.Entities;
-using Unity.Burst;
-using Systems.Simulation.GameEntity;
-using Components.Tool;
 using Components.GameEntity.Interaction;
+using Components.Tool;
+using Components.Tool.Picker;
+using Components.Unit;
+using Systems.Simulation.GameEntity;
+using Unity.Burst;
+using Unity.Entities;
 
 namespace Systems.Simulation.Tool
 {
@@ -17,7 +19,9 @@ namespace Systems.Simulation.Tool
             var query0 = SystemAPI.QueryBuilder()
                 .WithAll<
                     TargetEntity
-                    , CanInteractEntityTag>()
+                    , CanInteractEntityTag
+                    , CanPickToolTag
+                    , ToolToPick>()
                 .Build();
 
             var query1 = SystemAPI.QueryBuilder()
@@ -33,12 +37,17 @@ namespace Systems.Simulation.Tool
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (targetEntityRef, unitEntity) in
-                SystemAPI.Query<
-                    RefRO<TargetEntity>>()
-                    .WithAll<CanInteractEntityTag>()
-                    .WithEntityAccess())
+            foreach (var (targetEntityRef, unitToolHolderRef, unitEntity) in SystemAPI
+                .Query<
+                    RefRO<TargetEntity>
+                    , RefRO<UnitToolHolder>>()
+                .WithAll<CanInteractEntityTag>()
+                .WithDisabled<CanPickToolTag>()
+                .WithEntityAccess())
             {
+                bool toolSlotIsEmpty = unitToolHolderRef.ValueRO.Value == Entity.Null;
+                if (!toolSlotIsEmpty) continue;
+
                 var targetEntity = targetEntityRef.ValueRO.Value;
 
                 bool targetEntityIsDerelictTool = SystemAPI.HasComponent<DerelictToolTag>(targetEntity);
@@ -48,6 +57,7 @@ namespace Systems.Simulation.Tool
                 if (toolMarkedAsCanBePicked) continue;
 
                 this.MarkToolCanBePicked(ref state, in targetEntity, in unitEntity);
+                this.MarkUnitCanPickTool(ref state, in targetEntity, in unitEntity);
             }
 
         }
@@ -56,9 +66,17 @@ namespace Systems.Simulation.Tool
         private void MarkToolCanBePicked(ref SystemState state, in Entity toolEntity, in Entity unitEntity)
         {
             SystemAPI.SetComponentEnabled<CanBePickedTag>(toolEntity, true);
+            SystemAPI.SetComponent(toolEntity, new ToolPickerEntity
+            {
+                Value = unitEntity,
+            });
+        }
 
-            var toolPickerEntityRef = SystemAPI.GetComponentRW<ToolPickerEntity>(toolEntity);
-            toolPickerEntityRef.ValueRW.Value = unitEntity;
+        [BurstCompile]
+        private void MarkUnitCanPickTool(ref SystemState state, in Entity toolEntity, in Entity unitEntity)
+        {
+            SystemAPI.SetComponentEnabled<CanPickToolTag>(unitEntity, true);
+            SystemAPI.SetComponent(unitEntity, new ToolToPick(toolEntity));
         }
 
     }

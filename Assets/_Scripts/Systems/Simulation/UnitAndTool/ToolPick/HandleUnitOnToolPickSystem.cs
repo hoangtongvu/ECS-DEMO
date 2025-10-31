@@ -1,6 +1,7 @@
 using Components.Misc;
 using Components.Tool;
 using Components.Tool.Misc;
+using Components.Tool.Picker;
 using Components.Unit;
 using Components.Unit.Misc;
 using Unity.Burst;
@@ -98,6 +99,8 @@ namespace Systems.Simulation.UnitAndTool.ToolPick
             em.AddComponent<NeedRoleUpdatedTag>(unitEntity);
             em.AddComponent<NeedInitArmedStateComponentsTag>(unitEntity);
 
+            SystemAPI.SetComponentEnabled<CanPickToolTag>(unitEntity, false);
+            SystemAPI.SetComponent<ToolToPick>(unitEntity, default);
         }
 
     }

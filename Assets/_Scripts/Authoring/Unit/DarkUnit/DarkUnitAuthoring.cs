@@ -13,6 +13,7 @@ using Components.Misc.Presenter;
 using Components.Misc.Presenter.TransformSync;
 using Components.Misc.WorldMap.PathFinding;
 using Components.Tool.Misc;
+using Components.Tool.Picker;
 using Components.Unit;
 using Components.Unit.DarkUnit;
 using Components.Unit.Misc;
@@ -162,6 +163,9 @@ namespace Authoring.Unit.DarkUnit
                 AddComponent<PresenterHandSlotsHolder>(entity);
 
                 AddComponent<SpawnerEntityHolder>(entity);
+
+                AddComponent<ToolToPick>(entity);
+                this.AddAndDisableComponent<CanPickToolTag>(entity);
 
             }
 
