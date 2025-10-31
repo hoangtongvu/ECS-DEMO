@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DarkUnitConfigsSO
   m_EditorClassIdentifier: 
   SpawnRadius: 40
-  SpawnDurationMinutes: 5
+  SpawnDurationMinutes: 3.5
   DefaultDarkUnitFactionIndex: 2
   DarkUnitProfiles:
     _serializedList:
