@@ -5,7 +5,7 @@
 This is an RTS game prototype inspired by [Kingdom](https://en-m-wikipedia-org.translate.goog/wiki/Kingdom_(video_game)?_x_tr_sl=en&_x_tr_tl=vi&_x_tr_hl=vi&_x_tr_pto=tc) and [Age of Empires](https://vi.wikipedia.org/wiki/Age_of_Empires). The main goal is to learn and practice **Unity ECS**, **Source generator**, **optimization**, **game architecture design**, and **pathfinding algorithms**.
 
 Preview video:
-[![Preview](.github/videos/preview.png)](.github/videos/preview.mp4)
+<video src="https://github.com/user-attachments/assets/c308a508-8f0e-479b-a348-9f9e9fa353db" width="320" height="240" controls></video>
 
 ## Credits
 
