@@ -31,7 +31,7 @@ public class ConstantsGeneratorEditor : Editor
         var type = so.GetType();
 
         // Look for the target assembly field
-        var outputFolderField = type.GetProperty("OutputFolder", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        var outputFolderField = type.GetField("OutputFolder", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         string folder = null;
 
         if (outputFolderField != null)
