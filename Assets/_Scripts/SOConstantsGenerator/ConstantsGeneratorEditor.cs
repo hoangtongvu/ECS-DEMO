@@ -2,9 +2,9 @@ using System.IO;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using static SOConstGenerator.ConstantsGeneratorHelper;
+using static SOConstantsGenerator.ConstantsGeneratorHelper;
 
-namespace SOConstGenerator;
+namespace SOConstantsGenerator;
 
 [CustomEditor(typeof(ScriptableObject), true)]
 public class ConstantsGeneratorEditor : Editor

@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace SOConstGenerator;
+namespace SOConstantsGenerator;
 
 public interface IRequireOutputFolder
 {

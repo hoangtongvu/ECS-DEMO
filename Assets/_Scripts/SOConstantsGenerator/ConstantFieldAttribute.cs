@@ -1,6 +1,6 @@
 using System;
 
-namespace SOConstGenerator;
+namespace SOConstantsGenerator;
 
 [AttributeUsage(AttributeTargets.Field)]
 public sealed class ConstantFieldAttribute : Attribute

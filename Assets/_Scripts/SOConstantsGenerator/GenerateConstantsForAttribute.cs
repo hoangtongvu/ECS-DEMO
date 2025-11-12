@@ -1,6 +1,6 @@
 using System;
 
-namespace SOConstGenerator;
+namespace SOConstantsGenerator;
 
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class GenerateConstantsForAttribute : Attribute
