@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor;
 using UnityEngine;
@@ -13,7 +11,6 @@ public static class ConstantsGeneratorHelper
 {
     public static void GenerateFile(string outputPath, Object so, string className, string classNamespace)
     {
-        var customStructFieldInfoList = new List<FieldInfo>();
         var type = so.GetType();
         var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                          .Where(f => f.GetCustomAttribute<ConstantFieldAttribute>() != null);
@@ -21,6 +18,8 @@ public static class ConstantsGeneratorHelper
         using var writer = new StreamWriter(outputPath, false);
 
         writer.WriteLine("// This file is auto-generated, do not change.");
+        writer.WriteLine($"using System.Runtime.CompilerServices;");
+        writer.WriteLine();
         writer.WriteLine($"namespace {classNamespace};");
         writer.WriteLine();
 
@@ -35,64 +34,21 @@ public static class ConstantsGeneratorHelper
             if (CanBeConst(fieldType))
             {
                 // Write const
-                writer.WriteLine($"    public const {fieldType} {field.Name} = {FormatValue(value)};");
+                writer.WriteLine($"\tpublic const {fieldType} {field.Name} = {FormatValue(value)};");
             }
             else
             {
                 // Write static readonly
-                writer.WriteLine($"    public static readonly {fieldType} {field.Name};");
-                customStructFieldInfoList.Add(field);
-            }
-        }
+                byte[] data = ExtractStructBytes(fieldType, value);
+                string bytesString = string.Join(", ", data.Select(b => b.ToString()));
 
-        // Generate static constructor
-        if (customStructFieldInfoList.Count != 0)
-        {
-            writer.WriteLine();
-            writer.Write(GetStaticConstructor(customStructFieldInfoList, className, so));
+                writer.WriteLine($"\tpublic static readonly {fieldType} {field.Name} =");
+                writer.WriteLine($"\t\tUnsafe.As<byte, {fieldType}>(ref new byte[] {{ {bytesString} }}[0]);");
+            }
         }
 
         writer.WriteLine("}");
         writer.Flush();
-    }
-
-    private static string GetStaticConstructor(
-        List<FieldInfo> customStructFieldInfoList
-        , string className
-        , object so)
-    {
-        var sb = new StringBuilder();
-
-        sb.AppendLine($"static {className}()");
-        sb.AppendLine("{");
-
-        foreach ( var field in customStructFieldInfoList)
-        {
-            sb.AppendLine("\t{");
-
-            var fieldType = field.FieldType;
-            var value = field.GetValue(so);
-
-            // generate byte array
-            byte[] data = ExtractStructBytes(fieldType, value);
-            string bytesString = string.Join(", ", data.Select(b => b.ToString()));
-
-            sb.AppendLine($"\t\tbyte[] bytes = new byte[] {{ {bytesString} }};");
-            sb.AppendLine();
-
-            // generate assignment
-            sb.AppendLine("\t\tunsafe");
-            sb.AppendLine("\t\t{");
-            sb.AppendLine($"\t\t\tfixed (byte* ptr = bytes) {field.Name} = *({fieldType}*)ptr;");
-            sb.AppendLine("\t\t}");
-
-            sb.AppendLine("\t}");
-            sb.AppendLine();
-        }
-
-        sb.AppendLine("}");
-
-        return sb.ToString();
     }
 
     private static bool CanBeConst(System.Type t)
