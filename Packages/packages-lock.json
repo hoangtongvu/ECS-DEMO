@@ -48,6 +48,13 @@
       "dependencies": {},
       "hash": "65c8990d499f5ba71f9a300771be49075c5188c8"
     },
+    "com.darksun.so-constants-generator": {
+      "version": "https://github.com/hoangtongvu/SOConstantsGenerator.git?path=/Assets/SOConstantsGenerator",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1315c8d19e96149539afc9b1e276e019348daa67"
+    },
     "com.darksun.tweenlib": {
       "version": "https://github.com/hoangtongvu/TweenLib.git?path=/Assets/TweenLib",
       "depth": 0,
