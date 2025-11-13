@@ -41,3 +41,4 @@ MonoBehaviour:
         ToolProfileId:
           ToolType: 3
           VariantIndex: 0
+  OutputFolder: {fileID: 102900000, guid: 7b7a7d11146a3e14ebe8911470ebcbfe, type: 3}

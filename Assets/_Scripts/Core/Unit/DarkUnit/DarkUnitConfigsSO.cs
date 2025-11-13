@@ -1,6 +1,7 @@
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
 using Core.Tool;
+using SOConstantsGenerator;
 
 namespace Core.Unit.DarkUnit
 {
@@ -11,14 +12,15 @@ namespace Core.Unit.DarkUnit
         public ToolProfileId ToolProfileId;
     }
 
+    [GenerateConstantsFor("DarkUnitConfigConstants", "Core.Unit.DarkUnit")]
     [CreateAssetMenu(fileName = "DarkUnitConfigsSO", menuName = "SO/GameEntity/DarkUnitConfigsSO")]
-    public class DarkUnitConfigsSO : ScriptableObject
+    public partial class DarkUnitConfigsSO : ScriptableObject
     {
         public static readonly string DefaultAssetPath = "Misc/DarkUnitConfigsSO";
 
-        public float SpawnRadius = 40f;
-        public float SpawnDurationMinutes = 10;
-        public byte DefaultDarkUnitFactionIndex = 2;
+        [ConstantField] public float SpawnRadius = 40f;
+        [ConstantField] public float SpawnDurationMinutes = 10;
+        [ConstantField] public byte DefaultDarkUnitFactionIndex = 2;
 
         [SerializedDictionary("Id", "Profile")]
         public SerializedDictionary<UnitProfileId, DarkUnitProfileElement> DarkUnitProfiles;
