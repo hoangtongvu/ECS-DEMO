@@ -10,6 +10,7 @@ using Components.Unit.Misc;
 using Components.Unit.Reaction;
 using Core.GameEntity.Movement.MoveCommand;
 using Core.Misc;
+using Core.Unit.Common;
 using Core.Utilities.Extensions;
 using Unity.Burst;
 using Unity.Collections;
@@ -92,8 +93,6 @@ namespace Systems.Simulation.Unit.Misc
             state.RequireForUpdate<UnitReactionConfigsMap>();
             state.RequireForUpdate<DefaultStopMoveWorldRadius>();
             state.RequireForUpdate<DetectionRadiusMap>();
-            state.RequireForUpdate<UnarmedUnitFleeTotalSeconds>();
-
         }
 
         [BurstCompile]
@@ -109,7 +108,6 @@ namespace Systems.Simulation.Unit.Misc
             var moveCommandPrioritiesMap = SystemAPI.GetSingleton<MoveCommandPrioritiesMap>();
             var unitReactionConfigsMap = SystemAPI.GetSingleton<UnitReactionConfigsMap>().Value;
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-            var fleeTotalSeconds = SystemAPI.GetSingleton<UnarmedUnitFleeTotalSeconds>().Value;
 
             int entityCount = this.entityQuery.CalculateEntityCount();
             var targetInfoMap = new NativeHashMap<Entity, TargetEntityInfo>(entityCount, Allocator.TempJob);
@@ -150,7 +148,6 @@ namespace Systems.Simulation.Unit.Misc
 
             state.Dependency = new GetRunawayDestinationsJob
             {
-                FleeTotalSeconds = fleeTotalSeconds,
                 TargetInfoMap = targetInfoMap,
                 RunawayDestinationArray = runawayDestinationArray,
             }.ScheduleParallel(this.setTargetJobQuery, state.Dependency);
@@ -290,7 +287,6 @@ namespace Systems.Simulation.Unit.Misc
         [BurstCompile]
         private partial struct GetRunawayDestinationsJob : IJobEntity
         {
-            [ReadOnly] public half FleeTotalSeconds;
             [ReadOnly] public NativeHashMap<Entity, TargetEntityInfo> TargetInfoMap;
             [WriteOnly] public NativeArray<float3> RunawayDestinationArray;
 
@@ -304,20 +300,17 @@ namespace Systems.Simulation.Unit.Misc
                 this.RunawayDestinationArray[entityIndex] = this.GetRunAwayDestination(
                     in transform.Position
                     , this.TargetInfoMap[entity].Position
-                    , in moveSpeedLinear.Value
-                    , in this.FleeTotalSeconds);
-
+                    , in moveSpeedLinear.Value);
             }
 
             [BurstCompile]
             private float3 GetRunAwayDestination(
                 in float3 unitPos
                 , in float3 dangerousPos
-                , in float unitSpeed
-                , in half totalRunAwaySeconds)
+                , in float unitSpeed)
             {
                 float3 runDir = math.normalize(unitPos - dangerousPos).With(y: 0f);
-                float3 distanceVector = totalRunAwaySeconds * unitSpeed * runDir;
+                float3 distanceVector = UnitGlobalConfigConstants.UnitGlobalConfigs.UnarmedUnitFleeTotalSeconds * unitSpeed * runDir;
                 return distanceVector + unitPos;
             }
 

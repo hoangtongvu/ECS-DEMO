@@ -292,3 +292,4 @@ MonoBehaviour:
   UnitGlobalConfigs:
     MoveSpeedScale: 1
     UnarmedUnitFleeTotalSeconds: 2
+  OutputFolder: {fileID: 102900000, guid: 3d9eefc7ae18b9547bde396d123b1299, type: 3}
