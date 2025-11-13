@@ -28,14 +28,13 @@ namespace Systems.Simulation.Unit.UnitFeeding
                 .Build();
 
             state.RequireForUpdate(this.query0);
-            state.RequireForUpdate<UnitFeedingConfigsHolder>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             state.EntityManager.SetComponentEnabled<HungerThresholdChanged>(this.query0, false);
-            var configs = SystemAPI.GetSingleton<UnitFeedingConfigsHolder>().Value;
+            var configs = UnitFeedingConfigConstants.UnitFeedingConfigs;
 
             state.Dependency = new UpdateThresholdJob
             {

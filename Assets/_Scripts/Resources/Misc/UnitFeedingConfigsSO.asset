@@ -30,3 +30,4 @@ MonoBehaviour:
       FullThresholdConfigs:
         HpRegenIntervalSeconds: 5
         HpRegenValuePerInterval: 3
+  OutputFolder: {fileID: 102900000, guid: 7176a5cbeea6108429170b2e1d1f6283, type: 3}

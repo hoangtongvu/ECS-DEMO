@@ -1,6 +1,7 @@
 using Components.GameEntity.Damage;
 using Components.Unit.Misc;
 using Components.Unit.UnitFeeding;
+using Core.Unit.UnitFeeding;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -23,13 +24,12 @@ namespace Systems.Simulation.Unit.UnitFeeding
                 .Build();
 
             state.RequireForUpdate(query0);
-            state.RequireForUpdate<UnitFeedingConfigsHolder>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var configs = SystemAPI.GetSingleton<UnitFeedingConfigsHolder>().Value;
+            var configs = UnitFeedingConfigConstants.UnitFeedingConfigs;
             float deductAmount = configs.HungerBarConfigs.HungerDrainSpeed * SystemAPI.Time.DeltaTime;
 
             state.Dependency = new HungerBarDrainJob
