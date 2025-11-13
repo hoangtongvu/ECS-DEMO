@@ -53,7 +53,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "1315c8d19e96149539afc9b1e276e019348daa67"
+      "hash": "69f1b8acc41ed53d018dae7b367fe734e2356ad7"
     },
     "com.darksun.tweenlib": {
       "version": "https://github.com/hoangtongvu/TweenLib.git?path=/Assets/TweenLib",
