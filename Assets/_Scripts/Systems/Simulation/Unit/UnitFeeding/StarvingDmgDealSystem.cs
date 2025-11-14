@@ -39,7 +39,6 @@ namespace Systems.Simulation.Unit.UnitFeeding
                 .Build();
 
             state.RequireForUpdate(query0);
-            state.RequireForUpdate<UnitFeedingConfigsHolder>();
             state.RequireForUpdate<StarvingDmgDealTimerSeconds>();
         }
 
@@ -48,7 +47,7 @@ namespace Systems.Simulation.Unit.UnitFeeding
         {
             state.EntityManager.SetComponentEnabled<StarvingDmgTakenEvent>(this.starvingDmgTakenEventQuery, false);
 
-            var configs = SystemAPI.GetSingleton<UnitFeedingConfigsHolder>().Value;
+            var configs = UnitFeedingConfigConstants.UnitFeedingConfigs;
             var timerSecondsRef = SystemAPI.GetSingletonRW<StarvingDmgDealTimerSeconds>();
 
             float intervalSeconds = configs.HungerBarConfigs.StarvingThresholdConfigs.StarvingTakeDmgIntervalMinutes * 60;

@@ -4,6 +4,7 @@ using Core.GameEntity;
 using Core.GameResource;
 using Core.Unit.Reaction;
 using Core.Unit.Misc;
+using SOConstantsGenerator;
 
 namespace Core.Unit
 {
@@ -25,21 +26,17 @@ namespace Core.Unit
 
     }
 
+    [GenerateConstantsFor("UnitGlobalConfigConstants", "Core.Unit.Common")]
     [CreateAssetMenu(fileName = "UnitProfilesSO", menuName = "SO/GameEntity/UnitProfilesSO")]
-    public class UnitProfilesSO : GameEntityProfilesSO<UnitProfileId, UnitProfileElement>
+    public partial class UnitProfilesSO : GameEntityProfilesSO<UnitProfileId, UnitProfileElement>
     {
-        public UnitGlobalConfigs UnitGlobalConfigs = new();
         public static readonly string DefaultAssetPath = "Misc/UnitProfilesSO";
+        [ConstantField] public UnitGlobalConfigs UnitGlobalConfigs = new();
 
-#if (UNITY_EDITOR)
+#if UNITY_EDITOR
         [ContextMenu("Reset Global Configs")]
-        private void ResetGlobalConfigs()
-        {
-            this.UnitGlobalConfigs = new();
-        }
-
+        private void ResetGlobalConfigs() => this.UnitGlobalConfigs = new();
 #endif
-
     }
 
 }

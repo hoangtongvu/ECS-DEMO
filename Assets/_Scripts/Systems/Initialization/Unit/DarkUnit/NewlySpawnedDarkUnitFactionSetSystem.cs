@@ -1,6 +1,7 @@
 using Components.GameEntity.EntitySpawning;
 using Components.GameEntity.Misc;
 using Components.Unit.DarkUnit;
+using Core.Unit.DarkUnit;
 using Systems.Initialization.Misc;
 using Unity.Burst;
 using Unity.Collections;
@@ -26,16 +27,17 @@ namespace Systems.Initialization.Unit.DarkUnit
                 .Build();
 
             state.RequireForUpdate(this.darkUnitQuery);
-            state.RequireForUpdate<DarkUnitFactionIndexHolder>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var darkUnitFactionIndexHolder = SystemAPI.GetSingleton<DarkUnitFactionIndexHolder>();
             var entities = this.darkUnitQuery.ToEntityArray(Allocator.Temp);
 
-            state.EntityManager.SetComponentData(entities, darkUnitFactionIndexHolder.Value);
+            state.EntityManager.SetComponentData(entities, new FactionIndex
+            {
+                Value = DarkUnitConfigConstants.DefaultDarkUnitFactionIndex,
+            });
         }
 
     }

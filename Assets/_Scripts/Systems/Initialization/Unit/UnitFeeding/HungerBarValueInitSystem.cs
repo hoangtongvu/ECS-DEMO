@@ -1,6 +1,7 @@
 using Components.GameEntity.EntitySpawning;
 using Components.Unit.Misc;
 using Components.Unit.UnitFeeding;
+using Core.Unit.UnitFeeding;
 using Systems.Initialization.Misc;
 using Unity.Burst;
 using Unity.Collections;
@@ -37,11 +38,9 @@ namespace Systems.Initialization.Unit.UnitFeeding
             int length = entities.Length;
 
             if (length == 0) return;
-            var configs = SystemAPI.GetSingleton<UnitFeedingConfigsHolder>().Value;
-            var hungerBarCap = configs.HungerBarConfigs.HungerBarCap;
             var em = state.EntityManager;
 
-            em.SetComponentData(entities, new HungerBarValue(hungerBarCap));
+            em.SetComponentData(entities, new HungerBarValue(UnitFeedingConfigConstants.UnitFeedingConfigs.HungerBarConfigs.HungerBarCap));
         }
 
     }

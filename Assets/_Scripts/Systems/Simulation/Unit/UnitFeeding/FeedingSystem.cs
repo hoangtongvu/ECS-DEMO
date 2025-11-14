@@ -35,14 +35,13 @@ namespace Systems.Simulation.Unit.UnitFeeding
                 .Build();
 
             state.RequireForUpdate(query0);
-            state.RequireForUpdate<UnitFeedingConfigsHolder>();
             state.RequireForUpdate<FeedingTimerSeconds>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var configs = SystemAPI.GetSingleton<UnitFeedingConfigsHolder>().Value;
+            var configs = UnitFeedingConfigConstants.UnitFeedingConfigs;
             var timerSecondsRef = SystemAPI.GetSingletonRW<FeedingTimerSeconds>();
 
             float feedingIntervalSeconds = configs.FeedingEventConfigs.FeedingIntervalMinutes * 60;
